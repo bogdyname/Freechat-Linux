@@ -6,9 +6,13 @@
 #ifndef USERNAMETABLE_H
 #define USERNAMETABLE_H
 
-#include <QtCore/QCoreApplication>
 #include <QtNetwork/QNetworkInterface>
+#include <QtCore/QCoreApplication>
+#include <QAbstractSocket>
+#include <QHostAddress>
 #include <QString>
+#include <QList>
+
 
 class usernametable
 {
@@ -25,6 +29,16 @@ protected:
 
 protected:
     usernametable();
+
+protected:
+    QList<QHostAddress> list = QNetworkInterface::allAddresses();
+
+    for(int nInter = 0; nInter < list.count(); nInter++)
+    {
+    if(!list[nInter].isLoopback())
+           if(list[nIter].protocol() == QAbstractSocket::IPv4Protocolo)
+               qDebug() << list[nIter].toString();
+    }
 };
 
 #endif // USERNAMETABLE_H
