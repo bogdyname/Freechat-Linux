@@ -13,12 +13,12 @@
 
 class Connection;
 
-class Server : public QSctpServer
+class Server : public QTcpServer
 {
     Q_OBJECT
 
 public:
-        QSctpServer(QObject *parent = nullptr);
+        QTcpServer(QObject *parent = nullptr);
 
 signals:
         void NewConnection(Connection *connection);

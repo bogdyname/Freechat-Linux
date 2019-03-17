@@ -10,12 +10,16 @@
 #include <QtCore/QCoreApplication>
 #include <QAbstractSocket>
 #include <QHostAddress>
+#include <QSettings>
+#include <QHostInfo>
 #include <QString>
 #include <QList>
 
 
-class usernametable
+class usernametable : public QString
 {
+    Q_OBJECT
+
 protected:
     QString getMacAddress()
     {
@@ -28,7 +32,7 @@ protected:
     }
 
 protected:
-    usernametable();
+    ~usernametable();
 
 protected:
     QList<QHostAddress> list = QNetworkInterface::allAddresses();
@@ -38,6 +42,16 @@ protected:
     if(!list[nInter].isLoopback())
            if(list[nIter].protocol() == QAbstractSocket::IPv4Protocolo)
                qDebug() << list[nIter].toString();
+    }
+};
+
+class tabletranslation
+{
+    QString translationName()
+    {
+        QString name;
+
+
     }
 };
 

@@ -5,6 +5,9 @@
 
 QT       += core gui
 QT       += network
+QT       += gui
+QT       += multimedia
+QT       += svg
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -26,7 +29,9 @@ SOURCES += \
         userclient.cpp \
         datasave.cpp \
         multimedia.cpp \
-        usernametable.cpp
+        usernametable.cpp \
+        username.cpp \
+    peermanager.cpp
 
 HEADERS += \
         freechat.h \
@@ -35,7 +40,9 @@ HEADERS += \
         userclient.h \
         datasave.h \
         multimedia.h \
-        usernametable.h
+        usernametable.h \
+        username.h \
+    peermanager.h
 
 FORMS += \
         freechat.ui

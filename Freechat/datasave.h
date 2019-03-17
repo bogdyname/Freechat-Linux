@@ -6,11 +6,19 @@
 #ifndef DATASAVE_H
 #define DATASAVE_H
 
+#include <QTextStream>
+#include <QIODevice>
+#include <QFile>
 
-class datasave
+class datasave : public QFile
 {
+    Q_OBJECT
+
 public:
-    datasave();
+    datasave()
+    {
+
+    }
 };
 
 #endif // DATASAVE_H
