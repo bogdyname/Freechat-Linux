@@ -55,6 +55,7 @@ signals:
 
 protected:
     void timerEvent(QTimerEvent *timerEvent);
+    void timerIdForTimerEvent();
 
 private slots:
     void readyToRead();

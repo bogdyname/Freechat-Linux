@@ -53,8 +53,7 @@ void Connection::timerEvent(QTimerEvent *timerEvent)
     if(timerEvent->timerId() == transferTimerId)
     {
         abort();
-        killTimer(transferTimerId);
-        transferTimerId = -1;
+        timerIdForTimerEvent();
     }
     else
     {
@@ -62,9 +61,20 @@ void Connection::timerEvent(QTimerEvent *timerEvent)
     }
 }
 
+void Connection::timerIdForTimerEvent()
+{
+    killTimer(transferTimerId);
+    transferTimerId = -1;
+}
+
 void Connection::readyToRead()
 {
-
+/*
+CODE
+WILL
+BE
+HERE
+*/
 }
 
 void Connection::pingStatus()

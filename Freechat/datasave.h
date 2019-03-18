@@ -17,7 +17,12 @@ class datasave : public QFile
 public:
     datasave()
     {
-
+        /*
+        CODE
+        WILL
+        BE
+        HERE
+        */
     }
 };
 

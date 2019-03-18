@@ -4,7 +4,7 @@
 */
 
 #include "usernametable.h"
-
+#include "username.h"
 #include <iostream>
 
 using namespace std;
@@ -32,8 +32,13 @@ usernametable::usernametable()
           }
 }
 
-tabletranslation::tabletranslation()
+tableTranslation::translationName()
 {
-
+    /*
+    CODE
+    WILL
+    BE
+    HERE
+    */
 }
 

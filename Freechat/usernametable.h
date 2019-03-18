@@ -52,29 +52,35 @@ protected:
         }
     }
 
-      QString getIpV4Protocol()
-      {
-          int nIter = 0;
+    QString getIpV4Protocol()
+    {
+        int nIter = 0;
 
-          if(list[nIter].protocol() == QAbstractSocket::IPv4Protocol)
-          {
-             qDebug() << list[nIter].toString();
-          }
-          else
-          {
-           /*CLEAR CODE*/
-          }
+        if(list[nIter].protocol() == QAbstractSocket::IPv4Protocol)
+        {
+           qDebug() << list[nIter].toString();
+        }
+        else
+        {
+         /*CLEAR CODE*/
+        }
 
-      }
+    }
 };
 
-class tabletranslation
+class tableTranslation
 {
+private:
     QString translationName()
     {
         QString name;
 
-
+        /*
+        CODE
+        WILL
+        BE
+        HERE
+        */
     }
 };
 
