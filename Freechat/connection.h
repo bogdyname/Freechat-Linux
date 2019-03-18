@@ -45,7 +45,7 @@ public:
     Connection(qintptr socketDescriptor, QObject *parent = nullptr);
     ~Connection();
 
-    QString name() const;
+    QString returnVariableUsername() const;
     void testMessage(const QString &message);
     bool sendMessage(const QString &message);
 

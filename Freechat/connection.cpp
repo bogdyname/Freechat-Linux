@@ -31,7 +31,7 @@ Connection::Connection(qintptr socketDescriptor, QObject *parent)
     reader.setDevice(this);
 }
 
-QString Connection::name() const
+QString Connection::returnVariableUsername() const
 {
     return username;
 }

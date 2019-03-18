@@ -26,7 +26,7 @@ protected:
         QString text;
         foreach(QNetworkInterface interface, QNetworkInterface::allInterfaces())
         {
-            text += interface.hardwareAddress(); //CHECK THIS OUT
+            text += interface.hardwareAddress();
         }
         return text;
     }
@@ -37,12 +37,35 @@ protected:
 protected:
     QList<QHostAddress> list = QNetworkInterface::allAddresses();
 
-    for(int nInter = 0; nInter < list.count(); nInter++)
+    QString getIpAddress()
     {
-    if(!list[nInter].isLoopback())
-           if(list[nIter].protocol() == QAbstractSocket::IPv4Protocolo)
-               qDebug() << list[nIter].toString();
+        for(int nInter = 0; nInter < list.count(); nInter++)
+        {
+            if(!list[nInter].isLoopback())
+            {
+                getIpV4Protocol();
+            }
+            else
+            {
+             /*CLEAR CODE*/
+            }
+        }
     }
+
+      QString getIpV4Protocol()
+      {
+          int nIter = 0;
+
+          if(list[nIter].protocol() == QAbstractSocket::IPv4Protocol)
+          {
+             qDebug() << list[nIter].toString();
+          }
+          else
+          {
+           /*CLEAR CODE*/
+          }
+
+      }
 };
 
 class tabletranslation
