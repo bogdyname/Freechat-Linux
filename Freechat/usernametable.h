@@ -10,78 +10,43 @@
 #include <QtCore/QCoreApplication>
 #include <QAbstractSocket>
 #include <QHostAddress>
+#include <QByteArray>
 #include <QSettings>
 #include <QHostInfo>
 #include <QString>
 #include <QList>
 
 
-class usernametable : public QString
+class Usernametable : public QObject
 {
     Q_OBJECT
 
-protected:
-    QString getMacAddress()
+public:
+    enum variablesForGetMacAndIpAddress
     {
-        QString text;
-        foreach(QNetworkInterface interface, QNetworkInterface::allInterfaces())
-        {
-            text += interface.hardwareAddress();
-        }
-        return text;
-    }
 
-protected:
-    ~usernametable();
+    };
 
-protected:
+
+    Usernametable(QObject *parent = nullptr);
+    ~Usernametable();
+
+    QString getIpV4Protocol();
+    QString getIpAddress();
+    QString getMacAddress();
+    QString translationName();
+    QString outputOnDisplay();
+
+
+    int nIter = 0;
+    int nInter = 0;
+    QString textWithMacAddresOfUser;
+    QString name;
+    QString macAddres;
+    QString protocol = "???";
     QList<QHostAddress> list = QNetworkInterface::allAddresses();
-
-    QString getIpAddress()
-    {
-        for(int nInter = 0; nInter < list.count(); nInter++)
-        {
-            if(!list[nInter].isLoopback())
-            {
-                getIpV4Protocol();
-            }
-            else
-            {
-             /*CLEAR CODE*/
-            }
-        }
-    }
-
-    QString getIpV4Protocol()
-    {
-        int nIter = 0;
-
-        if(list[nIter].protocol() == QAbstractSocket::IPv4Protocol)
-        {
-           qDebug() << list[nIter].toString();
-        }
-        else
-        {
-         /*CLEAR CODE*/
-        }
-
-    }
+    QList<QHostAddress> addresses = QHostInfo::fromName(QHostInfo::localHostName()).addresses();
 };
 
-class tableTranslation
-{
-private:
-    QString translationName()
-    {
-        QString name;
-
-        /*
-        CODE
-        WILL
-        BE
-        HERE
-        */
-    }
-};
 
 #endif // USERNAMETABLE_H

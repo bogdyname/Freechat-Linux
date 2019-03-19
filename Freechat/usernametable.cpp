@@ -9,16 +9,12 @@
 
 using namespace std;
 
-usernametable::usernametable()
+Usernametable::Usernametable(QObject *parent)
+    : QObject(parent)
 {
-    cout << getMacAddress().toAscii().constData() << endl; // CHECK THIS OUT
-    exit(1); // CHECK THIS OUT
-
-    QList< QHostAddress > addresses = QHostInfo::fromName( QHostInfo::localHostName() ).addresses();
-          foreach ( const QHostAddress & a, addresses )
+          foreach (const QHostAddress & a, addresses)
           {
-              QString protocol = "???";
-              switch ( a.protocol() )
+              switch (a.protocol())
               {
                   case QAbstractSocket::IPv4Protocol:
                       protocol = "IPv4";
@@ -28,17 +24,47 @@ usernametable::usernametable()
                   break;
               }
               qDebug() << a.toString() << "(" << protocol << ")";
-
           }
 }
 
-tableTranslation::translationName()
-{
-    /*
-    CODE
-    WILL
-    BE
-    HERE
-    */
+QString Usernametable::getIpV4Protocol()
+    {
+        if(list[nIter].protocol() == QAbstractSocket::IPv4Protocol)
+        {
+            qDebug() << list[nIter].toString() << endl;
+        }
+        else
+        {
+            /*CLEAR CODE*/
+        }
 }
 
+QString Usernametable::getIpAddress()
+{
+    for(nInter < list.count(); nInter++)
+    {
+        if(!list[nInter].isLoopback())
+        {
+            getIpV4Protocol();
+        }
+        else
+        {
+            /*CLEAR CODE*/
+        }
+    }
+}
+
+QString Usernametable::getMacAddress()
+{
+            foreach(QNetworkInterface interface, QNetworkInterface::allInterfaces())
+            {
+                textWithMacAddresOfUser += interface.hardwareAddress();
+            }
+    return textWithMacAddresOfUser;
+}
+
+QString Usernametable::outputOnDisplay()
+{
+    qDebug() << getMacAddress().toAscii().constData() << endl;
+    exit(1);
+}
