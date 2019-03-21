@@ -13,33 +13,33 @@
 
 class PeerManager;
 
-class Client : public QObject
+class UserClient : public QObject
 {
     Q_OBJECT
 
 public:
-    Client();
+    UserClient();
 
-    void sendMessage(const QString &message);
     QString nickName() const;
+    void sendMessage(const QString &message);
     bool hasConnection(const QHostAddress &senderIp, int senderPort = -1) const;
 
 signals:
-    void newMessage(const QString &from, const QString &message);
     void newParticipant(const QString &nick);
     void participantLeft(const QString &nick);
+    void newMessage(const QString &from, const QString &message);
 
 private slots:
+    void readyForUse();
+    void disconnected();
     void newConnection(Connection *connection);
     void connectionError(QAbstractSocket::SocketError socketError);
-    void disconnected();
-    void readyForUse();
 
 private:
     void removeConnection(Connection *connection);
 
-    PeerManager *peerManager;
     Server server;
+    PeerManager *peerManager;
     QMultiHash<QHostAddress, Connection *> peers;
 };
 #endif // USERCLIENT_H
