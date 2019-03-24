@@ -7,12 +7,13 @@
 #include "userserver.h"
 #include "connection.h"
 
-Server::Userserver(QObject *parent):QSctpServer(parent)
+UserServer::UserServer(QObject *parent)
+    : QTcpServer(parent)
 {
     listen(QHostAddress::Any);
 }
 
-void Server::InComingConnection(qintptr socketDescription)
+void UserServer::InComingConnection(qintptr socketDescription)
 {
     Connection *connection = new Connection(socketDescription, this);
     emit NewConnection(connection);

@@ -8,17 +8,17 @@
 
 
 #include <QtNetwork>
-#include <QSctpServer>
+#include <QTcpServer>
 #include <QHostAddress>
 
 class Connection;
 
-class Server : public QTcpServer
+class UserServer : public QTcpServer
 {
     Q_OBJECT
 
 public:
-        QTcpServer(QObject *parent = nullptr);
+        UserServer(QObject *parent = nullptr);
 
 signals:
         void NewConnection(Connection *connection);

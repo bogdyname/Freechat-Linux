@@ -6,8 +6,9 @@
 #include <QtNetwork>
 #include "userclient.h"
 #include "connection.h"
+#include "peermanager.h"
 
-Client::Client()
+UserClient::UserClient()
 {
     peerManager = new PeerManager(this);
     peerManager->setServerPort(server.serverPort());
@@ -19,17 +20,23 @@ Client::Client()
                      this, SLOT(newConnection(Connection*)));
 }
 
-void Client::sendMessage(const QString &message)
+void UserClient::sendMessage(const QString &message)
 {
     if (message.isEmpty())
+    {
         return;
+    }
+    else
+    {
+        /*CLEAR CODE*/
+    }
 
     QList<Connection *> connections = peers.values();
     foreach (Connection *connection, connections)
         connection->sendMessage(message);
 }
 
-QString Client::nickName() const
+QString UserClient::nickName() const
 {
     return peerManager->userName() + '@' + QHostInfo::localHostName()
            + ':' + QString::number(server.serverPort());

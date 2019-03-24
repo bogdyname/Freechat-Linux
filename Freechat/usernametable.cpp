@@ -65,6 +65,6 @@ QString Usernametable::getMacAddress()
 
 QString Usernametable::outputOnDisplay()
 {
-    qDebug() << getMacAddress().toAscii().constData() << endl;
+    qDebug() << getMacAddress().constData() << endl;
     exit(1);
 }

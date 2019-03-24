@@ -39,7 +39,13 @@ QString Connection::returnVariableUsername() const
 bool Connection::sendMessage(const QString &message)
 {
     if (message.isEmpty())
+    {
         return false;
+    }
+    else
+    {
+        /*CLEAR CODE*/
+    }
 
     writer.startMap(1);
     writer.append(AlreadyConnection);
