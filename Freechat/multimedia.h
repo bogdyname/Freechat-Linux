@@ -1,5 +1,5 @@
 /*
-***Copyright (C) 2019 Freechat Inc
+***Copyright (C) 2019 Softwater Inc
 ***Contact: bogdyname@gmail.com
 */
 

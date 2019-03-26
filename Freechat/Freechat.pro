@@ -1,5 +1,5 @@
 #---------------------------------
-#Copyright (C) 2019 Freechat Inc
+#Copyright (C) 2019 Softwater Inc
 #Contact: bogdyname@gmail.com
 #---------------------------------
 
@@ -31,7 +31,7 @@ SOURCES += \
         multimedia.cpp \
         usernametable.cpp \
         username.cpp \
-    peermanager.cpp
+        peermanager.cpp
 
 HEADERS += \
         freechat.h \
@@ -42,7 +42,7 @@ HEADERS += \
         multimedia.h \
         usernametable.h \
         username.h \
-    peermanager.h
+        peermanager.h
 
 FORMS += \
         freechat.ui
