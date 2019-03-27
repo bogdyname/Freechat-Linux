@@ -38,7 +38,7 @@ private slots:
 private:
     void removeConnection(Connection *connection);
 
-    Server server;
+    UserServer userserver;
     PeerManager *peerManager;
     QMultiHash<QHostAddress, Connection *> peers;
 };

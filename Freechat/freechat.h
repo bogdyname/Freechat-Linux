@@ -23,13 +23,13 @@ public slots:
 
 private slots:
     void returnPressed();
-    void showInformation();
-    void newParticipant(const QString &nick);
-    void participantLeft(const QString &nick);
+    void hiiiiiiBoy();
+    void userIsJoined(const QString &nick);
+    void userIsLeft(const QString &nick);
 
 private:
-    UserClient client;
-    QString myNickName;
+    UserClient userclient;
+    QString whoami;
     QTextTableFormat tableFormat;
 };
 
