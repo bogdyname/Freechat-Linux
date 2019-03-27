@@ -15,6 +15,9 @@
 class UserClient;
 class Connection;
 
+static const qint32 BroadcastInterval = 2000;
+static const unsigned broadcastPort = 45000;
+
 class PeerManager : public QObject
 {
     Q_OBJECT
