@@ -41,7 +41,7 @@ QString Usernametable::getIpV4Protocol()
 
 QString Usernametable::getIpAddress()
 {
-    for(nInter < list.count(); nInter++)
+    for(nInter < list.count();; nInter++)
     {
         if(!list[nInter].isLoopback())
         {

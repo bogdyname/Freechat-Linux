@@ -11,12 +11,12 @@
 UserClient::UserClient()
 {
     peerManager = new PeerManager(this);
-    peerManager->setServerPort(server.serverPort());
+    peerManager->setServerPort(userserver.serverPort());
     peerManager->startBroadcasting();
 
     QObject::connect(peerManager, SIGNAL(newConnection(Connection*)),
                      this, SLOT(newConnection(Connection*)));
-    QObject::connect(&server, SIGNAL(newConnection(Connection*)),
+    QObject::connect(&userserver, SIGNAL(newConnection(Connection*)),
                      this, SLOT(newConnection(Connection*)));
 }
 
@@ -39,5 +39,5 @@ void UserClient::sendMessage(const QString &message)
 QString UserClient::nickName() const
 {
     return peerManager->userName() + '@' + QHostInfo::localHostName()
-           + ':' + QString::number(server.serverPort());
+           + ':' + QString::number(userserver.serverPort());
 }
