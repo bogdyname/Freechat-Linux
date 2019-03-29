@@ -1,10 +1,8 @@
 # **Freechat (decentralized chat)**
-## **Freechat via C++ & Qt**
-### **Debugger(Qt 5.12.1 GCC 64bit)**
-#### **Copyleft (C) 2019 Softwater, Inc.**
-#####  **Everyone is permitted to copy and distribute verbatim copies**
-#####   **of this license document, but changing it is not allowed.**
-#####  				**Preamble**
+## **Freechat via C++ & Qt, Debugger(Qt 5.12.1 GCC 64bit)**
+## **Copyleft (C) 2019 Softwater, Inc.**
+####  **Everyone is permitted to copy and distribute verbatim copies of this license document, but changing it is not allowed.**
+####  				**Preamble**
 
   The GNU General Public License is a free, copyleft license for
 software and other kinds of works.
@@ -617,5 +615,5 @@ an absolute waiver of all civil liability in connection with the
 Program, unless a warranty or assumption of liability accompanies a
 copy of the Program in return for a fee.
 
-##### 			**END OF TERMS AND CONDITIONS**
-#### **Contact: bogdyname@gmail.com**
+#### 			**END OF TERMS AND CONDITIONS**
+### **Contact: bogdyname@gmail.com**
