@@ -48,7 +48,8 @@ HEADERS += \
         duinterface.h
 
 FORMS += \
-        freechat.ui
+        freechat.ui \
+        duinterface.ui
 
 
 qnx: target.path = /tmp/$${TARGET}/bin

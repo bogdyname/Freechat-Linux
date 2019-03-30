@@ -7,8 +7,9 @@
 #define DUINTERFACE_H
 
 #include <QWidget>
+#include <QFile>
 
-class Duinterface
+class Duinterface : public QFile, private Ui::Duinterface
 {
 public:
     Duinterface();
