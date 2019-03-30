@@ -12,6 +12,9 @@ class Duinterface
 {
 public:
     Duinterface();
+
+public slots:
+    bool UserSelect();
 };
 
 #endif // DUINTERFACE_H

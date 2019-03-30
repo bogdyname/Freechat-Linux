@@ -7,10 +7,10 @@
 #define MULTIMEDIA_H
 
 
-class multimedia
+class Multimedia
 {
 public:
-    multimedia();
+    Multimedia();
 };
 
 #endif // MULTIMEDIA_H

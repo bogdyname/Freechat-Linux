@@ -33,7 +33,7 @@ SOURCES += \
         usernametable.cpp \
         username.cpp \
         peermanager.cpp \
-    duinterface.cpp
+        duinterface.cpp
 
 HEADERS += \
         freechat.h \
@@ -45,7 +45,7 @@ HEADERS += \
         usernametable.h \
         username.h \
         peermanager.h \
-    duinterface.h
+        duinterface.h
 
 FORMS += \
         freechat.ui

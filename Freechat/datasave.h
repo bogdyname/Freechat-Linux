@@ -11,12 +11,24 @@
 #include <QIODevice>
 #include <QFile>
 
+class Freechat;
+class Duinterface;
+
 class Datasave : public QSaveFile
 {
     Q_OBJECT
 
 public:
+    QFile fileWithData;
+    bool saveFileVariable = false;
+    bool deleteFileVariable = false;
+
+public:
     Datasave(QObject *parent = nullptr);
+
+    bool SaveFile();
+    bool DeleteFile();
+    QFile DataWriterInFile();
 };
 
 #endif // DATASAVE_H

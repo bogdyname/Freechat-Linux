@@ -5,9 +5,9 @@
 
 #include "username.h"
 #include "datasave.h"
+#include "freechat.h"
+#include "connection.h"
 #include "usernametable.h"
-
-using namespace std;
 
 Usernametable::Usernametable(QObject *parent)
     : QObject(parent)

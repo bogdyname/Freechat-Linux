@@ -5,6 +5,6 @@
 
 #include "multimedia.h"
 
-multimedia::multimedia()
+Multimedia::Multimedia()
 {
 }
