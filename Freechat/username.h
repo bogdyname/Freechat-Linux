@@ -1,5 +1,5 @@
 /*
-***Copyright (C) 2019 Softwater Inc
+***Copyleft (C) 2019 Softwater, Inc
 ***Contact: bogdyname@gmail.com
 */
 
@@ -8,16 +8,17 @@
 
 #include <QTextStream>
 #include <QDataStream>
-#include <QSettings>
+#include <QString>
 #include <QFile>
+#include <QList>
+
+class Username;
 
 class Username : public QFile
 {
     Q_OBJECT
 
 public:
-    Username(QObject *parent = nullptr);
-
     enum VariblesForMACAddress
     {
         CheckUserMACAddress,
@@ -34,6 +35,8 @@ public:
         CheckReadedIpFile,
         CheckWriterFileMACToIp
     };
+
+    Username(QObject *parent = nullptr);
 
 signals:
     bool AskUserForReadContactName();

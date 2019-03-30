@@ -1,5 +1,5 @@
 /*
-***Copyright (C) 2019 Softwater Inc
+***Copyleft (C) 2019 Softwater, Inc
 ***Contact: bogdyname@gmail.com
 */
 
@@ -7,23 +7,16 @@
 #define DATASAVE_H
 
 #include <QTextStream>
+#include <QSaveFile>
 #include <QIODevice>
 #include <QFile>
 
-class datasave : public QFile
+class Datasave : public QSaveFile
 {
     Q_OBJECT
 
 public:
-    datasave()
-    {
-        /*
-        CODE
-        WILL
-        BE
-        HERE
-        */
-    }
+    Datasave(QObject *parent = nullptr);
 };
 
 #endif // DATASAVE_H

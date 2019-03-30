@@ -1,5 +1,5 @@
 /*
-***Copyright (C) 2019 Softwater Inc
+***Copyleft (C) 2019 Softwater, Inc
 ***Contact: bogdyname@gmail.com
 */
 
@@ -22,20 +22,14 @@ class Usernametable : public QObject
     Q_OBJECT
 
 public:
-    enum variablesForGetMacAndIpAddress
-    {
-
-    };
-
-
     Usernametable(QObject *parent = nullptr);
     ~Usernametable();
 
-    QString getIpV4Protocol();
-    QString getIpAddress();
-    QString getMacAddress();
-    QString translationName();
-    QString outputOnDisplay();
+    QString GetIpV4Protocol();
+    QString GetIpAddress();
+    QString GetMacAddress();
+    QString TranslationName();
+    QString OutputOnDisplay();
 
 
     int nIter = 0;

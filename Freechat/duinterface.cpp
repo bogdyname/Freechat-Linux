@@ -3,8 +3,9 @@
 ***Contact: bogdyname@gmail.com
 */
 
-#include "multimedia.h"
+#include "duinterface.h"
 
-multimedia::multimedia()
+Duinterface::Duinterface()
 {
+
 }

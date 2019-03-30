@@ -1,16 +1,14 @@
 /*
-***Copyright (C) 2019 Softwater Inc
+***Copyleft (C) 2019 Softwater, Inc
 ***Contact: bogdyname@gmail.com
 */
 
 #include "username.h"
+#include "datasave.h"
+#include "usernametable.h"
 
-username::username()
+Username::Username(QObject *parent)
+    : QFile(parent)
 {
-    /*
-    CODE
-    WILL
-    BE
-    HERE
-    */
+
 }

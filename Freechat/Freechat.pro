@@ -1,6 +1,7 @@
 #---------------------------------
-#Copyright (C) 2019 Softwater Inc
-#Contact: bogdyname@gmail.com
+#Freechat (decentralized chat)
+#Freechat via C++ & Qt, Debugger(Qt 5.12.1 GCC 64bit)
+#Copyleft (C) 2019 Softwater, Inc.
 #---------------------------------
 
 QT       += core gui
@@ -31,7 +32,8 @@ SOURCES += \
         multimedia.cpp \
         usernametable.cpp \
         username.cpp \
-        peermanager.cpp
+        peermanager.cpp \
+    duinterface.cpp
 
 HEADERS += \
         freechat.h \
@@ -42,7 +44,8 @@ HEADERS += \
         multimedia.h \
         usernametable.h \
         username.h \
-        peermanager.h
+        peermanager.h \
+    duinterface.h
 
 FORMS += \
         freechat.ui
