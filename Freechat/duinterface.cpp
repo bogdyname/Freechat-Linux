@@ -3,9 +3,14 @@
 ***Contact: bogdyname@gmail.com
 */
 
+#include <QWidget>
 #include "duinterface.h"
 
-Duinterface::Duinterface()
+Duinterface::Duinterface(QWidget *parent)
+    : QDialog(parent)
 {
+    setupUi(this);
 
+    connect(button, SIGNAL(UserSelect()()),
+            this, SLOT(UserSelect()()));
 }

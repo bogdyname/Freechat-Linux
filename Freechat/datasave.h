@@ -19,7 +19,6 @@ class Datasave : public QSaveFile
     Q_OBJECT
 
 public:
-    QFile fileWithData;
     bool saveFileVariable = false;
     bool deleteFileVariable = false;
 
@@ -28,7 +27,7 @@ public:
 
     bool SaveFile();
     bool DeleteFile();
-    QFile DataWriterInFile();
+    QFile DataWriterInFile(QFile &fileWithData);
 };
 
 #endif // DATASAVE_H

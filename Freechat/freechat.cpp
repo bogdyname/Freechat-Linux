@@ -22,10 +22,10 @@ Freechat::Freechat(QWidget *parent)
             this, SLOT(returnPressed()));
     connect(&userclient, SIGNAL(newMessage(QString,QString)),
             this, SLOT(appendMessage(QString,QString)));
-    connect(&userclient, SIGNAL(newParticipant(QString)),
-            this, SLOT(newParticipant(QString)));
-    connect(&userclient, SIGNAL(participantLeft(QString)),
-            this, SLOT(participantLeft(QString)));
+    connect(&userclient, SIGNAL(userIsJoined(QString)),
+            this, SLOT(userIsJoined(QString)));
+    connect(&userclient, SIGNAL(userIsLeft(QString)),
+            this, SLOT(userIsLeft(QString)));
 
     whoami = userclient.nickName();
     userIsJoined(whoami);

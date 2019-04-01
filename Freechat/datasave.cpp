@@ -24,14 +24,13 @@ bool Datasave::SaveFile()
 
 bool Datasave::DeleteFile()
 {
-    deleteFileVariables = (UserSelect() == "YES");
+    deleteFileVariable = (UserSelect() == "YES");
 
     return true;
 }
 
-QFile Datasave::DataWriterInFile()
+QFile Datasave::DataWriterInFile(QFile &fileWithData)
 {
+    fileWithData = ;
 
-
-    return ;
 }
