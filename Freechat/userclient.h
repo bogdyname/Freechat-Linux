@@ -20,23 +20,23 @@ class UserClient : public QObject
 public:
     UserClient();
 
-    QString nickName() const;
-    void sendMessage(const QString &message);
-    bool hasConnection(const QHostAddress &senderIp, int senderPort = -1) const;
+    QString NickName() const;
+    void SendMessage(const QString &message);
+    bool HasConnection(const QHostAddress &senderIp, int senderPort = -1) const;
 
 signals:
-    void newParticipant(const QString &nick);
-    void participantLeft(const QString &nick);
-    void newMessage(const QString &from, const QString &message);
+    void NewParticipant(const QString &nick);
+    void ParticipantLeft(const QString &nick);
+    void NewMessage(const QString &from, const QString &message);
 
 private slots:
-    void readyForUse();
-    void disconnected();
-    void newConnection(Connection *connection);
-    void connectionError(QAbstractSocket::SocketError socketError);
+    void ReadyForUse();
+    void Disconnected();
+    void NewConnection(Connection *connection);
+    void ConnectionError(QAbstractSocket::SocketError socketError);
 
 private:
-    void removeConnection(Connection *connection);
+    void RemoveConnection(Connection *connection);
 
     UserServer userserver;
     PeerManager *peerManager;
