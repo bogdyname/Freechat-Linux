@@ -17,6 +17,7 @@
 #include <QList>
 
 class Freechat;
+class Username;
 class Connection;
 
 class Usernametable : public QObject
@@ -24,7 +25,7 @@ class Usernametable : public QObject
     Q_OBJECT
 
 public:
-    Usernametable(QObject *parent = nullptr);
+    Usernametable(Username *username);
     ~Usernametable();
 
     QString GetIpV4Protocol();
