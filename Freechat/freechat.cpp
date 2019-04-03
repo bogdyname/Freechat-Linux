@@ -16,24 +16,24 @@ Freechat::Freechat(QWidget *parent)
     textEdit->setReadOnly(true);
     listWidget->setFocusPolicy(Qt::NoFocus);
 
-    connect(lineEdit, SIGNAL(returnPressed()),
-            this, SLOT(returnPressed()));
-    connect(lineEdit, SIGNAL(returnPressed()),
-            this, SLOT(returnPressed()));
-    connect(&userclient, SIGNAL(newMessage(QString,QString)),
-            this, SLOT(appendMessage(QString,QString)));
-    connect(&userclient, SIGNAL(userIsJoined(QString)),
-            this, SLOT(userIsJoined(QString)));
-    connect(&userclient, SIGNAL(userIsLeft(QString)),
-            this, SLOT(userIsLeft(QString)));
+    connect(lineEdit, SIGNAL(ReturnPressed()),
+            this, SLOT(ReturnPressed()));
+    connect(lineEdit, SIGNAL(ReturnPressed()),
+            this, SLOT(ReturnPressed()));
+    connect(&userclient, SIGNAL(NewMessage(QString,QString)),
+            this, SLOT(AppendMessage(QString,QString)));
+    connect(&userclient, SIGNAL(UserIsJoined(QString)),
+            this, SLOT(UserIsJoined(QString)));
+    connect(&userclient, SIGNAL(UserIsLeft(QString)),
+            this, SLOT(UserIsLeft(QString)));
 
-    whoami = userclient.nickName();
-    userIsJoined(whoami);
+    whoami = userclient.NickName();
+    UserIsJoined(whoami);
     tableFormat.setBorder(0);
     QTimer::singleShot(10 * 1000, this, SLOT(showInformation()));
 }
 
-void Freechat::appendMessage(const QString &from, const QString &message)
+void Freechat::AppendMessage(const QString &from, const QString &message)
 {
     if (from.isEmpty() || message.isEmpty())
         return;
@@ -47,7 +47,7 @@ void Freechat::appendMessage(const QString &from, const QString &message)
     bar->setValue(bar->maximum());
 }
 
-void Freechat::returnPressed()
+void Freechat::ReturnPressed()
 {
     QString text = lineEdit->text();
     if (text.isEmpty())
@@ -69,14 +69,14 @@ void Freechat::returnPressed()
     }
     else
     {
-        userclient.sendMessage(text);
-        appendMessage(whoami, text);
+        userclient.SendMessage(text);
+        AppendMessage(whoami, text);
     }
 
     lineEdit->clear();
 }
 
-void Freechat::userIsJoined(const QString &nick)
+void Freechat::UserIsJoined(const QString &nick)
 {
     if (nick.isEmpty())
     {
@@ -94,7 +94,7 @@ void Freechat::userIsJoined(const QString &nick)
     listWidget->addItem(nick);
 }
 
-void Freechat::userIsLeft(const QString &nick)
+void Freechat::UserIsLeft(const QString &nick)
 {
     if (nick.isEmpty())
     {
@@ -122,7 +122,7 @@ void Freechat::userIsLeft(const QString &nick)
     textEdit->setTextColor(color);
 }
 
-void Freechat::hiiiiiiBoy()
+void Freechat::HiiiiiiBoy()
 {
     if (listWidget->count() == 1)
     {

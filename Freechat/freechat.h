@@ -19,13 +19,13 @@ public:
     Freechat(QWidget *parent = nullptr);
 
 public slots:
-    void appendMessage(const QString &from, const QString &message);
+    void AppendMessage(const QString &from, const QString &message);
 
 private slots:
-    void returnPressed();
-    void hiiiiiiBoy();
-    void userIsJoined(const QString &nick);
-    void userIsLeft(const QString &nick);
+    void ReturnPressed();
+    void HiiiiiiBoy();
+    void UserIsJoined(const QString &nick);
+    void UserIsLeft(const QString &nick);
 
 private:
     UserClient userclient;

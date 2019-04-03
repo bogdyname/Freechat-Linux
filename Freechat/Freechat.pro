@@ -35,7 +35,8 @@ SOURCES += \
         username.cpp \
         peermanager.cpp \
         duinterface.cpp \
-        videoviewer.cpp
+        videoviewer.cpp \
+        pictureviewer.cpp
 
 HEADERS += \
         freechat.h \
@@ -48,7 +49,8 @@ HEADERS += \
         username.h \
         peermanager.h \
         duinterface.h \
-        videoviewer.h
+        videoviewer.h \
+        pictureviewer.h
 
 FORMS += \
         freechat.ui \

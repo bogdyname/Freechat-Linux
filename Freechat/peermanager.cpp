@@ -40,7 +40,7 @@ PeerManager::PeerManager(UserClient *userclient)
     {
         /*CLEAR CODE*/
     }
-    updateAddresses();
+    UpdateAddresses();
     serverPort = 0;
 
     broadcastSocket.bind(QHostAddress::Any, broadcastPort,
@@ -54,22 +54,22 @@ PeerManager::PeerManager(UserClient *userclient)
             this, SLOT(sendBroadcastDatagram()));
 }
 
-void PeerManager::setServerPort(int port)
+void PeerManager::SetServerPort(int port)
 {
     serverPort = port;
 }
 
-QString PeerManager::userName() const
+QString PeerManager::UserName() const
 {
     return username;
 }
 
-void PeerManager::startBroadcasting()
+void PeerManager::StartBroadcasting()
 {
     broadcastTimer.start();
 }
 
-bool PeerManager::isWLANHostAddress(const QHostAddress &address)
+bool PeerManager::IsWLANHostAddress(const QHostAddress &address)
 {
     foreach (QHostAddress localAddress, ipAddresses)
     {
@@ -86,7 +86,7 @@ bool PeerManager::isWLANHostAddress(const QHostAddress &address)
     return false;
 }
 
-void PeerManager::sendBroadcastDatagram()
+void PeerManager::SendBroadcastDatagram()
 {
     QByteArray datagram;
     {
@@ -113,7 +113,7 @@ void PeerManager::sendBroadcastDatagram()
 
     if (!validBroadcastAddresses)
     {
-        updateAddresses();
+        UpdateAddresses();
     }
     else
     {
@@ -121,7 +121,7 @@ void PeerManager::sendBroadcastDatagram()
     }
 }
 
-void PeerManager::readBroadcastDatagram()
+void PeerManager::ReadBroadcastDatagram()
 {
     while (broadcastSocket.hasPendingDatagrams())
     {
@@ -185,7 +185,7 @@ void PeerManager::readBroadcastDatagram()
             senderServerPort = reader.toInteger();
         }
 
-        if (isWLANHostAddress(senderIp) && senderServerPort == serverPort)
+        if (IsWLANHostAddress(senderIp) && senderServerPort == serverPort)
         {
             continue;
         }
@@ -193,10 +193,10 @@ void PeerManager::readBroadcastDatagram()
         {
             /*CLEAR CODE*/
         }
-        if (!userclient->hasConnection(senderIp))
+        if (!userclient->HasConnection(senderIp))
         {
             Connection *connection = new Connection(this);
-            emit newConnection(connection);
+            emit NewConnection(connection);
             connection->connectToHost(senderIp, senderServerPort);
         }
         else
@@ -206,7 +206,7 @@ void PeerManager::readBroadcastDatagram()
     }
 }
 
-void PeerManager::updateAddresses()
+void PeerManager::UpdateAddresses()
 {
     broadcastAddresses.clear();
     ipAddresses.clear();

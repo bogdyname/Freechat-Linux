@@ -25,20 +25,20 @@ class PeerManager : public QObject
 public:
     PeerManager(UserClient *userclient);
 
-    QString userName() const;
-    void startBroadcasting();
-    void setServerPort(int port);
-    bool isWLANHostAddress(const QHostAddress &address);
+    QString UserName() const;
+    void StartBroadcasting();
+    void SetServerPort(int port);
+    bool IsWLANHostAddress(const QHostAddress &address);
 
 signals:
-    void newConnection(Connection *connection);
+    void NewConnection(Connection *connection);
 
 private slots:
-    void sendBroadcastDatagram();
-    void readBroadcastDatagram();
+    void SendBroadcastDatagram();
+    void ReadBroadcastDatagram();
 
 private:
-    void updateAddresses();
+    void UpdateAddresses();
 
     UserClient *userclient;
 

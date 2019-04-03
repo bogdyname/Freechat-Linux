@@ -35,12 +35,12 @@ Connection::Connection(qintptr socketDescriptor, QObject *parent)
     reader.setDevice(this);
 }
 
-QString Connection::returnVariableUsername() const
+QString Connection::ReturnVariableUsername() const
 {
     return username;
 }
 
-bool Connection::sendMessage(const QString &message)
+bool Connection::SendMessage(const QString &message)
 {
     if (message.isEmpty())
     {
@@ -58,12 +58,12 @@ bool Connection::sendMessage(const QString &message)
     return true;
 }
 
-void Connection::timerEvent(QTimerEvent *timerEvent)
+void Connection::TimerEvent(QTimerEvent *timerEvent)
 {
     if(timerEvent->timerId() == transferTimerId)
     {
         abort();
-        timerIdForTimerEvent();
+        TimerIdForTimerEvent();
     }
     else
     {
@@ -71,13 +71,13 @@ void Connection::timerEvent(QTimerEvent *timerEvent)
     }
 }
 
-void Connection::timerIdForTimerEvent()
+void Connection::TimerIdForTimerEvent()
 {
     killTimer(transferTimerId);
     transferTimerId = -1;
 }
 
-void Connection::readyToRead()
+void Connection::ReadyToRead()
 {
         reader.reparse();
         while (reader.lastError() == QCborError::NoError)
@@ -179,11 +179,11 @@ void Connection::readyToRead()
                     {
                         /*CLEAR CODE*/
                     }
-                    processCheckConnection();
+                    ProcessCheckConnection();
                 }
                 else
                 {
-                    processData();
+                    ProcessData();
                 }
             }
         }
@@ -207,7 +207,7 @@ void Connection::readyToRead()
         }
 }
 
-void Connection::pingStatus()
+void Connection::PingStatus()
 {
     if(pongTime.elapsed() > PongTimeout)
     {
@@ -225,7 +225,7 @@ void Connection::pingStatus()
     writer.endMap();
 }
 
-void Connection::checkConnection()
+void Connection::CheckConnection()
 {
     writer.startArray();
     writer.startMap(1);
@@ -244,7 +244,7 @@ void Connection::checkConnection()
     }
 }
 
-void Connection::processCheckConnection()
+void Connection::ProcessCheckConnection()
 {
     username = buffer + '@' + peerAddress().toString()
                 + ':' + QString::number(peerPort());
@@ -263,7 +263,7 @@ void Connection::processCheckConnection()
 
     if (!isCheckConnection)
     {
-        checkConnection();
+        CheckConnection();
     }
     else
     {
@@ -273,15 +273,15 @@ void Connection::processCheckConnection()
     pingTimer.start();
     pongTime.start();
     state = ReadyForConnection;
-    emit readyForUse();
+    emit ReadyForUse();
 }
 
-void Connection::processData()
+void Connection::ProcessData()
 {
     switch (currentDataType)
     {
     case PlainText:
-        emit newMessage(username, buffer);
+        emit NewMessage(username, buffer);
         break;
     case Ping:
         writer.startMap(1);

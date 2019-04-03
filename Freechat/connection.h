@@ -46,27 +46,27 @@ public:
     Connection(qintptr socketDescriptor, QObject *parent = nullptr);
     ~Connection();
 
-    QString returnVariableUsername() const;
-    void testMessage(const QString &message);
-    bool sendMessage(const QString &message);
+    QString ReturnVariableUsername() const;
+    void TestMessage(const QString &message);
+    bool SendMessage(const QString &message);
 
 signals:
-    void readyForUse();
-    void newMessage(const QString &from, const QString &message);
+    void ReadyForUse();
+    void NewMessage(const QString &from, const QString &message);
 
 protected:
-    void timerEvent(QTimerEvent *timerEvent);
-    void timerIdForTimerEvent();
+    void TimerEvent(QTimerEvent *timerEvent);
+    void TimerIdForTimerEvent();
 
 private slots:
-    void readyToRead();
-    void pingStatus();
-    void checkConnection();
+    void ReadyToRead();
+    void PingStatus();
+    void CheckConnection();
 
 private:
-    bool hasEnoughData();
-    void processCheckConnection();
-    void processData();
+    bool HasEnoughData();
+    void ProcessCheckConnection();
+    void ProcessData();
 
      QCborStreamReader reader;
      QCborStreamWriter writer;
