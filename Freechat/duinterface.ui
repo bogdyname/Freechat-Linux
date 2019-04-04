@@ -39,6 +39,19 @@
     <string>No</string>
    </property>
   </widget>
+  <widget class="QLabel" name="SaveLabel">
+   <property name="geometry">
+    <rect>
+     <x>60</x>
+     <y>0</y>
+     <width>281</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Window for save or delete your masseges</string>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>

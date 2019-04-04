@@ -23,11 +23,9 @@ class Duinterface : public QWidget, private Ui::Duinterface
 public:
     Duinterface(QWidget *parent = nullptr);
 
+    void UserSelectNo();
+    void UserSelectYes();
     void AbortProgError();
-
-public:
-    bool userSelectNo;
-    bool userSelectYes;
 
 public slots:
     bool UserSelect();
