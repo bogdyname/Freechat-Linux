@@ -25,7 +25,7 @@ class Usernametable : public QObject
     Q_OBJECT
 
 public:
-    Usernametable(Username *username);
+    Usernametable(QObject *parent = nullptr);
     ~Usernametable();
 
     QString GetIpV4Protocol();

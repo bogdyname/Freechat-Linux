@@ -3,14 +3,20 @@
 ***Contact: bogdyname@gmail.com
 */
 
-#include <QWidget>
 #include "duinterface.h"
 
 Duinterface::Duinterface(QWidget *parent)
-    : QDialog(parent)
+    : QWidget(parent)
 {
     setupUi(this);
 
-    connect(button, SIGNAL(UserSelect()()),
-            this, SLOT(UserSelect()()));
+    connect(checkUserChooseYes, SIGNAL(UserSelect()),
+            this, SLOT(UserSelect()));
+    connect(checkUserChooseNo, SIGNAL(UserSelect()),
+            this, SLOT(UserSelect()));
+}
+
+bool Duinterface::UserSelect()
+{
+
 }

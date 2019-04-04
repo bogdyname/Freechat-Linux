@@ -6,13 +6,13 @@
 #ifndef CONNECTION_H
 #define CONNECTION_H
 
-#include <QtNetwork>
 #include <QCborStreamReader>
 #include <QCborStreamWriter>
 #include <QElapsedTimer>
 #include <QHostAddress>
 #include <QSctpSocket>
 #include <QTcpSocket>
+#include <QtNetwork>
 #include <QString>
 #include <QTimer>
 

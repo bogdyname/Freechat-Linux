@@ -5,6 +5,8 @@
 
 #include "multimedia.h"
 
-Multimedia::Multimedia()
+Multimedia::Multimedia(QWidget *parent)
+    : QWidget(parent)
 {
+
 }

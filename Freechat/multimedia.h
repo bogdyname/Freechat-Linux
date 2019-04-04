@@ -15,7 +15,7 @@ class Multimedia : public QWidget , private Ui::Multimedia
     Q_OBJECT
 
 public:
-    Multimedia();
+    Multimedia(QWidget *parent = nullptr);
 };
 
 #endif // MULTIMEDIA_H

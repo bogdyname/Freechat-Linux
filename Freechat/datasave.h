@@ -31,6 +31,7 @@ public:
 
 signals:
     void CheckYourMemorySize();
+    void AborProgWheneverMemorySizeFull();
 };
 
 #endif // DATASAVE_H

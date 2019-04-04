@@ -47,11 +47,11 @@ PeerManager::PeerManager(UserClient *userclient)
     QUdpSocket::ShareAddress | QUdpSocket::ReuseAddressHint);
 
     connect(&broadcastSocket, SIGNAL(readyRead()),
-            this, SLOT(readBroadcastDatagram()));
+            this, SLOT(ReadBroadcastDatagram()));
 
     broadcastTimer.setInterval(BroadcastInterval);
     connect(&broadcastTimer, SIGNAL(timeout()),
-            this, SLOT(sendBroadcastDatagram()));
+            this, SLOT(SendBroadcastDatagram()));
 }
 
 void PeerManager::SetServerPort(int port)
