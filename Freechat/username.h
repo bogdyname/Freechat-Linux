@@ -12,7 +12,7 @@
 #include <QFile>
 #include <QList>
 
-class Username;
+class Usernametable;
 
 class Username : public QFile
 {
@@ -41,6 +41,8 @@ public:
 signals:
     bool AskUserForReadContactName();
     bool AskUserForWriteContactName();
+    bool MessegBoxWithCheckingCorrectReadContactName();
+    bool MessegBoxWithCheckingCorrectWriteContactName();
 
 public slots:
     QFile FileForWritingIpAddress(const QString &name);

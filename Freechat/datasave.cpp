@@ -12,7 +12,10 @@
 Datasave::Datasave(QObject *parent)
     : QSaveFile(parent)
 {
-
+    connect(QMessageBox::information, SIGNAL(CheckYourMemorySize()),
+            this, SLOT(AbortProgWheneverMemorySizeFull()));
+    connect(    , SIGNAL(),
+            this, SLOT());
 }
 
 bool Datasave::SaveFile()

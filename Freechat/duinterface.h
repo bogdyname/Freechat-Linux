@@ -15,6 +15,8 @@
 
 class Username;
 class Datasave;
+class Freechat;
+class UserClient;
 class Usernametable;
 
 class Duinterface : public QWidget, private Ui::Duinterface
