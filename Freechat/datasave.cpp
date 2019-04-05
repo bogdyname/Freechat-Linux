@@ -19,14 +19,14 @@ bool Datasave::SaveFile()
 {
     saveFileVariable = (UserSelect() == "YES");
 
-    return true;
+    return 0;
 }
 
 bool Datasave::DeleteFile()
 {
     deleteFileVariable = (UserSelect() == "YES");
 
-    return true;
+    return 0;
 }
 
 QFile Datasave::DataWriterInFile(QFile &fileWithData)

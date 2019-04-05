@@ -14,6 +14,7 @@
 #include "ui_duinterface.h"
 
 class Username;
+class Datasave;
 class Usernametable;
 
 class Duinterface : public QWidget, private Ui::Duinterface

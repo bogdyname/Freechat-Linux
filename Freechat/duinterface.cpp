@@ -4,6 +4,7 @@
 */
 
 #include "duinterface.h"
+#include "datasave.h"
 
 Duinterface::Duinterface(QWidget *parent)
     : QWidget(parent)
@@ -14,6 +15,10 @@ Duinterface::Duinterface(QWidget *parent)
             this, SLOT(UserSelect()));
     connect(checkUserChooseNo, SIGNAL(UserSelect()),
             this, SLOT(UserSelect()));
+    connect( , SIGNAL(CheckYourMemorySize()),
+            this, SLOT());
+    connect( , SIGNAL(AborProgWheneverMemorySizeFull),
+            this, SLOT());
 
 }
 
@@ -25,7 +30,25 @@ bool Duinterface::UserSelect()
 
 void Duinterface::AbortProgError()
 {
-    abort();
+    if (DeleteFile()->count() == 1) // if not return zero
+    {
+        QMessageBox::information(this, tr("ERROR"),
+        tr("Something is wrong! Abort program!"));
+    }
+    else
+    {
+        abort();
+    }
+
+    if (SaveFile()->count() == 1) // if not return zero
+    {
+        QMessageBox::information(this, tr("ERROR"),
+        tr("Something is wrong! Abort program!"));
+    }
+    else
+    {
+        abort();
+    }
 }
 
 void Duinterface::UserSelectNo()
