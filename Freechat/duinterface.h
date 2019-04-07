@@ -31,7 +31,7 @@ public:
     void AbortProgError();
 
 public slots:
-    bool UserSelect();
+    void UserSelect();
 
 private slots:
 

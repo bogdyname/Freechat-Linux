@@ -22,7 +22,7 @@ Duinterface::Duinterface(QWidget *parent)
 
 }
 
-bool Duinterface::UserSelect()
+void Duinterface::UserSelect()
 {
     checkUserChooseNo = /**/;
     checkUserChooseYes = /**/;
