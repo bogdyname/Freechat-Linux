@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>513</width>
-    <height>349</height>
+    <width>620</width>
+    <height>483</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -51,7 +51,7 @@
       <number>0</number>
      </property>
      <item>
-      <widget class="QTextEdit" name="textEdit">
+      <widget class="QTextEdit" name="textFieldForViewMessages">
        <property name="focusPolicy">
         <enum>Qt::NoFocus</enum>
        </property>
@@ -61,7 +61,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QListWidget" name="listWidget">
+      <widget class="QListWidget" name="listWithNicknameOfUser">
        <property name="maximumSize">
         <size>
          <width>180</width>
@@ -96,14 +96,14 @@
       <number>0</number>
      </property>
      <item>
-      <widget class="QLabel" name="label">
+      <widget class="QLabel" name="labelMessage">
        <property name="text">
         <string>Message:</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="lineEdit"/>
+      <widget class="QLineEdit" name="lineForTypeText"/>
      </item>
     </layout>
    </item>

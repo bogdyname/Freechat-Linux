@@ -24,8 +24,12 @@ public slots:
 private slots:
     void ReturnPressed();
     void HiiiiiiBoy();
+    void SlotsFAQ();
     void UserIsJoined(const QString &nick);
     void UserIsLeft(const QString &nick);
+
+signals:
+    void SignalFAQ();
 
 private:
     UserClient userclient;

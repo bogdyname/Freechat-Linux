@@ -7,6 +7,7 @@
 #define DUINTERFACE_H
 
 #include <QWidget>
+#include <QDialog>
 #include <QTextList>
 #include "datasave.h"
 #include "username.h"
@@ -19,12 +20,12 @@ class Freechat;
 class UserClient;
 class Usernametable;
 
-class Duinterface : public QWidget, private Ui::Duinterface
+class Duinterface : public QDialog, private Ui::Duinterface
 {
     Q_OBJECT
 
 public:
-    Duinterface(QWidget *parent = nullptr);
+    Duinterface(QDialog *parent = nullptr);
 
     void UserSelectNo();
     void UserSelectYes();

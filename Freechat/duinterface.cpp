@@ -6,8 +6,8 @@
 #include "duinterface.h"
 #include "datasave.h"
 
-Duinterface::Duinterface(QWidget *parent)
-    : QWidget(parent)
+Duinterface::Duinterface(QDialog *parent)
+    : QDialog(parent)
 {
     setupUi(this);
 

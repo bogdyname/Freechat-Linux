@@ -11,14 +11,14 @@ Freechat::Freechat(QWidget *parent)
 {
     setupUi(this);
 
-    lineEdit->setFocusPolicy(Qt::StrongFocus);
-    textEdit->setFocusPolicy(Qt::NoFocus);
-    textEdit->setReadOnly(true);
-    listWidget->setFocusPolicy(Qt::NoFocus);
+    lineForTypeText->setFocusPolicy(Qt::StrongFocus);
+    textFieldForViewMessages->setFocusPolicy(Qt::NoFocus);
+    textFieldForViewMessages->setReadOnly(true);
+    listWithNicknameOfUser->setFocusPolicy(Qt::NoFocus);
 
-    connect(lineEdit, SIGNAL(ReturnPressed()),
+    connect(lineForTypeText, SIGNAL(ReturnPressed()),
             this, SLOT(ReturnPressed()));
-    connect(lineEdit, SIGNAL(ReturnPressed()),
+    connect(lineForTypeText, SIGNAL(ReturnPressed()),
             this, SLOT(ReturnPressed()));
     connect(&userclient, SIGNAL(NewMessage(QString,QString)),
             this, SLOT(AppendMessage(QString,QString)));
@@ -26,6 +26,8 @@ Freechat::Freechat(QWidget *parent)
             this, SLOT(UserIsJoined(QString)));
     connect(&userclient, SIGNAL(UserIsLeft(QString)),
             this, SLOT(UserIsLeft(QString)));
+    /*connect(    , SIGNAL(SingalFAQ()),
+             this, SLOT(SlotsFAQ()));*/
 
     whoami = userclient.NickName();
     UserIsJoined(whoami);
@@ -38,18 +40,18 @@ void Freechat::AppendMessage(const QString &from, const QString &message)
     if (from.isEmpty() || message.isEmpty())
         return;
 
-    QTextCursor cursor(textEdit->textCursor());
+    QTextCursor cursor(textFieldForViewMessages->textCursor());
     cursor.movePosition(QTextCursor::End);
     QTextTable *table = cursor.insertTable(1, 2, tableFormat);
     table->cellAt(0, 0).firstCursorPosition().insertText('<' + from + "> ");
     table->cellAt(0, 1).firstCursorPosition().insertText(message);
-    QScrollBar *bar = textEdit->verticalScrollBar();
+    QScrollBar *bar = textFieldForViewMessages->verticalScrollBar();
     bar->setValue(bar->maximum());
 }
 
 void Freechat::ReturnPressed()
 {
-    QString text = lineEdit->text();
+    QString text = lineForTypeText->text();
     if (text.isEmpty())
     {
         return;
@@ -61,11 +63,11 @@ void Freechat::ReturnPressed()
 
     if (text.startsWith(QChar('/')))
     {
-        QColor color = textEdit->textColor();
-        textEdit->setTextColor(Qt::black);
-        textEdit->append(tr("! Unknown command: %1")
+        QColor color = textFieldForViewMessages->textColor();
+        textFieldForViewMessages->setTextColor(Qt::black);
+        textFieldForViewMessages->append(tr("! Unknown command: %1")
                          .arg(text.left(text.indexOf(' '))));
-        textEdit->setTextColor(color);
+        textFieldForViewMessages->setTextColor(color);
     }
     else
     {
@@ -73,7 +75,7 @@ void Freechat::ReturnPressed()
         AppendMessage(whoami, text);
     }
 
-    lineEdit->clear();
+    lineForTypeText->clear();
 }
 
 void Freechat::UserIsJoined(const QString &nick)
@@ -87,11 +89,11 @@ void Freechat::UserIsJoined(const QString &nick)
         /*CLEAR CODE*/
     }
 
-    QColor color = textEdit->textColor();
-    textEdit->setTextColor(Qt::gray);
-    textEdit->append(tr("* %1 has joined").arg(nick));
-    textEdit->setTextColor(color);
-    listWidget->addItem(nick);
+    QColor color = textFieldForViewMessages->textColor();
+    textFieldForViewMessages->setTextColor(Qt::gray);
+    textFieldForViewMessages->append(tr("* %1 has joined").arg(nick));
+    textFieldForViewMessages->setTextColor(color);
+    listWithNicknameOfUser->addItem(nick);
 }
 
 void Freechat::UserIsLeft(const QString &nick)
@@ -105,7 +107,7 @@ void Freechat::UserIsLeft(const QString &nick)
         /*CLEAR CODE*/
     }
 
-    QList<QListWidgetItem *> items = listWidget->findItems(nick, Qt::MatchExactly);
+    QList<QListWidgetItem *> items = listWithNicknameOfUser->findItems(nick, Qt::MatchExactly);
     if (items.isEmpty())
     {
         return;
@@ -116,18 +118,31 @@ void Freechat::UserIsLeft(const QString &nick)
     }
 
     delete items.at(0);
-    QColor color = textEdit->textColor();
-    textEdit->setTextColor(Qt::gray);
-    textEdit->append(tr("* %1 has left").arg(nick));
-    textEdit->setTextColor(color);
+    QColor color = textFieldForViewMessages->textColor();
+    textFieldForViewMessages->setTextColor(Qt::gray);
+    textFieldForViewMessages->append(tr("* %1 has left").arg(nick));
+    textFieldForViewMessages->setTextColor(color);
 }
 
 void Freechat::HiiiiiiBoy()
 {
-    if (listWidget->count() == 1)
+    if (listWithNicknameOfUser->count() == 1)
     {
         QMessageBox::information(this, tr("Freechat"),
         tr("Let's try the best! Boy boy - son, son son, boy!"));
+    }
+    else
+    {
+        /*CLEAR CODE*/
+    }
+}
+
+void Freechat::SlotsFAQ()
+{
+    if (listWithNicknameOfUser->count() == 1)
+    {
+    QMessageBox::information(this, tr("FAQ"),
+    tr("What about this program?!", "@Something text@"));
     }
     else
     {
