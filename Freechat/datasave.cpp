@@ -12,10 +12,10 @@
 Datasave::Datasave(QObject *parent)
     : QSaveFile(parent)
 {
-    connect(QMessageBox::information, SIGNAL(CheckYourMemorySize()),
+    connect( , SIGNAL(CheckYourMemorySize()),
             this, SLOT(AbortProgWheneverMemorySizeFull()));
-    connect(    , SIGNAL(),
-            this, SLOT());
+    connect(    , SIGNAL(CheckUsernameFOrSaveFile()),
+            this, SLOT(SveFileForUsername()));
 }
 
 bool Datasave::SaveFile()
@@ -36,4 +36,27 @@ QFile Datasave::DataWriterInFile(QFile &fileWithData)
 {
     fileWithData = ;
 
+}
+
+void Datasave::CheckUsernameFOrSaveFile()
+{
+
+}
+
+void Datasave::SaveFileForUsername()
+{
+
+}
+
+void Datasave::CheckYourMemorySize()
+{
+    if ( -> == 1)
+    {
+        QMessageBox::information(this, tr("WARNING!"),
+                        tr("Check your memory size!"));
+    }
+    else
+    {
+        /*CLEAR CODE*/
+    }
 }

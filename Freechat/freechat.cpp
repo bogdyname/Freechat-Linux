@@ -141,8 +141,8 @@ void Freechat::SlotsFAQ()
 {
     if (listWithNicknameOfUser->count() == 1)
     {
-    QMessageBox::information(this, tr("FAQ"),
-    tr("What about this program?!", "@Something text@"));
+        QMessageBox::information(this, tr("FAQ"),
+        tr("What about this program?!", "@Something text@"));
     }
     else
     {

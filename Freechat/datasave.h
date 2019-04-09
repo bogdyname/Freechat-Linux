@@ -9,9 +9,11 @@
 #include <QTextStream>
 #include <QSaveFile>
 #include <QIODevice>
+#include <QWidget>
 #include <QFile>
 
 class Freechat;
+class Username;
 class Duinterface;
 
 class Datasave : public QSaveFile
@@ -31,9 +33,11 @@ public:
 
 signals:
     void CheckYourMemorySize();
+    void CheckUsernameFOrSaveFile();
 
 public slots:
     void AbortProgWheneverMemorySizeFull();
+    void SaveFileForUsername();
 };
 
 #endif // DATASAVE_H
