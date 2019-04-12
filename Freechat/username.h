@@ -12,6 +12,7 @@
 #include <QFile>
 #include <QList>
 
+class UserClient;
 class Usernametable;
 
 class Username : public QFile

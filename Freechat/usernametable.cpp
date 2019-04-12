@@ -9,8 +9,8 @@
 #include "connection.h"
 #include "usernametable.h"
 
-Usernametable::Usernametable(QObject *parent)
-    : QObject(parent)
+Usernametable::Usernametable(QSaveFile *parent)
+    : QSaveFile(parent)
 {
           foreach (const QHostAddress & a, addresses)
           {
@@ -63,7 +63,7 @@ QString Usernametable::GetMacAddress()
     return textWithMacAddresOfUser;
 }
 
-QString Usernametable::OutputOnDisplay()
+void Usernametable::SaveUsersMACAddress(const QString &nameOfUserMAC)
 {
     qDebug() << GetMacAddress().constData() << endl;
     exit(1);

@@ -33,7 +33,7 @@ public:
 
 signals:
     void CheckYourMemorySize();
-    void CheckUsernameFOrSaveFile();
+    void CheckUsernameForSaveFile();
 
 public slots:
     void AbortProgWheneverMemorySizeFull();

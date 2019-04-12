@@ -28,3 +28,67 @@ Username::Username(QObject *parent)
     connect(QMessageBox::   , SIGNAL(MessegBoxWithCheckingCorrectWriteContactName),
             this, SLOT(CheckingCorrectWriteMACddress()));
 }
+
+
+
+bool Username::AskUserForReadContactName()
+{
+    QMessageBox::ask(this, tr("Read contact"),
+    tr("Do you want to read this contact?"));
+}
+
+bool Username::AskUserForWriteContactName()
+{
+    QMessageBox::ask(this, tr("Write contact"),
+    tr("Do you want to write this contact?"));
+}
+
+bool Username::MessegBoxWithCheckingCorrectReadContactName()
+{
+
+}
+
+bool Username::MessegBoxWithCheckingCorrectWriteContactName()
+{
+
+}
+
+QFile Username::FileForWritingIpAddress(const QString &name)
+{
+
+}
+
+QFile Username::FileForWritingMACAddress(const QString &name)
+{
+
+}
+
+QFile Username::FileForReadingIpAddress(const QString &fileName, const QString &newName)
+{
+
+}
+
+QFile Username::FileForReadingMACAddress(const QString &fileName, const QString &newName)
+{
+
+}
+
+bool Username::CheckingCorrectReadIpddress()
+{
+
+}
+
+bool Username::CheckingCorrectReadMACddress()
+{
+
+}
+
+bool Username::CheckingCorrectWriteIpddress()
+{
+
+}
+
+bool Username::CheckingCorrectWriteMACddress()
+{
+
+}

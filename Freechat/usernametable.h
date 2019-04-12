@@ -13,26 +13,28 @@
 #include <QByteArray>
 #include <QSettings>
 #include <QHostInfo>
+#include <QSaveFile>
 #include <QString>
+#include <QFile>
 #include <QList>
 
 class Freechat;
 class Username;
 class Connection;
 
-class Usernametable : public QObject
+class Usernametable : public QSaveFile
 {
     Q_OBJECT
 
 public:
-    Usernametable(QObject *parent = nullptr);
+    Usernametable(QSaveFile *parent = nullptr);
     ~Usernametable();
 
     QString GetIpV4Protocol();
     QString GetIpAddress();
     QString GetMacAddress();
     QString TranslationName();
-    QString OutputOnDisplay();
+    QString SaveUsersMACAddress();
 
 
     int nIter = 0;

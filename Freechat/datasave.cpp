@@ -38,7 +38,7 @@ QFile Datasave::DataWriterInFile(QFile &fileWithData)
 
 }
 
-void Datasave::CheckUsernameFOrSaveFile()
+void Datasave::CheckUsernameForSaveFile()
 {
 
 }
@@ -50,7 +50,7 @@ void Datasave::SaveFileForUsername()
 
 void Datasave::CheckYourMemorySize()
 {
-    if ( -> == 1)
+    if (listWithDataSave->count()-> == 1)
     {
         QMessageBox::information(this, tr("WARNING!"),
                         tr("Check your memory size!"));
