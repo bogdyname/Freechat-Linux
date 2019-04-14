@@ -7,8 +7,6 @@
 QT       += core gui
 QT       += network
 QT       += gui
-QT       += multimedia
-QT       += multimediawidgets
 QT       += svg
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
@@ -30,14 +28,9 @@ SOURCES += \
         userserver.cpp \
         userclient.cpp \
         datasave.cpp \
-        multimedia.cpp \
         usernametable.cpp \
         username.cpp \
-        peermanager.cpp \
-        duinterface.cpp \
-        videoviewer.cpp \
-        pictureviewer.cpp \
-        filecompression.cpp
+        peermanager.cpp
 
 HEADERS += \
         freechat.h \
@@ -45,20 +38,12 @@ HEADERS += \
         userserver.h \
         userclient.h \
         datasave.h \
-        multimedia.h \
         usernametable.h \
         username.h \
-        peermanager.h \
-        duinterface.h \
-        videoviewer.h \
-        pictureviewer.h \
-        filecompression.h
+        peermanager.h
 
 FORMS += \
-        freechat.ui \
-        duinterface.ui \
-        multimedia.ui \
-        compression.ui
+        freechat.ui
 
 
 qnx: target.path = /tmp/$${TARGET}/bin

@@ -14,7 +14,6 @@
 
 class Freechat;
 class Username;
-class Duinterface;
 
 class Datasave : public QSaveFile
 {

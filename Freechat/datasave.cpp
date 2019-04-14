@@ -6,7 +6,6 @@
 #include "username.h"
 #include "datasave.h"
 #include "freechat.h"
-#include "duinterface.h"
 #include "usernametable.h"
 
 Datasave::Datasave(QObject *parent)
@@ -20,21 +19,16 @@ Datasave::Datasave(QObject *parent)
 
 bool Datasave::SaveFile()
 {
-    saveFileVariable = (UserSelect() == "YES");
 
-    return 0;
 }
 
 bool Datasave::DeleteFile()
 {
-    deleteFileVariable = (UserSelect() == "YES");
 
-    return 0;
 }
 
 QFile Datasave::DataWriterInFile(QFile &fileWithData)
 {
-    fileWithData = ;
 
 }
 
