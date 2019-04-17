@@ -63,7 +63,7 @@ QString Usernametable::GetMacAddress()
     return textWithMacAddresOfUser;
 }
 
-void Usernametable::SaveUsersMACAddress(const QString &nameOfUserMAC)
+QString Usernametable::SaveUsersMACAddress(const QString &nameOfUserMAC)
 {
     qDebug() << GetMacAddress().constData() << endl;
     exit(1);

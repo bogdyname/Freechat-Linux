@@ -34,7 +34,7 @@ public:
     QString GetIpAddress();
     QString GetMacAddress();
     QString TranslationName();
-    QString SaveUsersMACAddress();
+    QString SaveUsersMACAddress(const QString &nameOfUserMAC);
 
 
     int nIter = 0;

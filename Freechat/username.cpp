@@ -7,9 +7,11 @@
 #include "datasave.h"
 #include "usernametable.h"
 
+
 Username::Username(QObject *parent)
     : QFile(parent)
 {
+    /*
     connect(QMessageBox::   , SIGNAL(AskUserForReadContactName()),
             this, SLOT(FileForWritingIpAddress(const QString &name)));
     connect(QMessageBox::   , SIGNAL(AskUserForReadContactName()),
@@ -27,20 +29,21 @@ Username::Username(QObject *parent)
             this, SLOT(CheckingCorrectWriteIpddress()));
     connect(QMessageBox::   , SIGNAL(MessegBoxWithCheckingCorrectWriteContactName),
             this, SLOT(CheckingCorrectWriteMACddress()));
+            */
 }
 
-
+/*
 
 bool Username::AskUserForReadContactName()
 {
-    QMessageBox::ask(this, tr("Read contact"),
-    tr("Do you want to read this contact?"));
+    //QMessageBox::ask(this, tr("Read contact"),
+    //tr("Do you want to read this contact?"));
 }
 
 bool Username::AskUserForWriteContactName()
 {
-    QMessageBox::ask(this, tr("Write contact"),
-    tr("Do you want to write this contact?"));
+    //QMessageBox::ask(this, tr("Write contact"),
+    //tr("Do you want to write this contact?"));
 }
 
 bool Username::MessegBoxWithCheckingCorrectReadContactName()
@@ -76,19 +79,24 @@ QFile Username::FileForReadingMACAddress(const QString &fileName, const QString 
 bool Username::CheckingCorrectReadIpddress()
 {
 
+     return 1;
 }
 
 bool Username::CheckingCorrectReadMACddress()
 {
 
+     return 1;
 }
 
 bool Username::CheckingCorrectWriteIpddress()
 {
 
+     return 1;
 }
 
 bool Username::CheckingCorrectWriteMACddress()
 {
 
+    return 1;
 }
+*/

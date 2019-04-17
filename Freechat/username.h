@@ -45,6 +45,7 @@ signals:
     bool MessegBoxWithCheckingCorrectReadContactName();
     bool MessegBoxWithCheckingCorrectWriteContactName();
 
+    /*
 public slots:
     QFile FileForWritingIpAddress(const QString &name);
     QFile FileForWritingMACAddress(const QString &name);
@@ -56,6 +57,7 @@ private slots:
     bool CheckingCorrectReadMACddress();
     bool CheckingCorrectWriteIpddress();
     bool CheckingCorrectWriteMACddress();
+    */
 };
 
 #endif // USERNAME_H

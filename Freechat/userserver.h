@@ -23,7 +23,7 @@ signals:
         void NewConnection(Connection *connection);
 
 protected:
-        void InComingConnection(qintptr socketDescription);
+        void InComingConnection(qintptr socketDescription) override;
 };
 
 #endif // USERSERVER_H

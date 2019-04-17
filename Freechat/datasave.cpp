@@ -11,10 +11,10 @@
 Datasave::Datasave(QObject *parent)
     : QSaveFile(parent)
 {
-    connect( , SIGNAL(CheckYourMemorySize()),
-            this, SLOT(AbortProgWheneverMemorySizeFull()));
-    connect(    , SIGNAL(CheckUsernameFOrSaveFile()),
-            this, SLOT(SveFileForUsername()));
+   // connect( , SIGNAL(CheckYourMemorySize()),
+     //       this, SLOT(AbortProgWheneverMemorySizeFull()));
+   // connect(    , SIGNAL(CheckUsernameFOrSaveFile()),
+     //       this, SLOT(SveFileForUsername()));
 }
 
 bool Datasave::SaveFile()
@@ -44,6 +44,7 @@ void Datasave::SaveFileForUsername()
 
 void Datasave::CheckYourMemorySize()
 {
+    /*
     if (listWithDataSave->count()-> == 1)
     {
         QMessageBox::information(this, tr("WARNING!"),
@@ -51,6 +52,7 @@ void Datasave::CheckYourMemorySize()
     }
     else
     {
-        /*CLEAR CODE*/
+        /*CLEAR CODE
     }
+   */
 }
