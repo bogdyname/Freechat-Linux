@@ -12,7 +12,9 @@
 #include <QFile>
 #include <QList>
 
+class Freechat;
 class UserClient;
+class Connection;
 class Usernametable;
 
 class Username : public QFile
@@ -40,24 +42,26 @@ public:
     Username(QObject *parent = nullptr);
 
 signals:
-    bool AskUserForReadContactName();
-    bool AskUserForWriteContactName();
-    bool MessegBoxWithCheckingCorrectReadContactName();
-    bool MessegBoxWithCheckingCorrectWriteContactName();
+    void AskUserForReadContactName();
+    void AskUserForWriteContactName();
+    void MessegBoxWithCheckingCorrectReadContactName();
+    void MessegBoxWithCheckingCorrectWriteContactName();
 
-    /*
-public slots:
-    QFile FileForWritingIpAddress(const QString &name);
-    QFile FileForWritingMACAddress(const QString &name);
-    QFile FileForReadingIpAddress(const QString &fileName, const QString &newName);
-    QFile FileForReadingMACAddress(const QString &fileName, const QString &newName);
 
 private slots:
-    bool CheckingCorrectReadIpddress();
-    bool CheckingCorrectReadMACddress();
-    bool CheckingCorrectWriteIpddress();
-    bool CheckingCorrectWriteMACddress();
-    */
+    void FileForWritingIpAddress(const QString &name);
+    void FileForWritingMACAddress(const QString &name);
+
+public slots:
+    void FileForReadingIpAddress(const QString &fileName, const QString &newName);
+    void FileForReadingMACAddress(const QString &fileName, const QString &newName);
+
+protected slots:
+    void CheckingCorrectReadIpddress();
+    void CheckingCorrectReadMACddress();
+    void CheckingCorrectWriteIpddress();
+    void CheckingCorrectWriteMACddress();
+
 };
 
 #endif // USERNAME_H
