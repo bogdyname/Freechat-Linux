@@ -35,7 +35,7 @@ QString Usernametable::GetIpV4Protocol()
         }
         else
         {
-            /*CLEAR CODE*/
+            /*clear code*/
         }
 }
 
@@ -49,7 +49,7 @@ QString Usernametable::GetIpAddress()
         }
         else
         {
-            /*CLEAR CODE*/
+            /*clear code*/
         }
     }
 }

@@ -28,7 +28,7 @@ PeerManager::PeerManager(UserClient *userclient)
         }
         else
         {
-            /*CLEAR CODE*/
+            /*clear code*/
         }
     }
 
@@ -38,7 +38,7 @@ PeerManager::PeerManager(UserClient *userclient)
     }
     else
     {
-        /*CLEAR CODE*/
+        /*clear code*/
     }
     UpdateAddresses();
     serverPort = 0;
@@ -80,7 +80,7 @@ bool PeerManager::IsWLANHostAddress(const QHostAddress &address)
         }
         else
         {
-            /*CLEAR CODE*/
+            /*clear code*/
         }
     }
     return false;
@@ -107,7 +107,7 @@ void PeerManager::SendBroadcastDatagram()
         }
         else
         {
-            /*CLEAR CODE*/
+            /*clear code*/
         }
     }
 
@@ -117,7 +117,7 @@ void PeerManager::SendBroadcastDatagram()
     }
     else
     {
-        /*CLEAR CODE*/
+        /*clear code*/
     }
 }
 
@@ -136,7 +136,7 @@ void PeerManager::ReadBroadcastDatagram()
         }
         else
         {
-            /*CLEAR CODE*/
+            /*clear code*/
         }
 
         int senderServerPort;
@@ -148,7 +148,7 @@ void PeerManager::ReadBroadcastDatagram()
             }
             else
             {
-                /*CLEAR CODE*/
+                /*clear code*/
             }
             if (!reader.isLengthKnown() || reader.length() != 2)
             {
@@ -156,7 +156,7 @@ void PeerManager::ReadBroadcastDatagram()
             }
             else
             {
-                /*CLEAR CODE*/
+                /*clear code*/
             }
 
             reader.enterContainer();
@@ -167,7 +167,7 @@ void PeerManager::ReadBroadcastDatagram()
             }
             else
             {
-                /*CLEAR CODE*/
+                /*clear code*/
             }
             while (reader.readString().status == QCborStreamReader::Ok)
             {
@@ -180,7 +180,7 @@ void PeerManager::ReadBroadcastDatagram()
             }
             else
             {
-                /*CLEAR CODE*/
+                /*clear code*/
             }
             senderServerPort = reader.toInteger();
         }
@@ -191,7 +191,7 @@ void PeerManager::ReadBroadcastDatagram()
         }
         else
         {
-            /*CLEAR CODE*/
+            /*clear code*/
         }
         if (!userclient->HasConnection(senderIp))
         {
@@ -201,7 +201,7 @@ void PeerManager::ReadBroadcastDatagram()
         }
         else
         {
-            /*CLEAR CODE*/
+            /*clear code*/
         }
     }
 }
@@ -222,7 +222,7 @@ void PeerManager::UpdateAddresses()
             }
             else
             {
-                /*CLEAR CODE*/
+                /*clear code*/
             }
         }
     }

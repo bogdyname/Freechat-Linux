@@ -48,7 +48,7 @@ bool Connection::SendMessage(const QString &message)
     }
     else
     {
-        /*CLEAR CODE*/
+        /*clear code*/
     }
 
     writer.startMap(1);
@@ -67,7 +67,7 @@ void Connection::TimerEvent(QTimerEvent *timerEvent)
     }
     else
     {
-        /*CLEAR CODE*/
+        /*clear code*/
     }
 }
 
@@ -90,7 +90,7 @@ void Connection::ReadyToRead()
                 }
                 else
                 {
-                    /*CLEAR CODE*/
+                    /*clear code*/
                 }
 
                 reader.enterContainer();
@@ -107,7 +107,7 @@ void Connection::ReadyToRead()
                 }
                 else
                 {
-                    /*CLEAR CODE*/
+                    /*clear code*/
                 }
 
                 if (!reader.isMap() || !reader.isLengthKnown() || reader.length() != 1)
@@ -116,7 +116,7 @@ void Connection::ReadyToRead()
                 }
                 else
                 {
-                    /*CLEAR CODE*/
+                    /*clear code*/
                 }
             }
             else if (currentDataType == Undefined)
@@ -127,7 +127,7 @@ void Connection::ReadyToRead()
                 }
                 else
                 {
-                    /*CLEAR CODE*/
+                    /*clear code*/
                 }
 
                 currentDataType = MetaData(reader.toInteger());
@@ -145,7 +145,7 @@ void Connection::ReadyToRead()
                     }
                     else
                     {
-                        /*CLEAR CODE*/
+                        /*clear code*/
                     }
                 }
                 else if (reader.isNull())
@@ -166,7 +166,7 @@ void Connection::ReadyToRead()
                 }
                 else
                 {
-                    /*CLEAR CODE*/
+                    /*clear code*/
                 }
 
                 if (state == WritingForConnection)
@@ -177,7 +177,7 @@ void Connection::ReadyToRead()
                     }
                     else
                     {
-                        /*CLEAR CODE*/
+                        /*clear code*/
                     }
                     ProcessCheckConnection();
                 }
@@ -194,7 +194,7 @@ void Connection::ReadyToRead()
         }
         else
         {
-            /*CLEAR CODE*/
+            /*clear code*/
         }
 
         if (transferTimerId != -1 && reader.containerDepth() > 1)
@@ -203,7 +203,7 @@ void Connection::ReadyToRead()
         }
         else
         {
-            /*CLEAR CODE*/
+            /*clear code*/
         }
 }
 
@@ -216,7 +216,7 @@ void Connection::PingStatus()
     }
     else
     {
-        /*CLEAR CODE*/
+        /*clear code*/
     }
 
     writer.startMap(1);
@@ -240,7 +240,7 @@ void Connection::CheckConnection()
     }
     else
     {
-        /*CLEAR CODE*/
+        /*clear code*/
     }
 }
 

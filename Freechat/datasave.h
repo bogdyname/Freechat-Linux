@@ -10,6 +10,7 @@
 #include <QSaveFile>
 #include <QIODevice>
 #include <QWidget>
+#include <QTimer>
 #include <QFile>
 
 class Freechat;
@@ -33,10 +34,14 @@ public:
 signals:
     void CheckYourMemorySize();
     void CheckUsernameForSaveFile();
+    void RunTimeIsOver();
 
 public slots:
     void AbortProgWheneverMemorySizeFull();
     void SaveFileForUsername();
+    void RunBackupFiles();
+
+    QTimer runTimer;
 };
 
 #endif // DATASAVE_H

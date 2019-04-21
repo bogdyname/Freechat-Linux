@@ -60,7 +60,7 @@ void Freechat::ReturnPressed()
     }
     else
     {
-        /*CLEAR CODE*/
+        /*clear code*/
     }
 
     if (text.startsWith(QChar('/')))
@@ -88,7 +88,7 @@ void Freechat::UserIsJoined(const QString &nick)
     }
     else
     {
-        /*CLEAR CODE*/
+        /*clear code*/
     }
 
     QColor color = textFieldForViewMessages->textColor();
@@ -106,7 +106,7 @@ void Freechat::UserIsLeft(const QString &nick)
     }
     else
     {
-        /*CLEAR CODE*/
+        /*clear code*/
     }
 
     QList<QListWidgetItem *> items = listWithNicknameOfUser->findItems(nick, MatchExactly);
@@ -116,7 +116,7 @@ void Freechat::UserIsLeft(const QString &nick)
     }
     else
     {
-        /*CLEAR CODE*/
+        /*clear code*/
     }
 
     delete items.at(0);
@@ -135,7 +135,7 @@ void Freechat::HiiiiiiBoy()
     }
     else
     {
-        /*CLEAR CODE*/
+        /*clear code*/
     }
 }
 
@@ -148,6 +148,6 @@ void Freechat::SlotsFAQ()
     }
     else
     {
-        /*CLEAR CODE*/
+        /*clear code*/
     }
 }

@@ -28,7 +28,7 @@ void UserClient::SendMessage(const QString &message)
     }
     else
     {
-        /*CLEAR CODE*/
+        /*clear code*/
     }
 
     QList<Connection *> connections = peers.values();
