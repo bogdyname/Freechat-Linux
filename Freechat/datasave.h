@@ -34,12 +34,16 @@ public:
 signals:
     void CheckYourMemorySize();
     void CheckUsernameForSaveFile();
+    void UpToBeginOfFile();
+    void DropToEndOfFile();
     void RunTimeIsOver();
 
 public slots:
     void AbortProgWheneverMemorySizeFull();
     void SaveFileForUsername();
     void RunBackupFiles();
+    void ToBeginOfFile();
+    void ToEndOfFile();
 
     QTimer runTimer;
 };

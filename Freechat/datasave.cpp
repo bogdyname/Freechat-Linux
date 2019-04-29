@@ -17,6 +17,10 @@ Datasave::Datasave(QObject *parent)
             this, SLOT(SveFileForUsername()));
    connect(    , SIGNAL(RunTimeIsOver()),
             this, SLOT(RunBackupFiles()));
+   connect(    , SIGNAL(UpToBeginOfFile()),
+            this, SLOT(ToBeginOfFile()));
+   connect(    , SIGNAL(DropToEndOfFile()),
+            this, SLOT(ToEndOfFile()));
 }
 
 bool Datasave::SaveFile()
@@ -87,6 +91,26 @@ void Datasave::RunTimeIsOver()
 }
 
 void Datasave::RunBackupFiles()
+{
+
+}
+
+void Datasave::ToBeginOfFile()
+{
+
+}
+
+void Datasave::UpToBeginOfFile()
+{
+
+}
+
+void Datasave::DropToEndOfFile()
+{
+
+}
+
+void Datasave::ToEndOfFile()
 {
 
 }
