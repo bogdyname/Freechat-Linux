@@ -11,6 +11,9 @@
 #include <QTextTableFormat>
 #include <QDialog>
 
+class Username;
+class Datasave;
+
 class Freechat : public QDialog, private Ui::Freechat
 {
     Q_OBJECT

@@ -11,12 +11,9 @@
 #include <QAbstractSocket>
 #include <QHostAddress>
 #include <QByteArray>
-#include <QSettings>
 #include <QHostInfo>
 #include <QSaveFile>
 #include <QString>
-#include <QFile>
-#include <QList>
 
 class Username;
 

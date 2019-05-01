@@ -11,6 +11,7 @@
 #include <QHostAddress>
 #include <QHash>
 
+class Username;
 class PeerManager;
 
 class UserClient : public QObject

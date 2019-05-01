@@ -9,11 +9,9 @@
 #include <QTextStream>
 #include <QSaveFile>
 #include <QIODevice>
-#include <QWidget>
 #include <QTimer>
 #include <QFile>
 
-class Freechat;
 class Username;
 
 class Datasave : public QFile
@@ -31,6 +29,7 @@ public:
     Datasave(QObject *parent = nullptr);
 
     bool CheckForFileExists();
+    bool CheckForFileIsOpen();
 
 signals:
     void CheckYourMemorySize();
@@ -41,7 +40,6 @@ signals:
 
 public slots:
     void AbortProgWheneverMemorySizeFull();
-    void SaveFileForUsername();
     void RunBackupFiles();
     void ToBeginOfFile();
     void ToEndOfFile();

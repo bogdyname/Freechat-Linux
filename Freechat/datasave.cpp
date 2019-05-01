@@ -14,7 +14,7 @@ Datasave::Datasave(QObject *parent)
    connect( , SIGNAL(CheckYourMemorySize()),
             this, SLOT(AbortProgWheneverMemorySizeFull()));
    connect(    , SIGNAL(CheckUsernameFOrSaveFile()),
-            this, SLOT(SveFileForUsername()));
+            this, SLOT(Datasave()));
    connect(    , SIGNAL(RunTimeIsOver()),
             this, SLOT(RunBackupFiles()));
    connect(    , SIGNAL(UpToBeginOfFile()),
@@ -39,22 +39,33 @@ Datasave::Datasave(QObject *parent)
 
 bool Datasave::CheckForFileExists()
 {
-    if(QFile::exists("data.txt"))
+    if(exists("data.txt"))
     {
-        return 0;
+        return true;
     }
     else
     {
          /*clear code*/
     }
+
+    return true;
+}
+
+bool Datasave::CheckForFileIsOpen()
+{
+    if(fileWithData.isOpen())
+    {
+        return true;
+    }
+    else
+    {
+         /*clear code*/
+    }
+
+    return true;
 }
 
 void Datasave::CheckUsernameForSaveFile()
-{
-
-}
-
-void Datasave::SaveFileForUsername()
 {
 
 }

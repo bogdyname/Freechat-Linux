@@ -21,6 +21,8 @@ static const int MaxBufferSize = 1024000;
 static const int PongTimeout = 60 * 1000;
 static const int TransferTimeout = 30 * 1000;
 
+class Username;
+
 class Connection : public QTcpSocket
 {
     Q_OBJECT
