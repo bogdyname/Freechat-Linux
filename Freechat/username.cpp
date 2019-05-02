@@ -28,6 +28,11 @@ Username::Username(QObject *parent)
             this, SLOT(CheckingCorrectWriteIpddress()));
     connect(   , SIGNAL(MessegBoxWithCheckingCorrectWriteContactName),
             this, SLOT(CheckingCorrectWriteMACddress()));
+
+    userMACAddress.setFileName("userMAC.txt");
+    writeUserMACAddressToUserIpAddress.setFileName("swapmtoi.txt");
+    userIpAddress.setFileName("userIP.txt");
+    checkWriterFileMACToIp.setFileName("swapmtoipo.txt");
 }
 
 

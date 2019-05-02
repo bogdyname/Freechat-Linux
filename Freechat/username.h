@@ -22,19 +22,10 @@ class Username : public QFile
     Q_OBJECT
 
 public:
-       //File for check read && write MAC address
-
-       QFile CheckUserMACAddress;
-       QFile CheckWroteMACFile;
-       QFile CheckReadedMACFile;
-       QFile WriteUserMACAddressToUserIpAddress;
-
-       //Files for check read && write IP address
-
-       QFile CheckUserIpAddress;
-       QFile CheckWroteIpFile;
-       QFile CheckReadedIpFile;
-       QFile CheckWriterFileMACToIp;
+    QFile userMACAddress;
+    QFile writeUserMACAddressToUserIpAddress;
+    QFile userIpAddress;
+    QFile checkWriterFileMACToIp;
 
     Username(QObject *parent = nullptr);
 
