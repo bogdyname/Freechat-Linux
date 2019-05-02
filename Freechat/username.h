@@ -22,22 +22,19 @@ class Username : public QFile
     Q_OBJECT
 
 public:
-    enum VariblesForMACAddress
-    {
-        CheckUserMACAddress,
-        CheckWroteMACFile,
-        CheckReadedMACFile,
-        WriteUserMACAddressToUserIpAddress
-    };
+       //File for check read && write MAC address
 
+       QFile CheckUserMACAddress;
+       QFile CheckWroteMACFile;
+       QFile CheckReadedMACFile;
+       QFile WriteUserMACAddressToUserIpAddress;
 
-    enum VariblesForIpAddress
-    {
-        CheckUserIpAddress,
-        CheckWroteIpFile,
-        CheckReadedIpFile,
-        CheckWriterFileMACToIp
-    };
+       //Files for check read && write IP address
+
+       QFile CheckUserIpAddress;
+       QFile CheckWroteIpFile;
+       QFile CheckReadedIpFile;
+       QFile CheckWriterFileMACToIp;
 
     Username(QObject *parent = nullptr);
 
