@@ -28,9 +28,6 @@ public:
 public:
     Datasave(QObject *parent = nullptr);
 
-    bool CheckForFileExists();
-    bool CheckForFileIsOpen();
-
 signals:
     void CheckYourMemorySize();
     void CheckUsernameForSaveFile();
@@ -43,6 +40,10 @@ public slots:
     void RunBackupFiles();
     void ToBeginOfFile();
     void ToEndOfFile();
+
+protected:
+    bool CheckForFileExists();
+    bool CheckForFileIsOpen();
 };
 
 #endif // DATASAVE_H

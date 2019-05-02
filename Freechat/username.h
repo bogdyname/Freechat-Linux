@@ -32,23 +32,20 @@ public:
 signals:
     void AskUserForReadContactName();
     void AskUserForWriteContactName();
-    void MessegBoxWithCheckingCorrectReadContactName();
-    void MessegBoxWithCheckingCorrectWriteContactName();
-
 
 private slots:
-    void FileForWritingIpAddress(const QString &name);
-    void FileForWritingMACAddress(const QString &name);
+    void FileForWritingIpAddress();
+    void FileForWritingMACAddress();
 
 public slots:
-    void FileForReadingIpAddress(const QString &fileName, const QString &newName);
-    void FileForReadingMACAddress(const QString &fileName, const QString &newName);
+    void FileForReadingIpAddress();
+    void FileForReadingMACAddress();
 
-protected slots:
-    void CheckingCorrectReadIpddress();
-    void CheckingCorrectReadMACddress();
-    void CheckingCorrectWriteIpddress();
-    void CheckingCorrectWriteMACddress();
+protected:
+    bool CheckingForExistsIpddress();
+    bool CheckingForExistsMACddress();
+    bool CheckForIpFileIsOpen();
+    bool CheckForMACFileIsOpen();
 
 };
 
