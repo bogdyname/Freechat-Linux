@@ -27,9 +27,10 @@ Usernametable::Usernametable(QSaveFile *parent)
           }
 }
 
-QString Usernametable::GetIpV4Protocol()
+QString Usernametable::GetIpV4AndV6Protocol()
     {
-        if(list[nIter].protocol() == QAbstractSocket::IPv4Protocol)
+        if((list[nIter].protocol() == QAbstractSocket::IPv4Protocol) &&
+                (list[nIter].protocol() == QAbstractSocket::IPv6Protocol))
         {
             qDebug() << list[nIter].toString() << endl;
         }
@@ -45,7 +46,7 @@ QString Usernametable::GetIpAddress()
     {
         if(!list[nInter].isLoopback())
         {
-            GetIpV4Protocol();
+            GetIpV4AndV6Protocol();
         }
         else
         {
@@ -60,6 +61,7 @@ QString Usernametable::GetMacAddress()
             {
                 textWithMacAddresOfUser += interface.hardwareAddress();
             }
+
     return textWithMacAddresOfUser;
 }
 

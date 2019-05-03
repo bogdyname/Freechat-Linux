@@ -25,7 +25,7 @@ public:
     Usernametable(QSaveFile *parent = nullptr);
     ~Usernametable();
 
-    QString GetIpV4Protocol();
+    QString GetIpV4AndV6Protocol();
     QString GetIpAddress();
     QString GetMacAddress();
     QString TranslationName();
