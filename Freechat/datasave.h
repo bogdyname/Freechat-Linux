@@ -29,14 +29,15 @@ public:
     Datasave(QObject *parent = nullptr);
 
 signals:
-    void CheckYourMemorySize();
-    void CheckUsernameForSaveFile();
+    void RunTimeIsOver();
+    void SaveDataFileAs();
     void UpToBeginOfFile();
     void DropToEndOfFile();
-    void RunTimeIsOver();
+    void CheckYourMemorySize();
+    void CheckUsernameForSaveFile();
 
 public slots:
-    void AbortProgWheneverMemorySizeFull();
+    void DeleteAllDataForFreeMemory();
     void RunBackupFiles();
     void ToBeginOfFile();
     void ToEndOfFile();

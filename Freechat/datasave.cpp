@@ -11,29 +11,35 @@
 Datasave::Datasave(QObject *parent)
     : QFile(parent)
 {
-   connect( , SIGNAL(CheckYourMemorySize()),
-            this, SLOT(AbortProgWheneverMemorySizeFull()));
-   connect(    , SIGNAL(CheckUsernameFOrSaveFile()),
-            this, SLOT(Datasave()));
-   connect(    , SIGNAL(RunTimeIsOver()),
+   connect( , SIGNAL(RunTimeIsOver()),
             this, SLOT(RunBackupFiles()));
-   connect(    , SIGNAL(UpToBeginOfFile()),
+   connect( , SIGNAL(SaveDataFileAs()),
+            this, SLOT(Datasave()));
+   connect( , SIGNAL(UpToBeginOfFile()),
             this, SLOT(ToBeginOfFile()));
-   connect(    , SIGNAL(DropToEndOfFile()),
+   connect( , SIGNAL(DropToEndOfFile()),
             this, SLOT(ToEndOfFile()));
+   connect( , SIGNAL(CheckYourMemorySize()),
+            this, SLOT(DeleteAllDataForFreeMemory()));
+   connect( , SIGNAL(CheckUsernameForSaveFile()),
+            this, SLOT(Datasave()));
+
 
    fileWithData.setFileName("data.txt");
    fileWithDataForBackup.setFileName("backupdata.txt");
 
-   if(fileWithData.open(WriteOnly))
+   if((CheckForFileExists() == true) && (CheckForFileIsOpen() == true))
    {
-       fileWithData.write("NAME OF USER");
-       fileWithData.write("WRITE FROM FIELD WIDGET!!");
-       fileWithData.flush();
-   }
-   else
-   {
-       /*clear code*/
+        if(fileWithData.open(WriteOnly))
+        {
+            fileWithData.write("NAME OF USER");
+            fileWithData.write("WRITE FROM FIELD WIDGET!!");
+            fileWithData.flush();
+        }
+        else
+        {
+            /*clear code*/
+        }
    }
 }
 
@@ -70,6 +76,11 @@ void Datasave::CheckUsernameForSaveFile()
 
 }
 
+void Datasave::SaveDataFileAs()
+{
+
+}
+
 void Datasave::CheckYourMemorySize()
 {
 
@@ -82,6 +93,11 @@ void Datasave::CheckYourMemorySize()
     {
         /*clear code*/
     }
+
+}
+
+void Datasave::DeleteAllDataForFreeMemory()
+{
 
 }
 
