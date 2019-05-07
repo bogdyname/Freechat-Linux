@@ -6,6 +6,7 @@
 #ifndef DATASAVE_H
 #define DATASAVE_H
 
+#include <QStorageInfo>
 #include <QTextStream>
 #include <QSaveFile>
 #include <QIODevice>
@@ -24,6 +25,8 @@ public:
 
     QTimer runTimer;
     QByteArray block;
+
+    QStorageInfo storage = QStorageInfo::root();
 
 public:
     Datasave(QObject *parent = nullptr);

@@ -3,6 +3,7 @@
 ***Contact: bogdyname@gmail.com
 */
 
+
 #include "username.h"
 #include "datasave.h"
 #include "freechat.h"
@@ -53,8 +54,6 @@ bool Datasave::CheckForFileExists()
     {
          /*clear code*/
     }
-
-    return true;
 }
 
 bool Datasave::CheckForFileIsOpen()
@@ -67,8 +66,6 @@ bool Datasave::CheckForFileIsOpen()
     {
          /*clear code*/
     }
-
-    return true;
 }
 
 void Datasave::CheckUsernameForSaveFile()
@@ -83,8 +80,30 @@ void Datasave::SaveDataFileAs()
 
 void Datasave::CheckYourMemorySize()
 {
+    /*
+     *              !!!!!!!!rootPath()!!!!!!!!
+     * return mount point of the filesystem (macOS && Linux)
+     * for Windows return the volume letter
+     * in case the volume is not mounted to a directory
+     */
 
-    if (listWithDataSave->count()-> == 1)
+    qDebug() << storage.rootPath();
+
+    if (storage.isReadOnly())
+    {
+        qDebug() << "isReadOnly:" << storage.isReadOnly();
+    }
+    else
+    {
+        /*clear code*/
+    }
+
+    qDebug() << "name:" << storage.name();
+    qDebug() << "fileSystemType:" << storage.fileSystemType();
+    qDebug() << "size:" << storage.bytesTotal()/1000/1000 << "MB";
+    qDebug() << "availableSize:" << storage.bytesAvailable()/1000/1000 << "MB";
+
+    if (storage.bytesFree() == 1)
     {
         QMessageBox::information(this, tr("WARNING!"),
                         tr("Check your memory size!"));
@@ -93,12 +112,12 @@ void Datasave::CheckYourMemorySize()
     {
         /*clear code*/
     }
-
 }
 
 void Datasave::DeleteAllDataForFreeMemory()
 {
-
+    QFile("data.txt").remove(); // delete main data
+    QFile("backupdata.txt").remove(); // delete backup data
 }
 
 void Datasave::RunTimeIsOver()

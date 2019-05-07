@@ -9,7 +9,7 @@ QT       += network
 QT       += gui
 QT       += svg
 
-greaterThan(QT_MAJOR_VERSION, 5): QT += widgets
+greaterThan(QT_MAJOR_VERSION, 5.4): QT += widgets
 
 TARGET = Freechat
 TEMPLATE = app
