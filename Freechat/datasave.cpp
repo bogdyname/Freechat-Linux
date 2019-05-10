@@ -80,13 +80,6 @@ void Datasave::SaveDataFileAs()
 
 void Datasave::CheckYourMemorySize()
 {
-    /*
-     *              !!!!!!!!rootPath()!!!!!!!!
-     * return mount point of the filesystem (macOS && Linux)
-     * for Windows return the volume letter
-     * in case the volume is not mounted to a directory
-     */
-
     qDebug() << storage.rootPath();
 
     if (storage.isReadOnly())
@@ -116,8 +109,8 @@ void Datasave::CheckYourMemorySize()
 
 void Datasave::DeleteAllDataForFreeMemory()
 {
-    QFile("data.txt").remove(); // delete main data
-    QFile("backupdata.txt").remove(); // delete backup data
+    QFile("data.txt").remove();
+    QFile("backupdata.txt").remove();
 }
 
 void Datasave::RunTimeIsOver()
@@ -129,8 +122,8 @@ void Datasave::RunBackupFiles()
 {
     if(fileWithData.open(ReadOnly) && fileWithDataForBackup.open(WriteOnly))
     {
-        block = fileWithData.read(1000); // read 1000 bytes from 'data.txt'
-        fileWithDataForBackup.write(block); // write 1000 bytes in 'databackup.txt' from 'data.txt'
+        block = fileWithData.read(1000);
+        fileWithDataForBackup.write(block);
         fileWithData.close();
         fileWithDataForBackup.close();
     }
