@@ -37,6 +37,7 @@ signals:
     void UpToBeginOfFile();
     void DropToEndOfFile();
     void CheckYourMemorySize();
+    void ReadFileForViewMessages();
     void CheckUsernameForSaveFile();
 
 public slots:
@@ -44,6 +45,7 @@ public slots:
     void RunBackupFiles();
     void ToBeginOfFile();
     void ToEndOfFile();
+    void ReadFile();
 
 protected:
     bool CheckForFileExists();
