@@ -22,6 +22,8 @@ Datasave::Datasave(QObject *parent)
             this, SLOT(ToEndOfFile()));
    connect( , SIGNAL(CheckYourMemorySize()),
             this, SLOT(DeleteAllDataForFreeMemory()));
+   connect( , SIGNAL(ReadFileForViewMessages()),
+            this, SLOT(ReadFile()));
    connect( , SIGNAL(CheckUsernameForSaveFile()),
             this, SLOT(Datasave()));
 
@@ -120,12 +122,30 @@ void Datasave::RunTimeIsOver()
 
 void Datasave::RunBackupFiles()
 {
-    if(fileWithData.open(ReadOnly) && fileWithDataForBackup.open(WriteOnly))
+    if((fileWithData.open(ReadOnly)) && (fileWithDataForBackup.open(WriteOnly)))
     {
-        block = fileWithData.read(1000);
+        block = fileWithData.readAll();
         fileWithDataForBackup.write(block);
         fileWithData.close();
-        fileWithDataForBackup.close();
+        fileWithDataForBackup.flush();
+    }
+    else
+    {
+        /*clear code*/
+    }
+}
+
+void Datasave::ReadFileForViewMessages()
+{
+
+}
+
+void Datasave::ReadFile()
+{
+    if ((fileWithData.exists()) && (fileWithData.open(ReadOnly)))
+    {
+        (fileWithData.readAll()); // !!!!!SET UI TextField for read data from fileWithData!!!!!
+        fileWithData.close();
     }
     else
     {
