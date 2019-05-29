@@ -22,9 +22,9 @@ CONFIG += app_bundle
 CONFIG += qt
 
 SOURCES += \
+        connectionf2f.cpp \
         main.cpp \
         freechat.cpp \
-        connection.cpp \
         userserver.cpp \
         userclient.cpp \
         datasave.cpp \
@@ -33,8 +33,8 @@ SOURCES += \
         peermanager.cpp
 
 HEADERS += \
+        connectionf2f.h \
         freechat.h \
-        connection.h \
         userserver.h \
         userclient.h \
         datasave.h \

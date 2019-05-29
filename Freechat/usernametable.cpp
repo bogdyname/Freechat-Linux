@@ -6,7 +6,7 @@
 #include "username.h"
 #include "datasave.h"
 #include "freechat.h"
-#include "connection.h"
+#include "connectionf2f.h"
 #include "usernametable.h"
 
 Usernametable::Usernametable(QSaveFile *parent)
