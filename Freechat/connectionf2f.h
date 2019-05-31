@@ -15,6 +15,10 @@
 #include <QTcpSocket>
 #include <QHostInfo>
 #include <QtNetwork>
+#include <QSsl>
+
+using namespace QSsl;
+using namespace QPasswordDigestor;
 
 class ConnectionF2F : public QTcpSocket
 {

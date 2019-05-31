@@ -12,6 +12,9 @@
 #include <QIODevice>
 #include <QTimer>
 #include <QFile>
+#include <QSsl>
+
+using namespace QSsl;
 
 class Username;
 
@@ -46,6 +49,13 @@ public slots:
     void ToBeginOfFile();
     void ToEndOfFile();
     void ReadFile();
+
+public:
+    void MakeEncoding();
+    void MakeAlgorithm();
+    void MakePublicKey();
+    void MakePrivateKey();
+    void SelectSslProtocol();
 
 protected:
     bool CheckForFileExists();
