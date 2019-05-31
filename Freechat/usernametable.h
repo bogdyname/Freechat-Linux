@@ -10,32 +10,43 @@
 #include <QtCore/QCoreApplication>
 #include <QAbstractSocket>
 #include <QHostAddress>
+#include <QTextStream>
 #include <QByteArray>
+#include <QIODevice>
 #include <QHostInfo>
 #include <QSaveFile>
 #include <QString>
+#include <QFile>
 
 class Username;
 
-class Usernametable : public QObject
+class Usernametable : public QFile
 {
     Q_OBJECT
 
 public:
     Usernametable(QObject *parent = nullptr);
 
-    QString GetIpV4AndV6Protocol();
-    QString GetIpAddress();
+    void GetIpAddress();
     QString GetMacAddress();
+    QString GetIpV4AndV6Protocol();
+
+public:
+    QFile name;
     QString TranslationName();
-    QString SaveUsersMACAddress(const QString &nameOfUserMAC);
 
+public:
+    QFile macAddres;
+    void SaveUsersMACAddresses();
+    QString textWithMacAddresOfUser;
 
+protected:
+    bool CheckForMACFileExists();
+    bool CheckForMACFileIsOpen();
+
+public:
     int nIter = 0;
     int nInter = 0;
-    QString textWithMacAddresOfUser;
-    QString name;
-    QString macAddres;
     QString protocol = "???";
     QList<QHostAddress> list = QNetworkInterface::allAddresses();
     QList<QHostAddress> addresses = QHostInfo::fromName(QHostInfo::localHostName()).addresses();

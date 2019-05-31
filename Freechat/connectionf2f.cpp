@@ -23,12 +23,12 @@ void ConnectionF2F::ConnectingToPeer()
 
 }
 
-void ConnectionF2F::WaitForConnected()
+void ConnectionF2F::SocketConnected()
 {
 
 }
 
-void ConnectionF2F::WaitForDisconnected()
+void ConnectionF2F::SocketDisconnected()
 {
 
 }
@@ -39,21 +39,6 @@ void ConnectionF2F::SockedErroe()
 }
 
 void ConnectionF2F::MakeSocket()
-{
-
-}
-
-quint16 ConnectionF2F::GetPeerPort()
-{
-
-}
-
-QHostAddress ConnectionF2F::GetPeerAddress()
-{
-
-}
-
-QTimerEvent ConnectionF2F::TimerForWaitingConnection()
 {
 
 }

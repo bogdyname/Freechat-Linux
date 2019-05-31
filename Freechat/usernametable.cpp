@@ -9,8 +9,8 @@
 #include "connectionf2f.h"
 #include "usernametable.h"
 
-Usernametable::Usernametable(QSaveFile *parent)
-    : QSaveFile(parent)
+Usernametable::Usernametable(QObject *parent)
+    : QFile(parent)
 {
           foreach (const QHostAddress & a, addresses)
           {
@@ -25,6 +25,9 @@ Usernametable::Usernametable(QSaveFile *parent)
               }
               qDebug() << a.toString() << "(" << protocol << ")";
           }
+
+    name.setFileName("name.txt");
+    macAddres.setFileName("macad.txt");
 }
 
 QString Usernametable::GetIpV4AndV6Protocol()
@@ -38,9 +41,11 @@ QString Usernametable::GetIpV4AndV6Protocol()
         {
             /*clear code*/
         }
+
+        return list[nIter].toString();
 }
 
-QString Usernametable::GetIpAddress()
+void Usernametable::GetIpAddress()
 {
     for(nInter < list.count();; nInter++)
     {
@@ -65,8 +70,37 @@ QString Usernametable::GetMacAddress()
     return textWithMacAddresOfUser;
 }
 
-QString Usernametable::SaveUsersMACAddress(const QString &nameOfUserMAC)
+bool Usernametable::CheckForMACFileExists()
 {
-    qDebug() << GetMacAddress().constData() << endl;
-    exit(1);
+    if(exists("macad.txt"))
+    {
+        return true;
+    }
+    else
+    {
+         /*clear code*/
+    }
+}
+
+bool Usernametable::CheckForMACFileIsOpen()
+{
+    if(macAddres.isOpen())
+    {
+        return true;
+    }
+    else
+    {
+         /*clear code*/
+    }
+}
+
+void Usernametable::SaveUsersMACAddresses()
+{
+    ((CheckForMACFileExists() == true) && (CheckForMACFileIsOpen() == true)) ?
+     (macAddres.open(WriteOnly)), macAddres.write(textWithMacAddresOfUser.toUtf8()) :
+      macAddres.flush();
+
+      macAddres.close();
+
+    return;
 }

@@ -4,7 +4,7 @@
 */
 
 
-#include "username.h"
+##include "username.h"
 #include "datasave.h"
 #include "freechat.h"
 #include "usernametable.h"
@@ -16,10 +16,6 @@ Datasave::Datasave(QObject *parent)
             this, SLOT(RunBackupFiles()));
    connect( , SIGNAL(SaveDataFileAs()),
             this, SLOT(Datasave()));
-   connect( , SIGNAL(UpToBeginOfFile()),
-            this, SLOT(ToBeginOfFile()));
-   connect( , SIGNAL(DropToEndOfFile()),
-            this, SLOT(ToEndOfFile()));
    connect( , SIGNAL(CheckYourMemorySize()),
             this, SLOT(DeleteAllDataForFreeMemory()));
    connect( , SIGNAL(ReadFileForViewMessages()),
@@ -36,7 +32,7 @@ Datasave::Datasave(QObject *parent)
         if(fileWithData.open(WriteOnly))
         {
             fileWithData.write("NAME OF USER");
-            fileWithData.write("WRITE FROM FIELD WIDGET!!");
+            fileWithData.write("WRITE FROM TEXT FIELD WIDGET!!");
             fileWithData.flush();
         }
         else
@@ -73,11 +69,13 @@ bool Datasave::CheckForFileIsOpen()
 void Datasave::CheckUsernameForSaveFile()
 {
 
+    return;
 }
 
 void Datasave::SaveDataFileAs()
 {
 
+    return;
 }
 
 void Datasave::CheckYourMemorySize()
@@ -107,17 +105,23 @@ void Datasave::CheckYourMemorySize()
     {
         /*clear code*/
     }
+
+    return;
 }
 
 void Datasave::DeleteAllDataForFreeMemory()
 {
     QFile("data.txt").remove();
     QFile("backupdata.txt").remove();
+
+    return;
 }
 
 void Datasave::RunTimeIsOver()
 {
 
+
+    return;
 }
 
 void Datasave::RunBackupFiles()
@@ -133,42 +137,28 @@ void Datasave::RunBackupFiles()
     {
         /*clear code*/
     }
+
+    return;
 }
 
 void Datasave::ReadFileForViewMessages()
 {
 
+
+    return;
 }
 
 void Datasave::ReadFile()
 {
     if ((fileWithData.exists()) && (fileWithData.open(ReadOnly)))
     {
-        (fileWithData.readAll()); // !!!!!SET UI TextField for read data from fileWithData!!!!!
+        (fileWithData.readAll());
         fileWithData.close();
     }
     else
     {
         /*clear code*/
     }
-}
 
-void Datasave::ToBeginOfFile()
-{
-
-}
-
-void Datasave::UpToBeginOfFile()
-{
-
-}
-
-void Datasave::DropToEndOfFile()
-{
-
-}
-
-void Datasave::ToEndOfFile()
-{
-
+    return;
 }
