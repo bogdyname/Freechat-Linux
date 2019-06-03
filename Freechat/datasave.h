@@ -6,23 +6,23 @@
 #ifndef DATASAVE_H
 #define DATASAVE_H
 
+#include "ui_freechat.h"
 #include <QStorageInfo>
 #include <QTextStream>
 #include <QSaveFile>
 #include <QIODevice>
+#include <QDateTime>
 #include <QTimer>
 #include <QFile>
 
 class Username;
+class Freechat;
 
 class Datasave : public QFile
 {
     Q_OBJECT
 
 public:
-    QFile fileWithData;
-    QFile fileWithDataForBackup;
-
     QTimer runTimer;
     QByteArray block;
 
@@ -39,13 +39,13 @@ signals:
     void CheckUsernameForSaveFile();
 
 public slots:
-    void DeleteAllDataForFreeMemory();
-    void RunBackupFiles();
-    void ReadFile();
+    void DeleteAllDataForFreeMemory(QFile &fileWithData, QFile &fileWithDataForBackup);
+    void RunBackupFiles(QFile &fileWithData, QFile &fileWithDataForBackup);
+    void ReadFile(QFile &fileWithData);
 
 protected:
-    bool CheckForFileExists();
-    bool CheckForFileIsOpen();
+    inline bool CheckForFileExists(QFile &fileWithData);
+    inline bool CheckForFileIsOpen(QFile &fileWithData);
 };
 
 #endif // DATASAVE_H

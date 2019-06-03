@@ -3,8 +3,7 @@
 ***Contact: bogdyname@gmail.com
 */
 
-
-##include "username.h"
+#include "username.h"
 #include "datasave.h"
 #include "freechat.h"
 #include "usernametable.h"
@@ -23,28 +22,31 @@ Datasave::Datasave(QObject *parent)
    connect( , SIGNAL(CheckUsernameForSaveFile()),
             this, SLOT(Datasave()));
 
+   QString fname = "filewd" +
+           QDateTime::currentDateTime().toString("yyyy-MM-dd_hh-mm-ss") + ".txt";
+   QFile file(fname);
 
-   fileWithData.setFileName("data.txt");
-   fileWithDataForBackup.setFileName("backupdata.txt");
-
-   if((CheckForFileExists() == true) && (CheckForFileIsOpen() == true))
+   if((CheckForFileExists(file) == true) && (CheckForFileIsOpen(file) == true))
    {
-        if(fileWithData.open(WriteOnly))
+        if(file.open(WriteOnly))
         {
-            fileWithData.write("NAME OF USER");
-            fileWithData.write("WRITE FROM TEXT FIELD WIDGET!!");
-            fileWithData.flush();
+            QTextStream writeStream(&file);
+            writeStream << "NAME OF USER like Nikita Volkov or Google";
+            writeStream << ui->textFieldForViewMessages->setText(file.readAll());;
+            file.flush();
         }
         else
         {
-            /*clear code*/
+            file.close();
         }
    }
+
+   QDir().mkdir(QApplication::applicationDirPath()+"/../data");
 }
 
-bool Datasave::CheckForFileExists()
+bool Datasave::CheckForFileExists(QFile &fileWithData)
 {
-    if(exists("data.txt"))
+    if(fileWithData.exists())
     {
         return true;
     }
@@ -52,9 +54,11 @@ bool Datasave::CheckForFileExists()
     {
          /*clear code*/
     }
+
+    return true;
 }
 
-bool Datasave::CheckForFileIsOpen()
+bool Datasave::CheckForFileIsOpen(QFile &fileWithData)
 {
     if(fileWithData.isOpen())
     {
@@ -64,6 +68,8 @@ bool Datasave::CheckForFileIsOpen()
     {
          /*clear code*/
     }
+
+    return true;
 }
 
 void Datasave::CheckUsernameForSaveFile()
@@ -109,10 +115,10 @@ void Datasave::CheckYourMemorySize()
     return;
 }
 
-void Datasave::DeleteAllDataForFreeMemory()
+void Datasave::DeleteAllDataForFreeMemory(QFile &fileWithData, QFile &fileWithDataForBackup)
 {
-    QFile("data.txt").remove();
-    QFile("backupdata.txt").remove();
+    fileWithData.remove();
+    fileWithDataForBackup.remove();
 
     return;
 }
@@ -124,7 +130,7 @@ void Datasave::RunTimeIsOver()
     return;
 }
 
-void Datasave::RunBackupFiles()
+void Datasave::RunBackupFiles(QFile &fileWithData, QFile &fileWithDataForBackup)
 {
     if((fileWithData.open(ReadOnly)) && (fileWithDataForBackup.open(WriteOnly)))
     {
@@ -148,11 +154,11 @@ void Datasave::ReadFileForViewMessages()
     return;
 }
 
-void Datasave::ReadFile()
+void Datasave::ReadFile(QFile &fileWithData)
 {
     if ((fileWithData.exists()) && (fileWithData.open(ReadOnly)))
     {
-        (fileWithData.readAll());
+        ui->textBrowser->setText(fileWithData.readAll());
         fileWithData.close();
     }
     else

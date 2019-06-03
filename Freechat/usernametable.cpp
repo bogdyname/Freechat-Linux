@@ -26,8 +26,26 @@ Usernametable::Usernametable(QObject *parent)
               qDebug() << a.toString() << "(" << protocol << ")";
           }
 
-    name.setFileName("name.txt");
-    macAddres.setFileName("macad.txt");
+          QString macOfUser;
+          GetMacAddresses(macOfUser);
+
+          QString fname = "macadd" +
+                  QDateTime::currentDateTime().toString("yyyy-MM-dd_hh-mm-ss") + ".txt";
+          QFile file(fname);
+
+          if((CheckForMACFileExists(file) == true) && (CheckForMACFileIsOpen(file) == true))
+          {
+               if(file.open(WriteOnly))
+               {
+                   QTextStream writeStream(&file);
+                   writeStream << macOfUser;
+                   file.flush();
+               }
+               else
+               {
+                   file.close();
+               }
+          }
 }
 
 QString Usernametable::GetIpV4AndV6Protocol()
@@ -45,7 +63,7 @@ QString Usernametable::GetIpV4AndV6Protocol()
         return list[nIter].toString();
 }
 
-void Usernametable::GetIpAddress()
+void Usernametable::GetIpAddresses()
 {
     for(nInter < list.count();; nInter++)
     {
@@ -58,49 +76,45 @@ void Usernametable::GetIpAddress()
             /*clear code*/
         }
     }
+
+    return;
 }
 
-QString Usernametable::GetMacAddress()
+void Usernametable::GetMacAddresses(QString textWithMacAddresOfUser)
 {
             foreach(QNetworkInterface interface, QNetworkInterface::allInterfaces())
             {
                 textWithMacAddresOfUser += interface.hardwareAddress();
             }
 
-    return textWithMacAddresOfUser;
-}
-
-bool Usernametable::CheckForMACFileExists()
-{
-    if(exists("macad.txt"))
-    {
-        return true;
-    }
-    else
-    {
-         /*clear code*/
-    }
-}
-
-bool Usernametable::CheckForMACFileIsOpen()
-{
-    if(macAddres.isOpen())
-    {
-        return true;
-    }
-    else
-    {
-         /*clear code*/
-    }
-}
-
-void Usernametable::SaveUsersMACAddresses()
-{
-    ((CheckForMACFileExists() == true) && (CheckForMACFileIsOpen() == true)) ?
-     (macAddres.open(WriteOnly)), macAddres.write(textWithMacAddresOfUser.toUtf8()) :
-      macAddres.flush();
-
-      macAddres.close();
-
     return;
+}
+
+bool Usernametable::CheckForMACFileExists(QFile &fileWithMAC)
+{
+    if(fileWithMAC.exists())
+    {
+        return true;
+    }
+    else
+    {
+         /*clear code*/
+    }
+}
+
+bool Usernametable::CheckForMACFileIsOpen(QFile &fileWithMAC)
+{
+    if(fileWithMAC.isOpen())
+    {
+        return true;
+    }
+    else
+    {
+         /*clear code*/
+    }
+}
+
+void Usernametable::TranslationName(QFile &fileWithMAC, QString &translator)
+{
+
 }
