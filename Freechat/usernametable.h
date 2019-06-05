@@ -28,16 +28,12 @@ class Usernametable : public QFile
 public:
     Usernametable(QObject *parent = nullptr);
 
-    void GetIpAddresses();
-    void GetMacAddresses(QString textWithMacAddresOfUser);
-    QString GetIpV4AndV6Protocol();
+    inline void GetIpAddresses();
+    inline void GetMacAddresses(QString textWithMacAddresOfUser);
+    inline QString GetIpV4AndV6Protocol();
 
-public:
+private:
     void TranslationName(QFile &fileWithMAC, QString &translator);
-
-protected:
-    bool CheckForMACFileExists(QFile &fileWithMAC);
-    bool CheckForMACFileIsOpen(QFile &fileWithMAC);
 
 public:
     int nIter = 0;

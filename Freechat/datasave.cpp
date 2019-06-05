@@ -26,7 +26,7 @@ Datasave::Datasave(QObject *parent)
            QDateTime::currentDateTime().toString("yyyy-MM-dd_hh-mm-ss") + ".txt";
    QFile file(fname);
 
-   if((CheckForFileExists(file) == true) && (CheckForFileIsOpen(file) == true))
+   if((file.exists()) && (file.isOpen()))
    {
         if(file.open(WriteOnly))
         {
@@ -42,34 +42,6 @@ Datasave::Datasave(QObject *parent)
    }
 
    QDir().mkdir(QApplication::applicationDirPath()+"/../data");
-}
-
-bool Datasave::CheckForFileExists(QFile &fileWithData)
-{
-    if(fileWithData.exists())
-    {
-        return true;
-    }
-    else
-    {
-         /*clear code*/
-    }
-
-    return true;
-}
-
-bool Datasave::CheckForFileIsOpen(QFile &fileWithData)
-{
-    if(fileWithData.isOpen())
-    {
-        return true;
-    }
-    else
-    {
-         /*clear code*/
-    }
-
-    return true;
 }
 
 void Datasave::CheckUsernameForSaveFile()
@@ -115,7 +87,7 @@ void Datasave::CheckYourMemorySize()
     return;
 }
 
-void Datasave::DeleteAllDataForFreeMemory(QFile &fileWithData, QFile &fileWithDataForBackup)
+inline void Datasave::DeleteAllDataForFreeMemory(QFile &fileWithData, QFile &fileWithDataForBackup)
 {
     fileWithData.remove();
     fileWithDataForBackup.remove();
@@ -123,7 +95,7 @@ void Datasave::DeleteAllDataForFreeMemory(QFile &fileWithData, QFile &fileWithDa
     return;
 }
 
-void Datasave::RunTimeIsOver()
+inline void Datasave::RunTimeIsOver()
 {
 
 
@@ -154,7 +126,7 @@ void Datasave::ReadFileForViewMessages()
     return;
 }
 
-void Datasave::ReadFile(QFile &fileWithData)
+inline void Datasave::ReadFile(QFile &fileWithData)
 {
     if ((fileWithData.exists()) && (fileWithData.open(ReadOnly)))
     {

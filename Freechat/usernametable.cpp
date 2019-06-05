@@ -33,7 +33,7 @@ Usernametable::Usernametable(QObject *parent)
                   QDateTime::currentDateTime().toString("yyyy-MM-dd_hh-mm-ss") + ".txt";
           QFile file(fname);
 
-          if((CheckForMACFileExists(file) == true) && (CheckForMACFileIsOpen(file) == true))
+          if((file.exists()) && (file.isOpen()))
           {
                if(file.open(WriteOnly))
                {
@@ -48,7 +48,7 @@ Usernametable::Usernametable(QObject *parent)
           }
 }
 
-QString Usernametable::GetIpV4AndV6Protocol()
+inline QString Usernametable::GetIpV4AndV6Protocol()
     {
         if((list[nIter].protocol() == QAbstractSocket::IPv4Protocol) &&
                 (list[nIter].protocol() == QAbstractSocket::IPv6Protocol))
@@ -63,7 +63,7 @@ QString Usernametable::GetIpV4AndV6Protocol()
         return list[nIter].toString();
 }
 
-void Usernametable::GetIpAddresses()
+inline void Usernametable::GetIpAddresses()
 {
     for(nInter < list.count();; nInter++)
     {
@@ -80,7 +80,7 @@ void Usernametable::GetIpAddresses()
     return;
 }
 
-void Usernametable::GetMacAddresses(QString textWithMacAddresOfUser)
+inline void Usernametable::GetMacAddresses(QString textWithMacAddresOfUser)
 {
             foreach(QNetworkInterface interface, QNetworkInterface::allInterfaces())
             {
@@ -88,30 +88,6 @@ void Usernametable::GetMacAddresses(QString textWithMacAddresOfUser)
             }
 
     return;
-}
-
-bool Usernametable::CheckForMACFileExists(QFile &fileWithMAC)
-{
-    if(fileWithMAC.exists())
-    {
-        return true;
-    }
-    else
-    {
-         /*clear code*/
-    }
-}
-
-bool Usernametable::CheckForMACFileIsOpen(QFile &fileWithMAC)
-{
-    if(fileWithMAC.isOpen())
-    {
-        return true;
-    }
-    else
-    {
-         /*clear code*/
-    }
 }
 
 void Usernametable::TranslationName(QFile &fileWithMAC, QString &translator)

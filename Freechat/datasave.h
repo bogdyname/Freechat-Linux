@@ -32,20 +32,16 @@ public:
     Datasave(QObject *parent = nullptr);
 
 signals:
-    void RunTimeIsOver();
     void SaveDataFileAs();
     void CheckYourMemorySize();
+    inline void RunTimeIsOver();
     void ReadFileForViewMessages();
     void CheckUsernameForSaveFile();
 
 public slots:
-    void DeleteAllDataForFreeMemory(QFile &fileWithData, QFile &fileWithDataForBackup);
+    inline void DeleteAllDataForFreeMemory(QFile &fileWithData, QFile &fileWithDataForBackup);
     void RunBackupFiles(QFile &fileWithData, QFile &fileWithDataForBackup);
-    void ReadFile(QFile &fileWithData);
-
-protected:
-    inline bool CheckForFileExists(QFile &fileWithData);
-    inline bool CheckForFileIsOpen(QFile &fileWithData);
+    inline void ReadFile(QFile &fileWithData);
 };
 
 #endif // DATASAVE_H
