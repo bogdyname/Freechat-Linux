@@ -26,54 +26,12 @@ Username::Username(QObject *parent)
     checkWriterFileMACToIp.setFileName("swapmtoipo.txt");
 }
 
-bool Username::CheckingForExistsIpddress()
+void Username::ReadingIpAddress()
 {
 
 }
 
-bool Username::CheckingForExistsMACddress()
-{
-
-}
-
-bool Username::CheckForIpFileIsOpen()
-{
-
-}
-
-bool Username::CheckForMACFileIsOpen()
-{
-
-}
-
-void Username::AskUserForReadContactName()
-{
-    QMessageBox::ask(this, tr("Read contact"),
-    tr("Do you want to read this contact?"));
-}
-
-void Username::AskUserForWriteContactName()
-{
-    QMessageBox::ask(this, tr("Write contact"),
-    tr("Do you want to write this contact?"));
-}
-
-void Username::FileForWritingIpAddress()
-{
-
-}
-
-void Username::FileForWritingMACAddress()
-{
-
-}
-
-void Username::FileForReadingIpAddress()
-{
-
-}
-
-void Username::FileForReadingMACAddress()
+void Username::ReadingMACAddress()
 {
 
 }
