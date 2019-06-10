@@ -621,6 +621,7 @@ copy of the Program in return for a fee.
 Contact: bogdyname@gmail.com
 */
 #include "freechat.h"
+#include "datasave.h"
 #include <QApplication>
 #include <QtCore/QSettings>
 #include <QtNetwork/QNetworkSession>
@@ -629,6 +630,8 @@ Contact: bogdyname@gmail.com
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
+
+    Datasave newFile;
 
     Freechat freechat;
     freechat.show();

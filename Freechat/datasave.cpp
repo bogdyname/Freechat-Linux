@@ -26,22 +26,62 @@ Datasave::Datasave(QObject *parent)
            QDateTime::currentDateTime().toString("yyyy-MM-dd_hh-mm-ss") + ".txt";
    QFile file(fname);
 
-   if((file.exists()) && (file.isOpen()))
+   if(buffer != nullptr)
    {
-        if(file.open(WriteOnly))
-        {
-            QTextStream writeStream(&file);
-            writeStream << "NAME OF USER like Nikita Volkov or Google";
-            writeStream << ui->textFieldForViewMessages->setText(file.readAll());;
-            file.flush();
+       buffer = new QByteArray;
+
+       if((file.exists()) && (file.isOpen()))
+       {
+            if(file.open(WriteOnly))
+            {
+                QTextStream writeStream(&file);
+                writeStream << "NAME OF USER like Nikita Volkov or Google";
+                file.write(*buffer);
+                file.flush();
+            }
+            else
+            {
+                file.close();
+            }
         }
         else
         {
-            file.close();
+            /*clear code*/
         }
    }
 
    QDir().mkdir(QApplication::applicationDirPath()+"/../data");
+}
+
+Datasave::Datasave(QFile &fileWithData, QFile &fileWithDataForBackup)
+{
+    if(buffer != nullptr)
+    {
+        buffer = new QByteArray;
+
+        if((fileWithData.open(ReadOnly)) && (fileWithDataForBackup.open(WriteOnly)))
+        {
+            *buffer = fileWithData.readAll();
+            fileWithDataForBackup.write(*buffer);
+            fileWithData.close();
+            fileWithDataForBackup.flush();
+        }
+        else
+        {
+            fileWithData.close();
+            fileWithDataForBackup.flush();
+        }
+    }
+    else
+    {
+        /*clear code*/
+    }
+}
+
+Datasave::~Datasave()
+{
+    delete runTimer;
+    delete buffer;
 }
 
 void Datasave::CheckUsernameForSaveFile()
@@ -98,23 +138,6 @@ inline void Datasave::DeleteAllDataForFreeMemory(QFile &fileWithData, QFile &fil
 inline void Datasave::RunTimeIsOver()
 {
 
-
-    return;
-}
-
-void Datasave::RunBackupFiles(QFile &fileWithData, QFile &fileWithDataForBackup)
-{
-    if((fileWithData.open(ReadOnly)) && (fileWithDataForBackup.open(WriteOnly)))
-    {
-        block = fileWithData.readAll();
-        fileWithDataForBackup.write(block);
-        fileWithData.close();
-        fileWithDataForBackup.flush();
-    }
-    else
-    {
-        /*clear code*/
-    }
 
     return;
 }

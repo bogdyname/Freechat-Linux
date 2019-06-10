@@ -7,7 +7,9 @@
 #define FREECHAT_H
 
 #include "ui_freechat.h"
+#include "datasave.h"
 #include <QTextTableFormat>
+#include <QTextEdit>
 #include <QDialog>
 
 class Freechat : public QDialog, private Ui::Freechat

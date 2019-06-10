@@ -25,22 +25,16 @@ SOURCES += \
         connectionf2f.cpp \
         main.cpp \
         freechat.cpp \
-        userserver.cpp \
-        userclient.cpp \
         datasave.cpp \
         usernametable.cpp \
-        username.cpp \
-        peermanager.cpp
+        username.cpp
 
 HEADERS += \
         connectionf2f.h \
         freechat.h \
-        userserver.h \
-        userclient.h \
         datasave.h \
         usernametable.h \
         username.h \
-        peermanager.h
 
 FORMS += \
         freechat.ui

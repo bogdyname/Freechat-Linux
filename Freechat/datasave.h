@@ -23,13 +23,16 @@ class Datasave : public QFile
     Q_OBJECT
 
 public:
-    QTimer runTimer;
-    QByteArray block;
+    QTimer *runTimer = nullptr;
+    QByteArray *buffer = nullptr;
 
     QStorageInfo storage = QStorageInfo::root();
 
 public:
+    ~Datasave();
     Datasave(QObject *parent = nullptr);
+    Datasave(Datasave &&MoveSource, QFile &fileWithDataForBackup);
+    Datasave(QFile &fileWithData, QFile &fileWithDataForBackup);
 
 signals:
     void SaveDataFileAs();
