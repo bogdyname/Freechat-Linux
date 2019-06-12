@@ -13,32 +13,29 @@ ConnectionF2F::ConnectionF2F(QObject *parent)
 
 }
 
-void ConnectionF2F::DigitalSignature()
+ConnectionF2F::~ConnectionF2F()
 {
 
 }
 
-void ConnectionF2F::ConnectingToPeer()
+Client::Client(QObject *parent)
+    : QTcpSocket(parent)
 {
 
 }
 
-void ConnectionF2F::SocketConnected()
+Client::~Client()
 {
 
 }
 
-void ConnectionF2F::SocketDisconnected()
+Host::Host(QObject *parent)
+    :QTcpServer(parent)
 {
 
 }
 
-void ConnectionF2F::SockedErroe()
-{
-
-}
-
-void ConnectionF2F::MakeSocket()
+Host::~Host()
 {
 
 }
