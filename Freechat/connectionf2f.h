@@ -60,15 +60,22 @@ public:
 
 private:
     void MakeSocketClient();
-    void SockedErroe();
+    void SockedErroe(int socketError, const QString &message);
 
 public:
     quint16 GetPeerPort();
     QHostAddress GetPeerAddress();
 
 private:
-    quint16 PeerPort();
-    QHostAddress PeerAddress();
+    quint16 PeerPort(quint16 port);
+    QHostAddress PeerAddress(const QString &hostName);
+
+private:
+    QString hostName;
+    quint16 port;
+    QMutex mutex;
+    QWaitCondition cond;
+    bool quit;
 };
 
 #endif // CLIENT_H
@@ -88,7 +95,7 @@ public:
 
 private:
     void MakeSocketHost();
-    void SockedErroe();
+    void SockedErroe(int socketError, const QString &message);
     void ListenPort();
 };
 

@@ -93,4 +93,6 @@ inline void Usernametable::GetMacAddresses(QString textWithMacAddresOfUser)
 void Usernametable::TranslationName(QFile &fileWithMAC, QString &translator)
 {
 
+
+    return;
 }

@@ -26,7 +26,9 @@ class Usernametable : public QFile
     Q_OBJECT
 
 public:
+    ~Usernametable();
     Usernametable(QObject *parent = nullptr);
+    Usernametable(Usernametable &&MoveNameSource, QFile &);
 
     inline void GetIpAddresses();
     inline void GetMacAddresses(QString textWithMacAddresOfUser);
