@@ -17,4 +17,5 @@ Freechat::Freechat(QWidget *parent)
     textFieldForViewMessages->setFocusPolicy(NoFocus);
     textFieldForViewMessages->setReadOnly(true);
     listWithNicknameOfUser->setFocusPolicy(NoFocus);
+    listViewWithNetworkData->setReadOnly(true);
 }
