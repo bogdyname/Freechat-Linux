@@ -3,6 +3,7 @@
 ***Contact: bogdyname@gmail.com
 */
 
+#include "ui_username.h"
 #include <QtNetwork/QNetworkInterface>
 #include <QtCore/QCoreApplication>
 #include <QAbstractSocket>
@@ -21,43 +22,44 @@
 #ifndef USERNAME_H
 #define USERNAME_H
 
-class Freechat;
-class Connection;
-class Usernametable;
-
-class Username : public QFile
+class Username : public QFile, private Ui::Username
 {
     Q_OBJECT
 
 public:
-    Username(QObject *parent = nullptr);
+    ~Username();
+    Username(QWidget *parent = nullptr);
 
 public slots:
     inline void ReadingIpAddress(QFile &fileWithIP);
     inline void ReadingMACAddress(QFile &fileWithMac);
-    void TranslationName(QFile &fileWithMAC, QString &translator);
+    virtual void TranslationName(QFile &fileWithMAC, QString &translator);
 };
-
-#endif // USERNAME_H
+#endif
 
 #ifndef USERNAMETABLE_H
 #define USERNAMETABLE_H
-
 class Username;
 
-class Usernametable : public QFile
+class Usernametable : public Username
 {
     Q_OBJECT
 
 public:
-    ~Usernametable();
-    Usernametable(QObject *parent = nullptr);
-    Usernametable(Usernametable &&MoveNameSource, QFile &);
+    ~Usernametable() override;
+    Usernametable(QWidget *parent = nullptr);
 
 private:
+    QString *buffer = nullptr;
+    const QString username;
+
+public slots:
+    void TranslationName(QFile &fileWithMAC, QString &translator) override;
+
+protected:
+    inline void MakeFileWithIp();
+    inline void MakeFileWithMac();
     void GetIpAddressFromWAN(QString &textWithIPAddres);
     inline void GetMacAddress(QString &textWithMacAddresOfUser);
 };
-
-
-#endif // USERNAMETABLE_H
+#endif

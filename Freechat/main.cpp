@@ -620,8 +620,9 @@ copy of the Program in return for a fee.
                     END OF TERMS AND CONDITIONS
 Contact: bogdyname@gmail.com
 */
-#include "freechat.h"
-#include "datasave.h"
+
+#include "User/freechat.h"
+#include "Data/datasave.h"
 #include <QApplication>
 #include <QtCore/QSettings>
 #include <QtNetwork/QNetworkSession>
@@ -632,6 +633,13 @@ int main(int argc, char *argv[])
     QApplication app(argc, argv);
 
     Datasave newFile;
+
+        //HEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHERE
+        //HEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHERE
+        //HEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHERE
+        //HEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHERE
+        //HEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHERE
+        //HEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHERE
 
     Freechat freechat;
     freechat.show();

@@ -3,26 +3,22 @@
 ***Contact: bogdyname@gmail.com
 */
 
-#ifndef DATASAVE_H
-#define DATASAVE_H
-
 #include "ui_freechat.h"
+#include "User/username.h"
+#include "User/freechat.h"
 #include <QStorageInfo>
-#include <QTextStream>
-#include <QSaveFile>
-#include <QIODevice>
 #include <QDateTime>
 #include <QTimer>
 #include <QFile>
 
-class Username;
-class Freechat;
+#ifndef DATASAVE_H
+#define DATASAVE_H
 
-class Datasave : public QFile
+class Datasave : public Username, public Freechat
 {
     Q_OBJECT
 
-public:
+private:
     QTimer *runTimer = nullptr;
     QByteArray *buffer = nullptr;
 
@@ -30,7 +26,7 @@ public:
 
 public:
     ~Datasave();
-    Datasave(QObject *parent = nullptr);
+    Datasave(Freechat *parent = nullptr);
     Datasave(Datasave &&MoveSource, QFile &fileWithDataForBackup);
     Datasave(QFile &fileWithData, QFile &fileWithDataForBackup);
 
@@ -45,6 +41,9 @@ public slots:
     inline void DeleteAllDataForFreeMemory(QFile &fileWithData, QFile &fileWithDataForBackup);
     void RunBackupFiles(QFile &fileWithData, QFile &fileWithDataForBackup);
     inline void ReadFile(QFile &fileWithData);
+
+private:
+    void RSAMODULE();
 };
 
 #endif // DATASAVE_H

@@ -5,6 +5,7 @@
 #---------------------------------
 
 QT       += core gui
+QT       += widgets
 QT       += network
 QT       += gui
 QT       += svg
@@ -17,27 +18,28 @@ TEMPLATE = app
 DEFINES += QT_DEPRECATED_WARNINGS
 
 CONFIG += c++11
+CONFIG += c++14
+CONFIG += c++17
 CONFIG += console
 CONFIG += app_bundle
 CONFIG += qt
 
 SOURCES += \
-        connectionf2f.cpp \
+        Network/connectionf2f.cpp \
         main.cpp \
-        freechat.cpp \
-        datasave.cpp \
-        usernametable.cpp \
-        username.cpp
+        User/freechat.cpp \
+        Data/datasave.cpp \
+        User/username.cpp
 
 HEADERS += \
-        connectionf2f.h \
-        freechat.h \
-        datasave.h \
-        usernametable.h \
-        username.h \
+        Network/connectionf2f.h \
+        User/freechat.h \
+        Data/datasave.h \
+        User/username.h \
 
 FORMS += \
-        freechat.ui
+        Designer/freechat.ui \
+        Designer/username.ui
 
 
 qnx: target.path = /tmp/$${TARGET}/bin
