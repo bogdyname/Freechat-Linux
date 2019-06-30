@@ -3,50 +3,80 @@
 ***Contact: bogdyname@gmail.com
 */
 
-#include "connectionf2f.h"
-#include "User/username.h"
+#include "Network/connectionf2f.h"
+#include "Bin/bin.h"
 
 ConnectionF2F::ConnectionF2F(QObject *parent)
     : QTcpSocket(parent)
 {
-    //HEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHERE
-    //HEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHERE
-    //HEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHERE
+
 }
 
-ConnectionF2F::~ConnectionF2F()
+/////////////////////////////////////////////////////
+
+Peerout::~Peerout()
 {
-    //HEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHERE
-    //HEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHERE
-    //HEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHERE
+    delete socket;
 }
 
-Client::Client(QObject *parent)
-    : ConnectionF2F(parent)
+void Peerout::MakeSocket()
 {
-    //HEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHERE
-    //HEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHERE
-    //HEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHERE
+    GetIpAddressFromWAN(strWANip);
+    socket = new QTcpSocket(this);
+    socket->connectToHost(strWANip, 80);
+
+        if(socket->waitForConnected(3000))
+        {
+            qDebug() << "Connected!";
+
+            socket->write("DATA OF TEXT");
+            socket->waitForBytesWritten(1000);
+            socket->waitForReadyRead(3000);
+            qDebug() << "Reading: " << socket->bytesAvailable();
+
+            qDebug() << socket->readAll();
+
+            socket->close();
+        }
+        else
+        {
+            qDebug() << "Not connected!";
+        }
 }
 
-Client::~Client()
+void Peerout::GetIpAddressFromWAN(QString &textWithIPAddres)
 {
-    //HEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHERE
-    //HEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHERE
-    //HEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHERE
+        QNetworkAccessManager networkManager;
+        QHostAddress IP;
+
+        QUrl url("https://api.ipify.org");
+        QUrlQuery query;
+        query.addQueryItem("format", "json");
+        url.setQuery(query);
+
+        QNetworkReply* reply = networkManager.get(QNetworkRequest(url));
+
+        connect(reply, &QNetworkReply::finished, [&]()
+        {
+            if(reply->error() != QNetworkReply::NoError)
+            {
+                qDebug() << "error: " << reply->error();
+            }
+            else
+            {
+                QJsonObject jsonObject= QJsonDocument::fromJson(reply->readAll()).object();
+                QHostAddress ip(jsonObject["ip"].toString());
+
+                IP = ip;
+            }
+            reply->deleteLater();
+        }
+        );
+
+        textWithIPAddres = IP.toString();
+
+        return;
 }
 
-Host::Host(QObject *parent)
-    :ConnectionF2F(parent)
-{
-    //HEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHERE
-    //HEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHERE
-    //HEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHERE
-}
 
-Host::~Host()
-{
-    //HEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHERE
-    //HEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHERE
-    //HEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHERE
-}
+/////////////////////////////////////////////////////////////////
