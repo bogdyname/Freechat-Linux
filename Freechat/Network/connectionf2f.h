@@ -46,11 +46,14 @@ public:
     Peerout();
     ~Peerout();
 
+private slots:
+    void ReadyRead();
+    void DoConnect();
+    void Connected();
+    void Disconnected();
+    void BytesWrittenOfData(qint64 bytes);
+
 private:
-    void MakeSocket();
-    void SocketError();
-    void SocketConnected();
-    void SocketDisconnected();
     void GetIpAddressFromWAN(QString &textWithIPAddres);
 
 private:
