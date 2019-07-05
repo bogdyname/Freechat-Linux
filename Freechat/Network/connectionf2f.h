@@ -33,6 +33,12 @@ public:
 
     void AskForConnectingToPortPeer();
     void AskForDisconnectingFromPortPeer();
+
+public:
+    void PassOnWANIp(QString &buffer);
+
+private:
+    void GetIpAddressFromWAN(QString &textWithIPAddres);
 };
 #endif
 
@@ -52,9 +58,6 @@ private slots:
     void Connected();
     void Disconnected();
     void BytesWrittenOfData(qint64 bytes);
-
-private:
-    void GetIpAddressFromWAN(QString &textWithIPAddres);
 
 private:
     QTcpSocket *socket = nullptr;
@@ -77,7 +80,14 @@ private:
     void SocketConnected();
     void SocketDisconnected();
 
+signals:
+    void ShowWANIpForUser();
+
+public slots:
+    void PassOnMyIpAddress();
+
 private:
     QTcpSocket *socket = nullptr;
+    QString strPassOnWANip;
 };
 #endif
