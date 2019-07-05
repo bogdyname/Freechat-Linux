@@ -4,6 +4,7 @@
 */
 
 #include "Network/connectionf2f.h"
+#include "Bin/freechat.h"
 #include "Bin/bin.h"
 
 ConnectionF2F::ConnectionF2F(QObject *parent)
@@ -11,6 +12,48 @@ ConnectionF2F::ConnectionF2F(QObject *parent)
 {
 
 }
+
+void ConnectionF2F::PassOnWANIp(QString &buffer)
+{
+    GetIpAddressFromWAN(buffer);
+
+    return;
+}
+
+void ConnectionF2F::GetIpAddressFromWAN(QString &textWithIPAddres)
+{
+        QNetworkAccessManager networkManager;
+        QHostAddress IP;
+
+        QUrl url("https://api.ipify.org");
+        QUrlQuery query;
+        query.addQueryItem("format", "json");
+        url.setQuery(query);
+
+        QNetworkReply* reply = networkManager.get(QNetworkRequest(url));
+
+        connect(reply, &QNetworkReply::finished, [&]()
+        {
+            if(reply->error() != QNetworkReply::NoError)
+            {
+                qDebug() << "error: " << reply->error();
+            }
+            else
+            {
+                QJsonObject jsonObject= QJsonDocument::fromJson(reply->readAll()).object();
+                QHostAddress ip(jsonObject["ip"].toString());
+
+                IP = ip;
+            }
+            reply->deleteLater();
+        }
+        );
+
+        textWithIPAddres = IP.toString();
+
+        return;
+}
+
 
 /////////////////////////////////////////////////////
 
@@ -29,7 +72,6 @@ Peerout::~Peerout()
 
 void Peerout::DoConnect()
 {
-    GetIpAddressFromWAN(strWANip);
     socket = new QTcpSocket(this);
 
     socket->connectToHost(strWANip, 80);
@@ -81,40 +123,19 @@ void Peerout::ReadyRead()
 
     return;
 }
+/////////////////////////////////////////////////////////////////
 
-void Peerout::GetIpAddressFromWAN(QString &textWithIPAddres)
+Peerinside::Peerinside()
 {
-        QNetworkAccessManager networkManager;
-        QHostAddress IP;
-
-        QUrl url("https://api.ipify.org");
-        QUrlQuery query;
-        query.addQueryItem("format", "json");
-        url.setQuery(query);
-
-        QNetworkReply* reply = networkManager.get(QNetworkRequest(url));
-
-        connect(reply, &QNetworkReply::finished, [&]()
-        {
-            if(reply->error() != QNetworkReply::NoError)
-            {
-                qDebug() << "error: " << reply->error();
-            }
-            else
-            {
-                QJsonObject jsonObject= QJsonDocument::fromJson(reply->readAll()).object();
-                QHostAddress ip(jsonObject["ip"].toString());
-
-                IP = ip;
-            }
-            reply->deleteLater();
-        }
-        );
-
-        textWithIPAddres = IP.toString();
-
-        return;
+    connect(&showNetworkInfo, SIGNAL(ShowWANIpForUser()), this, SLOT(PassOnMyIpAddress()));
 }
 
+void Peerinside::PassOnMyIpAddress()
+{
+    PassOnWANIp(strPassOnWANip);
 
-/////////////////////////////////////////////////////////////////
+    QMessageBox::information(this, tr("WAN IP"),
+                    tr("Do not show this IP to anyone!"), tr(strPassOnWANip));
+
+    return;
+}
