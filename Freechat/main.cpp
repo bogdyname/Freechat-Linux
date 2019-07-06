@@ -621,7 +621,7 @@ copy of the Program in return for a fee.
 Contact: bogdyname@gmail.com
 */
 
-#include "User/freechat.h"
+#include "Bin/freechat.h"
 #include "Data/datasave.h"
 #include <QApplication>
 #include <QtCore/QSettings>
@@ -631,15 +631,6 @@ Contact: bogdyname@gmail.com
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
-
-    Datasave newFile;
-
-        //HEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHERE
-        //HEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHERE
-        //HEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHERE
-        //HEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHERE
-        //HEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHERE
-        //HEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHERE
 
     Freechat freechat;
     freechat.show();

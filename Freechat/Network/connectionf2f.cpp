@@ -10,7 +10,7 @@
 ConnectionF2F::ConnectionF2F(QObject *parent)
     : QTcpSocket(parent)
 {
-
+    Peerout connecting;
 }
 
 void ConnectionF2F::PassOnWANIp(QString &buffer)

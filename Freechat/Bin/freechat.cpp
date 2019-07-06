@@ -3,11 +3,9 @@
 ***Contact: bogdyname@gmail.com
 */
 
-#include <QtWidgets>
 #include "Bin/freechat.h"
 #include "Network/connectionf2f.h"
-
-using namespace Qt;
+#include <QtWidgets>
 
 Freechat::Freechat(QWidget *parent)
     : QDialog(parent)
