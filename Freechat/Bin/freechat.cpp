@@ -4,7 +4,8 @@
 */
 
 #include <QtWidgets>
-#include "User/freechat.h"
+#include "Bin/freechat.h"
+#include "Network/connectionf2f.h"
 
 using namespace Qt;
 
@@ -16,13 +17,31 @@ Freechat::Freechat(QWidget *parent)
     lineForTypeText->setFocusPolicy(StrongFocus);
     textFieldForViewMessages->setFocusPolicy(NoFocus);
     textFieldForViewMessages->setReadOnly(true);
-    listWithNicknameOfUser->setFocusPolicy(NoFocus);
-    listViewWithNetworkData->setReadOnly(true);
+    listWithIpOfUsers->setFocusPolicy(NoFocus);
 
-    //HEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHERE
-    //HEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHERE
-    //HEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHERE
+    connect(&showNetworkInfo, SIGNAL(), SLOT());
+
 }
-//HEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHERE
-//HEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHERE
-//HEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHERE
+
+void Freechat::on_showNetworkSettings_clicked(bool checked)
+{
+        QString text = QInputDialog::getText(this, tr("Network settings"),
+        tr("Write IP address of peer:"),
+        QLineEdit::Normal, QDir::home().dirName(), &checked);
+
+        if (checked && !text.isEmpty())
+        {
+            writeIpOfPeer->setText(text);
+        }
+        else
+        {
+            /*clear code*/
+        }
+
+        return;
+}
+
+void Freechat::on_showNetworkInfo_clicked(bool checked)
+{
+
+}

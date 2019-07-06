@@ -13,10 +13,6 @@
 #include <QTcpSocket>
 #include <QHostInfo>
 #include <QtNetwork>
-#include <QSsl>
-
-using namespace QSsl;
-using namespace QPasswordDigestor;
 
 #ifndef CONNECTIONF2F_H
 #define CONNECTIONF2F_H
@@ -39,55 +35,5 @@ public:
 
 private:
     void GetIpAddressFromWAN(QString &textWithIPAddres);
-};
-#endif
-
-#ifndef PEEROUT
-#define PEEROUT
-class Peerout : public ConnectionF2F
-{
-    Q_OBJECT
-
-public:
-    Peerout();
-    ~Peerout();
-
-private slots:
-    void ReadyRead();
-    void DoConnect();
-    void Connected();
-    void Disconnected();
-    void BytesWrittenOfData(qint64 bytes);
-
-private:
-    QTcpSocket *socket = nullptr;
-    QString strWANip;
-};
-#endif
-
-#ifndef PEERONSIDE
-#define PEERONSIDE
-class Peerinside : public ConnectionF2F
-{
-    Q_OBJECT
-
-    Peerinside();
-    ~Peerinside();
-
-private:
-    void MakeSocket();
-    void SocketError();
-    void SocketConnected();
-    void SocketDisconnected();
-
-signals:
-    void ShowWANIpForUser();
-
-public slots:
-    void PassOnMyIpAddress();
-
-private:
-    QTcpSocket *socket = nullptr;
-    QString strPassOnWANip;
 };
 #endif
