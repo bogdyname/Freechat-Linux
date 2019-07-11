@@ -1,39 +1,84 @@
 #include <iostream>
-#include <string>
+#include <errno.h>
+#include <stdio.h>
+#include <unistd.h>
+#include <stdlib.h>
 #include <pthread.h>
 
 using namespace std;
 
-void *ThreadPongStatus(void *pong)
+inline void *ThreadStatus(void *someArg)
 {
-	cout << "T1: pong" << endl;
-
-	pthread_exit(0);
-}
-
-void *ThreadPingStatus(void *ping)
-{
-	cout << "T2: ping" << endl;
-
-	pthread_exit(0);
+	int loc_id = * (int *) someArg;
+	for(unsigned int i = 0; i < 2; i++)
+	{
+		cout << "T" << i  << ":"  << loc_id  << endl;
+		sleep(1);
+	}
 }
 
 int main(int argc, char *argv[])
 {
-	void *pong = NULL;
-	void *ping = NULL;
+	int T1 = 1;
+	int T2 = 2;
+	int result;
 
-	pthread_t T1;
-	pthread_t T2;
+	pthread_t threadOne;
+	pthread_t threadTwo;
 
-	pthread_create(&T1, NULL, ThreadPongStatus, pong);
-	pthread_create(&T2, NULL, ThreadPingStatus, ping);
+	result = pthread_create(&threadOne, NULL, ThreadStatus, &T1);
 
-	for(;;)
-	{	
-	pthread_join(T1, NULL);
-	pthread_join(T2, NULL);
+	if(result != 0)
+	{
+		perror("T1: pong");
+		return EXIT_FAILURE;
 	}
+	else
+	{
+		/*clear code*/
+	}
+
+
+	result = pthread_create(&threadTwo, NULL, ThreadStatus, &T2);
+
+	if(result != 0)
+	{
+		perror("T2: ping");
+		return EXIT_FAILURE;
+	}
+	else
+	{
+		/*clear code*/
+	}
+
+	sleep(2);
+	cout << "Loading..." << endl;
+
+	result = pthread_join(threadOne, NULL);
+	if(result != 0)
+	{
+		perror("Wait first torrent");
+		return EXIT_FAILURE;
+	}
+	else
+	{
+		/*clear code*/
+	}
+
+	result = pthread_join(threadTwo, NULL);
+       if(result != 0)
+       {
+       		perror("Wait second torrent");
+		return EXIT_FAILURE;
+       }	       
+       else
+       {
+       		/*clear code*/
+       }
+
+	cout << "Loading..." << endl;
+	cout << "Exit" << endl;
+	return EXIT_SUCCESS;
 
 	system("pause");
 	return 0;
