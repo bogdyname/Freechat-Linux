@@ -3,12 +3,13 @@
 ***Contact: bogdyname@gmail.com
 */
 
-#ifndef FREECHAT_H
-#define FREECHAT_H
 #include "Bin/bin.h"
 #include "ui_freechat.h"
 #include <QTextTableFormat>
 #include <QDialog>
+
+#ifndef FREECHAT_H
+#define FREECHAT_H
 
 using namespace Qt;
 

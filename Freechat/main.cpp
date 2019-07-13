@@ -628,9 +628,13 @@ Contact: bogdyname@gmail.com
 #include <QtNetwork/QNetworkSession>
 #include <QtNetwork/QNetworkConfigurationManager>
 
+using namespace Qt;
+
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
+
+    QNetworkConfigurationManager manager;
 
     Freechat freechat;
     freechat.show();

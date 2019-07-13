@@ -4,8 +4,8 @@
 */
 
 #include "ui_freechat.h"
-#include "User/username.h"
-#include "User/freechat.h"
+#include "Bin/freechat.h"
+#include "Network/connectionf2f.h"
 #include <QStorageInfo>
 #include <QDateTime>
 #include <QTimer>
@@ -13,8 +13,8 @@
 
 #ifndef DATASAVE_H
 #define DATASAVE_H
-
-class Datasave : public Username, public Freechat
+class Datasave : public QFile,
+public ConnectionF2F, public Freechat
 {
     Q_OBJECT
 
@@ -27,15 +27,13 @@ private:
 public:
     ~Datasave();
     Datasave(Freechat *parent = nullptr);
-    Datasave(Datasave &&MoveSource, QFile &fileWithDataForBackup);
     Datasave(QFile &fileWithData, QFile &fileWithDataForBackup);
 
 signals:
-    void SaveDataFileAs();
     void CheckYourMemorySize();
     inline void RunTimeIsOver();
     void ReadFileForViewMessages();
-    void CheckUsernameForSaveFile();
+    void CheckIpAddressForSaveFile();
 
 public slots:
     inline void DeleteAllDataForFreeMemory(QFile &fileWithData, QFile &fileWithDataForBackup);
@@ -45,5 +43,4 @@ public slots:
 private:
     void RSAMODULE();
 };
-
-#endif // DATASAVE_H
+#endif

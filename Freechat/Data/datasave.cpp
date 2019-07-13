@@ -3,31 +3,28 @@
 ***Contact: bogdyname@gmail.com
 */
 
-#include "User/username.h"
-#include "datasave.h"
-#include "User/freechat.h"
+#include "Data/datasave.h"
 
 Datasave::Datasave(Freechat *parent)
-    : Username(parent)
+    : QFile(parent)
 {
-    //HEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHERE
-    //HEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHERE
-    //HEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHEREHERE
-
    connect( , SIGNAL(RunTimeIsOver()),
             this, SLOT(RunBackupFiles()));
-   connect( , SIGNAL(SaveDataFileAs()),
-            this, SLOT(Datasave()));
    connect( , SIGNAL(CheckYourMemorySize()),
             this, SLOT(DeleteAllDataForFreeMemory()));
    connect( , SIGNAL(ReadFileForViewMessages()),
             this, SLOT(ReadFile()));
-   connect( , SIGNAL(CheckUsernameForSaveFile()),
-            this, SLOT(Datasave()));
+   connect( , SIGNAL(CheckIpAddressForSaveFile()),
+            this, SLOT());
 
    QString fname = "filewd" +
            QDateTime::currentDateTime().toString("yyyy-MM-dd_hh-mm-ss") + ".txt";
    QFile file(fname);
+
+   /*CHECK THIS SIDE!*/
+   QString str;
+   PassOnWANIp(str);
+  /*CHECK THIS SIDE!*/
 
    if(buffer != nullptr)
    {
@@ -38,7 +35,7 @@ Datasave::Datasave(Freechat *parent)
             if(file.open(WriteOnly))
             {
                 QTextStream writeStream(&file);
-                writeStream << "NAME OF USER like Nikita Volkov or Google";
+                writeStream << "";
                 file.write(*buffer);
                 file.flush();
             }
@@ -53,7 +50,7 @@ Datasave::Datasave(Freechat *parent)
         }
    }
 
-   QDir().mkdir(QApplication::applicationDirPath()+"/../data");
+   QDir().mkdir(QApplication::applicationDirPath()+"/../savedata");
 }
 
 Datasave::Datasave(QFile &fileWithData, QFile &fileWithDataForBackup)
@@ -87,13 +84,7 @@ Datasave::~Datasave()
     delete buffer;
 }
 
-void Datasave::CheckUsernameForSaveFile()
-{
-
-    return;
-}
-
-void Datasave::SaveDataFileAs()
+void Datasave::CheckIpAddressForSaveFile()
 {
 
     return;
@@ -166,3 +157,4 @@ inline void Datasave::ReadFile(QFile &fileWithData)
 
     return;
 }
+

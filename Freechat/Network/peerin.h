@@ -30,4 +30,4 @@ private:
     QTcpSocket *socket = nullptr;
     QString strPassOnWANip;
 };
-#endif // PEERIN_H
+#endif

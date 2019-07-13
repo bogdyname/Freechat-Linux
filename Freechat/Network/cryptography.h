@@ -24,5 +24,4 @@ public:
 private:
     friend class ConnectionF2F;
 };
-
-#endif // CRYPTOGRAPHY_H
+#endif
