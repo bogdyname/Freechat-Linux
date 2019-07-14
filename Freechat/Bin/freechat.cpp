@@ -17,8 +17,8 @@ Freechat::Freechat(QWidget *parent)
     textFieldForViewMessages->setReadOnly(true);
     listWithIpOfUsers->setFocusPolicy(NoFocus);
 
-    connect(&showNetworkInfo, SIGNAL(), SLOT());
-
+    connect(&on_showNetworkInfo_clicked, SIGNAL(), SLOT());
+    connect(&on_showNetworkSettings_clicked, SIGNAL(), SLOT());
 }
 
 void Freechat::on_showNetworkSettings_clicked(bool checked)

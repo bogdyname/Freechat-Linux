@@ -35,7 +35,7 @@ Datasave::Datasave(Freechat *parent)
             if(file.open(WriteOnly))
             {
                 QTextStream writeStream(&file);
-                writeStream << "";
+                writeStream << "messeges";
                 file.write(*buffer);
                 file.flush();
             }
@@ -84,8 +84,19 @@ Datasave::~Datasave()
     delete buffer;
 }
 
-void Datasave::CheckIpAddressForSaveFile()
+inline void Datasave::CheckIpAddressForSaveFile()
 {
+    QString str;
+    PassOnWANIp(str);
+
+    if(/*user here make operator*/)
+    {
+
+    }
+    else
+    {
+        /*clear code*/
+    }
 
     return;
 }
@@ -147,7 +158,7 @@ inline void Datasave::ReadFile(QFile &fileWithData)
 {
     if ((fileWithData.exists()) && (fileWithData.open(ReadOnly)))
     {
-        ui->textBrowser->setText(fileWithData.readAll());
+        ui->textFieldForViewMessages->setText(fileWithData.readAll());
         fileWithData.close();
     }
     else
@@ -157,4 +168,3 @@ inline void Datasave::ReadFile(QFile &fileWithData)
 
     return;
 }
-

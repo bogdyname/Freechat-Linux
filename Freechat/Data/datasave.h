@@ -41,6 +41,9 @@ public slots:
     inline void ReadFile(QFile &fileWithData);
 
 private:
+    void operator==();
+
+private:
     void RSAMODULE();
 };
 #endif
