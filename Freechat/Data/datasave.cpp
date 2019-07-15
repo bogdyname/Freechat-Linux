@@ -8,23 +8,14 @@
 Datasave::Datasave(Freechat *parent)
     : QFile(parent)
 {
-   connect( , SIGNAL(RunTimeIsOver()),
-            this, SLOT(RunBackupFiles()));
-   connect( , SIGNAL(CheckYourMemorySize()),
-            this, SLOT(DeleteAllDataForFreeMemory()));
-   connect( , SIGNAL(ReadFileForViewMessages()),
-            this, SLOT(ReadFile()));
-   connect( , SIGNAL(CheckIpAddressForSaveFile()),
-            this, SLOT());
+
 
    QString fname = "filewd" +
            QDateTime::currentDateTime().toString("yyyy-MM-dd_hh-mm-ss") + ".txt";
    QFile file(fname);
 
-   /*CHECK THIS SIDE!*/
-   QString str;
-   PassOnWANIp(str);
-  /*CHECK THIS SIDE!*/
+   QString strWithIP;
+   PassOnWANIp(strWithIP);
 
    if(buffer != nullptr)
    {
@@ -35,7 +26,8 @@ Datasave::Datasave(Freechat *parent)
             if(file.open(WriteOnly))
             {
                 QTextStream writeStream(&file);
-                writeStream << "messeges";
+                writeStream << strWithIP;
+                writeStream << /*Data from text field*/;
                 file.write(*buffer);
                 file.flush();
             }
@@ -80,25 +72,22 @@ Datasave::Datasave(QFile &fileWithData, QFile &fileWithDataForBackup)
 
 Datasave::~Datasave()
 {
-    delete runTimer;
     delete buffer;
 }
 
-inline void Datasave::CheckIpAddressForSaveFile()
+inline bool Datasave::CheckIpAddressForSaveFile()
 {
-    QString str;
+    QString str = nullptr;
     PassOnWANIp(str);
 
-    if(/*user here make operator*/)
+    if(str == )
     {
-
+        return true;
     }
     else
     {
-        /*clear code*/
+        return false;
     }
-
-    return;
 }
 
 void Datasave::CheckYourMemorySize()
@@ -136,13 +125,6 @@ inline void Datasave::DeleteAllDataForFreeMemory(QFile &fileWithData, QFile &fil
 {
     fileWithData.remove();
     fileWithDataForBackup.remove();
-
-    return;
-}
-
-inline void Datasave::RunTimeIsOver()
-{
-
 
     return;
 }
