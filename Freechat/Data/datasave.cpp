@@ -75,12 +75,12 @@ Datasave::~Datasave()
     delete buffer;
 }
 
-inline bool Datasave::CheckIpAddressForSaveFile()
+inline bool Datasave::CheckIpAddressForSaveFile(QString &strWithIpOfPeer)
 {
     QString str = nullptr;
     PassOnWANIp(str);
 
-    if(str == )
+    if(str == strWithIpOfPeer)
     {
         return true;
     }
@@ -88,6 +88,13 @@ inline bool Datasave::CheckIpAddressForSaveFile()
     {
         return false;
     }
+}
+
+inline QString Datasave::ReadFirstStringFromDataFile(QString &strWithIpOfPeer)
+{
+    //get first string from data file
+
+    return strWithIpOfPeer;
 }
 
 void Datasave::CheckYourMemorySize()
@@ -140,7 +147,7 @@ inline void Datasave::ReadFile(QFile &fileWithData)
 {
     if ((fileWithData.exists()) && (fileWithData.open(ReadOnly)))
     {
-        ui->textFieldForViewMessages->setText(fileWithData.readAll());
+        fileWithData.readAll();
         fileWithData.close();
     }
     else

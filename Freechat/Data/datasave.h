@@ -41,5 +41,6 @@ public slots:
 private:
     void RSAMODULE(QFile &fileWithData);
     inline bool CheckIpAddressForSaveFile(QString &strWithIpOfPeer);
+    inline QString ReadFirstStringFromDataFile(QString &strWithIpOfPeer);
 };
 #endif
