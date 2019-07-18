@@ -77,16 +77,19 @@ Datasave::~Datasave()
 
 inline bool Datasave::CheckIpAddressForSaveFile(QString &strWithIpOfPeer)
 {
-    QString str = nullptr;
-    PassOnWANIp(str);
+    QString str;
 
-    if(str == strWithIpOfPeer)
+    PassOnWANIp(str);
+    ReadFirstStringFromDataFile(strWithIpOfPeer);
+
+    switch(str)
     {
-        return true;
-    }
-    else
-    {
-        return false;
+        case strWithIpOfPeer:
+            return true;
+            break;
+        default:
+            return false;
+            break;
     }
 }
 
@@ -99,21 +102,27 @@ inline QString Datasave::ReadFirstStringFromDataFile(QString &strWithIpOfPeer)
 
 void Datasave::CheckYourMemorySize()
 {
+    #ifndef Q_DEBUG
     qDebug() << storage.rootPath();
+    #endif
 
     if (storage.isReadOnly())
     {
+        #ifndef Q_DEBUG
         qDebug() << "isReadOnly:" << storage.isReadOnly();
+        #endif
     }
     else
     {
         /*clear code*/
     }
 
+    #ifndef Q_DEBUG
     qDebug() << "name:" << storage.name();
     qDebug() << "fileSystemType:" << storage.fileSystemType();
     qDebug() << "size:" << storage.bytesTotal()/1000/1000 << "MB";
     qDebug() << "availableSize:" << storage.bytesAvailable()/1000/1000 << "MB";
+    #endif
 
     if (storage.bytesFree() == 1)
     {

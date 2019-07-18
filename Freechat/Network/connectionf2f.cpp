@@ -36,7 +36,9 @@ void ConnectionF2F::GetIpAddressFromWAN(QString &textWithIPAddres)
         {
             if(reply->error() != QNetworkReply::NoError)
             {
+                #ifndef Q_DEBUG
                 qDebug() << "error: " << reply->error();
+                #endif
             }
             else
             {

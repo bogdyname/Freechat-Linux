@@ -48,20 +48,25 @@ void Peerout::DoConnect()
 
         if(socket->waitForConnected(3000))
         {
+            #ifndef Q_DEBUG
             qDebug() << "Connected!";
+            #endif
 
             socket->write("DATA OF TEXT");
             socket->waitForBytesWritten(1000);
             socket->waitForReadyRead(3000);
+            #ifndef Q_DEBUG
             qDebug() << "Reading: " << socket->bytesAvailable();
-
             qDebug() << socket->readAll();
+            #endif
 
             socket->close();
         }
         else
         {
+            #ifndef Q_DEBUG
             qDebug() << "Not connected!";
+            #endif
         }
 
         return;
@@ -69,7 +74,9 @@ void Peerout::DoConnect()
 
 void Peerout::BytesWrittenOfData(qint64 bytes)
 {
+    #ifndef Q_DEBUG
     qDebug() << bytes << " bytes written...";
+    #endif
 
     return;
 }
@@ -88,8 +95,10 @@ void Peerout::Disconnected()
 
 void Peerout::ReadyRead()
 {
+    #ifndef Q_DEBUG
     qDebug() << "reading...";
     qDebug() << socket->readAll();
+    #endif
 
     return;
 }
