@@ -3,6 +3,9 @@
 ***Contact: bogdyname@gmail.com
 */
 
+#ifndef BIN_H
+#define BIN_H
+
 #include <QHostAddress>
 #include <QJsonObject>
 #include <QIODevice>
@@ -11,11 +14,6 @@
 #include <QDateTime>
 #include <QString>
 #include <QFile>
-
-#ifndef BIN_H
-#define BIN_H
-class Peerout;
-class ConnectionF2F;
 
 class Bin : public QObject
 {

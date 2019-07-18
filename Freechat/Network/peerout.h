@@ -3,12 +3,11 @@
 ***Contact: bogdyname@gmail.com
 */
 
-#include "Network/connectionf2f.h"
-#include <QWidget>
-#include <QInputDialog>
-
 #ifndef PEEROUT
 #define PEEROUT
+
+#include "Network/connectionf2f.h"
+
 class Peerout : public ConnectionF2F
 {
     Q_OBJECT

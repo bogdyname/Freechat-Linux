@@ -29,16 +29,16 @@ Datasave::Datasave(Freechat *parent)
                 writeStream << strWithIP;
                 writeStream << /*Data from text field*/;
                 file.write(*buffer);
-                file.flush();
+                file.close();
             }
             else
             {
-                file.close();
+                file.flush();
             }
         }
         else
         {
-            /*clear code*/
+            file.flush();
         }
    }
 
@@ -56,17 +56,18 @@ Datasave::Datasave(QFile &fileWithData, QFile &fileWithDataForBackup)
             *buffer = fileWithData.readAll();
             fileWithDataForBackup.write(*buffer);
             fileWithData.close();
-            fileWithDataForBackup.flush();
+            fileWithDataForBackup.close();
         }
         else
         {
-            fileWithData.close();
+            fileWithData.flush();
             fileWithDataForBackup.flush();
         }
     }
     else
     {
-        /*clear code*/
+        fileWithData.flush();
+        fileWithDataForBackup.flush();
     }
 }
 
@@ -82,14 +83,13 @@ inline bool Datasave::CheckIpAddressForSaveFile(QString &strWithIpOfPeer)
     PassOnWANIp(str);
     ReadFirstStringFromDataFile(strWithIpOfPeer);
 
-    switch(str)
+    if(str == strWithIpOfPeer)
     {
-        case strWithIpOfPeer:
-            return true;
-            break;
-        default:
-            return false;
-            break;
+        return true;
+    }
+    else
+    {
+        return false;
     }
 }
 

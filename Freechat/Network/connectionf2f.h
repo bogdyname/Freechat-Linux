@@ -3,7 +3,9 @@
 ***Contact: bogdyname@gmail.com
 */
 
-#include "Bin/bin.h"
+#ifndef CONNECTIONF2F_H
+#define CONNECTIONF2F_H
+
 #include <QNetworkInterface>
 #include <QAbstractSocket>
 #include <QNetworkSession>
@@ -14,8 +16,6 @@
 #include <QHostInfo>
 #include <QtNetwork>
 
-#ifndef CONNECTIONF2F_H
-#define CONNECTIONF2F_H
 class ConnectionF2F : public QTcpSocket
 {
     Q_OBJECT

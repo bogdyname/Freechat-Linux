@@ -29,7 +29,7 @@ void Freechat::on_showNetworkSettings_clicked(bool checked)
 
         if (checked && !text.isEmpty())
         {
-            writeIpOfPeer->setText(text);
+            writeIpOfPeer.setText(text);
         }
         else
         {

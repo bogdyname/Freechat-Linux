@@ -3,10 +3,11 @@
 ***Contact: bogdyname@gmail.com
 */
 
-#include "Network/connectionf2f.h"
-
 #ifndef FIREWALL_H
 #define FIREWALL_H
+
+#include "Network/connectionf2f.h"
+
 class Firewall : public ConnectionF2F
 {
     Q_OBJECT

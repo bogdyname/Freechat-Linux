@@ -11,8 +11,6 @@ Peerout::Peerout()
     connect(socket, SIGNAL(DoConnect()), this, SLOT(DoConnect()));
     connect(socket, SIGNAL(ReadyRead()), this, SLOT(ReadyRead()));
     connect(socket, SIGNAL(BytesWrittenOfData(qint64)), this, SLOT(BytesWrittenOfData(qint64)));
-
-    connect(&showNetworkSettings, SIGNAL(CallNetwrokSettings()), this, SLOT(WriteIpAddressFromPeer()));
 }
 
 Peerout::~Peerout()
@@ -22,20 +20,6 @@ Peerout::~Peerout()
 
 void Peerout::WriteIpAddressFromPeer()
 {
-    bool ok;
-
-        QString text = QInputDialog::getText(this, tr("Network settings"),
-        tr("Write IP address of peer:"),
-        QLineEdit::Normal, QDir::home().dirName(), &ok);
-
-        if (ok && !text.isEmpty())
-        {
-            writeIpOfPeer->setText(text);
-        }
-        else
-        {
-            /*clear code*/
-        }
 
         return;
 }
