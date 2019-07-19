@@ -18,7 +18,8 @@ class Freechat : public QDialog, private Ui::Freechat
     Q_OBJECT
 
 private:
-    QString writeIpOfPeer;
+    QString IpOfPeer;
+    QString NickNameOfPeer;
 
 public:
     Freechat(QWidget *parent = nullptr);

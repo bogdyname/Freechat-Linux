@@ -23,10 +23,17 @@ public:
     ~Bin();
     Bin(QObject *parent = nullptr);
 
-signals:
-    void RebootConnectin();
+private:
+    void ListWithNickNameOfPeers(const QString &nickname);
+    void ListWithIpOfPeers(const QString &ip);
 
-private slots:
-    void SlotForRebootConnection();
+    void InsertInIpList();
+    void InsertInNicknNameList();
+
+    void RemoveFromIpLIst();
+    void RemoveFromNickNameList();
+
+    void SortNickNameList();
+    void SortIpList();
 };
 #endif
