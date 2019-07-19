@@ -42,4 +42,19 @@ void Freechat::on_showNetworkSettings_clicked(bool checked)
 void Freechat::on_showNetworkInfo_clicked(bool checked)
 {
 
+
+    return;
+}
+
+void Freechat::on_writeIpOfPeer_textEdited(const QString &arg1)
+{
+
+    return;
+}
+
+void Freechat::on_writeNickOfPeer_textEdited(const QString &arg1)
+{
+
+
+    return;
 }

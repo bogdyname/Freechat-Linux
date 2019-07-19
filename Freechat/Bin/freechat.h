@@ -27,5 +27,7 @@ public:
 private slots:
     void on_showNetworkSettings_clicked(bool checked);
     void on_showNetworkInfo_clicked(bool checked);
+    void on_writeIpOfPeer_textEdited(const QString &arg1);
+    void on_writeNickOfPeer_textEdited(const QString &arg1);
 };
 #endif
