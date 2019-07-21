@@ -6,18 +6,16 @@
 #ifndef BIN_H
 #define BIN_H
 
-#include <QHostAddress>
-#include <QJsonObject>
-#include <QIODevice>
-#include <QHostInfo>
-#include <QSaveFile>
-#include <QDateTime>
 #include <QString>
-#include <QFile>
+#include <QList>
 
 class Bin : public QObject
 {
     Q_OBJECT
+
+private:
+    QList<QString> listWithNickName;
+    QList<QString> listWithIpAddress;
 
 public:
     ~Bin();
@@ -32,6 +30,9 @@ private:
 
     void RemoveFromIpLIst();
     void RemoveFromNickNameList();
+
+    void GetElementFromIpList();
+    void GetElementFromNickNameList();
 
     void SortNickNameList();
     void SortIpList();
