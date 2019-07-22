@@ -22,7 +22,6 @@ Bin::~Bin()
 void Bin::ListWithNickNameOfPeers(const QString &nickname)
 {
     listWithNickName << nickname;
-    QList<QString>::iterator it = listWithNickName.begin();
 
     return;
 }
@@ -30,14 +29,13 @@ void Bin::ListWithNickNameOfPeers(const QString &nickname)
 void Bin::ListWithIpOfPeers(const QString &ip)
 {
     listWithIpAddress << ip;
-    QList<QString>::iterator it = listWithIpAddress.begin();
 
     return;
 }
 
 void Bin::GetElementFromIpList()
 {
-    QList<QString>::iterator it = listWithIpAddress.begin();
+    QList<QString>::const_iterator it = listWithIpAddress.constBegin();
 
     for(; it != listWithIpAddress.end(); ++it)
     {
@@ -51,13 +49,45 @@ void Bin::GetElementFromIpList()
 
 void Bin::GetElementFromNickNameList()
 {
-    QList<QString>::iterator it = listWithNickName.begin();
+    QList<QString>::const_iterator it = listWithNickName.constBegin();
 
     for(; it != listWithNickName.end(); ++it)
     {
         #ifndef Q_DEBUG
         qDebug() << "Element from Nickname list: " << *it << endl;
         #endif
+    }
+
+    return;
+}
+
+void Bin::RemoveFromIpLIst()
+{
+    QList<QString>::iterator it = listWithIpAddress.begin();
+
+    for(; it != listWithIpAddress.end(); ++it)
+    {
+        #ifndef Q_DEBUG
+        qDebug() << "Deleted element from Nickname list: " << *it << endl;
+        #endif
+
+        listWithIpAddress.erase(*it);
+    }
+
+    return;
+}
+
+void Bin::RemoveFromNickNameList()
+{
+    QList<QString>::iterator it = listWithNickName.begin();
+
+    for(; it != listWithNickName.end(); ++it)
+    {
+        #ifndef Q_DEBUG
+        qDebug() << "Deleted element from Nickname list: " << *it << endl;
+        #endif
+
+        listWithNickName.erase(*it);
     }
 
     return;

@@ -25,16 +25,10 @@ private:
     void ListWithNickNameOfPeers(const QString &nickname);
     void ListWithIpOfPeers(const QString &ip);
 
-    void InsertInIpList();
-    void InsertInNicknNameList();
-
     void RemoveFromIpLIst();
     void RemoveFromNickNameList();
 
     void GetElementFromIpList();
     void GetElementFromNickNameList();
-
-    void SortNickNameList();
-    void SortIpList();
 };
 #endif
