@@ -30,8 +30,6 @@ SOURCES += \
         Network/connectionf2f.cpp \
         Network/cryptography.cpp \
         Network/cryptography.cpp \
-        Network/firewall.cpp \
-        Network/firewall.cpp \
         Network/peerin.cpp \
         Network/peerout.cpp \
         main.cpp \
@@ -46,8 +44,6 @@ HEADERS += \
         Data/datasave.h \
         Network/cryptography.h \
         Network/cryptography.h \
-        Network/firewall.h \
-        Network/firewall.h \
         Network/peerin.h \
         Network/peerout.h
 
