@@ -22,8 +22,8 @@ public:
     Bin(QObject *parent = nullptr);
 
 private:
-    void ListWithNickNameOfPeers(const QString &nickname);
-    void ListWithIpOfPeers(const QString &ip);
+    void WriteInNickNameListOfPeers(const QString &nickname);
+    void WriteInIpListOfPeers(const QString &ip);
 
     void RemoveFromIpLIst();
     void RemoveFromNickNameList();

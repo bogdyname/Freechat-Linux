@@ -19,14 +19,14 @@ Bin::~Bin()
 
 }
 
-void Bin::ListWithNickNameOfPeers(const QString &nickname)
+void Bin::WriteInNickNameListOfPeers(const QString &nickname)
 {
     listWithNickName << nickname;
 
     return;
 }
 
-void Bin::ListWithIpOfPeers(const QString &ip)
+void Bin::WriteInIpListOfPeers(const QString &ip)
 {
     listWithIpAddress << ip;
 
@@ -71,7 +71,7 @@ void Bin::RemoveFromIpLIst()
         qDebug() << "Deleted element from Nickname list: " << *it << endl;
         #endif
 
-        listWithIpAddress.erase(*it);
+        //listWithIpAddress.erase(*it);
     }
 
     return;
@@ -87,7 +87,7 @@ void Bin::RemoveFromNickNameList()
         qDebug() << "Deleted element from Nickname list: " << *it << endl;
         #endif
 
-        listWithNickName.erase(*it);
+        //listWithNickName.erase(*it);
     }
 
     return;
