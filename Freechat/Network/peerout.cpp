@@ -20,6 +20,7 @@ Peerout::~Peerout()
 
 void Peerout::WriteIpAddressFromPeer()
 {
+        strWANip = ;
 
         return;
 }
@@ -27,6 +28,10 @@ void Peerout::WriteIpAddressFromPeer()
 void Peerout::DoConnect()
 {
     socket = new QTcpSocket(this);
+
+    #ifndef Q_DEBUG
+    qDebug() << "A new socket created.";
+    #endif
 
     socket->connectToHost(strWANip, 80);
 

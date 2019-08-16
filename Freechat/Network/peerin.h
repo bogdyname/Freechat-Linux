@@ -7,24 +7,20 @@
 #define PEERIN_H
 
 #include "Network/connectionf2f.h"
+#include "Network/peerout.h"
 
-class Peerin : public ConnectionF2F
+class Peerin : public ConnectionF2F, public QTcpServer
 {
     Q_OBJECT
 
-    Peerin();
+    Peerin(ConnectionF2F *parent = nullptr);
     ~Peerin();
 
 private:
-    void MakeSocket();
-    void SocketError();
-    void SocketConnected();
-    void SocketDisconnected();
+    void CheckPortsForConnection();
+    void Connection();
 
-signals:
-    void ShowWANIpForUser();
-
-public slots:
+public:
     void PassOnMyIpAddress();
 
 private:

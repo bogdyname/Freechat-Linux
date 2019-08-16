@@ -7,6 +7,7 @@
 #define PEEROUT
 
 #include "Network/connectionf2f.h"
+#include "Bin/freechat.h"
 
 class Peerout : public ConnectionF2F
 {
@@ -16,17 +17,15 @@ public:
     Peerout();
     ~Peerout();
 
-signals:
-    void CallNetwrokSettings();
-
 protected slots:
     void WriteIpAddressFromPeer();
 
-private slots:
+public slots:
     void ReadyRead();
     void DoConnect();
     void Connected();
     void Disconnected();
+    void TaskResult(unsigned int Number);
     void BytesWrittenOfData(qint64 bytes);
 
 private:
