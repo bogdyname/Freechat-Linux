@@ -5,41 +5,46 @@
 
 #include "peerin.h"
 
-Peerin::Peerin(ConnectionF2F *parent)
+Peerin::Peerin(QObject *parent)
     : QTcpServer(parent)
 {
+    CheckPortForConnection();
 
 }
 
-void Peerin::PassOnMyIpAddress()
+void Peerin::CheckPortForConnection()
 {
-    PassOnWANIp(strPassOnWANip);
+    server = new QTcpServer(this);
 
-    return;
-}
-
-void Peerin::CheckPortsForConnection()
-{
-    if(listen(QHostAddress::Any, 1234))
+        if(listen(QHostAddress::Any, 80))
         {
-            #ifndef Q_DEBUG
-            qDebug() << "Server: started";
-            #endif
+           #ifndef Q_DEBUG
+           qDebug() << "Server: started";
+           #endif
         }
         else
         {
             #ifndef Q_DEBUG
-            qDebug() << "Server: not started!";
+            qDebug() << "Server: not started: " << errorString();
             #endif
         }
 
     return;
 }
 
-void Peerin::Connection()
+void Peerin::incomingConnection(qintptr socketDescriptor)
 {
-    Peerout *peer = new Peerout();
-    peer->DoConnect();
+    QTcpSocket *socket = new QTcpSocket();
+    socket->setSocketDescriptor(socketDescriptor);
+
+    connect(socket, SIGNAL(readyRead()), this, SLOT(ReadData()));
+    connect(socket, SIGNAL(disconnected()), this, SLOT(Disconnecting()));
+
+    return;
+}
+
+void Peerin::ReadData()
+{
 
     return;
 }

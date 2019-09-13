@@ -13,44 +13,14 @@ ConnectionF2F::ConnectionF2F(QObject *parent)
 
 }
 
-void ConnectionF2F::PassOnWANIp(QString &buffer)
+void ConnectionF2F::OpenConnectingToPortPeer()
 {
-    GetIpAddressFromWAN(buffer);
 
     return;
 }
 
-void ConnectionF2F::GetIpAddressFromWAN(QString &textWithIPAddres)
+void ConnectionF2F::OpenDisconnectingFromPortPeer()
 {
-        QNetworkAccessManager networkManager;
-        QHostAddress IP;
 
-        QUrl url("https://api.ipify.org");
-        QUrlQuery query;
-        query.addQueryItem("format", "json");
-        url.setQuery(query);
-
-        QNetworkReply* reply = networkManager.get(QNetworkRequest(url));
-
-        connect(reply, &QNetworkReply::finished, [&]()
-        {
-            if(reply->error() != QNetworkReply::NoError)
-            {
-                #ifndef Q_DEBUG
-                qDebug() << "error: " << reply->error();
-                #endif
-            }
-            else
-            {
-                QJsonObject jsonObject= QJsonDocument::fromJson(reply->readAll()).object();
-                QHostAddress ip(jsonObject["ip"].toString());
-
-                IP = ip;
-            }
-            reply->deleteLater();
-        });
-
-        textWithIPAddres = IP.toString();
-
-        return;
+    return;
 }

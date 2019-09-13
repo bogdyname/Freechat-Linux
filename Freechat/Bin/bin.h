@@ -6,8 +6,10 @@
 #ifndef BIN_H
 #define BIN_H
 
-#include <QString>
 #include <QList>
+#include <QString>
+#include <iostream>
+#include <algorithm>
 
 class Bin : public QObject
 {
@@ -15,20 +17,26 @@ class Bin : public QObject
 
 private:
     QList<QString> listWithNickName;
-    QList<QString> listWithIpAddress;
+    QList<QString> listWithWANIpAddress;
+    QList<QString> listWithLANIpAddress;
 
 public:
     ~Bin();
     Bin(QObject *parent = nullptr);
 
+public:
+    void AddPeer(QString &nickname, QString &Lanip, QString &Wanip);
+    void DeletePeer();
+    void GetNickname(QList<QString> &nick);
+
 private:
-    void WriteInNickNameListOfPeers(const QString &nickname);
-    void WriteInIpListOfPeers(const QString &ip);
+    template <typename Wcontainer>
+    Wcontainer WriteElementsInList(Wcontainer &list, const QString &element);
 
-    void RemoveFromIpLIst();
-    void RemoveFromNickNameList();
+    template <typename Gcontainer>
+    Gcontainer GetElementsFromList(Gcontainer &list);
 
-    void GetElementFromIpList();
-    void GetElementFromNickNameList();
+    template <typename Rcontainer>
+    Rcontainer RemoveElementsFromList(Rcontainer &list);
 };
 #endif

@@ -24,16 +24,7 @@ public:
     ConnectionF2F(QObject *parent = nullptr);
     ~ConnectionF2F();
 
-    void ConnectingToPeer();
-    void ReadyReadOfData();
-
-    void AskForConnectingToPortPeer();
-    void AskForDisconnectingFromPortPeer();
-
-public:
-    void PassOnWANIp(QString &buffer);
-
-private:
-    void GetIpAddressFromWAN(QString &textWithIPAddres);
+    void OpenConnectingToPortPeer();
+    void OpenDisconnectingFromPortPeer();
 };
 #endif

@@ -7,39 +7,50 @@
 
 Peerout::Peerout()
 {
-    connect(socket, SIGNAL(Connected()), this, SLOT(Connected()));
-    connect(socket, SIGNAL(DoConnect()), this, SLOT(DoConnect()));
-    connect(socket, SIGNAL(ReadyRead()), this, SLOT(ReadyRead()));
-    connect(socket, SIGNAL(BytesWrittenOfData(qint64)), this, SLOT(BytesWrittenOfData(qint64)));
-}
-
-Peerout::~Peerout()
-{
-    delete socket;
-}
-
-void Peerout::WriteIpAddressFromPeer()
-{
-        strWANip = ;
-
-        return;
-}
-
-void Peerout::DoConnect()
-{
     socket = new QTcpSocket(this);
 
     #ifndef Q_DEBUG
     qDebug() << "A new socket created.";
     #endif
 
-    socket->connectToHost(strWANip, 80);
+    connect(socket, SIGNAL(connected()), this, SLOT(Connected()));
+    connect(socket, SIGNAL(disconnected()), this, SLOT(Disconnected()));
+    connect(socket, SIGNAL(readyRead()), this, SLOT(ReadyRead()));
+    connect(socket, SIGNAL(bytesWritten(qint64)), this, SLOT(BytesWrittenOfData(qint64)));
+}
+
+Peerout::~Peerout()
+{
+    if(socket != nullptr)
+    {
+        delete socket;
+    }
+    else
+    {
+        /*clear code*/
+    }
+}
+
+void Peerout::WriteIpAddressFromPeer()
+{
+    auto list = QHostInfo::fromName(QHostInfo::localHostName()).addresses();
+
+    #ifndef Q_DEBUG
+    qDebug() << "Addresses: " << list << endl;
+    #endif
+
+    //strWANip = ;
+
+    return;
+}
+
+void Peerout::DoConnect()
+{
+    socket->connectToHost(ip, 80);
 
         if(socket->waitForConnected(3000))
         {
-            #ifndef Q_DEBUG
-            qDebug() << "Connected!";
-            #endif
+            Connected();
 
             socket->write("DATA OF TEXT");
             socket->waitForBytesWritten(1000);
@@ -61,7 +72,7 @@ void Peerout::DoConnect()
         return;
 }
 
-void Peerout::BytesWrittenOfData(qint64 bytes)
+void Peerout::BytesWrittenOfData(qint64 &bytes)
 {
     #ifndef Q_DEBUG
     qDebug() << bytes << " bytes written...";
@@ -72,12 +83,9 @@ void Peerout::BytesWrittenOfData(qint64 bytes)
 
 void Peerout::Connected()
 {
-
-    return;
-}
-
-void Peerout::Disconnected()
-{
+    #ifndef Q_DEBUG
+    qDebug() << "Connected!";
+    #endif
 
     return;
 }

@@ -20,9 +20,10 @@ class Freechat : public QDialog, private Ui::Freechat
     Q_OBJECT
 
 private:
-    QString ipOfPeer;
-    QString nickNameOfPeer;
-    QString yourIp;
+    static QString lanIpOfPeer;
+    static QString wanIpOfPeer;
+    static QString nickNameOfPeer;
+    static QString yourIp;
     bool *replyForCD = nullptr; //not sure
 
 public:
@@ -34,8 +35,25 @@ private:
     void AskForDisconnectingFromPortPeer();
     bool ReplyFromPortPeer(bool &reply);
 
+signals:
+    void SetTextInsideFiledOfChat();
+
 private slots:
     void on_showNetworkInfo_clicked(bool checked);
     void on_connectionToPeer_clicked(bool checked);
+
+    void on_writeNickOfPeer_textChanged();
+    void on_writeLanIpOfPeer_textChanged();
+    void on_writeWanIpOfPeer_textChanged();
+    void on_wanButton_clicked(bool checked);
+    void on_lanButton_clicked(bool checked);
+    void on_nickButton_clicked(bool checked);
+
+    void on_listWithIpOfUsers_itemDoubleClicked(QListWidgetItem *item);
+
+    void on_lineForTypeText_textEdited(const QString &arg1);
+
+private:
+    Ui::Freechat *ui;
 };
 #endif
