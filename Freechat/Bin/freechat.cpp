@@ -177,8 +177,19 @@ void Freechat::on_listWithIpOfUsers_itemDoubleClicked(QListWidgetItem *item)
     return;
 }
 
-void Freechat::on_lineForTypeText_textEdited(const QString &masseg)
+void Freechat::on_lineForTypeText_textEdited(QString &messages)
 {
+    connect(lineForTypeText, SIGNAL(inputRejected()), this, SLOT(PassMessagesInsideBuffer()));
+
+    messages = ui->lineForTypeText->text(); //pass text from line for type
+    bufferOfMessages += messages;//write inside buffer
+
+    return;
+}
+
+void Freechat::PassMessagesInsideBuffer()
+{
+    globalBuffer += bufferOfMessages; // pass messages to global buffer for save in file
 
     return;
 }

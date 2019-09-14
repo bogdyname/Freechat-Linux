@@ -19,11 +19,15 @@ class Freechat : public QDialog, private Ui::Freechat
 {
     Q_OBJECT
 
+public:
+    static QString globalBuffer;
+
 private:
+    static QString yourIp;
     static QString lanIpOfPeer;
     static QString wanIpOfPeer;
     static QString nickNameOfPeer;
-    static QString yourIp;
+    static QString bufferOfMessages;
     bool *replyForCD = nullptr; //not sure
 
 public:
@@ -39,6 +43,8 @@ signals:
     void SetTextInsideFiledOfChat();
 
 private slots:
+    void PassMessagesInsideBuffer();
+
     void on_showNetworkInfo_clicked(bool checked);
     void on_connectionToPeer_clicked(bool checked);
 
@@ -51,7 +57,7 @@ private slots:
 
     void on_listWithIpOfUsers_itemDoubleClicked(QListWidgetItem *item);
 
-    void on_lineForTypeText_textEdited(const QString &arg1);
+    void on_lineForTypeText_textEdited(QString &messages);
 
 private:
     Ui::Freechat *ui;

@@ -18,6 +18,9 @@ private ConnectionF2F, private Freechat
 {
     Q_OBJECT
 
+public:
+    QString *bufferNickname = nullptr;
+
 private:
     QByteArray *buffer = nullptr;
     QStorageInfo storage = QStorageInfo::root();
@@ -29,8 +32,8 @@ public:
 
 signals:
     void CheckYourMemorySize();
-    void ReadFileForViewMessages();
     void ChooseFileWithData(QFile &fileWithData);
+    void ReadFileForViewMessages(QFile &file, QString &nickname);
 
 private slots:
     inline void DeleteAllDataForFreeMemory(QFile &fileWithData, QFile &fileWithDataForBackup);
@@ -40,7 +43,7 @@ private slots:
 
 private:
     void RSAMODULE(QFile &fileWithData);
-    inline bool CheckIpAddressForSaveFile(QString &strWithIpOfPeer);
-    inline QString ReadFirstStringFromDataFile(QString &strWithIpOfPeer);
+    inline bool CheckNicknameForSaveFile(QString &nickname);
+    inline QString ReadFirstStringFromDataFile(QString &nickname);
 };
 #endif

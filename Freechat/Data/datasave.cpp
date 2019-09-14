@@ -8,14 +8,11 @@
 Datasave::Datasave(Freechat *parent)
     : QFile(parent)
 {
-
+   bufferNickname = new QString;
 
    QString fname = "filewd" +
            QDateTime::currentDateTime().toString("yyyy-MM-dd_hh-mm-ss") + ".txt";
    QFile file(fname);
-
-   QString strWithIP;
-   PassOnWANIp(strWithIP);
 
    if(buffer != nullptr)
    {
@@ -26,8 +23,8 @@ Datasave::Datasave(Freechat *parent)
             if(file.open(WriteOnly))
             {
                 QTextStream writeStream(&file);
-                writeStream << strWithIP;
-                writeStream << /*Data from text field*/;
+                writeStream << *bufferNickname;
+                writeStream << /*Data from text field*/; // variables bufferOfMessages
                 file.write(*buffer);
                 file.close();
             }
@@ -76,14 +73,11 @@ Datasave::~Datasave()
     delete buffer;
 }
 
-inline bool Datasave::CheckIpAddressForSaveFile(QString &strWithIpOfPeer)
+inline bool Datasave::CheckNicknameForSaveFile(QString &nickname)
 {
-    QString str;
+    ReadFirstStringFromDataFile(nickname);
 
-    PassOnWANIp(str);
-    ReadFirstStringFromDataFile(strWithIpOfPeer);
-
-    if(str == strWithIpOfPeer)
+    if(*bufferNickname == nickname)
     {
         return true;
     }
@@ -93,11 +87,11 @@ inline bool Datasave::CheckIpAddressForSaveFile(QString &strWithIpOfPeer)
     }
 }
 
-inline QString Datasave::ReadFirstStringFromDataFile(QString &strWithIpOfPeer)
+inline QString Datasave::ReadFirstStringFromDataFile(QString &nickname)
 {
     //get first string from data file
 
-    return strWithIpOfPeer;
+    return nickname;
 }
 
 void Datasave::CheckYourMemorySize()
@@ -145,9 +139,28 @@ inline void Datasave::DeleteAllDataForFreeMemory(QFile &fileWithData, QFile &fil
     return;
 }
 
-void Datasave::ReadFileForViewMessages()
+void Datasave::ReadFileForViewMessages(QFile &file, QString &nickname)
 {
+    ReadFile(file);
+    ReadFirstStringFromDataFile(nickname);
 
+    switch(CheckNicknameForSaveFile(*bufferNickname))
+    {
+    case true:
+        {
+            /*
+                need to pass buffer into bufferOfMessages
+                for open file line by line in
+                field for view messages
+            */
+        }
+        break;
+    case false:
+        {
+            file.flush();
+        }
+        break;
+    }
 
     return;
 }
