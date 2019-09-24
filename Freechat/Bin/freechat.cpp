@@ -16,7 +16,7 @@ Freechat::Freechat(QWidget *parent)
     ui->lineForTypeText->setFocusPolicy(StrongFocus);
     ui->textFieldForViewMessages->setFocusPolicy(NoFocus);
     ui->textFieldForViewMessages->setReadOnly(true);
-    ui->listWithIpOfUsers->setFocusPolicy(NoFocus);
+    ui->listWithNickName->setFocusPolicy(NoFocus);
 
 }
 
@@ -32,6 +32,7 @@ void Freechat::on_showNetworkInfo_clicked(bool checked)
     case true:
         QMessageBox::information(this, tr("Network Info"),
                                  tr("Your LAN IP address: "), yourIp);
+        yourIp.clear();
         break;
     case false:
         break;
@@ -126,6 +127,10 @@ void Freechat::on_wanButton_clicked(bool checked)
     {
     case true:
         wanIpOfPeer = ui->writeWanIpOfPeer->text();
+        globalBuffer += wanIpOfPeer;
+        ConnectionF2F::globalNetworkBuffer += globalBuffer;
+        wanIpOfPeer.clear();
+        globalBuffer.clear();
         break;
     case false:
         break;
@@ -140,6 +145,10 @@ void Freechat::on_lanButton_clicked(bool checked)
     {
     case true:
         lanIpOfPeer = ui->writeLanIpOfPeer->text();
+        globalBuffer += lanIpOfPeer;
+        ConnectionF2F::globalNetworkBuffer += globalBuffer;
+        lanIpOfPeer.clear();
+        globalBuffer.clear();
         break;
     case false:
         break;
@@ -154,6 +163,10 @@ void Freechat::on_nickButton_clicked(bool checked)
     {
     case true:
         nickNameOfPeer = ui->writeNickOfPeer->text();
+        globalBuffer += nickNameOfPeer;
+        ConnectionF2F::globalNetworkBuffer += globalBuffer;
+        nickNameOfPeer.clear();
+        globalBuffer.clear();
         break;
     case false:
         break;
@@ -162,7 +175,7 @@ void Freechat::on_nickButton_clicked(bool checked)
     return;
 }
 
-void Freechat::on_listWithIpOfUsers_itemDoubleClicked(QListWidgetItem *item)
+void Freechat::on_listWithNickName_itemDoubleClicked(QListWidgetItem *item)
 {
     connect(textFieldForViewMessages, SIGNAL(SetTextInsideFiledOfChat()), this, SLOT(paste()));
 
@@ -170,7 +183,7 @@ void Freechat::on_listWithIpOfUsers_itemDoubleClicked(QListWidgetItem *item)
     // not done
     QListWidgetItem *item = new QListWidgetItem(listWithNickName->toPlainText());
 
-    ui->listWithIpOfUsers->addItem(item);
+    ui->listWithNickName->addItem(item);
 
     //write here double ckicked on nick and copy data from file and past it in chat field
 
@@ -190,6 +203,9 @@ void Freechat::on_lineForTypeText_textEdited(QString &messages)
 void Freechat::PassMessagesInsideBuffer()
 {
     globalBuffer += bufferOfMessages; // pass messages to global buffer for save in file
+    ConnectionF2F::globalNetworkBuffer += globalBuffer;
+
+    globalBuffer.clear();
 
     return;
 }
