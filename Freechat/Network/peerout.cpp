@@ -72,7 +72,9 @@ void Peerout::SlotReadyRead()
         QString str;
         in >> time >> str;
 
-        Freechat::globalBuffer.append(time.toString() + " " + str);
+
+        // write data into variables for pass it in view field widget
+        Freechat::viewField.append(time.toString() + " " + str);
         nextBlockSize = 0;
     }
 
@@ -90,7 +92,8 @@ void Peerout::SlotError(QAbstractSocket::SocketError err)
                          "The connection was refused." :
                          QString(socket->errorString()));
 
-    Freechat::globalBuffer.append(strError);
+    // show error in view field
+    Freechat::viewField.append(strError);
 
     return;
 }
@@ -100,19 +103,25 @@ void Peerout::SlotSendToServer()
     QByteArray block;
     QDataStream out(&block, QIODevice::WriteOnly);
     out.setVersion(QDataStream::Qt_5_12);
-    out << quint16(0) << QTime::currentTime() << Freechat::globalBuffer;
+    // pass wroted data from line edit into socket through buffer
+    out << quint16(0) << QTime::currentTime() << Freechat::bufferOfMessages;
 
     out.device()->seek(0);
     out << quint16(block.size() - sizeof(quint16));
 
     socket->write(block);
+    socket->flush();
+
+    Freechat::bufferOfMessages.clear();
 
     return;
 }
 
 void Peerout::SlotConnected()
 {
-    Freechat::globalBuffer.append("Connected!");
+    #ifndef Q_DEBUG
+    qDebug() << "Connected.";
+    #endif
 
     return;
 }
