@@ -7,6 +7,15 @@
 #include "Bin/freechat.h"
 #include "Network/connectionf2f.h"
 
+static QString globalBuffer;
+static QString viewField;
+
+static QString yourIp;
+static QString lanIpOfPeer;
+static QString wanIpOfPeer;
+static QString nickNameOfPeer;
+static QString bufferOfMessages;
+
 Freechat::Freechat(QWidget *parent)
     : QDialog(parent),
       ui(new Ui::Freechat)
@@ -32,7 +41,6 @@ void Freechat::on_showNetworkInfo_clicked(bool checked)
     case true:
         QMessageBox::information(this, tr("Network Info"),
                                  tr("Your LAN IP address: "), yourIp);
-        yourIp.clear();
         break;
     case false:
         break;
@@ -96,12 +104,6 @@ bool Freechat::ReplyFromPortPeer(bool &reply)
     }
 }
 
-void Freechat::SetTextInsideFiledOfChat()
-{
-
-    return;
-}
-
 void Freechat::on_writeNickOfPeer_textChanged()
 {
 
@@ -120,92 +122,18 @@ void Freechat::on_writeWanIpOfPeer_textChanged()
     return;
 }
 
-void Freechat::on_wanButton_clicked(bool checked)
+void on_listWithNickName_itemDoubleClicked(QListWidgetItem *item)
 {
 
-    switch(checked)
-    {
-    case true:
-        wanIpOfPeer = ui->writeWanIpOfPeer->text();
-        globalBuffer += wanIpOfPeer;
-        ConnectionF2F::globalNetworkBuffer += globalBuffer;
-        wanIpOfPeer.clear();
-        globalBuffer.clear();
-        break;
-    case false:
-        break;
-    }
-
-    return;
-}
-
-void Freechat::on_lanButton_clicked(bool checked)
-{
-    switch(checked)
-    {
-    case true:
-        lanIpOfPeer = ui->writeLanIpOfPeer->text();
-        globalBuffer += lanIpOfPeer;
-        ConnectionF2F::globalNetworkBuffer += globalBuffer;
-        lanIpOfPeer.clear();
-        globalBuffer.clear();
-        break;
-    case false:
-        break;
-    }
-
-    return;
-}
-
-void Freechat::on_nickButton_clicked(bool checked)
-{
-    switch(checked)
-    {
-    case true:
-        nickNameOfPeer = ui->writeNickOfPeer->text();
-        globalBuffer += nickNameOfPeer;
-        ConnectionF2F::globalNetworkBuffer += globalBuffer;
-        nickNameOfPeer.clear();
-        globalBuffer.clear();
-        break;
-    case false:
-        break;
-    }
-
-    return;
-}
-
-void Freechat::on_listWithNickName_itemDoubleClicked(QListWidgetItem *item)
-{
-    connect(textFieldForViewMessages, SIGNAL(SetTextInsideFiledOfChat()), this, SLOT(paste()));
-
-    // need to add elements from nick list into *item QListWidgetItem for show nicknames
-    // not done
-    QListWidgetItem *item = new QListWidgetItem(listWithNickName->toPlainText());
-
-    ui->listWithNickName->addItem(item);
-
-    //write here double ckicked on nick and copy data from file and past it in chat field
-
-    return;
 }
 
 void Freechat::on_lineForTypeText_textEdited(QString &messages)
 {
     connect(lineForTypeText, SIGNAL(inputRejected()), this, SLOT(PassMessagesInsideBuffer()));
+    connect(lineForTypeText, SIGNAL(returnPressed()), this, SLOT(SlotSendToServer()));
 
     messages = ui->lineForTypeText->text(); //pass text from line for type
     bufferOfMessages += messages;//write inside buffer
-
-    return;
-}
-
-void Freechat::PassMessagesInsideBuffer()
-{
-    globalBuffer += bufferOfMessages; // pass messages to global buffer for save in file
-    ConnectionF2F::globalNetworkBuffer += globalBuffer;
-
-    globalBuffer.clear();
 
     return;
 }
