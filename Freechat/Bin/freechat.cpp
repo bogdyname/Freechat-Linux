@@ -7,14 +7,13 @@
 #include "Bin/freechat.h"
 #include "Network/connectionf2f.h"
 
-static QString globalBuffer;
-static QString viewField;
-
-static QString yourIp;
-static QString lanIpOfPeer;
-static QString wanIpOfPeer;
-static QString nickNameOfPeer;
-static QString bufferOfMessages;
+ QString Freechat::globalBuffer;
+ QString Freechat::viewField;
+ QString Freechat::yourIp;
+ QString Freechat::lanIpOfPeer;
+ QString Freechat::wanIpOfPeer;
+ QString Freechat::nickNameOfPeer;
+ QString Freechat::bufferOfMessages;
 
 Freechat::Freechat(QWidget *parent)
     : QDialog(parent),
