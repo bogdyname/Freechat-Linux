@@ -21,14 +21,14 @@ class Freechat : public QDialog, private Ui::Freechat
 
 public:
     static QString globalBuffer;
+    static QString viewField;
 
-private:
+public:
     static QString yourIp;
     static QString lanIpOfPeer;
     static QString wanIpOfPeer;
     static QString nickNameOfPeer;
     static QString bufferOfMessages;
-    bool *replyForCD = nullptr; //not sure
 
 public:
     Freechat(QWidget *parent = nullptr);
@@ -55,9 +55,11 @@ private slots:
     void on_lanButton_clicked(bool checked);
     void on_nickButton_clicked(bool checked);
 
-    void on_listWithIpOfUsers_itemDoubleClicked(QListWidgetItem *item);
+    void on_listWithNickName_itemDoubleClicked(QListWidgetItem *item);
 
     void on_lineForTypeText_textEdited(QString &messages);
+
+    void on_lineForTypeText_returnPressed();
 
 private:
     Ui::Freechat *ui;
