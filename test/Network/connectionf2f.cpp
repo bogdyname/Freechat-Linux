@@ -5,12 +5,14 @@
 
 #include "Network/connectionf2f.h"
 
-static QString globalNetworkBuffer;
+extern QString yourIp;
 
 ConnectionF2F::ConnectionF2F(QObject *parent)
     : QTcpSocket(parent)
 {
+     /*now is empty*/
 
+    return;
 }
 
 ConnectionF2F::~ConnectionF2F()
@@ -63,13 +65,5 @@ void ConnectionF2F::NetworkInfo()
        qDebug() << "Netmask = " << localNetmask;
        #endif
 
-       globalNetworkBuffer += localhostIP;
-}
-
-void ConnectionF2F::WriteIpAddressFromPeer()
-{
-    ip += globalNetworkBuffer;
-    globalNetworkBuffer.clear();
-
-    return;
+       Freechat::yourIp += localhostIP;
 }

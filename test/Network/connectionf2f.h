@@ -26,11 +26,10 @@ private:
     QString ip;
 
 public:
-    ConnectionF2F(QObject *parent = nullptr);
+    explicit ConnectionF2F(QObject *parent = nullptr);
     ~ConnectionF2F();
 
-public slots:
+public:
     void NetworkInfo();
-    void WriteIpAddressFromPeer();
 };
 #endif

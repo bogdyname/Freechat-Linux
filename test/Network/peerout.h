@@ -18,7 +18,7 @@ class Peerout : public QTcpSocket
     Q_OBJECT
 
 public:
-    Peerout(const QString &ipHost);
+    explicit Peerout();
     ~Peerout();
 
 public slots:

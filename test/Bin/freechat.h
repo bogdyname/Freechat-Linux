@@ -30,12 +30,18 @@ public:
     static QString bufferOfMessages;
 
 public:
-    Freechat(QWidget *parent = nullptr);
+    explicit Freechat(QWidget *parent = nullptr);
     ~Freechat();
 
 private slots:
     void on_showNetworkInfo_clicked(bool checked);
     void on_connectionToPeer_clicked(bool checked);
+
+private slots:
+    void on_lineForTypeText_returnPressed();
+    void on_writeWanIpOfPeer_returnPressed();
+    void on_writeLanIpOfPeer_returnPressed();
+    void on_writeNickOfPeer_returnPressed();
 
 private:
     Ui::Freechat *ui;
