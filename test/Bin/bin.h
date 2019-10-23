@@ -24,10 +24,14 @@ public:
     ~Bin();
     explicit Bin(QObject *parent = nullptr);
 
-private:
-    void AddPeer(QString &nickname, QString &Lanip, QString &Wanip);
+public slots:
+    void AddPeerLan();
+    void AddPeerWan();
+    void AddPeerNick();
     void DeletePeer();
     void GetNickname(QList<QString> &nick);
+
+    void Test();
 
 private:
     template <typename Wcontainer>

@@ -40,6 +40,8 @@ Peerout::~Peerout()
     {
         /*clear code*/
     }
+
+    return;
 }
 
 void Peerout::SlotReadyRead()
@@ -141,6 +143,8 @@ void Peerout::SlotConnected()
         qDebug() << "Error connection.";
         #endif
     }
+
+    Freechat::lanIpOfPeer.clear();
 
     return;
 }

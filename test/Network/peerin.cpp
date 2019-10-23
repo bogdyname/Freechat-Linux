@@ -9,6 +9,7 @@ Peerin::Peerin(unsigned short port, QObject *parent)
     : QTcpServer(parent)
 {
     server = new QTcpServer(this);
+    server->setMaxPendingConnections(1);
 
     connect(server, SIGNAL(newConnection()), this, SLOT(SlotNewConnection()));
 
@@ -43,6 +44,8 @@ Peerin::~Peerin()
     {
         /*clear code*/
     }
+
+    return;
 }
 
 void Peerin::SlotNewConnection()
@@ -53,6 +56,8 @@ void Peerin::SlotNewConnection()
     connect(clientSocket, SIGNAL(readyRead()), this, SLOT(SlotReadClient()));
 
     SendResponseToClient(clientSocket, Freechat::bufferOfMessages);
+
+    Freechat::bufferOfMessages.clear();
 
     return;
 }

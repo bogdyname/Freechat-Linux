@@ -12,13 +12,7 @@ using namespace std;
 Bin::Bin(QObject *parent)
     : QObject(parent)
 {
-    //signals from freechat for connect UI with bin header
 
-    /*
-    connect(, SIGNAL(), this, SLOT(AddPeer(QString)));
-    connect(, SIGNAL(), this, SLOT(DeletePeer()));
-    connect(, SIGNAL(), this, SLOT(GetNickname()));
-    */
 }
 
 Bin::~Bin()
@@ -26,11 +20,37 @@ Bin::~Bin()
 
 }
 
-void Bin::AddPeer(QString &nickname, QString &Lanip, QString &Wanip)
+void Bin::Test()
 {
-    WriteElementsInList(listWithNickName, nickname);
-    WriteElementsInList(listWithWANIpAddress, Lanip);
-    WriteElementsInList(listWithLANIpAddress, Wanip);
+    QList<QString>::const_iterator it = listWithNickName.constBegin();
+
+    for(; it != listWithNickName.end(); ++it)
+    {
+        #ifndef Q_DEBUG
+        qDebug() << "Element from list: " << *it << endl;
+        #endif
+    }
+
+    return;
+}
+
+void Bin::AddPeerLan()
+{
+    WriteElementsInList(listWithWANIpAddress, Freechat::lanIpOfPeer);
+
+    return;
+}
+
+void Bin::AddPeerWan()
+{
+    WriteElementsInList(listWithLANIpAddress, Freechat::wanIpOfPeer);
+
+    return;
+}
+
+void Bin::AddPeerNick()
+{
+    WriteElementsInList(listWithNickName, Freechat::nickNameOfPeer);
 
     return;
 }

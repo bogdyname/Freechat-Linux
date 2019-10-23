@@ -18,6 +18,26 @@ ConnectionF2F::ConnectionF2F(QObject *parent)
 ConnectionF2F::~ConnectionF2F()
 {
 
+    return;
+}
+
+int ConnectionF2F::CheckConnection()
+{
+    QNetworkAccessManager nam;
+    QNetworkRequest req(QUrl("http://www.google.com"));
+    QNetworkReply *reply = nam.get(req);
+    QEventLoop loop;
+    QObject::connect(reply, SIGNAL(finished()), &loop, SLOT(quit()));
+    loop.exec();
+
+    if(reply->bytesAvailable())
+    {
+        return 101;
+    }
+    else
+    {
+        return 404;
+    }
 }
 
 void ConnectionF2F::NetworkInfo()
