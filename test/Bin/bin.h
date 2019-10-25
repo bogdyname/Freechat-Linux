@@ -7,7 +7,6 @@
 #define BIN_H
 
 #include <QList>
-#include <QFile>
 #include <QString>
 #include <iostream>
 #include <algorithm>

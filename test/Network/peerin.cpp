@@ -5,7 +5,7 @@
 
 #include "peerin.h"
 
-Peerin::Peerin(unsigned short port, QObject *parent)
+Peerin::Peerin(QObject *parent)
     : QTcpServer(parent)
 {
     server = new QTcpServer(this);
@@ -13,7 +13,7 @@ Peerin::Peerin(unsigned short port, QObject *parent)
 
     connect(server, SIGNAL(newConnection()), this, SLOT(SlotNewConnection()));
 
-        if(server->listen(QHostAddress::Any, port))
+        if(server->listen(QHostAddress::Any, 80))
         {
            #ifndef Q_DEBUG
            qDebug() << "Server: started";
@@ -26,12 +26,7 @@ Peerin::Peerin(unsigned short port, QObject *parent)
             #endif
 
             server->close();
-            return;
         }
-
-        connect(server, SIGNAL(newConnection()), this, SLOT(SlotNewConnection()));
-
-        return;
 }
 
 Peerin::~Peerin()
@@ -50,22 +45,21 @@ Peerin::~Peerin()
 
 void Peerin::SlotNewConnection()
 {
-    QTcpSocket *clientSocket = server->nextPendingConnection();
+    clientSocket1 = server->nextPendingConnection();
 
-    connect(clientSocket, SIGNAL(disconnect()), clientSocket, SLOT(deleteLater()));
-    connect(clientSocket, SIGNAL(readyRead()), this, SLOT(SlotReadClient()));
+    connect(clientSocket1, SIGNAL(disconnect()), clientSocket1, SLOT(deleteLater()));
+    connect(clientSocket1, SIGNAL(readyRead()), this, SLOT(SlotReadClient()));
 
-    SendResponseToClient(clientSocket, Freechat::bufferOfMessages);
-
-    Freechat::bufferOfMessages.clear();
+    Freechat::viewField = "Connected";
+    SendResponseToClient(clientSocket1, Freechat::viewField);
 
     return;
 }
 
 void Peerin::SlotReadClient()
 {
-    QTcpSocket *clientSocket = (QTcpSocket*)sender();
-    QDataStream in(clientSocket);
+    clientSocket2 = (QTcpSocket*)sender();
+    QDataStream in(clientSocket2);
 
     in.setVersion(QDataStream::Qt_5_12);
 
@@ -73,7 +67,7 @@ void Peerin::SlotReadClient()
     {
         if(!nextBlockSize)
         {
-            if((clientSocket->bytesAvailable()) < (sizeof (quint16)))
+            if((clientSocket2->bytesAvailable()) < (sizeof (quint16)))
             {
                 break;
             }
@@ -89,7 +83,7 @@ void Peerin::SlotReadClient()
             /*clear code*/
         }
 
-        if((clientSocket->bytesAvailable()) < nextBlockSize)
+        if((clientSocket2->bytesAvailable()) < nextBlockSize)
         {
             break;
         }
@@ -98,17 +92,14 @@ void Peerin::SlotReadClient()
             /*clear code*/
         }
 
-        QTime time;
+        QTime time = QTime::currentTime();
         QString strOfTime;
         in >> time >> strOfTime;
 
-        QString strMessage = time.toString() + "Respons from peer: " + strOfTime;
+        QString strMessage = "Respons from peer:" + time.toString() + ": " + Freechat::bufferOfMessages + "\n";
 
         Freechat::viewField = strMessage;
         nextBlockSize = 0;
-
-        SendResponseToClient(clientSocket, Freechat::bufferOfMessages);
-
     }
 
     return;
@@ -128,6 +119,14 @@ void Peerin::SendResponseToClient(QTcpSocket *socket, QString &messages)
     socket->flush();
 
     messages.clear();
+
+    return;
+}
+
+void Peerin::SendToClientFlush()
+{
+    SendResponseToClient(clientSocket2, Freechat::bufferOfMessages);
+    Freechat::bufferOfMessages.clear();
 
     return;
 }

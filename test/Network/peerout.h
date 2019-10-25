@@ -21,6 +21,9 @@ public:
     explicit Peerout();
     ~Peerout();
 
+public:
+    void SlotConnecting();
+
 public slots:
     void SlotReadyRead();
     void SlotConnected();

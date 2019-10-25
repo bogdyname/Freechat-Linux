@@ -5,29 +5,19 @@
 
 #include "peerout.h"
 
-extern QString globalBuffer;
-extern QString viewField;
-extern QString yourIp;
-extern QString lanIpOfPeer;
-extern QString wanIpOfPeer;
-extern QString nickNameOfPeer;
-extern QString bufferOfMessages;
-
 Peerout::Peerout()
     : nextBlockSize(0)
 {
-        socket = new QTcpSocket(this);
+    socket = new QTcpSocket(this);
 
-        #ifndef Q_DEBUG
-        qDebug() << "A new socket created.";
-        #endif
+    #ifndef Q_DEBUG
+    qDebug() << "A new socket created.";
+    #endif
 
-        connect(socket, SIGNAL(connected()), this, SLOT(SlotConnected()));
-        connect(socket, SIGNAL(readyRead()), this, SLOT(SlotReadyRead()));
-        connect(socket, SIGNAL(error(QAbstractSocket::SocketError)),
-                this, SLOT(SlotError(QAbstractSocket::SocketError)));
-
-        return;
+    connect(socket, SIGNAL(connected()), this, SLOT(SlotConnected()));
+    connect(socket, SIGNAL(readyRead()), this, SLOT(SlotReadyRead()));
+    connect(socket, SIGNAL(error(QAbstractSocket::SocketError)),
+            this, SLOT(SlotError(QAbstractSocket::SocketError)));
 }
 
 Peerout::~Peerout()
@@ -127,11 +117,15 @@ void Peerout::SlotSendToServer()
     return;
 }
 
-void Peerout::SlotConnected()
+void Peerout::SlotConnecting()
 {
-    socket->connectToHost(Freechat::lanIpOfPeer, 3366);
+    #ifndef Q_DEBUG
+    qDebug() << "Connecting to " << Freechat::lanIpOfPeer;
+    #endif
 
-    if(bool connected = (socket->state() == QTcpSocket::ConnectedState) == true)
+    socket->connectToHost(Freechat::lanIpOfPeer, 80);
+
+    if(socket->waitForConnected(2000))
     {
         #ifndef Q_DEBUG
         qDebug() << "Connected.";
@@ -145,6 +139,15 @@ void Peerout::SlotConnected()
     }
 
     Freechat::lanIpOfPeer.clear();
+
+    return;
+}
+
+void Peerout::SlotConnected()
+{
+        #ifndef Q_DEBUG
+        qDebug() << "Connected.";
+        #endif
 
     return;
 }

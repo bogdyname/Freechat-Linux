@@ -5,8 +5,6 @@
 
 #include "Network/connectionf2f.h"
 
-extern QString yourIp;
-
 ConnectionF2F::ConnectionF2F(QObject *parent)
     : QTcpSocket(parent)
 {
