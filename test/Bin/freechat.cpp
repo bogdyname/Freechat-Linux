@@ -6,6 +6,8 @@
 #include "Bin/bin.h"
 #include "Bin/freechat.h"
 #include "Network/connectionf2f.h"
+#include <QTimer>
+#include <QPointer>
 
  QString Freechat::globalBuffer;
  QString Freechat::viewField;
@@ -14,6 +16,8 @@
  QString Freechat::wanIpOfPeer;
  QString Freechat::nickNameOfPeer;
  QString Freechat::bufferOfMessages;
+
+ static QPointer<Peerin> server = nullptr;
 
 Freechat::Freechat(QWidget *parent)
     : QDialog(parent),
@@ -31,13 +35,18 @@ Freechat::Freechat(QWidget *parent)
 
     //Network
     Peerout peerout;
-    Peerin server;
     ConnectionF2F netManager;
     netManager.NetworkInfo();
+    server = new Peerin;
+
+    QTimer *timer = new QTimer;
+    timer->setInterval(10000);
+    connect(timer, SIGNAL(timeout()), this, SLOT(ServerStillWorking()));
+    timer->start();
 
     //Connecting UI widgets with network object code
     connect(ui->lineForTypeText, SIGNAL(returnPressed()), &peerout, SLOT(SlotSendToServer()));
-    connect(ui->lineForTypeText, SIGNAL(returnPressed()), &server, SLOT(SendToClientFlush()));
+    connect(ui->lineForTypeText, SIGNAL(returnPressed()), server, SLOT(SendToClientFlush()));
 
     //UI connection
     connect(ui->lineForTypeText, SIGNAL(returnPressed()), ui->lineForTypeText, SLOT(clear()));
@@ -103,6 +112,25 @@ Freechat::~Freechat()
     else
     {
         /*clear code*/
+    }
+
+    return;
+}
+
+//check server
+void Freechat::ServerStillWorking()
+{
+    if(server != nullptr)
+    {
+        #ifndef Q_DEBUG
+        qDebug() << "Server still working";
+        #endif
+    }
+    else
+    {
+        #ifndef Q_DEBUG
+        qDebug() << "Server stoped!" ;
+        #endif
     }
 
     return;

@@ -9,45 +9,38 @@ Peerin::Peerin(QObject *parent)
     : QTcpServer(parent)
 {
     server = new QTcpServer(this);
-    server->setMaxPendingConnections(1);
 
-    connect(server, SIGNAL(newConnection()), this, SLOT(SlotNewConnection()));
+    connect(server, SIGNAL(newConnection()),
+            this, SLOT(SlotNewConnection()));
 
-        if(server->listen(QHostAddress::Any, 80))
-        {
-           #ifndef Q_DEBUG
-           qDebug() << "Server: started";
-           #endif
-        }
-        else
-        {
-            #ifndef Q_DEBUG
-            qDebug() << "Server: not started: " << server->errorString();
-            #endif
+    if (server->listen(QHostAddress::Any, 6000))
+    {
+        #ifndef Q_DEBUG
+        qDebug() << "Server started!";
+        #endif
 
-            server->close();
-        }
+    }
+    else
+    {
+        #ifndef Q_DEBUG
+        qDebug() << "Server not started: " << errorString();
+        #endif
+
+        server->close();
+    }
 }
 
 Peerin::~Peerin()
 {
-    if(server != nullptr)
-    {
-        delete server;
-    }
-    else
-    {
-        /*clear code*/
-    }
-
-    return;
+    delete server;
 }
 
 void Peerin::SlotNewConnection()
 {
+    server->setMaxPendingConnections(1);
     clientSocket1 = server->nextPendingConnection();
 
-    connect(clientSocket1, SIGNAL(disconnect()), clientSocket1, SLOT(deleteLater()));
+    connect(clientSocket1, SIGNAL(disconnected()), clientSocket1, SLOT(deleteLater()));
     connect(clientSocket1, SIGNAL(readyRead()), this, SLOT(SlotReadClient()));
 
     Freechat::viewField = "Connected";

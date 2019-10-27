@@ -22,16 +22,7 @@ Peerout::Peerout()
 
 Peerout::~Peerout()
 {
-    if(socket != nullptr)
-    {
-        delete socket;
-    }
-    else
-    {
-        /*clear code*/
-    }
-
-    return;
+    delete socket;
 }
 
 void Peerout::SlotReadyRead()
@@ -123,7 +114,8 @@ void Peerout::SlotConnecting()
     qDebug() << "Connecting to " << Freechat::lanIpOfPeer;
     #endif
 
-    socket->connectToHost(Freechat::lanIpOfPeer, 80);
+    QHostAddress hostAddress(Freechat::lanIpOfPeer);
+    socket->connectToHost(hostAddress, 6000);
 
     if(socket->waitForConnected(2000))
     {
@@ -140,7 +132,7 @@ void Peerout::SlotConnecting()
 
     Freechat::lanIpOfPeer.clear();
 
-    return;
+    //return;
 }
 
 void Peerout::SlotConnected()

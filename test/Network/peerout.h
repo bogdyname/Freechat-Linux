@@ -7,7 +7,9 @@
 #define PEEROUT
 
 #include "Bin/freechat.h"
+#include <QHostAddress>
 #include <QTcpSocket>
+
 
 class Freechat;
 class QTcpSocket;

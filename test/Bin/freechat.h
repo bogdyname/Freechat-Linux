@@ -8,6 +8,7 @@
 
 #include "Bin/bin.h"
 #include "ui_freechat.h"
+#include "Network/connectionf2f.h"
 #include <QTextTableFormat>
 #include <QMessageBox>
 #include <QtWidgets>
@@ -44,6 +45,8 @@ private slots:
     void on_writeNickOfPeer_returnPressed();
     void on_showNetworkInfo_clicked();
     void on_connectionToPeer_clicked();
+
+    void ServerStillWorking();
 
 private:
     Ui::Freechat *ui;
