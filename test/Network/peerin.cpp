@@ -9,6 +9,7 @@ Peerin::Peerin(QObject *parent)
     : QTcpServer(parent)
 {
     server = new QTcpServer(this);
+    pointerOfPeerin = Freechat::pointerOnPeerin;
 
     connect(server, SIGNAL(newConnection()),
             this, SLOT(SlotNewConnection()));
@@ -91,8 +92,9 @@ void Peerin::SlotReadClient()
 
         QString strMessage = "Respons from peer:" + time.toString() + ": " + Freechat::bufferOfMessages + "\n";
 
-        Freechat::viewField = strMessage;
+        pointerOfPeerin->insertPlainText(Freechat::viewField = strMessage);
         nextBlockSize = 0;
+        Freechat::viewField.clear();
     }
 
     return;
@@ -111,6 +113,7 @@ void Peerin::SendResponseToClient(QTcpSocket *socket, QString &messages)
     socket->write(block);
     socket->flush();
 
+    pointerOfPeerin->insertPlainText(messages);
     messages.clear();
 
     return;

@@ -23,6 +23,7 @@ private:
     quint16 nextBlockSize;
     QTcpSocket *clientSocket1 = nullptr;
     QTcpSocket *clientSocket2 = nullptr;
+    QTextEdit *pointerOfPeerin = nullptr;
 
 public:
     explicit Peerin(QObject *parent = nullptr);

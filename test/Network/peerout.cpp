@@ -9,6 +9,7 @@ Peerout::Peerout()
     : nextBlockSize(0)
 {
     socket = new QTcpSocket(this);
+    pointerOfPeerout = Freechat::pointerOnPeerin;
 
     #ifndef Q_DEBUG
     qDebug() << "A new socket created.";
@@ -65,8 +66,9 @@ void Peerout::SlotReadyRead()
 
 
         // write data into variables for pass it in view field widget
-        Freechat::viewField.append(time.toString() + " " + str);
+        pointerOfPeerout->insertPlainText(Freechat::viewField.append(time.toString() + " " + str));
         nextBlockSize = 0;
+        Freechat::viewField.clear();
     }
 
     return;
@@ -84,7 +86,8 @@ void Peerout::SlotError(QAbstractSocket::SocketError err)
                          QString(socket->errorString()));
 
     // show error in view field
-    Freechat::viewField.append(strError);
+    pointerOfPeerout->insertPlainText(Freechat::viewField.append(strError));
+    Freechat::viewField.clear();
 
     return;
 }
@@ -132,7 +135,7 @@ void Peerout::SlotConnecting()
 
     Freechat::lanIpOfPeer.clear();
 
-    //return;
+    return;
 }
 
 void Peerout::SlotConnected()

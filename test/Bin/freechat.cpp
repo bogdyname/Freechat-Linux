@@ -17,6 +17,9 @@
  QString Freechat::nickNameOfPeer;
  QString Freechat::bufferOfMessages;
 
+ QTextEdit *Freechat::pointerOnPeerin;
+ QTextEdit *Freechat::pointerOnPeerout;
+
  static QPointer<Peerin> server = nullptr;
 
 Freechat::Freechat(QWidget *parent)
@@ -38,6 +41,9 @@ Freechat::Freechat(QWidget *parent)
     ConnectionF2F netManager;
     netManager.NetworkInfo();
     server = new Peerin;
+
+    pointerOnPeerin = textFieldForViewMessages;
+    pointerOnPeerout = textFieldForViewMessages;
 
     QTimer *timer = new QTimer;
     timer->setInterval(10000);

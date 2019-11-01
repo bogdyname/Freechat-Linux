@@ -22,6 +22,10 @@ class Freechat : public QDialog, private Ui::Freechat
     Q_OBJECT
 
 public:
+    static QTextEdit *pointerOnPeerin;
+    static QTextEdit *pointerOnPeerout;
+
+public:
     static QString globalBuffer;
     static QString viewField;
     static QString yourIp;
@@ -46,7 +50,7 @@ private slots:
     void on_showNetworkInfo_clicked();
     void on_connectionToPeer_clicked();
 
-    void ServerStillWorking();
+    void ServerStillWorking();// test code
 
 private:
     Ui::Freechat *ui;
