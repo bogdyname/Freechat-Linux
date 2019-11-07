@@ -1,5 +1,3 @@
-
-
 QT       += gui
 QT       += svg
 QT       += network

@@ -68,6 +68,9 @@ Freechat::Freechat(QWidget *parent)
     ui->writeWanIpOfPeer->setPlaceholderText("Write here WAN IP of peer");
     ui->writeLanIpOfPeer->setPlaceholderText("Write here LAN IP of peer");
 
+    //ui->writeWanIpOfPeer->setInputMask("000.000.000.000");
+    //ui->writeLanIpOfPeer->setInputMask("000.000.000.000");
+
     ui->writeNickOfPeer->setMaxLength(15);
     ui->writeWanIpOfPeer->setMaxLength(15);
     ui->writeLanIpOfPeer->setMaxLength(15);
