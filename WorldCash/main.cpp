@@ -8,8 +8,8 @@ int main(int argc, char *argv[])
 
     WorldCash window;
 
-    window.QWidget::setMinimumWidth(400);
-    window.QWidget::setMinimumHeight(400);
+    window.QWidget::setMinimumWidth(575);
+    window.QWidget::setMinimumHeight(500);
 
     window.QWidget::show();
 

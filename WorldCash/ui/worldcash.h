@@ -4,6 +4,8 @@
 #include <QDebug>
 #include <QWidget>
 #include <QLineEdit>
+#include <QListWidget>
+#include <QPushButton>
 #include <QMainWindow>
 #include <QTextBrowser>
 #include "ui_worldcash.h"
@@ -19,10 +21,16 @@ public:
 private:
     QTextBrowser *ownCurrency;
     QTextBrowser *netCurrency;
-    QTextBrowser *dollarCurrency;
-    QTextBrowser *euroCurrency;
-    QTextBrowser *poundCurrency;
+    QTextBrowser *currency;
     QLineEdit *dataOfCurrency;
+    QListWidget *currencyList;
+
+private slots:
+    void ReturnPressedWithData();
+    void PastInfoIntoCurrency();
+    void PastInfoIntoOwnCurrency();
+    void PastInfoIntoNetCurrency();
+    void PastInfoIntoCurrencyList();
 
 private:
     Ui::WorldCash *ui;
