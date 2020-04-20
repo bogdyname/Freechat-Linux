@@ -15,15 +15,18 @@ SOURCES += \
     main.cpp \
     math/math.cpp \
     network/network.cpp \
+    ui/favorite.cpp \
     ui/worldcash.cpp
 
 HEADERS += \
     database/postgresql.h \
     math/math.h \
     network/network.h \
+    ui/favorite.h \
     ui/worldcash.h
 
 FORMS += \
+    ui/favorite.ui \
     ui/worldcash.ui
 
 qnx: target.path = /tmp/$${TARGET}/bin
