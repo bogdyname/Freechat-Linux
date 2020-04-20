@@ -9,6 +9,7 @@
 #include <QMainWindow>
 #include <QTextBrowser>
 #include "ui_worldcash.h"
+#include "ui/favorite.h"
 
 class WorldCash : public QMainWindow, private Ui::WorldCash
 {
@@ -25,12 +26,29 @@ private:
     QLineEdit *dataOfCurrency;
     QListWidget *currencyList;
 
+    //Object
+private:
+    Favorite *managerOfFavorite;
+
 private slots:
     void ReturnPressedWithData();
     void PastInfoIntoCurrency();
     void PastInfoIntoOwnCurrency();
     void PastInfoIntoNetCurrency();
-    void PastInfoIntoCurrencyList();
+    void CallFavoriteFromCurrencyList();
+
+private:
+    bool CheckListOfCurrency();
+
+private:
+    template <typename Wcontainer>
+    Wcontainer WriteElementsInList(Wcontainer &list, const QString &element);
+
+    template <typename Gcontainer>
+    Gcontainer GetElementsFromList(const Gcontainer &list);
+
+    template <typename Rcontainer>
+    Rcontainer RemoveElementsFromList(Rcontainer &list);
 
 private:
     Ui::WorldCash *ui;
