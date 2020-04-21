@@ -69,10 +69,14 @@ WorldCash::WorldCash(QWidget *parent)
 
     //second layout
     WorldCash::currency->QWidget::setMinimumSize(150, 150);
+    WorldCash::currencyList->QWidget::setMaximumWidth(150);
+    WorldCash::currencyList->QWidget::setMinimumWidth(150);
 
     //third layout
-    WorldCash::dataOfCurrency->QWidget::setMinimumSize(25, 30);
+    WorldCash::dataOfCurrency->QWidget::setMinimumSize(150, 30);
+    WorldCash::dataOfCurrency->QWidget::setMaximumWidth(150);
     WorldCash::dataOfCurrency->QWidget::setMaximumHeight(30);
+
     WorldCash::ownCurrency->QWidget::setMinimumSize(25, 30);
     WorldCash::ownCurrency->QWidget::setMaximumHeight(30);
 
