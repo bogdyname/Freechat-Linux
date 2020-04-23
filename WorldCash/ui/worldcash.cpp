@@ -107,6 +107,73 @@ void WorldCash::ReturnPressedWithData()
     if(WorldCash::dataOfCurrency->QLineEdit::text() == "")
         return;
 
+    QString buffer = WorldCash::dataOfCurrency->QLineEdit::text();
+    QString bufferOfFirstChar;
+    QString bufferOfLastChars;
+
+    switch(WorldCash::plusminus.QStringList::indexOf(bufferOfFirstChar))
+    {
+        case 1:
+        {
+            switch(WorldCash::infoCurrency.QStringList::indexOf(bufferOfLastChars))
+            {
+                case 1:
+                {
+
+                }
+                break;
+                case 2:
+                {
+
+                }
+                break;
+                case 3:
+                {
+
+                }
+                break;
+                case 4:
+                {
+
+                }
+                break;
+            }
+        }
+        break;
+        case 2:
+        {
+            switch(WorldCash::infoCurrency.QStringList::indexOf(bufferOfLastChars))
+            {
+                case 1:
+                {
+
+                }
+                break;
+                case 2:
+                {
+
+                }
+                break;
+                case 3:
+                {
+
+                }
+                break;
+                case 4:
+                {
+
+                }
+                break;
+            }
+        }
+        break;
+        default:
+        {
+            QMessageBox::Critical(); //message error
+        }
+        break;
+    }
+
     return;
 }
 

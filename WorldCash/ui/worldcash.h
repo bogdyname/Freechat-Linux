@@ -7,7 +7,9 @@
 #include <QListWidget>
 #include <QPushButton>
 #include <QMainWindow>
+#include <QStringList>
 #include <QTextBrowser>
+#include <QMessageBox>
 #include "ui_worldcash.h"
 #include "ui/favorite.h"
 
@@ -25,6 +27,10 @@ private:
     QTextBrowser *currency;
     QLineEdit *dataOfCurrency;
     QListWidget *currencyList;
+
+private:
+    QStringList plusminus =  { "+", "-" };
+    QStringList infoCurrency = { "USD", "EUR", "GBR", "RUB" };
 
     //Object
 private:
