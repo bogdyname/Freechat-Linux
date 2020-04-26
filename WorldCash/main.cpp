@@ -11,7 +11,7 @@ int main(int argc, char *argv[])
     file->QIODevice::open(QFile::ReadOnly);
     a.QApplication::setStyleSheet(file->QIODevice::readAll());
 
-    WorldCash window;
+    Ocean window;
 
     window.QWidget::setMinimumWidth(575);
     window.QWidget::setMinimumHeight(500);

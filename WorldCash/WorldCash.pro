@@ -1,6 +1,5 @@
 QT       += core gui
 QT       += network
-QT       += xml
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -12,22 +11,13 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 
 SOURCES += \
-    database/postgresql.cpp \
     main.cpp \
-    math/math.cpp \
-    network/network.cpp \
-    ui/favorite.cpp \
     ui/worldcash.cpp
 
 HEADERS += \
-    database/postgresql.h \
-    math/math.h \
-    network/network.h \
-    ui/favorite.h \
     ui/worldcash.h
 
 FORMS += \
-    ui/favorite.ui \
     ui/worldcash.ui
 
 qnx: target.path = /tmp/$${TARGET}/bin
