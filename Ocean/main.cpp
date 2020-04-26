@@ -1,4 +1,4 @@
-#include "ui/worldcash.h"
+#include "ui/ocean.h"
 
 #include <QApplication>
 #include <QFile>
@@ -11,10 +11,7 @@ int main(int argc, char *argv[])
     file->QIODevice::open(QFile::ReadOnly);
     a.QApplication::setStyleSheet(file->QIODevice::readAll());
 
-    WorldCash window;
-
-    window.QWidget::setMinimumWidth(575);
-    window.QWidget::setMinimumHeight(500);
+    Ocean window;
 
     window.QWidget::show();
 
