@@ -1,5 +1,5 @@
-#ifndef WORLDCASH_H
-#define WORLDCASH_H
+#ifndef OCEAN_H
+#define OCEAN_H
 
 #include <QDebug>
 #include <QWidget>
@@ -10,9 +10,9 @@
 #include <QStringList>
 #include <QTextBrowser>
 #include <QMessageBox>
-#include "ui_worldcash.h"
+#include "ui_ocean.h"
 
-class Ocean : public QMainWindow, private Ui::WorldCash
+class Ocean : public QMainWindow, private Ui::Ocean
 {
     Q_OBJECT
 
@@ -25,6 +25,6 @@ private:
 
 
 private:
-    Ui::WorldCash *ui;
+    Ui::Ocean *ui;
 };
 #endif

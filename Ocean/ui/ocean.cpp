@@ -1,8 +1,8 @@
-#include "ui/worldcash.h"
+#include "ui/ocean.h"
 
 Ocean::Ocean(QWidget *parent)
     : QMainWindow(parent)
-    , ui(new Ui::WorldCash)
+    , ui(new Ui::Ocean)
 {
     Ocean::ui->setupUi(this);
 

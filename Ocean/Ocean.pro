@@ -12,13 +12,13 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     main.cpp \
-    ui/worldcash.cpp
+    ui/ocean.cpp
 
 HEADERS += \
-    ui/worldcash.h
+    ui/ocean.h
 
 FORMS += \
-    ui/worldcash.ui
+    ui/ocean.ui
 
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin

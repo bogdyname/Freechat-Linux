@@ -1,7 +1,7 @@
 #build
-build-WorldCash-Desktop_Qt_5_13_0_GCC_64bit-Debug 
-build-WorldCash-Desktop_Qt_5_12_0_MSVC2017_64bit2-Debug
-build-WorldCash-Desktop_Qt_5_12_1_GCC_64bit-Debug
+build-Ocean-Desktop_Qt_5_13_0_GCC_64bit-Debug 
+build-Ocean-Desktop_Qt_5_12_0_MSVC2017_64bit2-Debug
+build-Ocean-Desktop_Qt_5_12_1_GCC_64bit-Debug
 
 #etc
-WorldCash.pro.user
+Ocean.pro.user
