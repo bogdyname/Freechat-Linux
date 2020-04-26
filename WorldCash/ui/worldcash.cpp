@@ -1,4 +1,5 @@
 #include "ui/worldcash.h"
+#include "network/network.h"
 
 WorldCash::WorldCash(QWidget *parent)
     : QMainWindow(parent)
@@ -88,6 +89,8 @@ WorldCash::WorldCash(QWidget *parent)
 
     //TTS
     WorldCash::currencyList->QListWidget::addItem("favorite");
+
+    Network objectTTS;
 }
 
 WorldCash::~WorldCash()
@@ -169,7 +172,7 @@ void WorldCash::ReturnPressedWithData()
         break;
         default:
         {
-            QMessageBox::Critical(); //message error
+            //QMessageBox::Critical(); //message error
         }
         break;
     }
