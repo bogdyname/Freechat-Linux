@@ -3,11 +3,10 @@
 Network::Network()
 {
     Network::networkManager = new QNetworkAccessManager();
-    QUrl url = QString("");
+    QUrl url = QString("http://www.cbr.ru/scripts/XML_daily.asp");
+    Network::networkManager->get(QNetworkRequest(url));
 
-    QObject::connect(Network::networkManager, SIGNAL(finished(QNetworkReply *)), this, SLOT(GetXMLFile(QNetworkReply *)));
-
-    Network::networkManager->QNetworkAccessManager::get(QNetworkRequest(url));
+    QObject::connect(Network::networkManager, SIGNAL(encrypted(QNetworkReply *)), this, SLOT(GetXMLFile(QNetworkReply *)));
 
     return;
 }
@@ -19,9 +18,13 @@ Network::~Network()
 
 void Network::GetXMLFile(QNetworkReply *reply)
 {
-    if(!reply->QNetworkReply::error())
+    if(!reply->error())
     {
 
+    }
+    else
+    {
+        qDebug() << "Error reply";
     }
 
     return;
