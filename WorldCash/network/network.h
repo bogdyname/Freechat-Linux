@@ -2,9 +2,11 @@
 #define NETWORK_H
 
 #include <QUrl>
+#include <QtXML>
 #include <QDebug>
 #include <QUrlQuery>
 #include <QNetworkReply>
+#include <QXmlStreamReader>
 #include <QNetworkAccessManager>
 
 class Network : public QNetworkAccessManager
