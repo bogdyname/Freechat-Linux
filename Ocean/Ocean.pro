@@ -11,10 +11,12 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 
 SOURCES += \
+    imports/importmanager.cpp \
     main.cpp \
     ui/ocean.cpp
 
 HEADERS += \
+    imports/importmanager.h \
     ui/ocean.h
 
 FORMS += \
