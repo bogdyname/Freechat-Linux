@@ -1,4 +1,11 @@
+/*
+***Copyleft (C) 2020 Softwater, Inc
+***Contact: bogdyname@gmail.com
+***Contact: donvalentiy@yandex.ru
+*/
+
 #include "ui/ocean.h"
+#include <QFileDialog>
 
 Ocean::Ocean(QWidget *parent)
     : QMainWindow(parent)
@@ -32,7 +39,6 @@ Ocean::Ocean(QWidget *parent)
     //STYLE
     Ocean::listMusic->QWidget::setMaximumWidth(150);
     Ocean::listMusic->QWidget::setMinimumWidth(150);
-
 
     //CONNECT SIGNALS WITH SLOTS
 }

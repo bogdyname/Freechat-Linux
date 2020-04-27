@@ -1,5 +1,10 @@
-#include "ui/ocean.h"
+/*
+***Copyleft (C) 2020 Softwater, Inc
+***Contact: bogdyname@gmail.com
+***Contact: donvalentiy@yandex.ru
+*/
 
+#include "ui/ocean.h"
 #include <QApplication>
 #include <QFile>
 
