@@ -6,6 +6,7 @@
 
 #include "ui/ocean.h"
 #include <QFileDialog>
+#include "imports/importmanager.h"
 
 Ocean::Ocean(QWidget *parent)
     : QMainWindow(parent)
@@ -16,7 +17,6 @@ Ocean::Ocean(QWidget *parent)
     //Objects of UI
     try
     {
-
         Ocean::listMusic = new QListWidget();
     }
     catch (std::bad_alloc &exp)
@@ -41,6 +41,9 @@ Ocean::Ocean(QWidget *parent)
     Ocean::listMusic->QWidget::setMinimumWidth(150);
 
     //CONNECT SIGNALS WITH SLOTS
+
+    //TTS
+    ImportManager managerTTS;
 }
 
 Ocean::~Ocean()
