@@ -12,6 +12,7 @@
 #include <QFileDialog>
 
 #include <QDebug>
+#include <QCoreApplication>
 
 class ImportManager : public QFile
 {
@@ -21,16 +22,19 @@ public:
     ImportManager();
     ~ImportManager();
 
-public slots:
+private slots:
     //SavingFiles
     //for file dialog (looking for file in finder)
-    void SaveFileIntoMusicFolder(const QString &pathOfmp3);
+    void SaveFileIntoMusicFolder(const QString &pathOfmp3); //NOT DONE
+    void SaveFilesIntoMusicFolder(const QStringList &pathsOfmp3); //NOT DONE
 
 private:
+    bool CheckDir();
 
     //Objects of Qt
 private:
-    QFile *mp3 = nullptr;
+    QDir *musicDir = nullptr;
+    QFile *mp3File = nullptr;
     QFileDialog *importerWindow = nullptr;
 };
 
