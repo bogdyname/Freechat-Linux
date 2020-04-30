@@ -12,7 +12,7 @@ ImportManager::ImportManager()
     {
         ImportManager::musicDir = new QDir();
         ImportManager::mp3File = new QFile();
-        ImportManager::importerWindow = new QFileDialog();
+        ImportManager::importerWindow = new QFileDialog();//TTS CODE LIKE EXAMPLE FOR Ocean.cpp
     }
     catch (std::bad_alloc &exp)
     {
@@ -38,23 +38,28 @@ ImportManager::ImportManager()
     else
         qDebug() << "not good";
 
+     //TTS CODE LIKE EXAMPLE FOR Ocean.cpp
     //Finder for looking for music
     ImportManager::importerWindow->QFileDialog::setDirectory(QDir::rootPath());
 
-    //SIGNALS WITH SLOTS
-    //looking for file and save if into own folder
-    QObject::connect(ImportManager::importerWindow, SIGNAL(fileSelected(const QString)), this, SLOT(SaveFileIntoMusicFolder(const QString)));
-    QObject::connect(ImportManager::importerWindow, SIGNAL(filesSelected(QStringList)), this, SLOT(SaveFilesIntoMusicFolder(QStringList)));
+    //TTS CODE LIKE EXAMPLE FOR Ocean.cpp
+    //TTS FOR ONE FILE
+   QString path = importerWindow->getOpenFileName(0, "TTS", "", "*.jpg");
 
-
-    //TTS
-    QString path = importerWindow->getOpenFileName(0, "TTS", "", "*.jpg");
-
-    if(path.isEmpty())
-        return;
+    if(path.QString::isEmpty())
+       return;
     else
         SaveFileIntoMusicFolder(path);
-    //TTS
+    //TTS FOR ONE FILE
+
+    //TTS FOR MORE FILES
+//    QStringList pathOfFiles = importerWindow->getOpenFileNames(0, "TTS", "", "*.jpg");
+
+//    if(pathOfFiles.QStringList::isEmpty())
+//        return;
+//    else
+//        SaveFilesIntoMusicFolder(pathOfFiles);
+    //TTS FOR MORE FILES
 }
 
 ImportManager::~ImportManager()
@@ -76,15 +81,15 @@ void ImportManager::SaveFileIntoMusicFolder(const QString &pathOfmp3)
     //copy file into music folder there is folder of app and delete it
     if(ImportManager::mp3File->QFile::open(QIODevice::ReadOnly))
     {
-        ImportManager::CheckDir();
+        const QString nameOfSong = ImportManager::GetNameOfSongFromCurrentPath(pathOfmp3);
 
-        //Need to rework it for save by only last name of the file (like this -> "I see fire.mp3")
-        //For this case need to sort out the string of current path of file
-        ImportManager::mp3File->QFile::copy(pathOfmp3, ImportManager::musicDir->QDir::currentPath() + "/music/" + "photo.jpg");
+        ImportManager::CheckDir();
+        ImportManager::mp3File->QFile::copy(pathOfmp3, ImportManager::musicDir->QDir::currentPath() + "/music/" + nameOfSong);
         ImportManager::mp3File->QFile::remove();
 
         #ifndef Q_DEBUG
         qDebug() << "File has been removed: " + pathOfmp3;
+        qDebug() << "Added new file: " + nameOfSong;
         #endif
     }
     else
@@ -103,6 +108,37 @@ void ImportManager::SaveFileIntoMusicFolder(const QString &pathOfmp3)
 
 void ImportManager::SaveFilesIntoMusicFolder(const QStringList &pathsOfmp3)
 {
+    if(pathsOfmp3.QStringList::isEmpty())
+        return;
+
+    for(const auto &iter : pathsOfmp3)
+    {
+        ImportManager::mp3File->QFile::setFileName(iter);
+
+        if(ImportManager::mp3File->QFile::open(QIODevice::ReadOnly))
+        {
+            const QString nameOfSong = ImportManager::GetNameOfSongFromCurrentPath(iter);
+
+            ImportManager::CheckDir();
+            ImportManager::mp3File->QFile::copy(iter, ImportManager::musicDir->QDir::currentPath() + "/music/" + nameOfSong);
+            ImportManager::mp3File->QFile::remove();
+
+            #ifndef Q_DEBUG
+            qDebug() << "File has been removed: " + iter;
+            qDebug() << "Added new file: " + nameOfSong;
+            #endif
+        }
+        else
+        {
+            #ifndef Q_DEBUG
+            qCritical() << "Error open or read file!";
+            #endif
+
+            return;
+        }
+
+        ImportManager::mp3File->close();
+    }
 
     return;
 }
@@ -127,4 +163,21 @@ bool ImportManager::CheckDir()
 
         return true;
     }
+}
+
+QString ImportManager::GetNameOfSongFromCurrentPath(const QString nameOfSong)
+{
+    QString::const_iterator iter = nameOfSong.QString::end();
+    QString buffer = "";
+
+    for(; iter != nameOfSong.QString::begin(); --iter)
+    {
+            //unix like         //windows
+        if((*iter == "/") || (*iter == "\\"))
+            return buffer;
+        else
+            buffer.QString::push_front(*iter);
+    }
+
+    return buffer;
 }
