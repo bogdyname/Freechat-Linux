@@ -2,6 +2,7 @@
 ***Copyleft (C) 2020 Softwater, Inc
 ***Contact: bogdyname@gmail.com
 ***Contact: donvalentiy@yandex.ru
+***Created by bogdyname
 */
 
 #include "importmanager.h"
@@ -29,32 +30,19 @@ ImportManager::ImportManager()
         abort();
     }
 
+    //SETTING UP QtObjects
+
+    //Finder for looking for music
+    ImportManager::importerWindow->QFileDialog::setDirectory(QDir::rootPath());
+
     //current path of app
     ImportManager::musicDir->QDir::setCurrent(QCoreApplication::applicationDirPath());
 
     //Check folder of music
     if(ImportManager::musicDir->QDir::mkdir("music"))
-        qDebug() << "good";
+        qDebug() << "Folder 'music' created";
     else
-        qDebug() << "not good";
-
-    //Finder for looking for music
-    ImportManager::importerWindow->QFileDialog::setDirectory(QDir::rootPath());
-
-    //SIGNALS WITH SLOTS
-    //looking for file and save if into own folder
-    QObject::connect(ImportManager::importerWindow, SIGNAL(fileSelected(const QString)), this, SLOT(SaveFileIntoMusicFolder(const QString)));
-    QObject::connect(ImportManager::importerWindow, SIGNAL(filesSelected(QStringList)), this, SLOT(SaveFilesIntoMusicFolder(QStringList)));
-
-
-    //TTS
-    QString path = importerWindow->getOpenFileName(0, "TTS", "", "*.jpg");
-
-    if(path.isEmpty())
-        return;
-    else
-        SaveFileIntoMusicFolder(path);
-    //TTS
+        qDebug() << "Folder 'music' already exists!";
 }
 
 ImportManager::~ImportManager()
@@ -64,45 +52,105 @@ ImportManager::~ImportManager()
     delete ImportManager::importerWindow;
 }
 
-//Slots for save files
-void ImportManager::SaveFileIntoMusicFolder(const QString &pathOfmp3)
+void ImportManager::CallFileDialogWithDel()
 {
-    //Check path of file
-    if(!pathOfmp3.isEmpty())
-        ImportManager::mp3File->QFile::setFileName(pathOfmp3);
-    else
+    const QStringList pathOfFiles = ImportManager::importerWindow->QFileDialog::getOpenFileNames(0, "Import Music", "", "*.mp3 *.wav");
+
+    if(pathOfFiles.QStringList::isEmpty())
         return;
-
-    //copy file into music folder there is folder of app and delete it
-    if(ImportManager::mp3File->QFile::open(QIODevice::ReadOnly))
-    {
-        ImportManager::CheckDir();
-
-        //Need to rework it for save by only last name of the file (like this -> "I see fire.mp3")
-        //For this case need to sort out the string of current path of file
-        ImportManager::mp3File->QFile::copy(pathOfmp3, ImportManager::musicDir->QDir::currentPath() + "/music/" + "photo.jpg");
-        ImportManager::mp3File->QFile::remove();
-
-        #ifndef Q_DEBUG
-        qDebug() << "File has been removed: " + pathOfmp3;
-        #endif
-    }
     else
-    {
-        #ifndef Q_DEBUG
-        qCritical() << "Error open or read file!";
-        #endif
-
-        return;
-    }
-
-    ImportManager::mp3File->close();
+        ImportManager::SaveFilesIntoMusicFolderAndDeleteIt(pathOfFiles);
 
     return;
 }
 
-void ImportManager::SaveFilesIntoMusicFolder(const QStringList &pathsOfmp3)
+void ImportManager::CallFileDialogOnlyCopy()
 {
+    const QStringList pathOfFiles = ImportManager::importerWindow->QFileDialog::getOpenFileNames(0, "Import Music", "", "*.mp3 *.wav");
+
+    if(pathOfFiles.QStringList::isEmpty())
+        return;
+    else
+        ImportManager::SaveFilesIntoMusicFolderOnlyCopy(pathOfFiles);
+
+    return;
+}
+
+void ImportManager::DeleteMusic()
+{
+
+    return;
+}
+
+//Methods for save files
+void ImportManager::SaveFilesIntoMusicFolderAndDeleteIt(const QStringList &pathsOfmp3)
+{
+    if(pathsOfmp3.QStringList::isEmpty())
+        return;
+
+    for(const auto &iter : pathsOfmp3)
+    {
+        ImportManager::mp3File->QFile::setFileName(iter);
+
+        if(ImportManager::mp3File->QFile::open(QIODevice::ReadOnly))
+        {
+            const QString nameOfSong = ImportManager::GetNameOfSongFromCurrentPath(iter);
+
+            ImportManager::CheckDir();
+            ImportManager::mp3File->QFile::copy(iter, ImportManager::musicDir->QDir::currentPath() + "/music/" + nameOfSong);
+            ImportManager::mp3File->QFile::remove();
+
+            #ifndef Q_DEBUG
+            qDebug() << "File has been removed: " + iter;
+            qDebug() << "Added new file: " + nameOfSong;
+            #endif
+        }
+        else
+        {
+            #ifndef Q_DEBUG
+            qCritical() << "Error open or read file!";
+            #endif
+
+            return;
+        }
+
+        ImportManager::mp3File->QFile::close();
+    }
+
+    return;
+}
+
+void ImportManager::SaveFilesIntoMusicFolderOnlyCopy(const QStringList &pathsOfmp3)
+{
+    if(pathsOfmp3.QStringList::isEmpty())
+        return;
+
+    for(const auto &iter : pathsOfmp3)
+    {
+        ImportManager::mp3File->QFile::setFileName(iter);
+
+        if(ImportManager::mp3File->QFile::open(QIODevice::ReadOnly))
+        {
+            const QString nameOfSong = ImportManager::GetNameOfSongFromCurrentPath(iter);
+
+            ImportManager::CheckDir();
+            ImportManager::mp3File->QFile::copy(iter, ImportManager::musicDir->QDir::currentPath() + "/music/" + nameOfSong);
+
+            #ifndef Q_DEBUG
+            qDebug() << "Added new file: " + nameOfSong;
+            #endif
+        }
+        else
+        {
+            #ifndef Q_DEBUG
+            qCritical() << "Error open or read file!";
+            #endif
+
+            return;
+        }
+
+        ImportManager::mp3File->QFile::close();
+    }
 
     return;
 }
@@ -127,4 +175,27 @@ bool ImportManager::CheckDir()
 
         return true;
     }
+}
+
+QString ImportManager::GetNameOfSongFromCurrentPath(const QString nameOfSong)
+{
+    QString::const_iterator iter = nameOfSong.QString::end();
+    QString buffer = "";
+
+    for(; iter != nameOfSong.QString::begin(); --iter)
+    {
+            //unix like         //windows
+        if((*iter == "/") || (*iter == "\\"))
+            return buffer;
+        else
+            buffer.QString::push_front(*iter);
+    }
+
+    return buffer;
+}
+
+bool ImportManager::DeleteMusicFromMusicFolder()
+{
+
+    return true;
 }

@@ -2,6 +2,7 @@
 ***Copyleft (C) 2020 Softwater, Inc
 ***Contact: bogdyname@gmail.com
 ***Contact: donvalentiy@yandex.ru
+***Created by bogdyname
 */
 
 #ifndef IMPORTMANAGER_H
@@ -22,14 +23,21 @@ public:
     ImportManager();
     ~ImportManager();
 
-private slots:
-    //SavingFiles
-    //for file dialog (looking for file in finder)
-    void SaveFileIntoMusicFolder(const QString &pathOfmp3); //NOT DONE
-    void SaveFilesIntoMusicFolder(const QStringList &pathsOfmp3); //NOT DONE
+    //Slots for call them in main UI file (Ocean.h/cpp)
+public slots:
+    void CallFileDialogWithDel();
+    void CallFileDialogOnlyCopy();
+
+    void DeleteMusic();
 
 private:
+    void SaveFilesIntoMusicFolderAndDeleteIt(const QStringList &pathsOfmp3);
+    void SaveFilesIntoMusicFolderOnlyCopy(const QStringList &pathsOfmp3);
+
     bool CheckDir();
+    QString GetNameOfSongFromCurrentPath(const QString nameOfSong);
+
+    bool DeleteMusicFromMusicFolder();
 
     //Objects of Qt
 private:

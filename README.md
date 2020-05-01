@@ -4,7 +4,7 @@ Classes
 3) sort music by metadata (V) --
 4) set own image for the playlist (V) -- 
 5) sync data in LAN via p2p (B) -- 
-6) import music (one or folder) (B) --
+6) import manager (B) +-
 7) compres of music (V) -- 
 8) ui (V+B) --
 
