@@ -8,14 +8,18 @@
 #define OCEAN_H
 
 #include <QDebug>
+#include <QLabel>
 #include <QWidget>
 #include <QLineEdit>
+#include <QComboBox>
 #include <QListWidget>
 #include <QPushButton>
 #include <QMainWindow>
 #include <QStringList>
-#include <QTextBrowser>
 #include <QMessageBox>
+#include <QTextBrowser>
+#include <QMediaPlayer>
+#include <QMediaPlaylist>
 #include "ui_ocean.h"
 
 #include "imports/importmanager.h"
@@ -29,9 +33,18 @@ public:
     ~Ocean();
 
 private:
-    QListWidget *listMusic;
-    QPushButton *buttonForAddMusicWithDel;
-    QPushButton *buttonForAddMusicOnlyCopy;
+    QLabel *imageOfPlayList = nullptr;
+    QComboBox *sortBy = nullptr;
+    QListWidget *playLists = nullptr;
+    QListWidget *musicList = nullptr;
+    QMediaPlayer *mediaPlayer = nullptr;
+    QMediaPlaylist *mediaPlayList = nullptr;
+    QPushButton *playTrack = nullptr;
+    QPushButton *stopTrack = nullptr;
+    QPushButton *nextTrack = nullptr;
+    QPushButton *previousTrack = nullptr;
+    QPushButton *buttonForAddMusicWithDel = nullptr;
+    QPushButton *buttonForAddMusicOnlyCopy = nullptr;
 
     //Own Objects
 private:
