@@ -2,6 +2,7 @@
 ***Copyleft (C) 2020 Softwater, Inc
 ***Contact: bogdyname@gmail.com
 ***Contact: donvalentiy@yandex.ru
+***Created by bogdyname
 */
 
 #ifndef IMPORTMANAGER_H
@@ -22,21 +23,27 @@ public:
     ImportManager();
     ~ImportManager();
 
-    //Connect it in UI code
-    //Need to connect object of this class with slots of this class inside Ocean.cpp
+    //Slots for call them in main UI file (Ocean.h/cpp)
 public slots:
-    void SaveFileIntoMusicFolder(const QString &pathOfmp3);
-    void SaveFilesIntoMusicFolder(const QStringList &pathsOfmp3);
+    void CallFileDialogWithDel();
+    void CallFileDialogOnlyCopy();
+
+    void DeleteMusic();
 
 private:
+    void SaveFilesIntoMusicFolderAndDeleteIt(const QStringList &pathsOfmp3);
+    void SaveFilesIntoMusicFolderOnlyCopy(const QStringList &pathsOfmp3);
+
     bool CheckDir();
     QString GetNameOfSongFromCurrentPath(const QString nameOfSong);
+
+    bool DeleteMusicFromMusicFolder();
 
     //Objects of Qt
 private:
     QDir *musicDir = nullptr;
     QFile *mp3File = nullptr;
-    QFileDialog *importerWindow = nullptr;//TTS CODE LIKE EXAMPLE FOR Ocean.cpp
+    QFileDialog *importerWindow = nullptr;
 };
 
 #endif

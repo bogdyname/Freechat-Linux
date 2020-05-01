@@ -2,6 +2,7 @@
 ***Copyleft (C) 2020 Softwater, Inc
 ***Contact: bogdyname@gmail.com
 ***Contact: donvalentiy@yandex.ru
+***Created by bogdyname
 */
 
 #include "importmanager.h"
@@ -12,7 +13,7 @@ ImportManager::ImportManager()
     {
         ImportManager::musicDir = new QDir();
         ImportManager::mp3File = new QFile();
-        ImportManager::importerWindow = new QFileDialog();//TTS CODE LIKE EXAMPLE FOR Ocean.cpp
+        ImportManager::importerWindow = new QFileDialog();
     }
     catch (std::bad_alloc &exp)
     {
@@ -29,37 +30,19 @@ ImportManager::ImportManager()
         abort();
     }
 
+    //SETTING UP QtObjects
+
+    //Finder for looking for music
+    ImportManager::importerWindow->QFileDialog::setDirectory(QDir::rootPath());
+
     //current path of app
     ImportManager::musicDir->QDir::setCurrent(QCoreApplication::applicationDirPath());
 
     //Check folder of music
     if(ImportManager::musicDir->QDir::mkdir("music"))
-        qDebug() << "good";
+        qDebug() << "Folder 'music' created";
     else
-        qDebug() << "not good";
-
-     //TTS CODE LIKE EXAMPLE FOR Ocean.cpp
-    //Finder for looking for music
-    ImportManager::importerWindow->QFileDialog::setDirectory(QDir::rootPath());
-
-    //TTS CODE LIKE EXAMPLE FOR Ocean.cpp
-    //TTS FOR ONE FILE
-   QString path = importerWindow->getOpenFileName(0, "TTS", "", "*.jpg");
-
-    if(path.QString::isEmpty())
-       return;
-    else
-        SaveFileIntoMusicFolder(path);
-    //TTS FOR ONE FILE
-
-    //TTS FOR MORE FILES
-//    QStringList pathOfFiles = importerWindow->getOpenFileNames(0, "TTS", "", "*.jpg");
-
-//    if(pathOfFiles.QStringList::isEmpty())
-//        return;
-//    else
-//        SaveFilesIntoMusicFolder(pathOfFiles);
-    //TTS FOR MORE FILES
+        qDebug() << "Folder 'music' already exists!";
 }
 
 ImportManager::~ImportManager()
@@ -69,44 +52,38 @@ ImportManager::~ImportManager()
     delete ImportManager::importerWindow;
 }
 
-//Slots for save files
-void ImportManager::SaveFileIntoMusicFolder(const QString &pathOfmp3)
+void ImportManager::CallFileDialogWithDel()
 {
-    //Check path of file
-    if(!pathOfmp3.isEmpty())
-        ImportManager::mp3File->QFile::setFileName(pathOfmp3);
-    else
+    const QStringList pathOfFiles = ImportManager::importerWindow->QFileDialog::getOpenFileNames(0, "Import Music", "", "*.mp3 *.wav");
+
+    if(pathOfFiles.QStringList::isEmpty())
         return;
-
-    //copy file into music folder there is folder of app and delete it
-    if(ImportManager::mp3File->QFile::open(QIODevice::ReadOnly))
-    {
-        const QString nameOfSong = ImportManager::GetNameOfSongFromCurrentPath(pathOfmp3);
-
-        ImportManager::CheckDir();
-        ImportManager::mp3File->QFile::copy(pathOfmp3, ImportManager::musicDir->QDir::currentPath() + "/music/" + nameOfSong);
-        ImportManager::mp3File->QFile::remove();
-
-        #ifndef Q_DEBUG
-        qDebug() << "File has been removed: " + pathOfmp3;
-        qDebug() << "Added new file: " + nameOfSong;
-        #endif
-    }
     else
-    {
-        #ifndef Q_DEBUG
-        qCritical() << "Error open or read file!";
-        #endif
-
-        return;
-    }
-
-    ImportManager::mp3File->close();
+        ImportManager::SaveFilesIntoMusicFolderAndDeleteIt(pathOfFiles);
 
     return;
 }
 
-void ImportManager::SaveFilesIntoMusicFolder(const QStringList &pathsOfmp3)
+void ImportManager::CallFileDialogOnlyCopy()
+{
+    const QStringList pathOfFiles = ImportManager::importerWindow->QFileDialog::getOpenFileNames(0, "Import Music", "", "*.mp3 *.wav");
+
+    if(pathOfFiles.QStringList::isEmpty())
+        return;
+    else
+        ImportManager::SaveFilesIntoMusicFolderOnlyCopy(pathOfFiles);
+
+    return;
+}
+
+void ImportManager::DeleteMusic()
+{
+
+    return;
+}
+
+//Methods for save files
+void ImportManager::SaveFilesIntoMusicFolderAndDeleteIt(const QStringList &pathsOfmp3)
 {
     if(pathsOfmp3.QStringList::isEmpty())
         return;
@@ -137,7 +114,42 @@ void ImportManager::SaveFilesIntoMusicFolder(const QStringList &pathsOfmp3)
             return;
         }
 
-        ImportManager::mp3File->close();
+        ImportManager::mp3File->QFile::close();
+    }
+
+    return;
+}
+
+void ImportManager::SaveFilesIntoMusicFolderOnlyCopy(const QStringList &pathsOfmp3)
+{
+    if(pathsOfmp3.QStringList::isEmpty())
+        return;
+
+    for(const auto &iter : pathsOfmp3)
+    {
+        ImportManager::mp3File->QFile::setFileName(iter);
+
+        if(ImportManager::mp3File->QFile::open(QIODevice::ReadOnly))
+        {
+            const QString nameOfSong = ImportManager::GetNameOfSongFromCurrentPath(iter);
+
+            ImportManager::CheckDir();
+            ImportManager::mp3File->QFile::copy(iter, ImportManager::musicDir->QDir::currentPath() + "/music/" + nameOfSong);
+
+            #ifndef Q_DEBUG
+            qDebug() << "Added new file: " + nameOfSong;
+            #endif
+        }
+        else
+        {
+            #ifndef Q_DEBUG
+            qCritical() << "Error open or read file!";
+            #endif
+
+            return;
+        }
+
+        ImportManager::mp3File->QFile::close();
     }
 
     return;
@@ -180,4 +192,9 @@ QString ImportManager::GetNameOfSongFromCurrentPath(const QString nameOfSong)
     }
 
     return buffer;
+}
+
+bool ImportManager::DeleteMusicFromMusicFolder()
+{
+
 }
