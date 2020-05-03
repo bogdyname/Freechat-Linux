@@ -74,6 +74,15 @@ Ocean::Ocean(QWidget *parent)
     Ocean::playLists->QWidget::setMinimumWidth(150);
     Ocean::playLists->QWidget::setMinimumHeight(150);
 
+    //Buttons for open file
+    Ocean::buttonForAddMusicWithDel->QPushButton::setText("Add music (delete it)");
+    Ocean::buttonForAddMusicOnlyCopy->QPushButton::setText("Add music (only copy)");
+
+    //tts
+    Ocean::sortBy->QComboBox::addItem("Name");
+    Ocean::sortBy->QComboBox::addItem("Date");
+    //tts
+
     /*
         *!CONNECT SIGNALS WITH SLOTS!*
     Import manager connect
