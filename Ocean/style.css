@@ -1,3 +1,4 @@
+/*DEFAULT VIEW* -----------------------------------------------------------------*/
 QWidget
 {
     background-color: #111a22;
@@ -20,12 +21,75 @@ QListWidget
     border-radius: 1px;
 }
 
-QLineEdit
+QPushButton
+{
+    border: 1.2px;
+    border-color: #562956;
+    border-style: outset;
+    border-radius: 2px;
+}
+
+/*COMBO BOX -----------------------------------------------------------------*/
+QComboBox
 {
     border: 1.2px;
     border-color: #562956;
     border-style: outset;
     border-radius: 1px;
+}
+
+QComboBox:hover
+{
+    border: 1.2px;
+    border-color: #273e51;
+    border-style: outset;
+    border-radius: 1px;
+}
+
+QComboBox::drop-down
+{
+    border: 1px solid #D3D3D3;
+    border-radius: 2px;
+}
+
+QComboBox::down-arrow
+{
+    padding: 0px 1px 0px 1px;
+    image: url(:/doors/icons/triangle.png); /*TTS*/
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,stop: 0 #EEEEEE, stop: 1 #FFFFFF);
+}
+
+QListView::item:selected
+{
+      border: 1px solid #6a6ea9;
+}
+
+QListView::item:selected:!active
+{
+      background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                  stop: 0 #ABAFE5, stop: 1 #8588B2);
+}
+
+QListView::item:selected:active
+{
+      background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                  stop: 0 #6a6ea9, stop: 1 #888dd9);
+}
+
+QListView::item:hover
+{
+      background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                  stop: 0 #FAFBFE, stop: 1 #DCDEF1);
+}
+
+
+/*HOBER ITEMS -----------------------------------------------------------------*/
+QPushButton:hover
+{
+    border: 1.5px;
+    border-color: #273e51;
+    border-style: outset;
+    border-radius: 2px;
 }
 
 QTextBrowser:hover
@@ -44,22 +108,7 @@ QListWidget:hover
     border-radius: 1px;
 }
 
-QLineEdit:hover
-{
-    border: 1.2px;
-    border-color: #273e51;
-    border-style: outset;
-    border-radius: 1px;
-}
-
-QLineEdit:focus
-{
-    border: 1.5px;
-    border-color: #273e51;
-    border-style: outset;
-    border-radius: 1px;
-}
-
+/*SCROLLS BAR -----------------------------------------------------------------*/
 QScrollBar:vertical
 {
     border: 1px outset;
