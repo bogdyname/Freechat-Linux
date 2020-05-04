@@ -10,6 +10,7 @@
 #include <QDebug>
 #include <QLabel>
 #include <QWidget>
+#include <QSlider>
 #include <QLineEdit>
 #include <QComboBox>
 #include <QListWidget>
@@ -32,13 +33,21 @@ public:
     Ocean(QWidget *parent = nullptr);
     ~Ocean();
 
+signals:
+    void WindowhasNewSize(QResizeEvent *event);
+
+protected:
+    virtual void resizeEvent(QResizeEvent *event);
+
+private slots:
+    void Hidder(const QSize &size);
+
 private:
+    QSlider *sliderOfTrack = nullptr;
     QLabel *imageOfPlayList = nullptr;
     QComboBox *sortBy = nullptr;
     QListWidget *playLists = nullptr;
     QListWidget *musicList = nullptr;
-    QMediaPlayer *mediaPlayer = nullptr;
-    QMediaPlaylist *mediaPlayList = nullptr;
     QPushButton *playTrack = nullptr;
     QPushButton *stopTrack = nullptr;
     QPushButton *nextTrack = nullptr;
