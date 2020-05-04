@@ -5,7 +5,6 @@
 */
 
 #include "ui/ocean.h"
-#include <QFileDialog>
 
 Ocean::Ocean(QWidget *parent)
     : QMainWindow(parent)
@@ -18,10 +17,9 @@ Ocean::Ocean(QWidget *parent)
         //Objects of UI
         Ocean::imageOfPlayList = new QLabel();
         Ocean::sortBy = new QComboBox();
+        Ocean::sliderOfTrack = new QSlider(Qt::Horizontal);
         Ocean::playLists = new QListWidget();
         Ocean::musicList = new QListWidget();
-        Ocean::mediaPlayer = new QMediaPlayer();
-        Ocean::mediaPlayList = new QMediaPlaylist();
         Ocean::playTrack = new QPushButton();
         Ocean::stopTrack = new QPushButton();
         Ocean::nextTrack = new QPushButton();
@@ -47,41 +45,45 @@ Ocean::Ocean(QWidget *parent)
         abort();
     }
 
-    Ocean::ui->horizontalLayout->QHBoxLayout::addWidget(Ocean::playLists);
-    Ocean::ui->horizontalLayout->QHBoxLayout::addWidget(Ocean::musicList);
+    //UpSide
+    //Player
+    Ocean::ui->buttonsOfPlayer->QHBoxLayout::addWidget(Ocean::stopTrack);
+    Ocean::ui->buttonsOfPlayer->QHBoxLayout::addWidget(Ocean::playTrack);
+    Ocean::ui->buttonsOfPlayer->QHBoxLayout::addWidget(Ocean::nextTrack);
+    Ocean::ui->sliderOfPlayer->QHBoxLayout::addWidget(Ocean::sliderOfTrack);
 
-    Ocean::ui->toolLayout->QVBoxLayout::addWidget(Ocean::imageOfPlayList);
-    Ocean::ui->toolLayout->QVBoxLayout::addWidget(Ocean::sortBy);
-    Ocean::ui->toolLayout->QVBoxLayout::addWidget(Ocean::buttonForAddMusicWithDel);
-    Ocean::ui->toolLayout->QVBoxLayout::addWidget(Ocean::buttonForAddMusicOnlyCopy);
+    //Left side
+    //Music
+    Ocean::ui->music->QHBoxLayout::addWidget(Ocean::playLists);
+    Ocean::ui->music->QHBoxLayout::addWidget(Ocean::musicList);
 
-    //STYLE
+    //Right side
+    //Image of play list
+    Ocean::ui->tool->QVBoxLayout::addWidget(Ocean::imageOfPlayList);
+    //Tool buttons
+    Ocean::ui->tool->QVBoxLayout::addWidget(Ocean::buttonForAddMusicWithDel);
+    Ocean::ui->tool->QVBoxLayout::addWidget(Ocean::buttonForAddMusicOnlyCopy);
+    Ocean::ui->tool->QVBoxLayout::addWidget(Ocean::sortBy);
 
     //Main window
     this->QWidget::setMinimumSize(250, 300);
 
-    //Image of play list
-    Ocean::imageOfPlayList->QWidget::setMinimumSize(200, 250);
-    Ocean::imageOfPlayList->QWidget::setMaximumSize(350, 400);
+    //Lists
+    Ocean::playLists->QWidget::setMaximumWidth(225);
+    Ocean::musicList->QWidget::setMaximumWidth(1500);
 
-    //Music list
-    Ocean::musicList->QWidget::setMaximumWidth(150);
-    Ocean::musicList->QWidget::setMinimumWidth(150);
-    Ocean::musicList->QWidget::setMinimumHeight(150);
-
-    //Play list
-    Ocean::playLists->QWidget::setMaximumWidth(150);
-    Ocean::playLists->QWidget::setMinimumWidth(150);
-    Ocean::playLists->QWidget::setMinimumHeight(150);
-
-    //Buttons for open file
-    Ocean::buttonForAddMusicWithDel->QPushButton::setText("Add music (delete it)");
-    Ocean::buttonForAddMusicOnlyCopy->QPushButton::setText("Add music (only copy)");
-
-    //tts
+    //Sort box
     Ocean::sortBy->QComboBox::addItem("Name");
     Ocean::sortBy->QComboBox::addItem("Date");
-    //tts
+
+    //Buttons for open file
+    Ocean::buttonForAddMusicWithDel->QPushButton::setText("Add music with delete");
+    Ocean::buttonForAddMusicOnlyCopy->QPushButton::setText("Add music with copy");
+
+    //Buttons for player
+    Ocean::stopTrack->QPushButton::setText("Stop");
+    Ocean::playTrack->QPushButton::setText("Play");
+    Ocean::nextTrack->QPushButton::setText("Next");
 
     /*
         *!CONNECT SIGNALS WITH SLOTS!*
@@ -92,6 +94,11 @@ Ocean::Ocean(QWidget *parent)
     //Import manager
     QObject::connect(Ocean::buttonForAddMusicWithDel, SIGNAL(clicked(bool)), Ocean::importManager, SLOT(CallFileDialogWithDel()));
     QObject::connect(Ocean::buttonForAddMusicOnlyCopy, SIGNAL(clicked(bool)), Ocean::importManager, SLOT(CallFileDialogOnlyCopy()));
+
+    //Main window style
+    QObject::connect(this, SIGNAL(iconSizeChanged(QSize)), this, SLOT(Hidder(QSize)));
+
+    return;
 }
 
 Ocean::~Ocean()
@@ -100,10 +107,9 @@ Ocean::~Ocean()
     delete Ocean::ui;
     delete Ocean::imageOfPlayList;
     delete Ocean::sortBy;
+    delete Ocean::sliderOfTrack;
     delete Ocean::playLists;
     delete Ocean::musicList;
-    delete Ocean::mediaPlayer;
-    delete Ocean::mediaPlayList;
     delete Ocean::playTrack;
     delete Ocean::stopTrack;
     delete Ocean::nextTrack;
@@ -113,4 +119,31 @@ Ocean::~Ocean()
 
     //Own classes
     delete Ocean::importManager;
+
+    return;
+}
+
+void Ocean::WindowhasNewSize(QResizeEvent *event)
+{
+    //QSize size = event->oldSize();
+
+    return;
+}
+
+void Ocean::Hidder(const QSize &size)
+{
+    QSize min(300, 300);
+
+    if(size == min)
+        Ocean::playLists->hide();
+
+    return;
+}
+
+void Ocean::resizeEvent(QResizeEvent *event)
+{
+    QWidget::resizeEvent(event);
+    emit WindowhasNewSize(event);
+
+    return;
 }
