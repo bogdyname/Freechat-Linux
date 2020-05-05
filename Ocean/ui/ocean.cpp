@@ -48,6 +48,7 @@ Ocean::Ocean(QWidget *parent)
     //UpSide
     //Player
     Ocean::ui->buttonsOfPlayer->QHBoxLayout::addWidget(Ocean::stopTrack);
+    Ocean::ui->buttonsOfPlayer->QHBoxLayout::addWidget(Ocean::previousTrack);
     Ocean::ui->buttonsOfPlayer->QHBoxLayout::addWidget(Ocean::playTrack);
     Ocean::ui->buttonsOfPlayer->QHBoxLayout::addWidget(Ocean::nextTrack);
     Ocean::ui->sliderOfPlayer->QHBoxLayout::addWidget(Ocean::sliderOfTrack);
@@ -72,9 +73,13 @@ Ocean::Ocean(QWidget *parent)
     Ocean::playLists->QWidget::setMaximumWidth(225);
     Ocean::musicList->QWidget::setMaximumWidth(1500);
 
+    Ocean::playLists->QListWidget::addItem("all");
+
     //Sort box
+    Ocean::sortBy->QComboBox::addItem("Default");
     Ocean::sortBy->QComboBox::addItem("Name");
     Ocean::sortBy->QComboBox::addItem("Date");
+    Ocean::sortBy->QComboBox::addItem("Group");
 
     //Buttons for open file
     Ocean::buttonForAddMusicWithDel->QPushButton::setText("Add music with delete");
@@ -82,6 +87,7 @@ Ocean::Ocean(QWidget *parent)
 
     //Buttons for player
     Ocean::stopTrack->QPushButton::setText("Stop");
+    Ocean::previousTrack->QPushButton::setText("Previous");
     Ocean::playTrack->QPushButton::setText("Play");
     Ocean::nextTrack->QPushButton::setText("Next");
 
@@ -122,16 +128,22 @@ Ocean::~Ocean()
 // NOT DONE
 void Ocean::Hidder()
 {
-    Ocean::playLists->hide();
-    Ocean::musicList->hide();
+    Ocean::playLists->QWidget::hide();
+    Ocean::musicList->QWidget::hide();
+    Ocean::sortBy->QWidget::hide();
+    Ocean::buttonForAddMusicWithDel->QWidget::hide();
+    Ocean::buttonForAddMusicOnlyCopy->QWidget::hide();
 
     return;
 }
 // NOT DONE
 void Ocean::Shower()
 {
-    Ocean::playLists->show();
-    Ocean::musicList->show();
+    Ocean::playLists->QWidget::show();
+    Ocean::musicList->QWidget::show();
+    Ocean::sortBy->QWidget::show();
+    Ocean::buttonForAddMusicWithDel->QWidget::show();
+    Ocean::buttonForAddMusicOnlyCopy->QWidget::show();
 
     return;
 }
@@ -140,13 +152,13 @@ void Ocean::resizeEvent(QResizeEvent *event)
 {
     QMainWindow::resizeEvent(event);
 
-    int h = event->size().height();
-    int w = event->size().width();
+    int short h = event->QResizeEvent::size().QSize::height();
+    int short w = event->QResizeEvent::size().QSize::width();
 
-    if(h <= 500 && w <= 500)//CHECK THIS SIDE FOR CORRECT VARIABLE OF PX
-        Hidder();
+    if(h <= 500 && w <= 500)
+        Ocean::Hidder();
     else
-        Shower();
+        Ocean::Shower();
 
     return;
 }

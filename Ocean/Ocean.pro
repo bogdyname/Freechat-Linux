@@ -14,10 +14,14 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
     imports/importmanager.cpp \
     main.cpp \
+    player/player.cpp \
+    playlists/playlist.cpp \
     ui/ocean.cpp
 
 HEADERS += \
     imports/importmanager.h \
+    player/player.h \
+    playlists/playlist.h \
     ui/ocean.h
 
 FORMS += \
