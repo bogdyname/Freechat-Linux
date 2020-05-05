@@ -95,9 +95,6 @@ Ocean::Ocean(QWidget *parent)
     QObject::connect(Ocean::buttonForAddMusicWithDel, SIGNAL(clicked(bool)), Ocean::importManager, SLOT(CallFileDialogWithDel()));
     QObject::connect(Ocean::buttonForAddMusicOnlyCopy, SIGNAL(clicked(bool)), Ocean::importManager, SLOT(CallFileDialogOnlyCopy()));
 
-    //Main window style
-    QObject::connect(this, SIGNAL(iconSizeChanged(QSize)), this, SLOT(Hidder(QSize)));
-
     return;
 }
 
@@ -122,28 +119,34 @@ Ocean::~Ocean()
 
     return;
 }
-
-void Ocean::WindowhasNewSize(QResizeEvent *event)
+// NOT DONE
+void Ocean::Hidder()
 {
-    //QSize size = event->oldSize();
+    Ocean::playLists->hide();
+    Ocean::musicList->hide();
 
     return;
 }
-
-void Ocean::Hidder(const QSize &size)
+// NOT DONE
+void Ocean::Shower()
 {
-    QSize min(300, 300);
-
-    if(size == min)
-        Ocean::playLists->hide();
+    Ocean::playLists->show();
+    Ocean::musicList->show();
 
     return;
 }
 
 void Ocean::resizeEvent(QResizeEvent *event)
 {
-    QWidget::resizeEvent(event);
-    emit WindowhasNewSize(event);
+    QMainWindow::resizeEvent(event);
+
+    int h = event->size().height();
+    int w = event->size().width();
+
+    if(h <= 500 && w <= 500)//CHECK THIS SIDE FOR CORRECT VARIABLE OF PX
+        Hidder();
+    else
+        Shower();
 
     return;
 }
