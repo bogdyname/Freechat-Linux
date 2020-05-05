@@ -20,6 +20,7 @@
 #include <QMessageBox>
 #include <QTextBrowser>
 #include <QMediaPlayer>
+#include <QResizeEvent>
 #include <QMediaPlaylist>
 #include "ui_ocean.h"
 
@@ -33,14 +34,12 @@ public:
     Ocean(QWidget *parent = nullptr);
     ~Ocean();
 
-signals:
-    void WindowhasNewSize(QResizeEvent *event);
-
 protected:
     virtual void resizeEvent(QResizeEvent *event);
 
 private slots:
-    void Hidder(const QSize &size);
+    void Hidder();// NOT DONE
+    void Shower();// NOT DONE
 
 private:
     QSlider *sliderOfTrack = nullptr;
