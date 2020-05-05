@@ -43,6 +43,8 @@ ImportManager::ImportManager()
         qDebug() << "Folder 'music' created";
     else
         qDebug() << "Folder 'music' already exists!";
+
+    return;
 }
 
 ImportManager::~ImportManager()

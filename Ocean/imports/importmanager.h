@@ -28,7 +28,7 @@ public slots:
     void CallFileDialogWithDel();
     void CallFileDialogOnlyCopy();
 
-    void DeleteMusic();
+    void DeleteMusic();//Not done
 
 private:
     void SaveFilesIntoMusicFolderAndDeleteIt(const QStringList &pathsOfmp3);
@@ -37,7 +37,7 @@ private:
     bool CheckDir();
     QString GetNameOfSongFromCurrentPath(const QString nameOfSong);
 
-    bool DeleteMusicFromMusicFolder();
+    bool DeleteMusicFromMusicFolder();//Not done
 
     //Objects of Qt
 private:
