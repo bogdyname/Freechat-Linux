@@ -21,26 +21,27 @@ class Playlist : public QFile, public QMediaPlaylist
 {
     Q_OBJECT
 
+    //dir 'bin' for saving and loading playlists
+
 public:
     Playlist();
     ~Playlist();
 
 public slots:
     void GetCurrentPlayList();
-    void CreateCurrentPlayList();
-    void RemuveCurrentPlayList();
+    void CreateCurrentPlayList(const QString &name);
+    void RemoveCurrentPlayList();
 
+    //check out these methods
 private:
-    bool CreatePlayList(const QStringList &list, QMediaPlaylist *playlist);
-    bool SavePlayListIntoFile();
-    bool RemuvePlayListFromFile();
-    bool LookingForListInFile();
+    bool CreatePlayList(const QString &name, const QStringList &list, QMediaPlaylist *playlist);
+    bool RemovePlayList(const QString &name);
+    bool LookingForPlayList(const QString &name, QMediaPlaylist *medialist);
     bool CheckSettingsDir();
 
 private:
     QFileDialog *dialog = nullptr;
     QDir *settingsDir = nullptr;
-    QFile *track = nullptr;
     QStringList list;
     QMediaPlaylist *playlist = nullptr;
 };

@@ -12,7 +12,6 @@ Playlist::Playlist()
     try
     {
         Playlist::settingsDir = new QDir();
-        Playlist::track = new QFile();
         Playlist::dialog = new QFileDialog();
         Playlist::playlist = new QMediaPlaylist();
     }
@@ -31,7 +30,6 @@ Playlist::Playlist()
         abort();
     }
 
-
     //current path of app
     Playlist::settingsDir->QDir::setCurrent(QCoreApplication::applicationDirPath());
     Playlist::dialog->QFileDialog::setDirectory(QCoreApplication::applicationDirPath() + "/music/");
@@ -48,7 +46,6 @@ Playlist::Playlist()
 Playlist::~Playlist()
 {
     delete Playlist::settingsDir;
-    delete Playlist::track;
     delete Playlist::dialog;
     delete Playlist::playlist;
 
@@ -61,63 +58,62 @@ void Playlist::GetCurrentPlayList()
     return;
 }
 
-void Playlist::CreateCurrentPlayList()
+void Playlist::CreateCurrentPlayList(const QString &name)
 {
     const QStringList songs = Playlist::dialog->QFileDialog::getOpenFileNames(0, "Create play list", "", "*.mp3 *.wav");
 
     if(songs.QList::isEmpty())
         return;
     else
-        if(Playlist::CreatePlayList(songs, Playlist::playlist))
-            qDebug() << "play list success created!";
+        if(Playlist::CreatePlayList(name ,songs, Playlist::playlist))
+            qDebug() << "play list success created!" + name;
         else
-            qCritical() << "error create play list!";
+            qCritical() << "error create play list!" + name;
 
     return;
 }
 
-void Playlist::RemuveCurrentPlayList()
+void Playlist::RemoveCurrentPlayList()
 {
 
     return;
 }
 
-bool Playlist::CreatePlayList(const QStringList &list, QMediaPlaylist *medialist)
+bool Playlist::CreatePlayList(const QString &name, const QStringList &list, QMediaPlaylist *medialist)
 {
     Playlist::CheckSettingsDir();
 
-    if(Playlist::track->QFile::open(ReadOnly))
-    {
-        Playlist::track->QFile::setFileName("playlists.bin");//TTS
-        QTextStream stream(Playlist::track);//TTS
+    for(const QString &iter : list)
+        medialist->QMediaPlaylist::addMedia(QMediaContent(QUrl::fromLocalFile(iter)));//add song into playlist
 
-        for(const QString &iter : list)
-        {
-            stream << iter << '\n';//write song into file for save it //TTS
-            medialist->addMedia(QMediaContent(QUrl::fromLocalFile(iter)));//add song into playlist
-        }
-
-        Playlist::track->QFile::close();
-
+    if(medialist->QMediaPlaylist::save(QCoreApplication::applicationDirPath() + "/bin/" + name, ".bin"))
         return true;
-    }
     else
-    {
-        #ifndef Q_DEBUG
-        qCritical() << "Error open or read file!";
-        #endif
-
         return false;
-    }
 }
 
-bool SavePlayListIntoFile();
-bool RemuvePlayListFromFile();
-bool LookingForListInFile();
+bool Playlist::RemovePlayList(const QString &name)
+{
+    QFile buffer(QCoreApplication::applicationDirPath() + "/bin/" + name + ".bin");
+
+    if(buffer.QFile::remove())
+        return true;
+    else
+        return false;
+}
+
+bool Playlist::LookingForPlayList(const QString &name, QMediaPlaylist *medialist)
+{
+    medialist->QMediaPlaylist::load(QCoreApplication::applicationDirPath() + "/bin/" + name + ".bin");
+
+    if(!medialist->QMediaPlaylist::isEmpty())
+        return true;
+    else
+        return false;
+}
 
 bool Playlist::CheckSettingsDir()
 {
-
     if(QDir("bin").QDir::exists() == false)
     {
         Playlist::settingsDir->QDir::mkdir("bin");
