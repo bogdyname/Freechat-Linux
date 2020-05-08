@@ -52,14 +52,19 @@ Playlist::~Playlist()
     return;
 }
 
-void Playlist::GetCurrentPlayList()
+//SLOTS
+void Playlist::LoadPlayList(const QString &name)
 {
+    Playlist::LookingForPlayList(name, Playlist::playlist);
 
     return;
 }
 
 void Playlist::CreateCurrentPlayList(const QString &name)
 {
+    if(name == "")
+        return;
+
     const QStringList songs = Playlist::dialog->QFileDialog::getOpenFileNames(0, "Create play list", "", "*.mp3 *.wav");
 
     if(songs.QList::isEmpty())
@@ -73,14 +78,22 @@ void Playlist::CreateCurrentPlayList(const QString &name)
     return;
 }
 
-void Playlist::RemoveCurrentPlayList()
+void Playlist::RemoveCurrentPlayList(const QString &name)
 {
+    if(name == "")
+        return;
+
+    Playlist::RemovePlayList(name);
 
     return;
 }
 
+//Methods
 bool Playlist::CreatePlayList(const QString &name, const QStringList &list, QMediaPlaylist *medialist)
 {
+    if((name == "") || (!list.QStringList::isEmpty()))
+        return false;
+
     Playlist::CheckSettingsDir();
 
     for(const QString &iter : list)
@@ -94,6 +107,11 @@ bool Playlist::CreatePlayList(const QString &name, const QStringList &list, QMed
 
 bool Playlist::RemovePlayList(const QString &name)
 {
+    if(name == "")
+        return false;
+
+    Playlist::CheckSettingsDir();
+
     QFile buffer(QCoreApplication::applicationDirPath() + "/bin/" + name + ".bin");
 
     if(buffer.QFile::remove())
@@ -104,6 +122,11 @@ bool Playlist::RemovePlayList(const QString &name)
 
 bool Playlist::LookingForPlayList(const QString &name, QMediaPlaylist *medialist)
 {
+    if(name == "")
+        return false;
+
+    Playlist::CheckSettingsDir();
+
     medialist->QMediaPlaylist::load(QCoreApplication::applicationDirPath() + "/bin/" + name + ".bin");
 
     if(!medialist->QMediaPlaylist::isEmpty())

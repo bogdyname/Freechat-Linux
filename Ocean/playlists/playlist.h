@@ -17,7 +17,7 @@
 #include <QMediaPlaylist>
 #include <QCoreApplication>
 
-class Playlist : public QFile, public QMediaPlaylist
+class Playlist : public QMediaPlaylist
 {
     Q_OBJECT
 
@@ -28,9 +28,9 @@ public:
     ~Playlist();
 
 public slots:
-    void GetCurrentPlayList();
+    void LoadPlayList(const QString &name);
     void CreateCurrentPlayList(const QString &name);
-    void RemoveCurrentPlayList();
+    void RemoveCurrentPlayList(const QString &name);
 
     //check out these methods
 private:
