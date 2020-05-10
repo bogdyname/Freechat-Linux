@@ -13,13 +13,29 @@
 #include <QMediaPlayer>
 #include <QMediaPlaylist>
 
-class Player
+class Player : public QMediaPlayer
 {
     Q_OBJECT
 
 public:
     Player();
     ~Player();
+
+public slots:
+    void CallSetMod(const unsigned short int &mod);
+    void CallSetPlayList(QMediaPlaylist *playlist);
+    void CallSetVolume(const unsigned short int &volume);
+
+public:
+    QMediaPlayer* GetPlayer();
+
+private:
+    bool SetModOfPlayer(const unsigned short int &mod);
+    bool SetPlayList(QMediaPlaylist *playlist);
+    bool SetVolume(const unsigned short int &volume);
+
+private:
+    QMediaPlayer *player = nullptr;
 };
 
 #endif

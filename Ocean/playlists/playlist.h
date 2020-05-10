@@ -28,21 +28,28 @@ public:
     ~Playlist();
 
 public slots:
+    void LoadDefaultPlayList();
     void LoadPlayList(const QString &name);
     void CreateCurrentPlayList(const QString &name);
     void RemoveCurrentPlayList(const QString &name);
+
+public:
+    QMediaPlaylist* GetPlayList();
 
     //check out these methods
 private:
     bool CreatePlayList(const QString &name, const QStringList &list, QMediaPlaylist *playlist);
     bool RemovePlayList(const QString &name);
     bool LookingForPlayList(const QString &name, QMediaPlaylist *medialist);
+    bool CreateDefaultPlaylist(QMediaPlaylist *medialist);
     bool CheckSettingsDir();
 
 private:
     QFileDialog *dialog = nullptr;
     QDir *settingsDir = nullptr;
+    QDir *musicFolder = nullptr;
     QStringList list;
+    QStringList allSongs;
     QMediaPlaylist *playlist = nullptr;
 };
 

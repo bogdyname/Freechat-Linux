@@ -25,6 +25,8 @@
 #include "ui_ocean.h"
 
 #include "imports/importmanager.h"
+#include "playlists/playlist.h"
+#include "player/player.h"
 
 class Ocean : public QMainWindow, private Ui::Ocean
 {
@@ -43,6 +45,7 @@ private slots:
 
 private:
     QSlider *sliderOfTrack = nullptr;
+    QSlider *sliderOfVolume = nullptr;
     QLabel *imageOfPlayList = nullptr;
     QComboBox *sortBy = nullptr;
     QListWidget *playLists = nullptr;
@@ -57,6 +60,8 @@ private:
     //Own Objects
 private:
     ImportManager *importManager = nullptr;
+    Playlist *playlistmanager = nullptr;
+    Player *playermanager = nullptr;
 
 private:
     Ui::Ocean *ui;

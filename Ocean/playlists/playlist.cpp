@@ -13,6 +13,7 @@ Playlist::Playlist()
     {
         Playlist::settingsDir = new QDir();
         Playlist::dialog = new QFileDialog();
+        Playlist::musicFolder = new QDir();
         Playlist::playlist = new QMediaPlaylist();
     }
     catch (std::bad_alloc &exp)
@@ -32,7 +33,10 @@ Playlist::Playlist()
 
     //current path of app
     Playlist::settingsDir->QDir::setCurrent(QCoreApplication::applicationDirPath());
+    Playlist::musicFolder->QDir::setCurrent(QCoreApplication::applicationDirPath() + "/music/");
     Playlist::dialog->QFileDialog::setDirectory(QCoreApplication::applicationDirPath() + "/music/");
+
+    Playlist::allSongs = Playlist::musicFolder->QDir::entryList(QDir::AllEntries);
 
     //Check folder of settings/playlist
     if(Playlist::settingsDir->QDir::mkdir("bin"))
@@ -46,6 +50,7 @@ Playlist::Playlist()
 Playlist::~Playlist()
 {
     delete Playlist::settingsDir;
+    delete Playlist::musicFolder;
     delete Playlist::dialog;
     delete Playlist::playlist;
 
@@ -53,9 +58,30 @@ Playlist::~Playlist()
 }
 
 //SLOTS
+void Playlist::LoadDefaultPlayList()
+{
+    if(Playlist::CreateDefaultPlaylist(Playlist::playlist))
+        #ifndef Q_DEBUG
+        qDebug() << "loaded default playlist";
+        #endif
+    else
+        #ifndef Q_DEBUG
+        qCritical() << "error: can't load default playlist";
+        #endif
+
+    return;
+}
+
 void Playlist::LoadPlayList(const QString &name)
 {
-    Playlist::LookingForPlayList(name, Playlist::playlist);
+    if(Playlist::LookingForPlayList(name, Playlist::playlist))
+        #ifndef Q_DEBUG
+        qDebug() << "loaded playlist";
+        #endif
+    else
+        #ifndef Q_DEBUG
+        qCritical() << "error: can't load playlist";
+        #endif
 
     return;
 }
@@ -71,9 +97,13 @@ void Playlist::CreateCurrentPlayList(const QString &name)
         return;
     else
         if(Playlist::CreatePlayList(name ,songs, Playlist::playlist))
-            qDebug() << "play list success created!" + name;
+            #ifndef Q_DEBUG
+            qDebug() << "play list successed created!" + name;
+            #endif
         else
+            #ifndef Q_DEBUG
             qCritical() << "error create play list!" + name;
+            #endif
 
     return;
 }
@@ -83,12 +113,24 @@ void Playlist::RemoveCurrentPlayList(const QString &name)
     if(name == "")
         return;
 
-    Playlist::RemovePlayList(name);
+    if(Playlist::RemovePlayList(name))
+        #ifndef Q_DEBUG
+        qDebug() << "playlist successed removed: " << name;
+        #endif
+    else
+        #ifndef Q_DEBUG
+        qCritical() << "error: can't remove playlist";
+        #endif
 
     return;
 }
 
 //Methods
+QMediaPlaylist* Playlist::GetPlayList()
+{
+    return Playlist::playlist;
+}
+
 bool Playlist::CreatePlayList(const QString &name, const QStringList &list, QMediaPlaylist *medialist)
 {
     if((name == "") || (!list.QStringList::isEmpty()))
@@ -133,6 +175,20 @@ bool Playlist::LookingForPlayList(const QString &name, QMediaPlaylist *medialist
         return true;
     else
         return false;
+}
+
+bool Playlist::CreateDefaultPlaylist(QMediaPlaylist *medialist)
+{
+    if(QDir("dir").QDir::exists() == false)
+        return false;
+    else
+    {
+        for(const QString &iter : Playlist::allSongs)
+            medialist->QMediaPlaylist::addMedia(QMediaContent(QUrl::fromLocalFile(iter)));
+
+        return true;
+    }
+
 }
 
 bool Playlist::CheckSettingsDir()
