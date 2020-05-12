@@ -83,8 +83,11 @@ Ocean::Ocean(QWidget *parent)
     Ocean::musicList->QAbstractItemView::setSelectionMode(QAbstractItemView::SingleSelection);
     Ocean::playLists->QAbstractItemView::setSelectionBehavior(QAbstractItemView::SelectRows);
     Ocean::musicList->QAbstractItemView::setSelectionBehavior(QAbstractItemView::SelectRows);
+    Ocean::playLists->QWidget::setContextMenuPolicy(Qt::CustomContextMenu);
+    Ocean::musicList->QWidget::setContextMenuPolicy(Qt::CustomContextMenu);
 
     Ocean::playLists->QListWidget::addItem("all");
+    Ocean::playLists->QListWidget::addItem("TTS");
 
     //Slider of volume
     Ocean::sliderOfVolume->QWidget::setMinimumSize(225, 17);
@@ -129,6 +132,9 @@ Ocean::Ocean(QWidget *parent)
     Playlist manager
         1) next track
         2) previous track
+    UI lists widgets
+        1) Context Menu for playlist
+        2) Context Menu for music list
     */
     //Import manager
     QObject::connect(Ocean::buttonForAddMusicWithDel, SIGNAL(clicked(bool)), Ocean::importManager, SLOT(CallFileDialogWithDel()));
@@ -139,6 +145,9 @@ Ocean::Ocean(QWidget *parent)
     //Playlist manager
     QObject::connect(Ocean::nextTrack, &QPushButton::clicked, Ocean::playlistmanager, &QMediaPlaylist::next);
     QObject::connect(Ocean::previousTrack, &QPushButton::clicked, Ocean::playlistmanager, &QMediaPlaylist::previous);
+    //UI Lists
+    QObject::connect(Ocean::playLists, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(ShowContextMenuOfPlayList(QPoint)));
+    QObject::connect(Ocean::musicList, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(ShowContextMenuOfMusicList(QPoint)));
 
     return;
 }
@@ -186,6 +195,62 @@ void Ocean::Shower()
     Ocean::sortBy->QWidget::show();
     Ocean::buttonForAddMusicWithDel->QWidget::show();
     Ocean::buttonForAddMusicOnlyCopy->QWidget::show();
+
+    return;
+}
+// NOT DONE
+void Ocean::ShowContextMenuOfPlayList(const QPoint &point)
+{
+    QPoint globalPoint = Ocean::playLists->QWidget::mapToGlobal(point);
+
+    // Create menu and insert some actions
+    QMenu myMenu;
+    myMenu.QMenu::addAction("Delete", this, SLOT(EraseItemFromPlayList()));
+
+    // Show context menu at handling position
+    myMenu.QMenu::exec(globalPoint);
+
+    //write here method from playlist.h
+
+    return;
+}
+// NOT DONE
+void Ocean::ShowContextMenuOfMusicList(const QPoint &point)
+{
+    QPoint globalPoint = Ocean::playLists->QWidget::mapToGlobal(point);
+
+    QMenu myMenu;
+    myMenu.QMenu::addAction("Delete", this, SLOT(EraseItemFromMusicList()));
+
+    myMenu.QMenu::exec(globalPoint);
+
+    //write here method from importmanager.h
+
+    return;
+}
+
+void Ocean::EraseItemFromMusicList()
+{
+    // If multiple selection is on, we need to erase all selected items
+    for (unsigned short int iter = 0; iter < Ocean::musicList->QListWidget::selectedItems().QList::size(); ++iter)
+    {
+        // Get curent item on selected row
+        QListWidgetItem *item = Ocean::musicList->QListWidget::takeItem(Ocean::musicList->QListWidget::currentRow());
+        // And remove it
+        delete item;
+    }
+
+    return;
+}
+
+void Ocean::EraseItemFromPlayList()
+{
+    for (unsigned short int iter = 0; iter < Ocean::playLists->QListWidget::selectedItems().QList::size(); ++iter)
+    {
+        QListWidgetItem *item = Ocean::playLists->QListWidget::takeItem(Ocean::playLists->QListWidget::currentRow());
+
+        delete item;
+    }
 
     return;
 }

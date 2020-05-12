@@ -81,6 +81,7 @@ void ImportManager::CallFileDialogOnlyCopy()
 void ImportManager::DeleteMusic()
 {
 
+
     return;
 }
 
@@ -198,6 +199,7 @@ QString ImportManager::GetNameOfSongFromCurrentPath(const QString nameOfSong)
 
 bool ImportManager::DeleteMusicFromMusicFolder()
 {
+
 
     return true;
 }
