@@ -43,6 +43,12 @@ private slots:
     void Hidder();// NOT DONE
     void Shower();// NOT DONE
 
+    //Context Menu of QListWidget
+    void ShowContextMenuOfPlayList(const QPoint &point);// NOT DONE
+    void ShowContextMenuOfMusicList(const QPoint &point);// NOT DONE
+    void EraseItemFromMusicList();
+    void EraseItemFromPlayList();
+
 private:
     QSlider *sliderOfTrack = nullptr;
     QSlider *sliderOfVolume = nullptr;

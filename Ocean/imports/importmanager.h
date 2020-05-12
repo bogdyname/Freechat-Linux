@@ -10,9 +10,11 @@
 
 #include <QDir>
 #include <QFile>
+#include <QList>
 #include <QFileDialog>
 
 #include <QDebug>
+#include <QListWidgetItem>
 #include <QCoreApplication>
 
 class ImportManager : public QFile
@@ -28,6 +30,7 @@ public slots:
     void CallFileDialogWithDel();
     void CallFileDialogOnlyCopy();
 
+public:
     void DeleteMusic();//Not done
 
 private:
