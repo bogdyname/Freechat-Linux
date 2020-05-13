@@ -24,6 +24,10 @@
 #include <QMediaPlaylist>
 #include "ui_ocean.h"
 
+//widgets
+#include "createplaylistwidget.h"
+
+//managers
 #include "imports/importmanager.h"
 #include "playlists/playlist.h"
 #include "player/player.h"
@@ -48,9 +52,14 @@ private slots:
     void ShowContextMenuOfMusicList(const QPoint &point);// NOT DONE
     void EraseItemFromMusicList();
     void EraseItemFromPlayList();
+    void CreatePlaylist();
 
     //Work with managers of won classe
     void SetPlayList(QListWidgetItem *item);
+
+    //ui slots of create playlist widget
+    void CloseWidgetViaCancel();
+    void CloseWidgetViaOkay(const QString &name);
 
 private:
     QSlider *sliderOfTrack = nullptr;
@@ -68,6 +77,10 @@ private:
 
     //Own Objects
 private:
+    //ui
+    CreatePlayListWidget *createPlayList = nullptr;
+
+    //managers
     ImportManager *importManager = nullptr;
     Playlist *playlistmanager = nullptr;
     Player *playermanager = nullptr;
