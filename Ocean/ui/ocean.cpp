@@ -30,6 +30,7 @@ Ocean::Ocean(QWidget *parent)
         Ocean::buttonForAddMusicOnlyCopy = new QPushButton();
 
         //Object of own classes
+        Ocean::createPlayList = new CreatePlayListWidget();
         Ocean::importManager = new ImportManager();
         Ocean::playlistmanager = new Playlist();
         Ocean::playermanager = new Player();
@@ -153,6 +154,9 @@ Ocean::Ocean(QWidget *parent)
     QObject::connect(Ocean::playLists, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(ShowContextMenuOfPlayList(QPoint)));
     QObject::connect(Ocean::musicList, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(ShowContextMenuOfMusicList(QPoint)));
 
+    QObject::connect(Ocean::createPlayList, &CreatePlayListWidget::BreakeWidget, this, &Ocean::CloseWidgetViaCancel);
+    QObject::connect(Ocean::createPlayList, &CreatePlayListWidget::SendNameOfPlayList, this, &Ocean::CloseWidgetViaOkay);
+
     return;
 }
 
@@ -177,6 +181,7 @@ Ocean::~Ocean()
     delete Ocean::importManager;
     delete Ocean::playlistmanager;
     delete Ocean::playermanager;
+    delete Ocean::createPlayList;
 
     return;
 }
@@ -209,6 +214,7 @@ void Ocean::ShowContextMenuOfPlayList(const QPoint &point)
 
     // Create menu and insert some actions
     QMenu myMenu;
+    myMenu.QMenu::addAction("Create", this, SLOT(CreatePlaylist()));
     myMenu.QMenu::addAction("Delete", this, SLOT(EraseItemFromPlayList()));
 
     // Show context menu at handling position
@@ -259,15 +265,41 @@ void Ocean::EraseItemFromPlayList()
     return;
 }
 
+void Ocean::CreatePlaylist()
+{
+    this->QWidget::setDisabled(true);
+    Ocean::createPlayList->QWidget::show();
+
+    return;
+}
+
 void Ocean::SetPlayList(QListWidgetItem *item)
 {
     if(item->QListWidgetItem::text() == "all")
-         Ocean::playlistmanager->Playlist::LoadDefaultPlayList();
+        Ocean::playlistmanager->Playlist::LoadDefaultPlayList();
     else
         Ocean::playlistmanager->Playlist::LoadPlayList(item->QListWidgetItem::text());
 
     //Emit signal from Playlist.h with current playlist
     emit Ocean::playlistmanager->Playlist::SetPlayCurrentList(Ocean::playlistmanager->Playlist::GetPlayList());
+
+    return;
+}
+
+void Ocean::CloseWidgetViaCancel()
+{
+    this->QWidget::setEnabled(true);
+    Ocean::createPlayList->QWidget::hide();
+
+    return;
+}
+
+void Ocean::CloseWidgetViaOkay(const QString &name)
+{
+    //before delete widget need to pass data into playlist
+
+    this->QWidget::setEnabled(true);
+    Ocean::createPlayList->QWidget::hide();
 
     return;
 }
