@@ -27,14 +27,17 @@ public:
     Playlist();
     ~Playlist();
 
+signals:
+    void SetPlayCurrentList(QMediaPlaylist *playlist);
+
 public slots:
-    void LoadDefaultPlayList();
-    void LoadPlayList(const QString &name);
     void CreateCurrentPlayList(const QString &name);
     void RemoveCurrentPlayList(const QString &name);
 
 public:
     QMediaPlaylist* GetPlayList();
+    void LoadDefaultPlayList();
+    void LoadPlayList(const QString &name);
 
     //check out these methods
 private:

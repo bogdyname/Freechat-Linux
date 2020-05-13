@@ -49,6 +49,9 @@ private slots:
     void EraseItemFromMusicList();
     void EraseItemFromPlayList();
 
+    //Work with managers of won classe
+    void SetPlayList(QListWidgetItem *item);
+
 private:
     QSlider *sliderOfTrack = nullptr;
     QSlider *sliderOfVolume = nullptr;
