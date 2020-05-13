@@ -15,7 +15,7 @@ ImportManager::ImportManager()
         ImportManager::mp3File = new QFile();
         ImportManager::importerWindow = new QFileDialog();
     }
-    catch (std::bad_alloc &exp)
+    catch(std::bad_alloc &exp)
     {
         #ifndef Q_DEBUG
         qCritical() << "Exception caught: " << exp.std::bad_alloc::what();
@@ -91,7 +91,7 @@ void ImportManager::SaveFilesIntoMusicFolderAndDeleteIt(const QStringList &paths
     if(pathsOfmp3.QStringList::isEmpty())
         return;
 
-    for(const auto &iter : pathsOfmp3)
+    for(const QString &iter : pathsOfmp3)
     {
         ImportManager::mp3File->QFile::setFileName(iter);
 
@@ -128,7 +128,7 @@ void ImportManager::SaveFilesIntoMusicFolderOnlyCopy(const QStringList &pathsOfm
     if(pathsOfmp3.QStringList::isEmpty())
         return;
 
-    for(const auto &iter : pathsOfmp3)
+    for(const QString &iter : pathsOfmp3)
     {
         ImportManager::mp3File->QFile::setFileName(iter);
 

@@ -16,7 +16,7 @@ Playlist::Playlist()
         Playlist::musicFolder = new QDir();
         Playlist::playlist = new QMediaPlaylist();
     }
-    catch (std::bad_alloc &exp)
+    catch(std::bad_alloc &exp)
     {
         #ifndef Q_DEBUG
         qCritical() << "Exception caught: " << exp.std::bad_alloc::what();
@@ -58,34 +58,6 @@ Playlist::~Playlist()
 }
 
 //SLOTS
-void Playlist::LoadDefaultPlayList()
-{
-    if(Playlist::CreateDefaultPlaylist(Playlist::playlist))
-        #ifndef Q_DEBUG
-        qDebug() << "loaded default playlist";
-        #endif
-    else
-        #ifndef Q_DEBUG
-        qCritical() << "error: can't load default playlist";
-        #endif
-
-    return;
-}
-
-void Playlist::LoadPlayList(const QString &name)
-{
-    if(Playlist::LookingForPlayList(name, Playlist::playlist))
-        #ifndef Q_DEBUG
-        qDebug() << "loaded playlist";
-        #endif
-    else
-        #ifndef Q_DEBUG
-        qCritical() << "error: can't load playlist";
-        #endif
-
-    return;
-}
-
 void Playlist::CreateCurrentPlayList(const QString &name)
 {
     if(name == "")
@@ -131,6 +103,37 @@ QMediaPlaylist* Playlist::GetPlayList()
     return Playlist::playlist;
 }
 
+void Playlist::LoadDefaultPlayList()
+{
+    Playlist::allSongs.QStringList::clear();
+    Playlist::allSongs = Playlist::musicFolder->QDir::entryList(QDir::AllEntries);
+
+    if(Playlist::CreateDefaultPlaylist(Playlist::playlist))
+        #ifndef Q_DEBUG
+        qDebug() << "loaded default playlist";
+        #endif
+    else
+        #ifndef Q_DEBUG
+        qCritical() << "error: can't load default playlist";
+        #endif
+
+    return;
+}
+
+void Playlist::LoadPlayList(const QString &name)
+{
+    if(Playlist::LookingForPlayList(name, Playlist::playlist))
+        #ifndef Q_DEBUG
+        qDebug() << "loaded playlist";
+        #endif
+    else
+        #ifndef Q_DEBUG
+        qCritical() << "error: can't load playlist";
+        #endif
+
+    return;
+}
+
 bool Playlist::CreatePlayList(const QString &name, const QStringList &list, QMediaPlaylist *medialist)
 {
     if((name == "") || (!list.QStringList::isEmpty()))
@@ -169,6 +172,7 @@ bool Playlist::LookingForPlayList(const QString &name, QMediaPlaylist *medialist
 
     Playlist::CheckSettingsDir();
 
+    medialist->QMediaPlaylist::clear();
     medialist->QMediaPlaylist::load(QCoreApplication::applicationDirPath() + "/bin/" + name + ".bin");
 
     if(!medialist->QMediaPlaylist::isEmpty())
@@ -179,12 +183,17 @@ bool Playlist::LookingForPlayList(const QString &name, QMediaPlaylist *medialist
 
 bool Playlist::CreateDefaultPlaylist(QMediaPlaylist *medialist)
 {
-    if(QDir("dir").QDir::exists() == false)
+    if(QDir("bin").QDir::exists() == false)
         return false;
     else
     {
+        medialist->QMediaPlaylist::clear();
+
         for(const QString &iter : Playlist::allSongs)
+        {
             medialist->QMediaPlaylist::addMedia(QMediaContent(QUrl::fromLocalFile(iter)));
+            qDebug() << medialist->QMediaPlaylist::mediaCount();
+        }
 
         return true;
     }

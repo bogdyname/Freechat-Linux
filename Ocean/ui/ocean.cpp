@@ -34,7 +34,7 @@ Ocean::Ocean(QWidget *parent)
         Ocean::playlistmanager = new Playlist();
         Ocean::playermanager = new Player();
     }
-    catch (std::bad_alloc &exp)
+    catch(std::bad_alloc &exp)
     {
         #ifndef Q_DEBUG
         qCritical() << "Exception caught: " << exp.std::bad_alloc::what();
@@ -124,17 +124,19 @@ Ocean::Ocean(QWidget *parent)
     /*
         *!CONNECT SIGNALS WITH SLOTS!*
     Import manager connect
-        1) Add new music and delete it via button
-        2) Add new music (only copy) via button
+        1.1) Add new music and delete it via button
+        1.2) Add new music (only copy) via button
     Player manager
-        1) play track
-        2) stop track
+        2.1) play track
+        2.2) stop track
+        2.3) set current playlist via playlist manager (emited signal from SLOT(SetPlayList(QListWidgetItem *)))
     Playlist manager
-        1) next track
-        2) previous track
+        3.1) next track
+        3.2) previous track
     UI lists widgets
-        1) Context Menu for playlist
-        2) Context Menu for music list
+        4.1) set playlist then item clicked (UI only)
+        4.2) Context Menu for playlist
+        4.3) Context Menu for music list
     */
     //Import manager
     QObject::connect(Ocean::buttonForAddMusicWithDel, SIGNAL(clicked(bool)), Ocean::importManager, SLOT(CallFileDialogWithDel()));
@@ -142,10 +144,12 @@ Ocean::Ocean(QWidget *parent)
     //Player manager
     QObject::connect(Ocean::playTrack, &QPushButton::clicked, Ocean::playermanager, &QMediaPlayer::play);
     QObject::connect(Ocean::stopTrack, &QPushButton::clicked, Ocean::playermanager, &QMediaPlayer::stop);
+    QObject::connect(Ocean::playlistmanager, &Playlist::SetPlayCurrentList, Ocean::playermanager, &QMediaPlayer::setPlaylist);
     //Playlist manager
     QObject::connect(Ocean::nextTrack, &QPushButton::clicked, Ocean::playlistmanager, &QMediaPlaylist::next);
     QObject::connect(Ocean::previousTrack, &QPushButton::clicked, Ocean::playlistmanager, &QMediaPlaylist::previous);
     //UI Lists
+    QObject::connect(Ocean::playLists, SIGNAL(itemClicked(QListWidgetItem *)), this, SLOT(SetPlayList(QListWidgetItem *)));
     QObject::connect(Ocean::playLists, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(ShowContextMenuOfPlayList(QPoint)));
     QObject::connect(Ocean::musicList, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(ShowContextMenuOfMusicList(QPoint)));
 
@@ -251,6 +255,19 @@ void Ocean::EraseItemFromPlayList()
 
         delete item;
     }
+
+    return;
+}
+
+void Ocean::SetPlayList(QListWidgetItem *item)
+{
+    if(item->QListWidgetItem::text() == "all")
+         Ocean::playlistmanager->Playlist::LoadDefaultPlayList();
+    else
+        Ocean::playlistmanager->Playlist::LoadPlayList(item->QListWidgetItem::text());
+
+    //Emit signal from Playlist.h with current playlist
+    emit Ocean::playlistmanager->Playlist::SetPlayCurrentList(Ocean::playlistmanager->Playlist::GetPlayList());
 
     return;
 }

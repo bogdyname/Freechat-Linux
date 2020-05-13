@@ -14,7 +14,7 @@ Player::Player()
     {
         Player::player = new QMediaPlayer();
     }
-    catch (std::bad_alloc &exp)
+    catch(std::bad_alloc &exp)
     {
         #ifndef Q_DEBUG
         qCritical() << "Exception caught: " << exp.std::bad_alloc::what();
