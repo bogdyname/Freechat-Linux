@@ -8,23 +8,23 @@
 #define CREATEPLAYLISTWIDGET_H
 
 #include <QWidget>
+#include <QDialog>
 #include <QLineEdit>
 #include <QPushButton>
 #include <QDebug>
 
 #include "ui_createplaylist.h"
 
-class CreatePlayListWidget : public QWidget, private Ui::CreatePlayList
+class CreatePlayListWidget : public QDialog, private Ui::CreatePlayList
 {
     Q_OBJECT
 
 public:
-    explicit CreatePlayListWidget(QWidget *parent = nullptr);
+    CreatePlayListWidget(QDialog *parent = nullptr);
     ~CreatePlayListWidget();
 
 private:
     QLineEdit *nameOfPlayList = nullptr;
-    QPushButton *okay = nullptr;
     QPushButton *cancel = nullptr;
 
 signals:
@@ -33,7 +33,6 @@ signals:
 
 private slots:
     void ReturnPressedForLineEdit();
-    void ClickedOkay();
     void ClickedCancel();
 
 private:

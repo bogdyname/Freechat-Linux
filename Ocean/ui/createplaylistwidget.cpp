@@ -1,15 +1,22 @@
+/*
+***Copyleft (C) 2020 Softwater, Inc
+***Contact: bogdyname@gmail.com
+***Contact: donvalentiy@yandex.ru
+*/
+
 #include "createplaylistwidget.h"
 
-CreatePlayListWidget::CreatePlayListWidget(QWidget *parent)
-    : QWidget(parent)
+CreatePlayListWidget::CreatePlayListWidget(QDialog *parent)
+    : QDialog(parent)
+    , ui(new Ui::CreatePlayList)
 {
     CreatePlayListWidget::ui->setupUi(this);
+    this->setWindowFlags(Qt::FramelessWindowHint);
 
     try
     {
         //Objects of UI
         CreatePlayListWidget::nameOfPlayList = new QLineEdit();
-        CreatePlayListWidget::okay = new QPushButton("okay");
         CreatePlayListWidget::cancel = new QPushButton("cancel");
     }
     catch(std::bad_alloc &exp)
@@ -31,12 +38,13 @@ CreatePlayListWidget::CreatePlayListWidget(QWidget *parent)
 
     //Ui settings
     CreatePlayListWidget::ui->verticalLayout->QVBoxLayout::addWidget(CreatePlayListWidget::nameOfPlayList);
-    CreatePlayListWidget::ui->horizontalLayout->QHBoxLayout::addWidget(CreatePlayListWidget::okay);
     CreatePlayListWidget::ui->horizontalLayout->QHBoxLayout::addWidget(CreatePlayListWidget::cancel);
 
     //SIGNALS/SLOTS
+    //QLineEdit
     QObject::connect(CreatePlayListWidget::nameOfPlayList, &QLineEdit::returnPressed, this, &CreatePlayListWidget::ReturnPressedForLineEdit);
-    QObject::connect(CreatePlayListWidget::okay, &QPushButton::clicked, this, &CreatePlayListWidget::ClickedOkay);
+    QObject::connect(CreatePlayListWidget::nameOfPlayList, &QLineEdit::returnPressed, CreatePlayListWidget::nameOfPlayList, &QLineEdit::clear);
+    //Buttons
     QObject::connect(CreatePlayListWidget::cancel, &QPushButton::clicked, this, &CreatePlayListWidget::ClickedCancel);
 
     return;
@@ -45,7 +53,6 @@ CreatePlayListWidget::CreatePlayListWidget(QWidget *parent)
 CreatePlayListWidget::~CreatePlayListWidget()
 {
     delete CreatePlayListWidget::nameOfPlayList;
-    delete CreatePlayListWidget::okay;
     delete CreatePlayListWidget::cancel;
     delete CreatePlayListWidget::ui;
 
@@ -59,15 +66,6 @@ void CreatePlayListWidget::ReturnPressedForLineEdit()
 
     CreatePlayListWidget::createName.QString::clear();
     CreatePlayListWidget::createName += CreatePlayListWidget::nameOfPlayList->QLineEdit::text();
-
-    return;
-}
-
-void CreatePlayListWidget::ClickedOkay()
-{
-    if(CreatePlayListWidget::createName == "")
-        return;
-
     emit CreatePlayListWidget::SendNameOfPlayList(CreatePlayListWidget::createName);
 
     return;
