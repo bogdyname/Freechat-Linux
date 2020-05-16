@@ -16,6 +16,8 @@ Ocean::Ocean(QWidget *parent)
     try
     {
         //Objects of UI
+        Ocean::spacer = new QSpacerItem(100, 250);
+        Ocean::ownImage = new QPixmap();
         Ocean::imageOfPlayList = new QLabel();
         Ocean::sortBy = new QComboBox();
         Ocean::sliderOfTrack = new QSlider(Qt::Horizontal);
@@ -28,6 +30,9 @@ Ocean::Ocean(QWidget *parent)
         Ocean::previousTrack = new QPushButton();
         Ocean::buttonForAddMusicWithDel = new QPushButton();
         Ocean::buttonForAddMusicOnlyCopy = new QPushButton();
+
+        //Tools for widgets
+        Ocean::timerForCheckWidgetOfCreatPlayList = new QTimer();
 
         //Object of own classes
         Ocean::createPlayList = new CreatePlayListWidget();
@@ -67,6 +72,7 @@ Ocean::Ocean(QWidget *parent)
     //Right side
     //Image of play list
     Ocean::ui->tool->QVBoxLayout::addWidget(Ocean::imageOfPlayList);
+    Ocean::ui->tool->QVBoxLayout::addItem(Ocean::spacer);
     //slider for volume
     Ocean::ui->tool->QVBoxLayout::addWidget(Ocean::sliderOfVolume);
     //Tool buttons
@@ -93,6 +99,30 @@ Ocean::Ocean(QWidget *parent)
     //Slider of volume
     Ocean::sliderOfVolume->QWidget::setMinimumSize(225, 17);
     Ocean::sliderOfVolume->QWidget::setMaximumSize(225, 17);
+
+    //Slider of track
+    Ocean::sliderOfTrack->QWidget::setMinimumWidth(225);
+
+
+
+
+    //TTS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    if(Ocean::ownImage->QPixmap::load("/root/29614_original.jpg", "jpg", Qt::AutoColor))
+        qDebug() << "true";
+    else
+        qDebug() << "false";
+
+    //Ocean::ownImage->QPixmap::scaled(150, 150, Qt::IgnoreAspectRatio, Qt::FastTransformation);
+    const QPixmap *imageTTS = Ocean::ownImage;
+    //TTS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+
+
+    //Image of playlist
+    Ocean::imageOfPlayList->QLabel::setPixmap(*imageTTS);
+    Ocean::imageOfPlayList->QWidget::setMinimumSize(200, 150);
+    Ocean::imageOfPlayList->QWidget::setMaximumSize(225, 200);
 
     //Sort box
     Ocean::sortBy->QComboBox::addItem("Default");
@@ -122,23 +152,47 @@ Ocean::Ocean(QWidget *parent)
 
     /*--------------------------------------------------MANAGERS--------------------------------------------------*/
 
+    /*--------------------------------------------------TOOLS--------------------------------------------------*/
+    //Timer for check widget of create playlist
+    Ocean::timerForCheckWidgetOfCreatPlayList->QTimer::setInterval(500);
+    Ocean::timerForCheckWidgetOfCreatPlayList->QTimer::start();
+
+    /*--------------------------------------------------TOOLS--------------------------------------------------*/
+
+
     /*
-        *!CONNECT SIGNALS WITH SLOTS!*
-    Import manager connect
+        *****!CONNECT SIGNALS WITH SLOTS!*****
+
+    ---------------------Managers---------------------
+    1)Import manager connect
         1.1) Add new music and delete it via button
         1.2) Add new music (only copy) via button
-    Player manager
+    2)Player manager
         2.1) play track
         2.2) stop track
         2.3) set current playlist via playlist manager (emited signal from SLOT(SetPlayList(QListWidgetItem *)))
-    Playlist manager
+    3)Playlist manager
         3.1) next track
         3.2) previous track
-    UI lists widgets
+    ---------------------Managers---------------------
+
+    -----------------------UI-------------------------
+    4)UI lists widgets
         4.1) set playlist then item clicked (UI only)
         4.2) Context Menu for playlist
         4.3) Context Menu for music list
+    5)Widget of create playlist
+        5.1) close widget of create playlist via cancel button
+        5.2) close widget of create playlist via okay button and pass QString into slot
+    -----------------------UI-------------------------
+
+    ----------------------Tools-----------------------
+    6)Timer for check CreateListWidget
+        6.1) check widget of create playlist (UI --> 5) to close it if pressed keys Alt+F4
+    ----------------------Tools-----------------------
     */
+
+    //Managers-----------------------------------------
     //Import manager
     QObject::connect(Ocean::buttonForAddMusicWithDel, SIGNAL(clicked(bool)), Ocean::importManager, SLOT(CallFileDialogWithDel()));
     QObject::connect(Ocean::buttonForAddMusicOnlyCopy, SIGNAL(clicked(bool)), Ocean::importManager, SLOT(CallFileDialogOnlyCopy()));
@@ -149,13 +203,19 @@ Ocean::Ocean(QWidget *parent)
     //Playlist manager
     QObject::connect(Ocean::nextTrack, &QPushButton::clicked, Ocean::playlistmanager, &QMediaPlaylist::next);
     QObject::connect(Ocean::previousTrack, &QPushButton::clicked, Ocean::playlistmanager, &QMediaPlaylist::previous);
+
+    //UI-----------------------------------------------
     //UI Lists
     QObject::connect(Ocean::playLists, SIGNAL(itemClicked(QListWidgetItem *)), this, SLOT(SetPlayList(QListWidgetItem *)));
     QObject::connect(Ocean::playLists, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(ShowContextMenuOfPlayList(QPoint)));
     QObject::connect(Ocean::musicList, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(ShowContextMenuOfMusicList(QPoint)));
-
+    //Wodget of create playlist
     QObject::connect(Ocean::createPlayList, &CreatePlayListWidget::BreakeWidget, this, &Ocean::CloseWidgetViaCancel);
     QObject::connect(Ocean::createPlayList, &CreatePlayListWidget::SendNameOfPlayList, this, &Ocean::CloseWidgetViaOkay);
+
+    //Tools--------------------------------------------
+    //Timer for check widget of create playlist
+    QObject::connect(Ocean::timerForCheckWidgetOfCreatPlayList, &QTimer::timeout, this, &Ocean::IfCreatListWidgetClosed);
 
     return;
 }
@@ -163,6 +223,8 @@ Ocean::Ocean(QWidget *parent)
 Ocean::~Ocean()
 {
     //UI
+    delete Ocean::ownImage;
+    delete Ocean::spacer;
     delete Ocean::ui;
     delete Ocean::imageOfPlayList;
     delete Ocean::sortBy;
@@ -177,6 +239,9 @@ Ocean::~Ocean()
     delete Ocean::buttonForAddMusicWithDel;
     delete Ocean::buttonForAddMusicOnlyCopy;
 
+    //Tools
+    delete Ocean::timerForCheckWidgetOfCreatPlayList;
+
     //Own classes
     delete Ocean::importManager;
     delete Ocean::playlistmanager;
@@ -188,6 +253,7 @@ Ocean::~Ocean()
 // NOT DONE
 void Ocean::Hidder()
 {
+    Ocean::spacer->QSpacerItem::changeSize(0, 0);
     Ocean::playLists->QWidget::hide();
     Ocean::musicList->QWidget::hide();
     Ocean::sortBy->QWidget::hide();
@@ -199,6 +265,7 @@ void Ocean::Hidder()
 // NOT DONE
 void Ocean::Shower()
 {
+    Ocean::spacer->QSpacerItem::changeSize(100, 250);
     Ocean::playLists->QWidget::show();
     Ocean::musicList->QWidget::show();
     Ocean::sortBy->QWidget::show();
@@ -231,10 +298,20 @@ void Ocean::ShowContextMenuOfMusicList(const QPoint &point)
 
     QMenu myMenu;
     myMenu.QMenu::addAction("Delete", this, SLOT(EraseItemFromMusicList()));
+    myMenu.QMenu::addAction("Delete All", this, SLOT(EraseAllItemsFromMusicList()));
 
     myMenu.QMenu::exec(globalPoint);
 
     //write here method from importmanager.h
+
+    return;
+}
+
+void Ocean::EraseAllItemsFromMusicList()
+{
+    //TTS
+    Ocean::musicList->QListWidget::clear();
+    //TTS
 
     return;
 }
@@ -299,7 +376,18 @@ void Ocean::CloseWidgetViaOkay(const QString &name)
     //before delete widget need to pass data into playlist
 
     this->QWidget::setEnabled(true);
+    Ocean::playLists->QListWidget::addItem(name);
     Ocean::createPlayList->QWidget::hide();
+
+    return;
+}
+
+void Ocean::IfCreatListWidgetClosed()
+{
+    if(Ocean::createPlayList->QWidget::isHidden())
+        this->QWidget::setEnabled(true);
+    else
+        this->QWidget::setDisabled(true);
 
     return;
 }
@@ -311,7 +399,7 @@ void Ocean::resizeEvent(QResizeEvent *event)
     int short h = event->QResizeEvent::size().QSize::height();
     int short w = event->QResizeEvent::size().QSize::width();
 
-    if(h <= 500 && w <= 500)
+    if((h <= 200) || (w <= 400))
         Ocean::Hidder();
     else
         Ocean::Shower();

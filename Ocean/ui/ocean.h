@@ -7,8 +7,10 @@
 #ifndef OCEAN_H
 #define OCEAN_H
 
+#include <QTimer>
 #include <QDebug>
 #include <QLabel>
+#include <QPixmap>
 #include <QWidget>
 #include <QSlider>
 #include <QLineEdit>
@@ -18,6 +20,7 @@
 #include <QMainWindow>
 #include <QStringList>
 #include <QMessageBox>
+#include <QSpacerItem>
 #include <QTextBrowser>
 #include <QMediaPlayer>
 #include <QResizeEvent>
@@ -50,6 +53,7 @@ private slots:
     //Context Menu of QListWidget
     void ShowContextMenuOfPlayList(const QPoint &point);// NOT DONE
     void ShowContextMenuOfMusicList(const QPoint &point);// NOT DONE
+    void EraseAllItemsFromMusicList();
     void EraseItemFromMusicList();
     void EraseItemFromPlayList();
     void CreatePlaylist();
@@ -61,19 +65,34 @@ private slots:
     void CloseWidgetViaCancel();
     void CloseWidgetViaOkay(const QString &name);
 
+    //slots for timers
+    //slot of timer-For-Check-Creat-List-Widget
+    void IfCreatListWidgetClosed();
+
 private:
+    //UI widgets
+    //track status (maybe bit rank)
     QSlider *sliderOfTrack = nullptr;
+    //right side (working with app)
+    QSpacerItem *spacer = nullptr;
+    QPixmap *ownImage = nullptr;
     QSlider *sliderOfVolume = nullptr;
     QLabel *imageOfPlayList = nullptr;
     QComboBox *sortBy = nullptr;
+    //lists of playlists and musiclists
     QListWidget *playLists = nullptr;
     QListWidget *musicList = nullptr;
+    //player
     QPushButton *playTrack = nullptr;
     QPushButton *stopTrack = nullptr;
     QPushButton *nextTrack = nullptr;
     QPushButton *previousTrack = nullptr;
+    //add music buttons
     QPushButton *buttonForAddMusicWithDel = nullptr;
     QPushButton *buttonForAddMusicOnlyCopy = nullptr;
+
+    //ToolS for widgets
+    QTimer *timerForCheckWidgetOfCreatPlayList = nullptr;
 
     //Own Objects
 private:
