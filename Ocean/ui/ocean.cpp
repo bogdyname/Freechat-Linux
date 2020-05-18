@@ -199,7 +199,8 @@ Ocean::Ocean(QWidget *parent)
     //Player manager
     QObject::connect(Ocean::playTrack, &QPushButton::clicked, Ocean::playermanager, &QMediaPlayer::play);
     QObject::connect(Ocean::stopTrack, &QPushButton::clicked, Ocean::playermanager, &QMediaPlayer::stop);
-    QObject::connect(Ocean::playlistmanager, &Playlist::SetPlayCurrentList, Ocean::playermanager, &QMediaPlayer::setPlaylist);
+    QObject::connect(Ocean::playlistmanager, &Playlist::SetDefaultPlayList, Ocean::playermanager, &QMediaPlayer::setPlaylist);
+    QObject::connect(Ocean::playlistmanager, &Playlist::SetCurrentPlayList, Ocean::playermanager, &QMediaPlayer::setPlaylist);
     //Playlist manager
     QObject::connect(Ocean::nextTrack, &QPushButton::clicked, Ocean::playlistmanager, &QMediaPlaylist::next);
     QObject::connect(Ocean::previousTrack, &QPushButton::clicked, Ocean::playlistmanager, &QMediaPlaylist::previous);
@@ -353,12 +354,17 @@ void Ocean::CreatePlaylist()
 void Ocean::SetPlayList(QListWidgetItem *item)
 {
     if(item->QListWidgetItem::text() == "all")
+    {
         Ocean::playlistmanager->Playlist::LoadDefaultPlayList();
+        emit Ocean::playlistmanager->Playlist::SetDefaultPlayList(Ocean::playlistmanager->Playlist::GetDefaultPlayList());
+    }
     else
+    {
         Ocean::playlistmanager->Playlist::LoadPlayList(item->QListWidgetItem::text());
 
-    //Emit signal from Playlist.h with current playlist
-    emit Ocean::playlistmanager->Playlist::SetPlayCurrentList(Ocean::playlistmanager->Playlist::GetPlayList());
+        //Emit signal from Playlist.h with current playlist
+        emit Ocean::playlistmanager->Playlist::SetCurrentPlayList(Ocean::playlistmanager->Playlist::GetCurrentPlayList());
+    }
 
     return;
 }

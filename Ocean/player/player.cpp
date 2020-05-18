@@ -103,7 +103,7 @@ bool Player::SetModOfPlayer(const unsigned short int &mod)
             return true;
         }
         break;
-
+        //False
         default: return false;
     }
 }
