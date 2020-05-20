@@ -22,6 +22,8 @@ class Playlist : public QMediaPlaylist
     Q_OBJECT
 
     //dir 'bin' for saving and loading playlists
+    //need to test this class
+    //TTS
 
 public:
     Playlist();
@@ -29,11 +31,15 @@ public:
 
 signals:
     void SetCurrentPlayList(QMediaPlaylist *currentPlaylist);
-    void SetDefaultPlayList(QMediaPlaylist *currentPlaylist);
+    void SetDefaultPlayList(QMediaPlaylist *defaultPlaylist);
+    void CallOutSaveCurrentPlayList(const QString &name, QMediaPlaylist *currentPlaylist);
+    void CallOutRenameCurrentPlayList(QString &name, QMediaPlaylist *currentPlaylist);
 
 public slots:
+    void SaveCurrentPlayList(const QString &name, QMediaPlaylist *currentPlaylist);
     void CreateCurrentPlayList(const QString &name);
     void RemoveCurrentPlayList(const QString &name);
+    void RenameCurrentPlayList(QString &name, QMediaPlaylist *currentPlaylist);
 
 public:
     QMediaPlaylist* GetCurrentPlayList();
@@ -47,6 +53,8 @@ private:
     bool RemovePlayList(const QString &name);
     bool LookingForPlayList(const QString &name, QMediaPlaylist *medialist);
     bool CreateDefaultPlaylist(QMediaPlaylist *medialist);
+    bool SavePlaylist(const QString &name, QMediaPlaylist *currentPlaylist);
+    bool RenamePlayList(QString &name, QMediaPlaylist *currentPlaylist);
     bool CheckSettingsDir();
 
 private:

@@ -61,6 +61,23 @@ Playlist::~Playlist()
 }
 
 //SLOTS
+void Playlist::SaveCurrentPlayList(const QString &name, QMediaPlaylist *currentPlaylist)
+{
+    if(name == "")
+        return;
+
+    if(Playlist::SavePlaylist(name, currentPlaylist))
+        #ifndef Q_DEBUG
+        qDebug() << "playlist successed saved";
+        #endif
+    else
+        #ifndef Q_DEBUG
+        qCritical() << "error: can't save playlist";
+        #endif
+
+    return;
+}
+
 void Playlist::CreateCurrentPlayList(const QString &name)
 {
     if(name == "")
@@ -98,6 +115,21 @@ void Playlist::RemoveCurrentPlayList(const QString &name)
         #endif
 
     return;
+}
+
+void Playlist::RenameCurrentPlayList(QString &name, QMediaPlaylist *currentPlaylist)
+{
+    if(name == "")
+        return;
+
+    if(Playlist::RenamePlayList(name, currentPlaylist))
+        #ifndef Q_DEBUG
+        qDebug() << "playlist successed renamed";
+        #endif
+    else
+        #ifndef Q_DEBUG
+        qCritical() << "error: can't rename playlist";
+        #endif
 }
 
 //Methods
@@ -217,6 +249,32 @@ bool Playlist::CreateDefaultPlaylist(QMediaPlaylist *medialist)
         return true;
     }
 
+}
+
+bool Playlist::SavePlaylist(const QString &name, QMediaPlaylist *currentPlaylist)
+{
+    if(name == "")
+        return false;
+
+    Playlist::settingsDir->QDir::setCurrent(QCoreApplication::applicationDirPath());
+
+    if(currentPlaylist->QMediaPlaylist::save(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/" + name), ".bin"))
+        return true;
+    else
+        return false;
+}
+
+bool Playlist::RenamePlayList(QString &name, QMediaPlaylist *currentPlaylist)
+{
+    if(name == "")
+        return false;
+
+    Playlist::settingsDir->QDir::setCurrent(QCoreApplication::applicationDirPath());
+
+    if(currentPlaylist->QMediaPlaylist::save(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/" + name), ".bin"))
+        return true;
+    else
+        return false;
 }
 
 bool Playlist::CheckSettingsDir()
