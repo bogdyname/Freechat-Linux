@@ -33,22 +33,30 @@ public:
     ~Playlist();
 
 signals:
+    //for player
     void SetCurrentPlayList(QMediaPlaylist *currentPlaylist);
     void SetDefaultPlayList(QMediaPlaylist *defaultPlaylist);
-    void CallOutSaveCurrentPlayList(const QString &name, const QStringList &newListOfSongs);
-    void CallOutSaveSelectedPlayList(const QString &name, const QStringList &newListOfSongs, QMediaPlaylist *currentPlaylist);
+
+    //for playlist
+    void CallOutSaveCurrentPlayList(const QString &name, const QStringList &newListOfSongs, QMediaPlaylist *currentPlaylist);
+    void CallOutSaveSelectedPlayList(const QString &name, const QStringList &newListOfSongs);
     void CallOutRenameCurrentPlayList(QString &newName, QMediaPlaylist *currentPlaylist);
     void CallOutRenameSelectedPlayList(const QString &newName, const QString &currentName);
+    void CallOutSetCurrentPlayListName(const QString &nameOfCurrentPlaylist);
+    void CallOutCreateNewPlayList(const QString &name);
+    void CallOutRemovePlayListByName(const QString &name);
 
-public slots:
+private slots:
     void SaveCurrentPlayList(const QString &name, const QStringList &newListOfSongs, QMediaPlaylist *currentPlaylist);
     void SaveSelectedPlayList(const QString &name, const QStringList &newListOfSongs);
-    void CreateCurrentPlayList(const QString &name);
-    void RemoveCurrentPlayList(const QString &name);
     void RenameCurrentPlayList(const QString &newName, QMediaPlaylist *currentPlaylist);
     void RenameSelectedPlayList(const QString &newName, const QString &currentName);
+    void SetCurrentPlayListName(const QString &nameOfCurrentPlaylist);
+    void CreateNewPlayList(const QString &name);
+    void RemovePlayListByName(const QString &name);
 
 public:
+    QString GetCurrentPlayListName();
     QMediaPlaylist* GetCurrentPlayList();
     QMediaPlaylist* GetDefaultPlayList();
     void LoadDefaultPlayList();
@@ -56,7 +64,7 @@ public:
 
     //check out these methods
 private:
-    bool CreatePlayList(const QString &name, const QStringList &list, QMediaPlaylist *currentPlaylist);
+    bool CreatePlayList(const QString &name, const QStringList &list);
     bool RemovePlayList(const QString &name);
     bool LookingForPlayList(const QString &name, QMediaPlaylist *medialist);
     bool CreateDefaultPlaylist(QMediaPlaylist *medialist);
@@ -71,6 +79,7 @@ private:
     QDir *settingsDir = nullptr;
     QStringList list;
     QStringList allSongs;
+    QString currentPlaylistName;
     QMediaPlaylist *currentPlaylist = nullptr;
     QMediaPlaylist *defaultPlaylist = nullptr;
 };

@@ -207,7 +207,7 @@ Ocean::Ocean(QWidget *parent)
 
     //UI-----------------------------------------------
     //UI Lists
-    QObject::connect(Ocean::playLists, SIGNAL(itemClicked(QListWidgetItem *)), this, SLOT(SetPlayList(QListWidgetItem *)));
+    QObject::connect(Ocean::playLists, SIGNAL(itemDoubleClicked(QListWidgetItem *)), this, SLOT(SetPlayList(QListWidgetItem *)));
     QObject::connect(Ocean::playLists, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(ShowContextMenuOfPlayList(QPoint)));
     QObject::connect(Ocean::musicList, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(ShowContextMenuOfMusicList(QPoint)));
     //Wodget of create playlist
@@ -216,7 +216,7 @@ Ocean::Ocean(QWidget *parent)
 
     //Tools--------------------------------------------
     //Timer for check widget of create playlist
-    QObject::connect(Ocean::timerForCheckWidgetOfCreatPlayList, &QTimer::timeout, this, &Ocean::IfCreatListWidgetClosed);
+    QObject::connect(Ocean::timerForCheckWidgetOfCreatPlayList, &QTimer::timeout, this, &Ocean::IfCreateListWidgetClosed);
 
     return;
 }
@@ -395,10 +395,14 @@ void Ocean::SetPlayList(QListWidgetItem *item)
     {
         Ocean::playlistmanager->Playlist::LoadDefaultPlayList();
         emit Ocean::playlistmanager->Playlist::SetDefaultPlayList(Ocean::playlistmanager->Playlist::GetDefaultPlayList());
+        emit Ocean::playlistmanager->Playlist::CallOutSetCurrentPlayListName("all");
     }
     else
     {
-        Ocean::playlistmanager->Playlist::LoadPlayList(item->QListWidgetItem::text());
+        //set name of playlist
+        emit Ocean::playlistmanager->Playlist::CallOutSetCurrentPlayListName(item->QListWidgetItem::text());
+
+        Ocean::playlistmanager->Playlist::LoadPlayList(Ocean::playlistmanager->Playlist::GetCurrentPlayListName());
 
         //Emit signal from Playlist.h with current playlist
         emit Ocean::playlistmanager->Playlist::SetCurrentPlayList(Ocean::playlistmanager->Playlist::GetCurrentPlayList());
@@ -426,7 +430,7 @@ void Ocean::CloseWidgetViaOkay(const QString &name)
     return;
 }
 
-void Ocean::IfCreatListWidgetClosed()
+void Ocean::IfCreateListWidgetClosed()
 {
     if(Ocean::createPlayList->QWidget::isHidden())
         this->QWidget::setEnabled(true);
