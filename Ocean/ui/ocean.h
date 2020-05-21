@@ -50,24 +50,32 @@ private slots:
     void Hidder();// NOT DONE
     void Shower();// NOT DONE
 
-    //Context Menu of QListWidget
-    void ShowContextMenuOfPlayList(const QPoint &point);// NOT DONE
-    void ShowContextMenuOfMusicList(const QPoint &point);// NOT DONE
-    void EraseAllItemsFromMusicList();
-    void EraseItemFromMusicList();
-    void EraseItemFromPlayList();
-    void CreatePlaylist();
+    /*----------------------------------------------------------------NOT DONE----------------------------------------------------------------*/
 
-    //Work with managers of won classe
-    void SetPlayList(QListWidgetItem *item);
+    //Context Menu of QListWidget
+    //for musiclist widget
+    void ShowContextMenuOfMusicList(const QPoint &point);//NOT DONE
+    void EraseAllItemsFromMusicList();//NOT DONE
+    void EraseItemFromMusicList();//NOT DONE
+    //for playlist widget
+    void ShowContextMenuOfPlayList(const QPoint &point);//NOT DONE
+    void EraseItemFromPlayList();//NOT DONE
+    void CreatePlaylist();//NOT DONE
+    void RenamePlaylist();//NOT DONE
+    void SavePlaylist();//NOT DONE
+
+    //Work with managers of own classes
+    void SetPlayList(QListWidgetItem *item);//NOT DONE
 
     //ui slots of create playlist widget
-    void CloseWidgetViaCancel();
-    void CloseWidgetViaOkay(const QString &name);
+    void CloseWidgetViaCancel();//NOT DONE
+    void CloseWidgetViaOkay(const QString &name);//NOT DONE
 
     //slots for timers
     //slot of timer-For-Check-Creat-List-Widget
-    void IfCreatListWidgetClosed();
+    void IfCreateListWidgetClosed();//NOT DONE
+
+    /*----------------------------------------------------------------NOT DONE----------------------------------------------------------------*/
 
 private:
     //UI widgets

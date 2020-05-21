@@ -207,7 +207,7 @@ Ocean::Ocean(QWidget *parent)
 
     //UI-----------------------------------------------
     //UI Lists
-    QObject::connect(Ocean::playLists, SIGNAL(itemClicked(QListWidgetItem *)), this, SLOT(SetPlayList(QListWidgetItem *)));
+    QObject::connect(Ocean::playLists, SIGNAL(itemDoubleClicked(QListWidgetItem *)), this, SLOT(SetPlayList(QListWidgetItem *)));
     QObject::connect(Ocean::playLists, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(ShowContextMenuOfPlayList(QPoint)));
     QObject::connect(Ocean::musicList, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(ShowContextMenuOfMusicList(QPoint)));
     //Wodget of create playlist
@@ -216,7 +216,7 @@ Ocean::Ocean(QWidget *parent)
 
     //Tools--------------------------------------------
     //Timer for check widget of create playlist
-    QObject::connect(Ocean::timerForCheckWidgetOfCreatPlayList, &QTimer::timeout, this, &Ocean::IfCreatListWidgetClosed);
+    QObject::connect(Ocean::timerForCheckWidgetOfCreatPlayList, &QTimer::timeout, this, &Ocean::IfCreateListWidgetClosed);
 
     return;
 }
@@ -282,6 +282,8 @@ void Ocean::ShowContextMenuOfPlayList(const QPoint &point)
 
     // Create menu and insert some actions
     QMenu myMenu;
+    myMenu.QMenu::addAction("Save", this, SLOT(SavePlaylist()));
+    myMenu.QMenu::addAction("Rename", this, SLOT(RenamePlaylist()));
     myMenu.QMenu::addAction("Create", this, SLOT(CreatePlaylist()));
     myMenu.QMenu::addAction("Delete", this, SLOT(EraseItemFromPlayList()));
 
@@ -351,16 +353,56 @@ void Ocean::CreatePlaylist()
     return;
 }
 
+void Ocean::RenamePlaylist()
+{
+    for(unsigned short int iter = 0; iter < Ocean::playLists->QListWidget::selectedItems().size(); ++iter)
+    {
+        // Get curent item on selected row
+        QListWidgetItem *item = Ocean::playLists->QListWidget::item(Ocean::playLists->QListWidget::currentRow());
+
+        qDebug() << item->text();
+
+        //need to call here ui 'createplaylisywidget' for get string with newName of playlist
+        //then emit signal
+
+        if((item->text() == "") || (item->text() == "all"))
+            return;
+        //else
+            //emit Ocean::playlistmanager->Playlist::CallOutRenameSelectedPlayList();
+    }
+
+    return;
+}
+
+void Ocean::SavePlaylist()
+{
+    for(unsigned short int iter = 0; iter < Ocean::playLists->QListWidget::selectedItems().size(); ++iter)
+    {
+        // Get curent item on selected row
+        QListWidgetItem *item = Ocean::playLists->QListWidget::item(Ocean::playLists->QListWidget::currentRow());
+
+        qDebug() << item->text();
+
+        //create if() for QMediaPlaylist (currentPlaylist || other playlist)
+    }
+
+    return;
+}
+
 void Ocean::SetPlayList(QListWidgetItem *item)
 {
     if(item->QListWidgetItem::text() == "all")
     {
         Ocean::playlistmanager->Playlist::LoadDefaultPlayList();
         emit Ocean::playlistmanager->Playlist::SetDefaultPlayList(Ocean::playlistmanager->Playlist::GetDefaultPlayList());
+        emit Ocean::playlistmanager->Playlist::CallOutSetCurrentPlayListName("all");
     }
     else
     {
-        Ocean::playlistmanager->Playlist::LoadPlayList(item->QListWidgetItem::text());
+        //set name of playlist
+        emit Ocean::playlistmanager->Playlist::CallOutSetCurrentPlayListName(item->QListWidgetItem::text());
+
+        Ocean::playlistmanager->Playlist::LoadPlayList(Ocean::playlistmanager->Playlist::GetCurrentPlayListName());
 
         //Emit signal from Playlist.h with current playlist
         emit Ocean::playlistmanager->Playlist::SetCurrentPlayList(Ocean::playlistmanager->Playlist::GetCurrentPlayList());
@@ -388,7 +430,7 @@ void Ocean::CloseWidgetViaOkay(const QString &name)
     return;
 }
 
-void Ocean::IfCreatListWidgetClosed()
+void Ocean::IfCreateListWidgetClosed()
 {
     if(Ocean::createPlayList->QWidget::isHidden())
         this->QWidget::setEnabled(true);
