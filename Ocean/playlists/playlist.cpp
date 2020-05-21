@@ -61,12 +61,29 @@ Playlist::~Playlist()
 }
 
 //SLOTS
-void Playlist::SaveCurrentPlayList(const QString &name, QMediaPlaylist *currentPlaylist)
+void Playlist::SaveCurrentPlayList(const QString &name, const QStringList &newListOfSongs, QMediaPlaylist *currentPlaylist)
 {
-    if(name == "")
+    if(name == "" && newListOfSongs.QStringList::isEmpty())
         return;
 
-    if(Playlist::SavePlaylist(name, currentPlaylist))
+    if(Playlist::SavePlaylist(name, newListOfSongs, currentPlaylist))
+        #ifndef Q_DEBUG
+        qDebug() << "playlist successed saved";
+        #endif
+    else
+        #ifndef Q_DEBUG
+        qCritical() << "error: can't save playlist";
+        #endif
+
+    return;
+}
+
+void Playlist::SaveSelectedPlayList(const QString &name, const QStringList &newListOfSongs)
+{
+    if(name == "" && newListOfSongs.QStringList::isEmpty())
+        return;
+
+    if(Playlist::SavePlaylist(name, newListOfSongs))
         #ifndef Q_DEBUG
         qDebug() << "playlist successed saved";
         #endif
@@ -90,11 +107,11 @@ void Playlist::CreateCurrentPlayList(const QString &name)
     else
         if(Playlist::CreatePlayList(name, songs, Playlist::currentPlaylist))
             #ifndef Q_DEBUG
-            qDebug() << "play list successed created!" + name;
+            qDebug() << "play list successed created! " + name;
             #endif
         else
             #ifndef Q_DEBUG
-            qCritical() << "error create play list!" + name;
+            qCritical() << "error create play list! " + name;
             #endif
 
     return;
@@ -111,25 +128,46 @@ void Playlist::RemoveCurrentPlayList(const QString &name)
         #endif
     else
         #ifndef Q_DEBUG
-        qCritical() << "error: can't remove playlist";
+        qCritical() << "error: can't remove playlist " << name;
         #endif
 
     return;
 }
 
-void Playlist::RenameCurrentPlayList(QString &name, QMediaPlaylist *currentPlaylist)
+void Playlist::RenameCurrentPlayList(const QString &newName, QMediaPlaylist *currentPlaylist)
 {
-    if(name == "")
+    if(newName == "")
         return;
 
-    if(Playlist::RenamePlayList(name, currentPlaylist))
+    if(Playlist::RenamePlayList(newName, currentPlaylist))
         #ifndef Q_DEBUG
+        qDebug() << "playlist successed renamed with new name: " << newName;
+        #endif
+    else
+        #ifndef Q_DEBUG
+        qCritical() << "error: can't rename playlist " << newName;
+        #endif
+}
+
+void Playlist::RenameSelectedPlayList(const QString &newName, const QString &currentName)
+{
+    if((newName == "") && (currentName == ""))
+        return;
+
+    if(Playlist::RenamePlayList(newName, currentName))
+    {
+        #ifndef Q_DEBUG
+        qDebug() << "Playlist name: " << currentName;
+        qDebug() << "Playlist new name: " << newName;
         qDebug() << "playlist successed renamed";
         #endif
+    }
     else
         #ifndef Q_DEBUG
         qCritical() << "error: can't rename playlist";
         #endif
+
+    return;
 }
 
 //Methods
@@ -186,7 +224,7 @@ bool Playlist::CreatePlayList(const QString &name, const QStringList &list, QMed
     for(const QString &iter : list)
         medialist->QMediaPlaylist::addMedia(QMediaContent(QUrl::fromLocalFile(iter)));//add song into playlist
 
-    if(medialist->QMediaPlaylist::save(QCoreApplication::applicationDirPath() + "/bin/" + name, ".bin"))
+    if(medialist->QMediaPlaylist::save(QCoreApplication::applicationDirPath() + "/bin/" + name, ".m3u"))
         return true;
     else
         return false;
@@ -199,7 +237,7 @@ bool Playlist::RemovePlayList(const QString &name)
 
     Playlist::CheckSettingsDir();
 
-    QFile buffer(QCoreApplication::applicationDirPath() + "/bin/" + name + ".bin");
+    QFile buffer(QCoreApplication::applicationDirPath() + "/bin/" + name + ".m3u");
 
     if(buffer.QFile::remove())
         return true;
@@ -215,7 +253,7 @@ bool Playlist::LookingForPlayList(const QString &name, QMediaPlaylist *medialist
     Playlist::CheckSettingsDir();
 
     medialist->QMediaPlaylist::clear();
-    medialist->QMediaPlaylist::load(QCoreApplication::applicationDirPath() + "/bin/" + name + ".bin");
+    medialist->QMediaPlaylist::load(QCoreApplication::applicationDirPath() + "/bin/" + name + ".m3u");
     medialist->setCurrentIndex(1);
 
     if(!medialist->QMediaPlaylist::isEmpty())
@@ -251,30 +289,94 @@ bool Playlist::CreateDefaultPlaylist(QMediaPlaylist *medialist)
 
 }
 
-bool Playlist::SavePlaylist(const QString &name, QMediaPlaylist *currentPlaylist)
+bool Playlist::SavePlaylist(const QString &name, const QStringList &newListOfSongs, QMediaPlaylist *currentPlaylist)
 {
-    if(name == "")
+    if(name == "" && newListOfSongs.QStringList::isEmpty())
         return false;
 
     Playlist::settingsDir->QDir::setCurrent(QCoreApplication::applicationDirPath());
+    currentPlaylist->QMediaPlaylist::clear();
 
-    if(currentPlaylist->QMediaPlaylist::save(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/" + name), ".bin"))
+    for(const QString &iter : newListOfSongs)
+    {
+        currentPlaylist->QMediaPlaylist::addMedia(QMediaContent(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/music/" + iter)));
+
+        #ifndef Q_DEBUG
+        qDebug() << iter;
+        qDebug() << currentPlaylist->QMediaPlaylist::mediaCount();
+        #endif
+    }
+
+    if(currentPlaylist->QMediaPlaylist::save(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/" + name), ".m3u"))
         return true;
     else
         return false;
 }
 
-bool Playlist::RenamePlayList(QString &name, QMediaPlaylist *currentPlaylist)
+bool Playlist::SavePlaylist(const QString &name, const QStringList &newListOfSongs)
 {
-    if(name == "")
+    if(name == "" && newListOfSongs.QStringList::isEmpty())
         return false;
 
     Playlist::settingsDir->QDir::setCurrent(QCoreApplication::applicationDirPath());
 
-    if(currentPlaylist->QMediaPlaylist::save(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/" + name), ".bin"))
+    QMediaPlaylist *bufferPlaylist = new QMediaPlaylist();
+
+    for(const QString &iter : newListOfSongs)
+    {
+        bufferPlaylist->QMediaPlaylist::addMedia(QMediaContent(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/music/" + iter)));
+
+        #ifndef Q_DEBUG
+        qDebug() << iter;
+        qDebug() << bufferPlaylist->QMediaPlaylist::mediaCount();
+        #endif
+    }
+
+    if(bufferPlaylist->QMediaPlaylist::save(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/" + name), ".m3u"))
+    {
+        delete bufferPlaylist;
+        return true;
+    }
+    else
+    {
+        delete bufferPlaylist;
+        return false;
+    }
+}
+
+bool Playlist::RenamePlayList(const QString &newName, QMediaPlaylist *currentPlaylist)
+{
+    if(newName == "")
+        return false;
+
+    Playlist::settingsDir->QDir::setCurrent(QCoreApplication::applicationDirPath());
+
+    if(currentPlaylist->QMediaPlaylist::save(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/" + newName), ".m3u"))
         return true;
     else
         return false;
+}
+
+bool Playlist::RenamePlayList(const QString &newName, const QString &currentName)
+{
+    if((newName == "") && (currentName == ""))
+        return false;
+
+    Playlist::settingsDir->QDir::setCurrent(QCoreApplication::applicationDirPath());
+
+    QMediaPlaylist *bufferPlaylist = new QMediaPlaylist();
+    bufferPlaylist->QMediaPlaylist::load(QCoreApplication::applicationDirPath() + "/bin/" + currentName + ".m3u");
+
+    if(bufferPlaylist->QMediaPlaylist::save(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/" + newName), ".m3u"))
+    {
+        delete bufferPlaylist;
+        return true;
+    }
+    else
+    {
+        delete bufferPlaylist;
+        return false;
+    }
 }
 
 bool Playlist::CheckSettingsDir()

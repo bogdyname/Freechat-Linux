@@ -51,14 +51,18 @@ private slots:
     void Shower();// NOT DONE
 
     //Context Menu of QListWidget
-    void ShowContextMenuOfPlayList(const QPoint &point);// NOT DONE
-    void ShowContextMenuOfMusicList(const QPoint &point);// NOT DONE
+    //for musiclist widget
+    void ShowContextMenuOfMusicList(const QPoint &point);
     void EraseAllItemsFromMusicList();
     void EraseItemFromMusicList();
+    //for playlist widget
+    void ShowContextMenuOfPlayList(const QPoint &point);
     void EraseItemFromPlayList();
     void CreatePlaylist();
+    void RenamePlaylist();
+    void SavePlaylist();
 
-    //Work with managers of won classe
+    //Work with managers of own classes
     void SetPlayList(QListWidgetItem *item);
 
     //ui slots of create playlist widget
