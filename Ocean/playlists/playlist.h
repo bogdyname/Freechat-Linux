@@ -62,6 +62,7 @@ public:
     void LoadDefaultPlayList();
     void LoadPlayList(const QString &name);
     QStringList GetSongsFromCurrentPlayList(const QString &nameOfPlayList);
+    QStringList GetSongsFromDeaultPlayList();
 
 private:
     bool CreatePlayList(const QString &name, const QStringList &list);
