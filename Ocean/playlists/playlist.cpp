@@ -283,6 +283,17 @@ QStringList Playlist::GetSongsFromCurrentPlayList(const QString &nameOfPlayList)
     return songs;
 }
 
+//TTS
+QStringList Playlist::GetSongsFromDeaultPlayList()
+{
+    Playlist::allSongs.QStringList::clear();
+    Playlist::settingsDir->QDir::setCurrent(QCoreApplication::applicationDirPath() + "/music/");
+    Playlist::allSongs = Playlist::settingsDir->QDir::entryList(QStringList() << "*.mp3" << "*.MP3" << "*.wav" << "*.WAV", QDir::Files);
+    Playlist::settingsDir->QDir::setCurrent(QCoreApplication::applicationDirPath());
+
+    return allSongs;
+}
+
 //Methods private
 bool Playlist::CreatePlayList(const QString &name, const QStringList &list)
 {
