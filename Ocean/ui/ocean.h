@@ -52,6 +52,9 @@ public:
 protected:
     virtual void resizeEvent(QResizeEvent *event);
 
+signals:
+    void CallOutPassNamesOfSongsToMusicList(const QStringList &songs);
+
     // Slots for MainWindow
     /*
         1) Slot for hide widgets inside MainWindow
@@ -60,6 +63,8 @@ protected:
 private slots:
     void Hidder();
     void Shower();
+    void GetNamesOfSongsToMusicList(QListWidgetItem *item);
+    void PassNamesOfSongsToMusicList(const QStringList &songs);
     /*-------------------------------------------this->QWidget------------------------------------------*/
 
 

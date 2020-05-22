@@ -181,6 +181,7 @@ Ocean::Ocean(QWidget *parent)
         4.1) set playlist then item clicked (UI only)
         4.2) Context Menu for playlist
         4.3) Context Menu for music list
+        4.4) show songs in music list
     5)Widget of create playlist
         5.1) close widget of create playlist via cancel button
         5.2) close widget of create playlist via okay button and pass QString into slot
@@ -207,9 +208,11 @@ Ocean::Ocean(QWidget *parent)
 
     //UI-----------------------------------------------
     //UI Lists
+    QObject::connect(Ocean::playLists, SIGNAL(itemClicked(QListWidgetItem *)), this, SLOT(GetNamesOfSongsToMusicList(QListWidgetItem *)));
     QObject::connect(Ocean::playLists, SIGNAL(itemDoubleClicked(QListWidgetItem *)), this, SLOT(SetPlayList(QListWidgetItem *)));
     QObject::connect(Ocean::playLists, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(ShowContextMenuOfPlayList(QPoint)));
     QObject::connect(Ocean::musicList, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(ShowContextMenuOfMusicList(QPoint)));
+    QObject::connect(this, &Ocean::CallOutPassNamesOfSongsToMusicList, this, &Ocean::PassNamesOfSongsToMusicList);
     //Widget for get string from user
     QObject::connect(Ocean::getStringFromUser, &GetStringWidget::BreakeWidget, this, &Ocean::CloseWidgetForGetStringViaCancel);
     QObject::connect(Ocean::getStringFromUser, &GetStringWidget::SendName, this, &Ocean::CloseWidgetForGetStringViaOkay);
@@ -251,7 +254,7 @@ Ocean::~Ocean()
 
     return;
 }
-// NOT DONE
+
 void Ocean::Hidder()
 {
     Ocean::spacer->QSpacerItem::changeSize(0, 0);
@@ -263,7 +266,7 @@ void Ocean::Hidder()
 
     return;
 }
-// NOT DONE
+
 void Ocean::Shower()
 {
     Ocean::spacer->QSpacerItem::changeSize(100, 250);
@@ -275,7 +278,24 @@ void Ocean::Shower()
 
     return;
 }
-// NOT DONE
+
+void Ocean::GetNamesOfSongsToMusicList(QListWidgetItem *item)
+{
+    if(item->QListWidgetItem::text() == "all")
+        emit CallOutPassNamesOfSongsToMusicList(Ocean::playlistmanager->Playlist::GetSongsFromDeaultPlayList());
+    else
+        emit CallOutPassNamesOfSongsToMusicList(Ocean::playlistmanager->Playlist::GetSongsFromCurrentPlayList(item->QListWidgetItem::text()));
+
+    return;
+}
+
+void Ocean::PassNamesOfSongsToMusicList(const QStringList &songs)
+{
+    Ocean::musicList->QListWidget::addItems(songs);
+
+    return;
+}
+
 void Ocean::ShowContextMenuOfPlayList(const QPoint &point)
 {
     QPoint globalPoint = Ocean::playLists->QWidget::mapToGlobal(point);
@@ -396,6 +416,8 @@ void Ocean::SetPlayList(QListWidgetItem *item)
         Ocean::playlistmanager->Playlist::LoadDefaultPlayList();
         emit Ocean::playlistmanager->Playlist::SetDefaultPlayList(Ocean::playlistmanager->Playlist::GetDefaultPlayList());
         emit Ocean::playlistmanager->Playlist::CallOutSetCurrentPlayListName("all");
+        //show songs in music list
+        emit CallOutPassNamesOfSongsToMusicList(Ocean::playlistmanager->Playlist::GetSongsFromDeaultPlayList());
     }
     else
     {
@@ -406,6 +428,8 @@ void Ocean::SetPlayList(QListWidgetItem *item)
 
         //Emit signal from Playlist.h with current playlist
         emit Ocean::playlistmanager->Playlist::SetCurrentPlayList(Ocean::playlistmanager->Playlist::GetCurrentPlayList());
+        //show songs in music list
+        emit CallOutPassNamesOfSongsToMusicList(Ocean::playlistmanager->Playlist::GetSongsFromCurrentPlayList(item->QListWidgetItem::text()));
     }
 
     return;
