@@ -61,8 +61,8 @@ public:
     QMediaPlaylist* GetDefaultPlayList();
     void LoadDefaultPlayList();
     void LoadPlayList(const QString &name);
+    QStringList GetSongsFromCurrentPlayList(const QString &nameOfPlayList);
 
-    //check out these methods
 private:
     bool CreatePlayList(const QString &name, const QStringList &list);
     bool RemovePlayList(const QString &name);
