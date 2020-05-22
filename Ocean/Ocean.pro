@@ -16,18 +16,18 @@ SOURCES += \
     main.cpp \
     player/player.cpp \
     playlists/playlist.cpp \
-    ui/createplaylistwidget.cpp \
+    ui/getstringwidget.cpp \
     ui/ocean.cpp
 
 HEADERS += \
     imports/importmanager.h \
     player/player.h \
     playlists/playlist.h \
-    ui/createplaylistwidget.h \
+    ui/getstringwidget.h \
     ui/ocean.h
 
 FORMS += \
-    ui/createplaylist.ui \
+    ui/getstring.ui \
     ui/ocean.ui
 
 qnx: target.path = /tmp/$${TARGET}/bin

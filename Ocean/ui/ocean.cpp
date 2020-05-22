@@ -35,7 +35,7 @@ Ocean::Ocean(QWidget *parent)
         Ocean::timerForCheckWidgetOfCreatPlayList = new QTimer();
 
         //Object of own classes
-        Ocean::createPlayList = new CreatePlayListWidget();
+        Ocean::getStringFromUser = new GetStringWidget();
         Ocean::importManager = new ImportManager();
         Ocean::playlistmanager = new Playlist();
         Ocean::playermanager = new Player();
@@ -210,9 +210,9 @@ Ocean::Ocean(QWidget *parent)
     QObject::connect(Ocean::playLists, SIGNAL(itemDoubleClicked(QListWidgetItem *)), this, SLOT(SetPlayList(QListWidgetItem *)));
     QObject::connect(Ocean::playLists, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(ShowContextMenuOfPlayList(QPoint)));
     QObject::connect(Ocean::musicList, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(ShowContextMenuOfMusicList(QPoint)));
-    //Wodget of create playlist
-    QObject::connect(Ocean::createPlayList, &CreatePlayListWidget::BreakeWidget, this, &Ocean::CloseWidgetViaCancel);
-    QObject::connect(Ocean::createPlayList, &CreatePlayListWidget::SendNameOfPlayList, this, &Ocean::CloseWidgetViaOkay);
+    //Widget for get string from user
+    QObject::connect(Ocean::getStringFromUser, &GetStringWidget::BreakeWidget, this, &Ocean::CloseWidgetForGetStringViaCancel);
+    QObject::connect(Ocean::getStringFromUser, &GetStringWidget::SendName, this, &Ocean::CloseWidgetForGetStringViaOkay);
 
     //Tools--------------------------------------------
     //Timer for check widget of create playlist
@@ -247,7 +247,7 @@ Ocean::~Ocean()
     delete Ocean::importManager;
     delete Ocean::playlistmanager;
     delete Ocean::playermanager;
-    delete Ocean::createPlayList;
+    delete Ocean::getStringFromUser;
 
     return;
 }
@@ -348,7 +348,7 @@ void Ocean::EraseItemFromPlayList()
 void Ocean::CreatePlaylist()
 {
     this->QWidget::setDisabled(true);
-    Ocean::createPlayList->QWidget::show();
+    Ocean::getStringFromUser->QWidget::show();
 
     return;
 }
@@ -411,28 +411,28 @@ void Ocean::SetPlayList(QListWidgetItem *item)
     return;
 }
 
-void Ocean::CloseWidgetViaCancel()
+void Ocean::CloseWidgetForGetStringViaCancel()
 {
     this->QWidget::setEnabled(true);
-    Ocean::createPlayList->QWidget::hide();
+    Ocean::getStringFromUser->QWidget::hide();
 
     return;
 }
 
-void Ocean::CloseWidgetViaOkay(const QString &name)
+void Ocean::CloseWidgetForGetStringViaOkay(const QString &name)
 {
     //before delete widget need to pass data into playlist
 
     this->QWidget::setEnabled(true);
     Ocean::playLists->QListWidget::addItem(name);
-    Ocean::createPlayList->QWidget::hide();
+    Ocean::getStringFromUser->QWidget::hide();
 
     return;
 }
 
 void Ocean::IfCreateListWidgetClosed()
 {
-    if(Ocean::createPlayList->QWidget::isHidden())
+    if(Ocean::getStringFromUser->QWidget::isHidden())
         this->QWidget::setEnabled(true);
     else
         this->QWidget::setDisabled(true);

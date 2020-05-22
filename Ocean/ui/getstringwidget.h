@@ -13,22 +13,22 @@
 #include <QPushButton>
 #include <QDebug>
 
-#include "ui_createplaylist.h"
+#include "ui_getstring.h"
 
-class CreatePlayListWidget : public QDialog, private Ui::CreatePlayList
+class GetStringWidget : public QWidget, private Ui::GetString
 {
     Q_OBJECT
 
 public:
-    CreatePlayListWidget(QDialog *parent = nullptr);
-    ~CreatePlayListWidget();
+    GetStringWidget(QWidget *parent = nullptr);
+    ~GetStringWidget();
 
 private:
-    QLineEdit *nameOfPlayList = nullptr;
+    QLineEdit *lineEditForString = nullptr;
     QPushButton *cancel = nullptr;
 
 signals:
-    void SendNameOfPlayList(const QString &name);
+    void SendName(const QString &name);
     void BreakeWidget();
 
 private slots:
@@ -36,10 +36,10 @@ private slots:
     void ClickedCancel();
 
 private:
-    QString createName;
+    QString getString;
 
 private:
-    Ui::CreatePlayList *ui;
+    Ui::GetString *ui;
 };
 
 #endif
