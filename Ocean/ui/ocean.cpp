@@ -320,6 +320,7 @@ void Ocean::ShowContextMenuOfMusicList(const QPoint &point)
     QPoint globalPoint = Ocean::playLists->QWidget::mapToGlobal(point);
 
     QMenu myMenu;
+    myMenu.QMenu::addAction("Add to...", this, SLOT(void AddSongIntoPlayListByIndex()));
     myMenu.QMenu::addAction("Delete", this, SLOT(EraseItemFromMusicList()));
     myMenu.QMenu::addAction("Delete All", this, SLOT(EraseAllItemsFromMusicList()));
 
@@ -348,6 +349,19 @@ void Ocean::EraseItemFromMusicList()
         QListWidgetItem *item = Ocean::musicList->QListWidget::takeItem(Ocean::musicList->QListWidget::currentRow());
         // And remove it
         delete item;
+    }
+
+    return;
+}
+
+void Ocean::AddSongIntoPlayListByIndex()
+{
+    for (unsigned short int iter = 0; iter < Ocean::musicList->QListWidget::selectedItems().QList::size(); ++iter)
+    {
+        // Get curent item on selected row
+        QListWidgetItem *item = Ocean::musicList->QListWidget::takeItem(Ocean::musicList->QListWidget::currentRow());
+
+        //EMIT HERE SIGNAL OF Playlist class TO PASS DATA INTO playlist manager
     }
 
     return;

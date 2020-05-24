@@ -83,9 +83,11 @@ private slots:
     /*
         1) Delete all songs
         2) Delete one selected item
+        3) Add song into playlist by name (pass data via SIGNAL of playlist manager)
     */
     void EraseAllItemsFromMusicList();
     void EraseItemFromMusicList();
+    void AddSongIntoPlayListByIndex();
     // Context Menu of Music list ------------------------------------------------- 1
 
     // Context Menu of Playlists -------------------------------------------------- 2
