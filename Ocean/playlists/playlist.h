@@ -46,7 +46,9 @@ public:
         4) set playlist via Playlist::GetCurrentPlayListName()
         5) create playlist by name
         6) delete playlist by name
-        7) add song into playlist
+        7)
+           7.1) add song into playlist from other playlist by index
+           7.2) add song into platlist from all songs (default playlist)
     */
 signals:
     /*----------------------------------------set playlist player----------------------------------------*/
@@ -65,7 +67,8 @@ signals:
     /*----------------------------------------delete----------------------------------------*/
     void CallOutRemovePlayListByName(const QString &name);
     /*--------------------------------add song into playlist--------------------------------*/
-    void CallOutAddSongIntoPlayList(const QString &song, const QString &nameOfPlayList);
+    void CallOutAddSongIntoPlayList(const QString &song, const QString &nameOfPlayList, const QString &nameOfCurrentPlayList, const unsigned short int &index);
+    void CallOutAddSongIntoPlayListFromDefaultPlayList(const QString &song, const QString &nameOfPlayList, const unsigned short int &index);
     /*-------------------------------------------------------SIGNALS-------------------------------------------------------*/
 
 
@@ -96,7 +99,8 @@ private slots:
     /*----------------------------------------delete----------------------------------------*/
     void RemovePlayListByName(const QString &name);
     /*--------------------------------add song into playlist--------------------------------*/
-    void AddSongIntoPlayList(const QString &song, const QString &nameOfPlayList);
+    void AddSongIntoPlayList(const QString &song, const QString &nameOfPlayList, const QString &nameOfCurrentPlayList, const unsigned short int &index);
+    void AddSongIntoPlayListFromDefaultPlayList(const QString &song, const QString &nameOfPlayList, const unsigned short int &index);
     /*--------------------------------------------------------SLOTS--------------------------------------------------------*/
 
 
@@ -133,7 +137,8 @@ public:
         8) rename playlist with new name via current name
         9) check if 'bin' dir is exists (else create it!)
        10) add song into playlist
-       11) get format of playlist
+       11) get format of playlist by index
+       12) parse string to get format
     */
 private:
     bool CreatePlayList(const QString &name, const QStringList &list); //--------------------------------------------------1)
@@ -145,8 +150,9 @@ private:
     bool RenamePlayList(const QString &newName, QMediaPlaylist *currentPlaylist);//----------------------------------------7)
     bool RenamePlayList(const QString &newName, const QString &currentName); //--------------------------------------------8)
     bool CheckSettingsDir();//---------------------------------------------------------------------------------------------9)
-    bool AddSongIntoPlayListByName(const QString &song, const QString &nameOfPlayList, const QString &formatOfSong); //---10)
-    QString GetFormatOfSong(const QString &name, const QString &nameOfPlayList); //---------------------------------------11)
+    bool AddSongIntoPlayListByName(const QString &song, const QString &nameOfPlayList, const QString &nameOfCurrentPlayList, const unsigned short int &index); //---10)
+    QString GetFormatOfSong(const QString &nameOfPlayList, const unsigned short int &index); //------11)
+    QString ParseStringToGetFormat(const QString &string);
     /*----------------------------------------Methods for call it in Private SLOTS----------------------------------------*/
 
 
