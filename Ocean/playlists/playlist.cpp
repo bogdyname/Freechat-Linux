@@ -62,7 +62,8 @@ Playlist::Playlist()
      * Remove -------------------------
         5.1) remove playlist by name
      * Add ----------------------------
-        6.1) add song into playlist
+        6.1) add song into playlist by index
+        6.2) add song into platlist from all songs (default playlist)
     */
     //Save
     QObject::connect(this, &Playlist::CallOutSaveCurrentPlayList, this, &Playlist::SaveCurrentPlayList);
@@ -78,6 +79,7 @@ Playlist::Playlist()
     QObject::connect(this, &Playlist::CallOutRemovePlayListByName, this, &Playlist::RemovePlayListByName);
     //Add song
     QObject::connect(this, &Playlist::CallOutAddSongIntoPlayList, this, &Playlist::AddSongIntoPlayList);
+    QObject::connect(this, &Playlist::CallOutAddSongIntoPlayListFromDefaultPlayList, this, &Playlist::AddSongIntoPlayListFromDefaultPlayList);
 
     return;
 }
@@ -210,8 +212,30 @@ void Playlist::RemovePlayListByName(const QString &name)
     return;
 }
 
-void Playlist::AddSongIntoPlayList(const QString &song, const QString &nameOfPlayList)
+void Playlist::AddSongIntoPlayList(const QString &song, const QString &nameOfPlayList, const QString &nameOfCurrentPlayList, const unsigned short int &index)
 {
+    if(Playlist::AddSongIntoPlayListByName(song, nameOfPlayList, nameOfCurrentPlayList, index))
+        #ifndef Q_DEBUG
+        qDebug() << "song successed added into '" << nameOfPlayList << "' -" << song;
+        #endif
+    else
+        #ifndef Q_DEBUG
+        qCritical() << "error: can't add sog into playlist '" << nameOfPlayList << "' -" << song;
+        #endif
+
+    return;
+}
+
+void Playlist::AddSongIntoPlayListFromDefaultPlayList(const QString &song, const QString &nameOfPlayList, const unsigned short int &index)
+{
+    if(Playlist::AddSongIntoPlayListByName(song, nameOfPlayList, "default", index))
+        #ifndef Q_DEBUG
+        qDebug() << "song successed added into '" << nameOfPlayList << "' -" << song;
+        #endif
+    else
+        #ifndef Q_DEBUG
+        qCritical() << "error: can't add sog into playlist '" << nameOfPlayList << "' -" << song;
+        #endif
 
     return;
 }
@@ -384,7 +408,10 @@ bool Playlist::CreateDefaultPlaylist(QMediaPlaylist *medialist)
 
         medialist->setCurrentIndex(1);
 
-        return true;
+        if(medialist->QMediaPlaylist::save(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/" + "default"), "m3u"))
+            return true;
+        else
+            return false;
     }
 
 }
@@ -501,15 +528,16 @@ bool Playlist::CheckSettingsDir()
     }
 }
 
-bool Playlist::AddSongIntoPlayListByName(const QString &song, const QString &nameOfPlayList, const QString &formatOfSong)
+bool Playlist::AddSongIntoPlayListByName(const QString &song, const QString &nameOfPlayList, const QString &nameOfCurrentPlayList, const unsigned short int &index)
 {
-    if((song == "") && (nameOfPlayList == "") && (formatOfSong == ""))
+    if((song == "") && (nameOfPlayList == ""))
         return false;
 
-    Playlist::settingsDir->QDir::setCurrent(QCoreApplication::applicationDirPath());
+    Playlist::settingsDir->QDir::setCurrent(QCoreApplication::applicationDirPath()); // set default playlist
+    const QString formatOfSong = Playlist::GetFormatOfSong(nameOfCurrentPlayList, index); // get format by index inside current playlist
 
     QMediaPlaylist *bufferPlaylist = new QMediaPlaylist();
-    bufferPlaylist->QMediaPlaylist::load(QCoreApplication::applicationDirPath() + "/bin/" + nameOfPlayList + "m3u");
+    bufferPlaylist->QMediaPlaylist::load(QCoreApplication::applicationDirPath() + "/bin/" + nameOfPlayList, "m3u"); // load playlist
     bufferPlaylist->QMediaPlaylist::addMedia(QMediaContent(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/music/" + song + formatOfSong)));
 
     if(bufferPlaylist->QMediaPlaylist::save(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/" + nameOfPlayList), "m3u"))
@@ -524,28 +552,46 @@ bool Playlist::AddSongIntoPlayListByName(const QString &song, const QString &nam
     }
 }
 
-QString Playlist::GetFormatOfSong(const QString &name, const QString &nameOfPlayList)
+QString Playlist::GetFormatOfSong(const QString &nameOfPlayList, const unsigned short int &index)
 {
-    if((name == "") && (nameOfPlayList == ""))
+    if(nameOfPlayList == "")
         return "";
 
-    QString wav = ".wav";
-    QString mp3 = ".mp3";
-
     QFile buffer(QCoreApplication::applicationDirPath() + "/bin/" + nameOfPlayList + ".m3u");
+    QString format = "";
 
     if(buffer.QIODevice::open(QIODevice::ReadOnly))
     {
         QTextStream playRead(&buffer);
 
-        while(!buffer.QFileDevice::atEnd())
+        // read specific line by index
+        for(unsigned short int iterOfFile = 0; iterOfFile < index; ++iterOfFile)
+            format = playRead.QTextStream::readLine().QString::trimmed();
+
+        // parse string to get format of song
+        format != "" ? format = Playlist::ParseStringToGetFormat(format) : format = "";
+    }
+
+    return format;
+}
+
+QString Playlist::ParseStringToGetFormat(const QString &string)
+{
+    QString::const_iterator iter = string.QString::end();
+    QString buffer = "";
+
+    for(; iter != string.QString::begin(); --iter)
+    {
+        if(*iter == ".")
         {
-            if((playRead.QTextStream::readLine().QString::trimmed() == (name + mp3)))
-               return mp3;
-            else if((playRead.QTextStream::readLine().QString::trimmed() == (name + wav)))
-               return wav;
-            else
-               return "";
+            buffer.QString::push_front(".");
+            return buffer;
+        }
+        else
+        {
+            buffer.QString::push_front(*iter);
         }
     }
+
+    return buffer;
 }

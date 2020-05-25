@@ -17,18 +17,21 @@ SOURCES += \
     player/player.cpp \
     playlists/playlist.cpp \
     ui/getstringwidget.cpp \
-    ui/ocean.cpp
+    ui/ocean.cpp \
+    ui/selectplaylist.cpp
 
 HEADERS += \
     imports/importmanager.h \
     player/player.h \
     playlists/playlist.h \
     ui/getstringwidget.h \
-    ui/ocean.h
+    ui/ocean.h \
+    ui/selectplaylist.h
 
 FORMS += \
     ui/getstring.ui \
-    ui/ocean.ui
+    ui/ocean.ui \
+    ui/selectplaylist.ui
 
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin

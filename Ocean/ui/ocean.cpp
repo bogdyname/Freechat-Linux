@@ -32,10 +32,13 @@ Ocean::Ocean(QWidget *parent)
         Ocean::buttonForAddMusicOnlyCopy = new QPushButton();
 
         //Tools for widgets
-        Ocean::timerForCheckWidgetOfCreatPlayList = new QTimer();
+        Ocean::timerForCheckWidgets = new QTimer();
 
         //Object of own classes
+        //widgets
         Ocean::getStringFromUser = new GetStringWidget();
+        Ocean::getStringWithSelectedPlaylist = new SelectPlaylist();
+        //managers
         Ocean::importManager = new ImportManager();
         Ocean::playlistmanager = new Playlist();
         Ocean::playermanager = new Player();
@@ -154,8 +157,10 @@ Ocean::Ocean(QWidget *parent)
 
     /*--------------------------------------------------TOOLS--------------------------------------------------*/
     //Timer for check widget of create playlist
-    Ocean::timerForCheckWidgetOfCreatPlayList->QTimer::setInterval(500);
-    Ocean::timerForCheckWidgetOfCreatPlayList->QTimer::start();
+    Ocean::timerForCheckWidgets->QTimer::setInterval(500);
+    Ocean::timerForCheckWidgets->QTimer::start();
+    //String to get selected playlist
+    Ocean::currentPlaylist = "";
 
     /*--------------------------------------------------TOOLS--------------------------------------------------*/
 
@@ -178,18 +183,23 @@ Ocean::Ocean(QWidget *parent)
 
     -----------------------UI-------------------------
     4)UI lists widgets
-        4.1) set playlist then item clicked (UI only)
-        4.2) Context Menu for playlist
-        4.3) Context Menu for music list
-        4.4) show songs in music list
+        4.1) set name of selected playlist (itemClicked)
+        4.2) set name of selected playlist (itemDoubleClicked)
+        4.3) set playlist then item clicked (UI only)
+        4.4) Context Menu for playlist
+        4.5) Context Menu for music list
+        4.6) show songs in music list
     5)Widget of create playlist
         5.1) close widget of create playlist via cancel button
         5.2) close widget of create playlist via okay button and pass QString into slot
+    6) Widget for get name of playlist from user
+        6.1) get name of playlist
+        6.2) breake widget via cancel button
     -----------------------UI-------------------------
 
     ----------------------Tools-----------------------
-    6)Timer for check CreateListWidget
-        6.1) check widget of create playlist (UI --> 5) to close it if pressed keys Alt+F4
+    7)Timer for check CreateListWidget
+        7.1) check widget of create playlist (UI --> 5) to close it if pressed keys Alt+F4
     ----------------------Tools-----------------------
     */
 
@@ -208,6 +218,8 @@ Ocean::Ocean(QWidget *parent)
 
     //UI-----------------------------------------------
     //UI Lists
+    QObject::connect(Ocean::playLists, SIGNAL(itemClicked(QListWidgetItem *)), this, SLOT(GetNameOfSelectedPlaylist(QListWidgetItem *)));
+    QObject::connect(Ocean::playLists, SIGNAL(itemDoubleClicked(QListWidgetItem *)), this, SLOT(GetNameOfSelectedPlaylist(QListWidgetItem *)));
     QObject::connect(Ocean::playLists, SIGNAL(itemClicked(QListWidgetItem *)), this, SLOT(GetNamesOfSongsToMusicList(QListWidgetItem *)));
     QObject::connect(Ocean::playLists, SIGNAL(itemDoubleClicked(QListWidgetItem *)), this, SLOT(SetPlayList(QListWidgetItem *)));
     QObject::connect(Ocean::playLists, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(ShowContextMenuOfPlayList(QPoint)));
@@ -216,10 +228,14 @@ Ocean::Ocean(QWidget *parent)
     //Widget for get string from user
     QObject::connect(Ocean::getStringFromUser, &GetStringWidget::BreakeWidget, this, &Ocean::CloseWidgetForGetStringViaCancel);
     QObject::connect(Ocean::getStringFromUser, &GetStringWidget::SendName, this, &Ocean::CloseWidgetForGetStringViaOkay);
+    //Widget for get name of playlist from user
+    QObject::connect(Ocean::getStringWithSelectedPlaylist, &SelectPlaylist::CallOutToPassStringFromWidget, this, &Ocean::ParseMusicList);
+    QObject::connect(Ocean::getStringWithSelectedPlaylist, &SelectPlaylist::BreakeWidget, this, &Ocean::CloseWidgetForGetNameOfSelectedPlaylistViaCancel);
 
     //Tools--------------------------------------------
     //Timer for check widget of create playlist
-    QObject::connect(Ocean::timerForCheckWidgetOfCreatPlayList, &QTimer::timeout, this, &Ocean::IfCreateListWidgetClosed);
+    QObject::connect(Ocean::timerForCheckWidgets, &QTimer::timeout, this, &Ocean::IfCreateListWidgetClosed);
+    QObject::connect(Ocean::timerForCheckWidgets, &QTimer::timeout, this, &Ocean::IfSelectItemFromListWidgetClosed);
 
     return;
 }
@@ -244,13 +260,17 @@ Ocean::~Ocean()
     delete Ocean::buttonForAddMusicOnlyCopy;
 
     //Tools
-    delete Ocean::timerForCheckWidgetOfCreatPlayList;
+    delete Ocean::timerForCheckWidgets;
 
     //Own classes
+    //managers
     delete Ocean::importManager;
     delete Ocean::playlistmanager;
     delete Ocean::playermanager;
+
+    //widgets
     delete Ocean::getStringFromUser;
+    delete Ocean::getStringWithSelectedPlaylist;
 
     return;
 }
@@ -320,7 +340,7 @@ void Ocean::ShowContextMenuOfMusicList(const QPoint &point)
     QPoint globalPoint = Ocean::playLists->QWidget::mapToGlobal(point);
 
     QMenu myMenu;
-    myMenu.QMenu::addAction("Add to...", this, SLOT(void AddSongIntoPlayListByIndex()));
+    myMenu.QMenu::addAction("Add to...", this, SLOT(AddSongIntoPlayListByIndex()));
     myMenu.QMenu::addAction("Delete", this, SLOT(EraseItemFromMusicList()));
     myMenu.QMenu::addAction("Delete All", this, SLOT(EraseAllItemsFromMusicList()));
 
@@ -356,13 +376,30 @@ void Ocean::EraseItemFromMusicList()
 
 void Ocean::AddSongIntoPlayListByIndex()
 {
+    Ocean::getStringWithSelectedPlaylist->SelectPlaylist::PassAllPlaylistsIntoWidget(Ocean::GetAllItemsFromList());
+
+    this->QWidget::setDisabled(true);
+    Ocean::getStringWithSelectedPlaylist->QWidget::show();
+
+    return;
+}
+
+void Ocean::ParseMusicList(const QString &name)
+{
+    QListWidgetItem *item;
+
     for (unsigned short int iter = 0; iter < Ocean::musicList->QListWidget::selectedItems().QList::size(); ++iter)
     {
-        // Get curent item on selected row
-        QListWidgetItem *item = Ocean::musicList->QListWidget::takeItem(Ocean::musicList->QListWidget::currentRow());
-
-        //EMIT HERE SIGNAL OF Playlist class TO PASS DATA INTO playlist manager
+        // Get current item on selected row (music list)
+        item = Ocean::musicList->QListWidget::item(Ocean::musicList->QListWidget::currentRow());
     }
+
+    //REBUILD WITH AND TEST IT
+    //emit Ocean::playlistmanager->Playlist::CallOutAddSongIntoPlayList(item->QListWidgetItem::text(), //name of song
+                                                            //Ocean::getStringWithSelectedPlaylist->SelectPlaylist::GetNameOfSelectedPlaylist(), //playlist
+                                                            //name, //current playlist
+                                                            //Ocean::musicList->QListWidget::currentRow()); //index of song
+
 
     return;
 }
@@ -468,6 +505,22 @@ void Ocean::CloseWidgetForGetStringViaOkay(const QString &name)
     return;
 }
 
+void Ocean::CloseWidgetForGetNameOfSelectedPlaylist()
+{
+    this->QWidget::setEnabled(true);
+    Ocean::getStringWithSelectedPlaylist->QWidget::hide();
+
+    return;
+}
+
+void Ocean::CloseWidgetForGetNameOfSelectedPlaylistViaCancel()
+{
+    this->QWidget::setEnabled(true);
+    Ocean::getStringWithSelectedPlaylist->QWidget::hide();
+
+    return;
+}
+
 void Ocean::IfCreateListWidgetClosed()
 {
     if(Ocean::getStringFromUser->QWidget::isHidden())
@@ -476,6 +529,36 @@ void Ocean::IfCreateListWidgetClosed()
         this->QWidget::setDisabled(true);
 
     return;
+}
+
+void Ocean::IfSelectItemFromListWidgetClosed()
+{
+    if(Ocean::getStringWithSelectedPlaylist->QWidget::isHidden())
+        this->QWidget::setEnabled(true);
+    else
+        this->QWidget::setDisabled(true);
+
+    return;
+}
+
+void Ocean::GetNameOfSelectedPlaylist(QListWidgetItem *item)
+{
+    Ocean::currentPlaylist = item->QListWidgetItem::text();
+
+    return;
+}
+
+QStringList Ocean::GetAllItemsFromList()
+{
+    QStringList list;
+
+    for(unsigned short int iter = 0; iter < Ocean::playLists->QListWidget::count(); ++iter)
+    {
+        QListWidgetItem* item = Ocean::playLists->item(iter);
+        list.QStringList::push_back(item->text());
+    }
+
+    return  list;
 }
 
 void Ocean::resizeEvent(QResizeEvent *event)

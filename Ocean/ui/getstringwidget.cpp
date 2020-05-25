@@ -66,14 +66,14 @@ void GetStringWidget::ReturnPressedForLineEdit()
 
     GetStringWidget::getString.QString::clear();
     GetStringWidget::getString += GetStringWidget::lineEditForString->QLineEdit::text();
-    emit GetStringWidget::SendName(GetStringWidget::getString);
+    emit this->GetStringWidget::SendName(GetStringWidget::getString);
 
     return;
 }
 
 void GetStringWidget::ClickedCancel()
 {
-    emit GetStringWidget::BreakeWidget();
+    emit this->GetStringWidget::BreakeWidget();
 
     return;
 }

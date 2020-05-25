@@ -29,6 +29,7 @@
 
 //widgets
 #include "getstringwidget.h"
+#include "selectplaylist.h"
 
 //managers
 #include "imports/importmanager.h"
@@ -88,6 +89,7 @@ private slots:
     void EraseAllItemsFromMusicList();
     void EraseItemFromMusicList();
     void AddSongIntoPlayListByIndex();
+    void ParseMusicList(const QString &name);
     // Context Menu of Music list ------------------------------------------------- 1
 
     // Context Menu of Playlists -------------------------------------------------- 2
@@ -119,7 +121,8 @@ private slots:
 
     /*
        1) Widget for get string from user
-       2) widget for info of song
+       2) Widget for get name of selected playlist
+       3) Widget for info of song //Valenty
     */
 
     // Widget for get string from user -------------------------------------------- 1
@@ -130,6 +133,13 @@ private slots:
     void CloseWidgetForGetStringViaCancel();
     void CloseWidgetForGetStringViaOkay(const QString &name);
     // Widget for get string from user -------------------------------------------- 1
+    // Widget for get name of playlist from user ---------------------------------- 2
+    /*
+        1) Close widget after get name of selected playlist
+    */
+    void CloseWidgetForGetNameOfSelectedPlaylist();
+    void CloseWidgetForGetNameOfSelectedPlaylistViaCancel();
+    // Widget for get name of playlist from user ---------------------------------- 2
 
     /*-----------------------------------------------UI-----------------------------------------------*/
 
@@ -138,13 +148,21 @@ private slots:
 
     /*
         1) Timer for Ocean::getStringFromUser
+        2) Timer for Ocean::getStringWithSelectedPlaylist
+        3) Get name of selected playlist
     */
 
     // Timer for Ocean::getStringFromUser ----------------------------------------- 1
     void IfCreateListWidgetClosed();
+    void IfSelectItemFromListWidgetClosed();
     // Timer for Ocean::getStringFromUser ----------------------------------------- 1
 
+    void GetNameOfSelectedPlaylist(QListWidgetItem *item);
+
     /*---------------------------------------------Tools---------------------------------------------*/
+
+private:
+    QStringList GetAllItemsFromList();
 
 private:
     //UI--------------------------------------------------------------
@@ -175,7 +193,8 @@ private:
 
     //TOOLS-----------------------------------------------------------
     //ToolS for widgets
-    QTimer *timerForCheckWidgetOfCreatPlayList = nullptr;
+    QTimer *timerForCheckWidgets = nullptr;
+    QString currentPlaylist;
     //TOOLS-----------------------------------------------------------
 
 
@@ -189,6 +208,7 @@ private:
     // UI own widgets ----------------------------------------------- 1
     //ui widgets
     GetStringWidget *getStringFromUser = nullptr;
+    SelectPlaylist *getStringWithSelectedPlaylist = nullptr;
     // UI own widgets ----------------------------------------------- 1
 
     // Managers ----------------------------------------------------- 2
