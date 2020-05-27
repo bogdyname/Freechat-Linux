@@ -37,8 +37,8 @@ SelectPlaylist::SelectPlaylist(QWidget *parent)
     SelectPlaylist::selectedName  = "";
 
     //setting up UI
-    SelectPlaylist::ui->verticalLayout->QHBoxLayout::addWidget(SelectPlaylist::cancel);
-    SelectPlaylist::ui->verticalLayout->QHBoxLayout::addWidget(SelectPlaylist::playlists);
+    SelectPlaylist::ui->verticalLayout->QVBoxLayout::addWidget(SelectPlaylist::cancel);
+    SelectPlaylist::ui->verticalLayout->QVBoxLayout::addWidget(SelectPlaylist::playlists);
 
     //SIGNAL/SLOTS
     QObject::connect(SelectPlaylist::playlists, &QListWidget::itemDoubleClicked, this, &SelectPlaylist::SelectNameOfPlayList);

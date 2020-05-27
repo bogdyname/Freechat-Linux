@@ -55,20 +55,20 @@ signals:
     void SetCurrentPlayList(QMediaPlaylist *currentPlaylist);
     void SetDefaultPlayList(QMediaPlaylist *defaultPlaylist);
     /*----------------------------------------save------------------------------------------*/
-    void CallOutSaveCurrentPlayList(const QString &name, const QStringList &newListOfSongs, QMediaPlaylist *currentPlaylist);
-    void CallOutSaveSelectedPlayList(const QString &name, const QStringList &newListOfSongs);
+    void CallOutSaveCurrentPlayList(const QString &name, const QStringList &newListOfSongs, QMediaPlaylist *currentPlaylist);//---------TTS
+    void CallOutSaveSelectedPlayList(const QString &name, const QStringList &newListOfSongs);//-----------------------------------------TTS
     /*----------------------------------------rename----------------------------------------*/
-    void CallOutRenameCurrentPlayList(QString &newName, QMediaPlaylist *currentPlaylist);
-    void CallOutRenameSelectedPlayList(const QString &newName, const QString &currentName);
+    void CallOutRenameCurrentPlayList(QString &newName, QMediaPlaylist *currentPlaylist);//---------------------------------------------TTS
+    void CallOutRenameSelectedPlayList(const QString &newName, const QString &currentName);//-------------------------------------------TTS
     /*----------------------------------------set playlist----------------------------------*/
     void CallOutSetCurrentPlayListName(const QString &nameOfCurrentPlaylist);
     /*----------------------------------------create playlist-------------------------------*/
-    void CallOutCreateNewPlayList(const QString &name);
+    void CallOutCreateNewPlayList(const QString &name);//-------------------------------------------------------------------------------TTS
     /*----------------------------------------delete----------------------------------------*/
-    void CallOutRemovePlayListByName(const QString &name);
+    void CallOutRemovePlayListByName(const QString &name);//----------------------------------------------------------------------------TTS
     /*--------------------------------add song into playlist--------------------------------*/
-    void CallOutAddSongIntoPlayList(const QString &song, const QString &nameOfPlayList, const QString &nameOfCurrentPlayList, const unsigned short int &index);
-    void CallOutAddSongIntoPlayListFromDefaultPlayList(const QString &song, const QString &nameOfPlayList, const unsigned short int &index);
+    void CallOutAddSongIntoPlayList(const QString &song, const QString &nameOfPlayList, const QString &nameOfCurrentPlayList, const unsigned short int &index);//TTS
+    void CallOutAddSongIntoPlayListFromDefaultPlayList(const QString &song, const QString &nameOfPlayList, const unsigned short int &index);//TTS
     /*-------------------------------------------------------SIGNALS-------------------------------------------------------*/
 
 
