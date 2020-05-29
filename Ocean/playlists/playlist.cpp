@@ -240,6 +240,27 @@ void Playlist::AddSongIntoPlayListFromDefaultPlayList(const QString &song, const
     return;
 }
 
+//Publick Slots
+void Playlist::SetNextTrack()
+{
+    if(Playlist::currentPlaylistName == "all")
+        Playlist::defaultPlaylist->QMediaPlaylist::next();
+    else
+        Playlist::currentPlaylist->QMediaPlaylist::next();
+
+    return;
+}
+
+void Playlist::SetPreviousTrack()
+{
+    if(Playlist::currentPlaylistName == "all")
+        Playlist::defaultPlaylist->QMediaPlaylist::previous();
+    else
+        Playlist::currentPlaylist->QMediaPlaylist::previous();
+
+    return;
+}
+
 //Methods public
 QString Playlist::GetCurrentPlayListName()
 {
