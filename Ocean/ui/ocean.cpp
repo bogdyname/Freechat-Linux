@@ -213,8 +213,8 @@ Ocean::Ocean(QWidget *parent)
     QObject::connect(Ocean::playlistmanager, &Playlist::SetDefaultPlayList, Ocean::playermanager, &QMediaPlayer::setPlaylist);
     QObject::connect(Ocean::playlistmanager, &Playlist::SetCurrentPlayList, Ocean::playermanager, &QMediaPlayer::setPlaylist);
     //Playlist manager
-    QObject::connect(Ocean::nextTrack, &QPushButton::clicked, Ocean::playlistmanager, &QMediaPlaylist::next);
-    QObject::connect(Ocean::previousTrack, &QPushButton::clicked, Ocean::playlistmanager, &QMediaPlaylist::previous);
+    QObject::connect(Ocean::nextTrack, &QPushButton::clicked, Ocean::playlistmanager, &Playlist::SetNextTrack);
+    QObject::connect(Ocean::previousTrack, &QPushButton::clicked, Ocean::playlistmanager, &Playlist::SetPreviousTrack);
 
     //UI-----------------------------------------------
     //UI Lists
