@@ -31,6 +31,9 @@ signals:
     void SendName(const QString &name);
     void BreakeWidget();
 
+public:
+    QString GetNameOfNewPlayList();
+
 private slots:
     void ReturnPressedForLineEdit();
     void ClickedCancel();
