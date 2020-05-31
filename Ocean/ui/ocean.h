@@ -7,6 +7,7 @@
 #ifndef OCEAN_H
 #define OCEAN_H
 
+#include <QDir>
 #include <QTimer>
 #include <QDebug>
 #include <QLabel>
@@ -150,14 +151,13 @@ private slots:
         1) Timer for Ocean::getStringFromUser
         2) Timer for Ocean::getStringWithSelectedPlaylist
         3) Get name of selected playlist
+        4) Get names of playlists from 'bin' dir
     */
 
-    // Timer for Ocean::getStringFromUser ----------------------------------------- 1
-    void IfCreateListWidgetClosed();
-    void IfSelectItemFromListWidgetClosed();
-    // Timer for Ocean::getStringFromUser ----------------------------------------- 1
-
-    void GetNameOfSelectedPlaylist(QListWidgetItem *item);
+    void IfCreateListWidgetClosed();//-----------------------------------------1
+    void IfSelectItemFromListWidgetClosed();//---------------------------------2
+    void GetNameOfSelectedPlaylist(QListWidgetItem *item);//-------------------3
+    QStringList GetNamesOfPlaylistsFromBinDir();//-----------------------------4
 
     /*---------------------------------------------Tools---------------------------------------------*/
 
@@ -195,6 +195,7 @@ private:
     //ToolS for widgets
     QTimer *timerForCheckWidgets = nullptr;
     QString currentPlaylist;
+    QDir *cd = nullptr;
     //TOOLS-----------------------------------------------------------
 
 

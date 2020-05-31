@@ -6,7 +6,9 @@
 */
 
 #include "playlist.h"
-
+/*--------------------------------------------------------------------------------------------------------------------------------------------------*/
+/*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||MAIN|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
+/*--------------------------------------------------------------------------------------------------------------------------------------------------*/
 Playlist::Playlist()
 {
     try
@@ -52,6 +54,7 @@ Playlist::Playlist()
      * Save ---------------------------
         1.1) save current playlist
         1.2) save selected playlist
+        1.3) save playlist by name
      * Rename -------------------------
         2.1) rename current playlist
         2.2) rename selected playlist
@@ -68,6 +71,7 @@ Playlist::Playlist()
     //Save
     QObject::connect(this, &Playlist::CallOutSaveCurrentPlayList, this, &Playlist::SaveCurrentPlayList);
     QObject::connect(this, &Playlist::CallOutSaveSelectedPlayList, this, &Playlist::SaveSelectedPlayList);
+    QObject::connect(this, &Playlist::CallOutSaveNewPlayList, this, &Playlist::SaveNewPlayList);
     //Rename
     QObject::connect(this, &Playlist::CallOutRenameCurrentPlayList, this, &Playlist::RenameCurrentPlayList);
     QObject::connect(this, &Playlist::CallOutRenameSelectedPlayList, this, &Playlist::RenameSelectedPlayList);
@@ -93,8 +97,14 @@ Playlist::~Playlist()
 
     return;
 }
+/*--------------------------------------------------------------------------------------------------------------------------------------------------*/
+/*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||MAIN|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
+/*--------------------------------------------------------------------------------------------------------------------------------------------------*/
 
-//SLOTS public
+
+/*--------------------------------------------------------------------------------------------------------------------------------------------------*/
+/*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||SLOTS PRIVATE||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
+/*--------------------------------------------------------------------------------------------------------------------------------------------------*/
 void Playlist::SaveCurrentPlayList(const QString &name, const QStringList &newListOfSongs, QMediaPlaylist *currentPlaylist)
 {
     if(name == "" && newListOfSongs.QStringList::isEmpty())
@@ -118,6 +128,23 @@ void Playlist::SaveSelectedPlayList(const QString &name, const QStringList &newL
         return;
 
     if(Playlist::SavePlaylist(name, newListOfSongs))
+        #ifndef Q_DEBUG
+        qDebug() << "playlist successed saved";
+        #endif
+    else
+        #ifndef Q_DEBUG
+        qCritical() << "error: can't save playlist";
+        #endif
+
+    return;
+}
+
+void Playlist::SaveNewPlayList(const QString &name)
+{
+    if(name == "")
+        return;
+
+    if(Playlist::SavePlaylist(name))
         #ifndef Q_DEBUG
         qDebug() << "playlist successed saved";
         #endif
@@ -165,6 +192,7 @@ void Playlist::RenameSelectedPlayList(const QString &newName, const QString &cur
     return;
 }
 
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void Playlist::SetCurrentPlayListName(const QString &nameOfCurrentPlaylist)
 {
     Playlist::currentPlaylistName.QString::clear();
@@ -173,6 +201,7 @@ void Playlist::SetCurrentPlayListName(const QString &nameOfCurrentPlaylist)
     return;
 }
 
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void Playlist::CreateNewPlayList(const QString &name)
 {
     if(name == "")
@@ -239,8 +268,15 @@ void Playlist::AddSongIntoPlayListFromDefaultPlayList(const QString &song, const
 
     return;
 }
+/*--------------------------------------------------------------------------------------------------------------------------------------------------*/
+/*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||SLOTS PRIVATE||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
+/*--------------------------------------------------------------------------------------------------------------------------------------------------*/
 
-//Publick Slots
+
+/*--------------------------------------------------------------------------------------------------------------------------------------------------*/
+/*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||SLOTS PUBLIC|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
+/*--------------------------------------------------------------------------------------------------------------------------------------------------*/
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void Playlist::SetNextTrack()
 {
     if(Playlist::currentPlaylistName == "all")
@@ -251,6 +287,7 @@ void Playlist::SetNextTrack()
     return;
 }
 
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void Playlist::SetPreviousTrack()
 {
     if(Playlist::currentPlaylistName == "all")
@@ -260,23 +297,33 @@ void Playlist::SetPreviousTrack()
 
     return;
 }
+/*--------------------------------------------------------------------------------------------------------------------------------------------------*/
+/*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||SLOTS PUBLIC|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
+/*--------------------------------------------------------------------------------------------------------------------------------------------------*/
 
-//Methods public
+
+/*--------------------------------------------------------------------------------------------------------------------------------------------------*/
+/*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||METHODS PUBLIC|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
+/*--------------------------------------------------------------------------------------------------------------------------------------------------*/
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 QString Playlist::GetCurrentPlayListName()
 {
     return Playlist::currentPlaylistName;
 }
 
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 QMediaPlaylist* Playlist::GetCurrentPlayList()
 {
     return Playlist::currentPlaylist;
 }
 
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 QMediaPlaylist* Playlist::GetDefaultPlayList()
 {
     return  Playlist::defaultPlaylist;
 }
 
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void Playlist::LoadDefaultPlayList()
 {
     Playlist::allSongs.QStringList::clear();
@@ -296,6 +343,7 @@ void Playlist::LoadDefaultPlayList()
     return;
 }
 
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void Playlist::LoadPlayList(const QString &name)
 {
     if(Playlist::LookingForPlayList(name, Playlist::currentPlaylist))
@@ -310,6 +358,7 @@ void Playlist::LoadPlayList(const QString &name)
     return;
 }
 
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 QStringList Playlist::GetSongsFromCurrentPlayList(const QString &nameOfPlayList)
 {
     QStringList songs = {};
@@ -317,16 +366,24 @@ QStringList Playlist::GetSongsFromCurrentPlayList(const QString &nameOfPlayList)
     if((nameOfPlayList == "") && (Playlist::CheckSettingsDir() == false))
         return songs;
 
-    Playlist::settingsDir->QDir::setCurrent(QCoreApplication::applicationDirPath());
+    QFile *buffer = new QFile(QCoreApplication::applicationDirPath() + "/bin/" + nameOfPlayList + ".m3u");
 
-    QFile buffer(QCoreApplication::applicationDirPath() + "/bin/" + nameOfPlayList + ".m3u");
-
-    if(buffer.QIODevice::open(QIODevice::ReadOnly))
+    if(buffer->QIODevice::open(QIODevice::ReadOnly))
     {
-        QTextStream playRead(&buffer);
+        QTextStream stream(buffer);
 
-        while(!playRead.atEnd())
-            songs.QStringList::push_back(playRead.QTextStream::readLine().QString::trimmed());
+        qCritical() << QCoreApplication::applicationDirPath() + "/bin/" + nameOfPlayList + ".m3u";
+        qCritical() << "1here";
+
+        buffer->QFileDevice::seek(0);
+
+        while(!stream.QTextStream::atEnd())
+        {
+            qCritical() << "2here";
+            songs.QStringList::push_back(stream.QTextStream::readLine().QString::trimmed());
+        }
+
+         buffer->QFile::close();
     }
     else
     {
@@ -335,10 +392,12 @@ QStringList Playlist::GetSongsFromCurrentPlayList(const QString &nameOfPlayList)
             #endif
     }
 
+    delete buffer;
+
     return songs;
 }
 
-//TTS
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 QStringList Playlist::GetSongsFromDeaultPlayList()
 {
     Playlist::allSongs.QStringList::clear();
@@ -348,11 +407,18 @@ QStringList Playlist::GetSongsFromDeaultPlayList()
 
     return allSongs;
 }
+/*--------------------------------------------------------------------------------------------------------------------------------------------------*/
+/*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||METHODS PUBLIC|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
+/*--------------------------------------------------------------------------------------------------------------------------------------------------*/
 
-//Methods private
+
+/*--------------------------------------------------------------------------------------------------------------------------------------------------*/
+/*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||METHODS PRIVATE||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
+/*--------------------------------------------------------------------------------------------------------------------------------------------------*/
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 bool Playlist::CreatePlayList(const QString &name, const QStringList &list)
 {
-    if((name == "") || (!list.QStringList::isEmpty()))
+    if((name == "") || (list.QStringList::isEmpty()))
         return false;
 
     Playlist::CheckSettingsDir();
@@ -363,7 +429,7 @@ bool Playlist::CreatePlayList(const QString &name, const QStringList &list)
     for(const QString &iter : list)
         bufferPlaylist->QMediaPlaylist::addMedia(QMediaContent(QUrl::fromLocalFile(iter)));//add song into playlist
 
-    if(bufferPlaylist->QMediaPlaylist::save(QCoreApplication::applicationDirPath() + "/bin/" + name, "m3u"))
+    if(bufferPlaylist->QMediaPlaylist::save(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/" + name), "m3u"))
     {
         delete bufferPlaylist;
         return true;
@@ -398,7 +464,7 @@ bool Playlist::LookingForPlayList(const QString &name, QMediaPlaylist *medialist
     Playlist::CheckSettingsDir();
 
     medialist->QMediaPlaylist::clear();
-    medialist->QMediaPlaylist::load(QCoreApplication::applicationDirPath() + "/bin/" + name + "m3u");
+    medialist->QMediaPlaylist::load(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/" + name), "m3u");
     medialist->setCurrentIndex(1);
 
     if(!medialist->QMediaPlaylist::isEmpty())
@@ -407,6 +473,7 @@ bool Playlist::LookingForPlayList(const QString &name, QMediaPlaylist *medialist
         return false;
 }
 
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 bool Playlist::CreateDefaultPlaylist(QMediaPlaylist *medialist)
 {
     if(QDir("music").QDir::exists() == false)
@@ -479,6 +546,25 @@ bool Playlist::SavePlaylist(const QString &name, const QStringList &newListOfSon
         qDebug() << bufferPlaylist->QMediaPlaylist::mediaCount();
         #endif
     }
+
+    if(bufferPlaylist->QMediaPlaylist::save(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/" + name), "m3u"))
+    {
+        delete bufferPlaylist;
+        return true;
+    }
+    else
+    {
+        delete bufferPlaylist;
+        return false;
+    }
+}
+
+bool Playlist::SavePlaylist(const QString &name)
+{
+    if(name == "")
+        return false;
+
+    QMediaPlaylist *bufferPlaylist = new QMediaPlaylist();
 
     if(bufferPlaylist->QMediaPlaylist::save(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/" + name), "m3u"))
     {
@@ -573,6 +659,7 @@ bool Playlist::AddSongIntoPlayListByName(const QString &song, const QString &nam
     }
 }
 
+//TEST IT
 QString Playlist::GetFormatOfSong(const QString &nameOfPlayList, const unsigned short int &index)
 {
     if(nameOfPlayList == "")
@@ -596,6 +683,7 @@ QString Playlist::GetFormatOfSong(const QString &nameOfPlayList, const unsigned 
     return format;
 }
 
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 QString Playlist::ParseStringToGetFormat(const QString &string)
 {
     QString::const_iterator iter = string.QString::end();
@@ -616,3 +704,6 @@ QString Playlist::ParseStringToGetFormat(const QString &string)
 
     return buffer;
 }
+/*--------------------------------------------------------------------------------------------------------------------------------------------------*/
+/*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||METHODS PRIVATE||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
+/*--------------------------------------------------------------------------------------------------------------------------------------------------*/

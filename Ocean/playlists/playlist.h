@@ -13,6 +13,7 @@
 #include <QFile>
 #include <QList>
 #include <QString>
+#include <QTextStream>
 #include <QStringList>
 #include <QFileDialog>
 #include <QMediaObject>
@@ -40,6 +41,7 @@ public:
         2) save
             2.1) save current playlist by name and media playlist
             2.2) save selected playlist by name
+            2.3) save playlist by name (only name)
         3) rename
             3.1) rename current playlist by name and media playlist
             3.2) rename selected playlist by name
@@ -57,6 +59,7 @@ signals:
     /*----------------------------------------save------------------------------------------*/
     void CallOutSaveCurrentPlayList(const QString &name, const QStringList &newListOfSongs, QMediaPlaylist *currentPlaylist);//---------------------------------TTS
     void CallOutSaveSelectedPlayList(const QString &name, const QStringList &newListOfSongs);//-----------------------------------------------------------------TTS
+    void CallOutSaveNewPlayList(const QString &name);
     /*----------------------------------------rename----------------------------------------*/
     void CallOutRenameCurrentPlayList(QString &newName, QMediaPlaylist *currentPlaylist);//---------------------------------------------------------------------TTS
     void CallOutRenameSelectedPlayList(const QString &newName, const QString &currentName);//-------------------------------------------------------------------TTS
@@ -77,11 +80,12 @@ signals:
         1) save playlist
             1.1) save current playlist
             1.2) save selected playlist
+            1.3) save playlist by name (only name)
         2) rename
             2.1) rename current playlist
             2.2) rename selected playlist
-        3) set name of playlist
-        4) create playlist by name
+        3) set name of playlist (DONE)
+        4) create playlist by name (DONE)
         5) delete playlist by name
         6) add song into playlist
     */
@@ -89,6 +93,7 @@ private slots:
     /*----------------------------------------save------------------------------------------*/
     void SaveCurrentPlayList(const QString &name, const QStringList &newListOfSongs, QMediaPlaylist *currentPlaylist);
     void SaveSelectedPlayList(const QString &name, const QStringList &newListOfSongs);
+    void SaveNewPlayList(const QString &name);
     /*----------------------------------------rename----------------------------------------*/
     void RenameCurrentPlayList(const QString &newName, QMediaPlaylist *currentPlaylist);
     void RenameSelectedPlayList(const QString &newName, const QString &currentName);
@@ -110,13 +115,13 @@ public slots:
 
     /*----------------------------------------Methods for get data about playlist----------------------------------------*/
     /*
-        1) get name of current playlist
-        2) get current playlist
-        3) get default playlist
-        4) load all songs (default playlist)
-        5) load playlist by name
-        6) get songs from current playlist by name of playlist
-        7) get all songs (default playlist)
+        1) get name of current playlist (DONE)
+        2) get current playlist (DONE)
+        3) get default playlist (DONE)
+        4) load all songs (default playlist) (DONE)
+        5) load playlist by name (DONE)
+        6) get songs from current playlist by name of playlist //TTS
+        7) get all songs (default playlist) (DONE)
     */
 public:
     QString GetCurrentPlayListName(); //--------------------------------------------------------------------------------1)
@@ -137,26 +142,28 @@ public:
         4) load default playlist (all songs)
         5) save CURRENT playlist by name and songs inside changed playlist
         6) save playlist by name and songs inside changed playlist
-        7) rename CURRENT playlist with new name
-        8) rename playlist with new name via current name
-        9) check if 'bin' dir is exists (else create it!)
-       10) add song into playlist
-       11) get format of playlist by index
-       12) parse string to get format
+        7) save playlist by name (only name)
+        8) rename CURRENT playlist with new name
+        9) rename playlist with new name via current name
+        10) check if 'bin' dir is exists (else create it!)
+       11) add song into playlist
+       12) get format of playlist by index
+       13) parse string to get format
     */
 private:
-    bool CreatePlayList(const QString &name, const QStringList &list); //--------------------------------------------------1)
-    bool RemovePlayList(const QString &name);//----------------------------------------------------------------------------2)
-    bool LookingForPlayList(const QString &name, QMediaPlaylist *medialist);//---------------------------------------------3)
-    bool CreateDefaultPlaylist(QMediaPlaylist *medialist);//---------------------------------------------------------------4)
-    bool SavePlaylist(const QString &name, const QStringList &newListOfSongs, QMediaPlaylist *currentPlaylist);//----------5)
-    bool SavePlaylist(const QString &name, const QStringList &newListOfSongs);//-------------------------------------------6)
-    bool RenamePlayList(const QString &newName, QMediaPlaylist *currentPlaylist);//----------------------------------------7)
-    bool RenamePlayList(const QString &newName, const QString &currentName); //--------------------------------------------8)
-    bool CheckSettingsDir();//---------------------------------------------------------------------------------------------9)
-    bool AddSongIntoPlayListByName(const QString &song, const QString &nameOfPlayList, const QString &nameOfCurrentPlayList, const unsigned short int &index); //---10)
-    QString GetFormatOfSong(const QString &nameOfPlayList, const unsigned short int &index); //------11)
-    QString ParseStringToGetFormat(const QString &string);
+    bool CreatePlayList(const QString &name, const QStringList &list); //--------------------------------------------------------------------------------------------1)
+    bool RemovePlayList(const QString &name);//----------------------------------------------------------------------------------------------------------------------2)
+    bool LookingForPlayList(const QString &name, QMediaPlaylist *medialist);//---------------------------------------------------------------------------------------3)
+    bool CreateDefaultPlaylist(QMediaPlaylist *medialist);//---------------------------------------------------------------------------------------------------------4)
+    bool SavePlaylist(const QString &name, const QStringList &newListOfSongs, QMediaPlaylist *currentPlaylist);//----------------------------------------------------5)
+    bool SavePlaylist(const QString &name, const QStringList &newListOfSongs);//-------------------------------------------------------------------------------------6)
+    bool SavePlaylist(const QString &name);//------------------------------------------------------------------------------------------------------------------------7)
+    bool RenamePlayList(const QString &newName, QMediaPlaylist *currentPlaylist);//----------------------------------------------------------------------------------8)
+    bool RenamePlayList(const QString &newName, const QString &currentName); //--------------------------------------------------------------------------------------9)
+    bool CheckSettingsDir();//--------------------------------------------------------------------------------------------------------------------------------------10)
+    bool AddSongIntoPlayListByName(const QString &song, const QString &nameOfPlayList, const QString &nameOfCurrentPlayList, const unsigned short int &index); //---11)
+    QString GetFormatOfSong(const QString &nameOfPlayList, const unsigned short int &index); //---------------------------------------------------------------------12)
+    QString ParseStringToGetFormat(const QString &string);//--------------------------------------------------------------------------------------------------------13)
     /*----------------------------------------Methods for call it in Private SLOTS----------------------------------------*/
 
 

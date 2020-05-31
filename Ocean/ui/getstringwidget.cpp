@@ -59,6 +59,11 @@ GetStringWidget::~GetStringWidget()
     return;
 }
 
+QString GetStringWidget::GetNameOfNewPlayList()
+{
+    return GetStringWidget::getString;
+}
+
 void GetStringWidget::ReturnPressedForLineEdit()
 {
     if(GetStringWidget::lineEditForString->QLineEdit::text() == "")
