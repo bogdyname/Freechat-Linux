@@ -66,7 +66,7 @@ signals:
     /*----------------------------------------set playlist----------------------------------*/
     void CallOutSetCurrentPlayListName(const QString &nameOfCurrentPlaylist);
     /*----------------------------------------create playlist-------------------------------*/
-    void CallOutCreateNewPlayList(const QString &name);
+    void CallOutCreateNewPlayList(const QString &name, const QStringList &tracks);
     /*----------------------------------------delete----------------------------------------*/
     void CallOutRemovePlayListByName(const QString &name);
     /*--------------------------------add song into playlist--------------------------------*/
@@ -100,17 +100,21 @@ private slots:
     /*----------------------------------------set playlist----------------------------------*/
     void SetCurrentPlayListName(const QString &nameOfCurrentPlaylist);
     /*----------------------------------------create playlist-------------------------------*/
-    void CreateNewPlayList(const QString &name);
+    void CreateNewPlayList(const QString &name, const QStringList &tracks);
     /*----------------------------------------delete----------------------------------------*/
     void RemovePlayListByName(const QString &name);
     /*--------------------------------add song into playlist--------------------------------*/
     void AddSongIntoPlayList(const QString &song, const QString &nameOfPlayList, const QString &nameOfCurrentPlayList, const unsigned short int &index);
     void AddSongIntoPlayListFromDefaultPlayList(const QString &song, const QString &nameOfPlayList, const unsigned short int &index);
-    /*--------------------------------------------------------SLOTS--------------------------------------------------------*/
 
+    /*
+        1) set next track
+        2) set previuos track
+    */
 public slots:
     void SetNextTrack();
     void SetPreviousTrack();
+    /*--------------------------------------------------------SLOTS--------------------------------------------------------*/
 
 
     /*----------------------------------------Methods for get data about playlist----------------------------------------*/

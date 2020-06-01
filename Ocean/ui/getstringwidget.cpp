@@ -71,7 +71,7 @@ void GetStringWidget::ReturnPressedForLineEdit()
 
     GetStringWidget::getString.QString::clear();
     GetStringWidget::getString += GetStringWidget::lineEditForString->QLineEdit::text();
-    emit this->GetStringWidget::SendName(GetStringWidget::getString);
+    emit this->GetStringWidget::SendName();
 
     return;
 }

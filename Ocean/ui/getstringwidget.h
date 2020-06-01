@@ -8,7 +8,6 @@
 #define CREATEPLAYLISTWIDGET_H
 
 #include <QWidget>
-#include <QDialog>
 #include <QLineEdit>
 #include <QPushButton>
 #include <QDebug>
@@ -28,7 +27,7 @@ private:
     QPushButton *cancel = nullptr;
 
 signals:
-    void SendName(const QString &name);
+    void SendName();
     void BreakeWidget();
 
 public:
