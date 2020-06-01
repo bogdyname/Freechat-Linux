@@ -38,7 +38,7 @@ Playlist::Playlist()
 
     //For get all songs into 'allSongs' variable
     Playlist::settingsDir->QDir::setCurrent(QCoreApplication::applicationDirPath() + "/music/");
-    Playlist::allSongs = Playlist::settingsDir->QDir::entryList(QDir::AllEntries);
+    Playlist::allSongs = Playlist::settingsDir->QDir::entryList(QStringList() << "*.mp3" << "*.MP3" << "*.wav" << "*.WAV", QDir::Files);
 
     //For bin folder
     Playlist::settingsDir->QDir::setCurrent(QCoreApplication::applicationDirPath());
@@ -67,6 +67,7 @@ Playlist::Playlist()
      * Add ----------------------------
         6.1) add song into playlist by index
         6.2) add song into platlist from all songs (default playlist)
+        6.3) add tracks into NEW playlist
     */
     //Save
     QObject::connect(this, &Playlist::CallOutSaveCurrentPlayList, this, &Playlist::SaveCurrentPlayList);
@@ -200,24 +201,19 @@ void Playlist::SetCurrentPlayListName(const QString &nameOfCurrentPlaylist)
     return;
 }
 
-void Playlist::CreateNewPlayList(const QString &name)
+void Playlist::CreateNewPlayList(const QString &name, const QStringList &tracks)
 {
     if(name == "")
         return;
 
-    const QStringList songs = Playlist::dialog->QFileDialog::getOpenFileNames(0, "Create play list", "", "*.mp3 *.wav");
-
-    if(songs.QList::isEmpty())
-        return;
+    if(Playlist::CreatePlayList(name, tracks))
+        #ifndef Q_DEBUG
+        qDebug() << "play list successed created! " + name;
+        #endif
     else
-        if(Playlist::CreatePlayList(name, songs))
-            #ifndef Q_DEBUG
-            qDebug() << "play list successed created! " + name;
-            #endif
-        else
-            #ifndef Q_DEBUG
-            qCritical() << "error create play list! " + name;
-            #endif
+        #ifndef Q_DEBUG
+        qCritical() << "error create play list! " + name;
+        #endif
 
     return;
 }
@@ -349,7 +345,6 @@ void Playlist::LoadPlayList(const QString &name)
     return;
 }
 
-//FIX IT!!!!!! INFINITE CYCLE
 QStringList Playlist::GetSongsFromCurrentPlayList(const QString &nameOfPlayList)
 {
     QStringList songs = {};
@@ -358,8 +353,7 @@ QStringList Playlist::GetSongsFromCurrentPlayList(const QString &nameOfPlayList)
         return songs;
 
     //path to file
-    const QString path = QCoreApplication::applicationDirPath() + "/bin/" + "tts.txt";
-    //"/Users/user/tts.txt"
+    const QString path = QCoreApplication::applicationDirPath() + "/bin/" + nameOfPlayList;
 
     QFile file;
     file.QFile::setFileName(path);

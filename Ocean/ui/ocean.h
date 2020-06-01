@@ -29,6 +29,7 @@
 #include "ui_ocean.h"
 
 //widgets
+#include "addmusicwidget.h"
 #include "getstringwidget.h"
 #include "selectplaylist.h"
 
@@ -54,8 +55,14 @@ public:
 protected:
     virtual void resizeEvent(QResizeEvent *event);
 
+    //Signals for playlists
+    /*
+        1) pass tracks into music list
+        2) Create widget after widget for get string from user
+    */
 signals:
     void CallOutPassNamesOfSongsToMusicList(const QStringList &songs);
+    void CallOutToCreateWindowThisWidgetToGetAddedTracks();
 
     // Slots for MainWindow
     /*
@@ -131,16 +138,25 @@ private slots:
         1) Close widget via 'cancel button' without string
         2) Close widget via return pressed and pass string from user
     */
-    void CloseWidgetForGetStringViaCancel();
-    void CloseWidgetForGetStringViaOkay(const QString &name);
+    void ClosegetStringFromUserViaCancel();
+    void ClosegetStringFromUserViaOkay();
     // Widget for get string from user -------------------------------------------- 1
     // Widget for get name of playlist from user ---------------------------------- 2
     /*
         1) Close widget after get name of selected playlist
+        2) Close widget via 'cancel button'
     */
-    void CloseWidgetForGetNameOfSelectedPlaylist();
-    void CloseWidgetForGetNameOfSelectedPlaylistViaCancel();
+    void ClosegetStringWithSelectedPlaylist();
+    void ClosegetStringWithSelectedPlaylistViaCancel();
     // Widget for get name of playlist from user ---------------------------------- 2
+    // Widget for get added tracks from widget  ----------------------------------- 3
+    /*
+        1) Close widget via 'cancel button'
+        2) Pass tracks into buffer
+    */
+    void ClosegetAddedTracksFromWidgetViaCancel();
+    void PassAddedTracksIntoBuffer(const QStringList &list);
+    // Widget for get added tracks from widget  ----------------------------------- 3
 
     /*-----------------------------------------------UI-----------------------------------------------*/
 
@@ -150,19 +166,25 @@ private slots:
     /*
         1) Timer for Ocean::getStringFromUser
         2) Timer for Ocean::getStringWithSelectedPlaylist
-        3) Get name of selected playlist
-        4) Get names of playlists from 'bin' dir
+        3) Timer for Ocean::getAddedTracksFromWidget
+        4) Get name of selected playlist
+        5) Get names of playlists from 'bin' dir
+        6) Create widget after widget for get string from user
     */
 
-    void IfCreateListWidgetClosed();//-----------------------------------------1
-    void IfSelectItemFromListWidgetClosed();//---------------------------------2
-    void GetNameOfSelectedPlaylist(QListWidgetItem *item);//-------------------3
-    QStringList GetNamesOfPlaylistsFromBinDir();//-----------------------------4
+    void IfgetStringFromUserClosed();//-----------------------------------------1
+    void IfgetStringWithSelectedPlaylistClosed();//-----------------------------2
+    void IfgetAddedTracksFromWidgetClosed();//----------------------------------3
+    void GetNameOfSelectedPlaylist(QListWidgetItem *item);//--------------------4
+    QStringList GetNamesOfPlaylistsFromBinDir();//------------------------------5
+    void CallWidgetAfterCreatePlaylistSlot();//---------------------------------6
 
     /*---------------------------------------------Tools---------------------------------------------*/
 
 private:
     QStringList GetAllItemsFromList();
+    QStringList ParseToGetFullPathOfTracks(const QStringList &list);
+    QString ParseStringToRemoveFormat(const QString &string);
 
 private:
     //UI--------------------------------------------------------------
@@ -195,6 +217,7 @@ private:
     //ToolS for widgets
     QTimer *timerForCheckWidgets = nullptr;
     QString currentPlaylist;
+    QStringList bufferOfAddedTracks = {};
     QDir *cd = nullptr;
     //TOOLS-----------------------------------------------------------
 
@@ -208,6 +231,7 @@ private:
 private:
     // UI own widgets ----------------------------------------------- 1
     //ui widgets
+    AddMusicWidget *getAddedTracksFromWidget = nullptr;
     GetStringWidget *getStringFromUser = nullptr;
     SelectPlaylist *getStringWithSelectedPlaylist = nullptr;
     // UI own widgets ----------------------------------------------- 1
