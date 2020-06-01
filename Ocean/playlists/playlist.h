@@ -57,21 +57,21 @@ signals:
     void SetCurrentPlayList(QMediaPlaylist *currentPlaylist);
     void SetDefaultPlayList(QMediaPlaylist *defaultPlaylist);
     /*----------------------------------------save------------------------------------------*/
-    void CallOutSaveCurrentPlayList(const QString &name, const QStringList &newListOfSongs, QMediaPlaylist *currentPlaylist);//---------------------------------TTS
-    void CallOutSaveSelectedPlayList(const QString &name, const QStringList &newListOfSongs);//-----------------------------------------------------------------TTS
+    void CallOutSaveCurrentPlayList(const QString &name, const QStringList &newListOfSongs, QMediaPlaylist *currentPlaylist);
+    void CallOutSaveSelectedPlayList(const QString &name, const QStringList &newListOfSongs);
     void CallOutSaveNewPlayList(const QString &name);
     /*----------------------------------------rename----------------------------------------*/
-    void CallOutRenameCurrentPlayList(QString &newName, QMediaPlaylist *currentPlaylist);//---------------------------------------------------------------------TTS
-    void CallOutRenameSelectedPlayList(const QString &newName, const QString &currentName);//-------------------------------------------------------------------TTS
+    void CallOutRenameCurrentPlayList(QString &newName, QMediaPlaylist *currentPlaylist);
+    void CallOutRenameSelectedPlayList(const QString &newName, const QString &currentName);
     /*----------------------------------------set playlist----------------------------------*/
     void CallOutSetCurrentPlayListName(const QString &nameOfCurrentPlaylist);
     /*----------------------------------------create playlist-------------------------------*/
-    void CallOutCreateNewPlayList(const QString &name);//-------------------------------------------------------------------------------------------------------TTS
+    void CallOutCreateNewPlayList(const QString &name);
     /*----------------------------------------delete----------------------------------------*/
-    void CallOutRemovePlayListByName(const QString &name);//----------------------------------------------------------------------------------------------------TTS
+    void CallOutRemovePlayListByName(const QString &name);
     /*--------------------------------add song into playlist--------------------------------*/
-    void CallOutAddSongIntoPlayList(const QString &song, const QString &nameOfPlayList, const QString &nameOfCurrentPlayList, const unsigned short int &index);//TTS
-    void CallOutAddSongIntoPlayListFromDefaultPlayList(const QString &song, const QString &nameOfPlayList, const unsigned short int &index);//-------------------TTS
+    void CallOutAddSongIntoPlayList(const QString &song, const QString &nameOfPlayList, const QString &nameOfCurrentPlayList, const unsigned short int &index);
+    void CallOutAddSongIntoPlayListFromDefaultPlayList(const QString &song, const QString &nameOfPlayList, const unsigned short int &index);
     /*-------------------------------------------------------SIGNALS-------------------------------------------------------*/
 
 
@@ -84,8 +84,8 @@ signals:
         2) rename
             2.1) rename current playlist
             2.2) rename selected playlist
-        3) set name of playlist (DONE)
-        4) create playlist by name (DONE)
+        3) set name of playlist
+        4) create playlist by name
         5) delete playlist by name
         6) add song into playlist
     */
@@ -115,22 +115,22 @@ public slots:
 
     /*----------------------------------------Methods for get data about playlist----------------------------------------*/
     /*
-        1) get name of current playlist (DONE)
-        2) get current playlist (DONE)
-        3) get default playlist (DONE)
-        4) load all songs (default playlist) (DONE)
-        5) load playlist by name (DONE)
-        6) get songs from current playlist by name of playlist //TTS
-        7) get all songs (default playlist) (DONE)
+        1) get name of current playlist
+        2) get current playlist
+        3) get default playlist
+        4) load all songs (default playlist)
+        5) load playlist by name
+        6) get songs from current playlist by name of playlist
+        7) get all songs (default playlist)
     */
 public:
-    QString GetCurrentPlayListName(); //--------------------------------------------------------------------------------1)
-    QMediaPlaylist* GetCurrentPlayList(); //----------------------------------------------------------------------------2)
-    QMediaPlaylist* GetDefaultPlayList(); //----------------------------------------------------------------------------3)
-    void LoadDefaultPlayList(); //--------------------------------------------------------------------------------------4)
-    void LoadPlayList(const QString &name); //--------------------------------------------------------------------------5)
-    QStringList GetSongsFromCurrentPlayList(const QString &nameOfPlayList); //------------------------------------------6)
-    QStringList GetSongsFromDeaultPlayList(); //------------------------------------------------------------------------7)
+    QString GetCurrentPlayListName(); //--------------------------------------------------------------------------------1) (DONE)
+    QMediaPlaylist* GetCurrentPlayList(); //----------------------------------------------------------------------------2) (DONE)
+    QMediaPlaylist* GetDefaultPlayList(); //----------------------------------------------------------------------------3) (DONE)
+    void LoadDefaultPlayList(); //--------------------------------------------------------------------------------------4) (DONE)
+    void LoadPlayList(const QString &name); //--------------------------------------------------------------------------5) (DONE)
+    QStringList GetSongsFromCurrentPlayList(const QString &nameOfPlayList); //------------------------------------------6) (DONE)
+    QStringList GetSongsFromDeaultPlayList(); //------------------------------------------------------------------------7) (DONE)
     /*----------------------------------------Methods for get data about playlist----------------------------------------*/
 
 
@@ -151,19 +151,19 @@ public:
        13) parse string to get format
     */
 private:
-    bool CreatePlayList(const QString &name, const QStringList &list); //--------------------------------------------------------------------------------------------1)
+    bool CreatePlayList(const QString &name, const QStringList &list); //--------------------------------------------------------------------------------------------1) (DONE)
     bool RemovePlayList(const QString &name);//----------------------------------------------------------------------------------------------------------------------2)
-    bool LookingForPlayList(const QString &name, QMediaPlaylist *medialist);//---------------------------------------------------------------------------------------3)
-    bool CreateDefaultPlaylist(QMediaPlaylist *medialist);//---------------------------------------------------------------------------------------------------------4)
-    bool SavePlaylist(const QString &name, const QStringList &newListOfSongs, QMediaPlaylist *currentPlaylist);//----------------------------------------------------5)
-    bool SavePlaylist(const QString &name, const QStringList &newListOfSongs);//-------------------------------------------------------------------------------------6)
-    bool SavePlaylist(const QString &name);//------------------------------------------------------------------------------------------------------------------------7)
+    bool LookingForPlayList(const QString &name, QMediaPlaylist *medialist);//---------------------------------------------------------------------------------------3) (DONE)
+    bool CreateDefaultPlaylist(QMediaPlaylist *medialist);//---------------------------------------------------------------------------------------------------------4) (DONE)
+    bool SavePlaylist(const QString &name, const QStringList &newListOfSongs, QMediaPlaylist *currentPlaylist);//----------------------------------------------------5) (DONE)
+    bool SavePlaylist(const QString &name, const QStringList &newListOfSongs);//-------------------------------------------------------------------------------------6) (DONE)
+    bool SavePlaylist(const QString &name);//------------------------------------------------------------------------------------------------------------------------7) (DONE)
     bool RenamePlayList(const QString &newName, QMediaPlaylist *currentPlaylist);//----------------------------------------------------------------------------------8)
     bool RenamePlayList(const QString &newName, const QString &currentName); //--------------------------------------------------------------------------------------9)
-    bool CheckSettingsDir();//--------------------------------------------------------------------------------------------------------------------------------------10)
+    bool CheckSettingsDir();//--------------------------------------------------------------------------------------------------------------------------------------10) (DONE)
     bool AddSongIntoPlayListByName(const QString &song, const QString &nameOfPlayList, const QString &nameOfCurrentPlayList, const unsigned short int &index); //---11)
-    QString GetFormatOfSong(const QString &nameOfPlayList, const unsigned short int &index); //---------------------------------------------------------------------12)
-    QString ParseStringToGetFormat(const QString &string);//--------------------------------------------------------------------------------------------------------13)
+    QString GetFormatOfSong(const QString &nameOfPlayList, const unsigned short int &index); //---------------------------------------------------------------------12) (DONE)
+    QString ParseStringToGetFormat(const QString &string);//--------------------------------------------------------------------------------------------------------13) (DONE)
     /*----------------------------------------Methods for call it in Private SLOTS----------------------------------------*/
 
 

@@ -192,7 +192,6 @@ void Playlist::RenameSelectedPlayList(const QString &newName, const QString &cur
     return;
 }
 
-//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void Playlist::SetCurrentPlayListName(const QString &nameOfCurrentPlaylist)
 {
     Playlist::currentPlaylistName.QString::clear();
@@ -201,7 +200,6 @@ void Playlist::SetCurrentPlayListName(const QString &nameOfCurrentPlaylist)
     return;
 }
 
-//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void Playlist::CreateNewPlayList(const QString &name)
 {
     if(name == "")
@@ -276,7 +274,6 @@ void Playlist::AddSongIntoPlayListFromDefaultPlayList(const QString &song, const
 /*--------------------------------------------------------------------------------------------------------------------------------------------------*/
 /*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||SLOTS PUBLIC|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
 /*--------------------------------------------------------------------------------------------------------------------------------------------------*/
-//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void Playlist::SetNextTrack()
 {
     if(Playlist::currentPlaylistName == "all")
@@ -287,7 +284,6 @@ void Playlist::SetNextTrack()
     return;
 }
 
-//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void Playlist::SetPreviousTrack()
 {
     if(Playlist::currentPlaylistName == "all")
@@ -305,25 +301,21 @@ void Playlist::SetPreviousTrack()
 /*--------------------------------------------------------------------------------------------------------------------------------------------------*/
 /*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||METHODS PUBLIC|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
 /*--------------------------------------------------------------------------------------------------------------------------------------------------*/
-//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 QString Playlist::GetCurrentPlayListName()
 {
     return Playlist::currentPlaylistName;
 }
 
-//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 QMediaPlaylist* Playlist::GetCurrentPlayList()
 {
     return Playlist::currentPlaylist;
 }
 
-//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 QMediaPlaylist* Playlist::GetDefaultPlayList()
 {
     return  Playlist::defaultPlaylist;
 }
 
-//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void Playlist::LoadDefaultPlayList()
 {
     Playlist::allSongs.QStringList::clear();
@@ -343,7 +335,6 @@ void Playlist::LoadDefaultPlayList()
     return;
 }
 
-//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void Playlist::LoadPlayList(const QString &name)
 {
     if(Playlist::LookingForPlayList(name, Playlist::currentPlaylist))
@@ -366,30 +357,33 @@ QStringList Playlist::GetSongsFromCurrentPlayList(const QString &nameOfPlayList)
     if((nameOfPlayList == "") && (Playlist::CheckSettingsDir() == false))
         return songs;
 
-    const QString path = QCoreApplication::applicationDirPath() + "/bin/" + nameOfPlayList;
-    QFile *buffer = new QFile(path);
+    //path to file
+    const QString path = QCoreApplication::applicationDirPath() + "/bin/" + "tts.txt";
+    //"/Users/user/tts.txt"
 
+    QFile file;
+    file.QFile::setFileName(path);
+
+    #ifndef Q_DEBUG
     qDebug() << path;
+    #endif
 
-    if(buffer->QFile::exists())
+    if(file.QFile::exists())
     {
-        if(buffer->QIODevice::open(QIODevice::ReadOnly))
+        if(!file.QFile::open(QFile::ReadOnly))
         {
-            QTextStream stream(buffer);
-
-            while(!stream.QTextStream::atEnd())
-            {
-                qCritical() << "hi";
-                songs.QStringList::push_back(stream.QTextStream::readLine().QString::trimmed());
-            }
-
-             buffer->QFile::close();
+            #ifndef Q_DEBUG
+            qCritical() << "error: can't open playlist";
+            #endif
         }
         else
         {
-                #ifndef Q_DEBUG
-                qCritical() << "error: can't open playlist";
-                #endif
+            QTextStream stream(&file);
+
+            while(!stream.QTextStream::atEnd())
+                songs.QList::push_back(stream.QTextStream::readLine());
+
+            file.QFile::close();
         }
     }
     else
@@ -399,12 +393,9 @@ QStringList Playlist::GetSongsFromCurrentPlayList(const QString &nameOfPlayList)
         #endif
     }
 
-    delete buffer;
-
     return songs;
 }
 
-//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 QStringList Playlist::GetSongsFromDeaultPlayList()
 {
     Playlist::allSongs.QStringList::clear();
@@ -422,7 +413,6 @@ QStringList Playlist::GetSongsFromDeaultPlayList()
 /*--------------------------------------------------------------------------------------------------------------------------------------------------*/
 /*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||METHODS PRIVATE||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
 /*--------------------------------------------------------------------------------------------------------------------------------------------------*/
-//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 bool Playlist::CreatePlayList(const QString &name, const QStringList &list)
 {
     if((name == "") || (list.QStringList::isEmpty()))
@@ -480,7 +470,6 @@ bool Playlist::LookingForPlayList(const QString &name, QMediaPlaylist *medialist
         return false;
 }
 
-//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 bool Playlist::CreateDefaultPlaylist(QMediaPlaylist *medialist)
 {
     if(QDir("music").QDir::exists() == false)
@@ -666,7 +655,6 @@ bool Playlist::AddSongIntoPlayListByName(const QString &song, const QString &nam
     }
 }
 
-//TEST IT
 QString Playlist::GetFormatOfSong(const QString &nameOfPlayList, const unsigned short int &index)
 {
     if(nameOfPlayList == "")
@@ -690,7 +678,6 @@ QString Playlist::GetFormatOfSong(const QString &nameOfPlayList, const unsigned 
     return format;
 }
 
-//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 QString Playlist::ParseStringToGetFormat(const QString &string)
 {
     QString::const_iterator iter = string.QString::end();
