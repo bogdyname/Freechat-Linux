@@ -14,9 +14,7 @@ Playlist::Playlist()
     try
     {
         Playlist::settingsDir = new QDir();
-        Playlist::dialog = new QFileDialog();
         Playlist::currentPlaylist = new QMediaPlaylist();
-        Playlist::defaultPlaylist = new QMediaPlaylist();
     }
     catch(std::bad_alloc &exp)
     {
@@ -33,21 +31,61 @@ Playlist::Playlist()
         abort();
     }
 
-    //current path of app
-    Playlist::dialog->QFileDialog::setDirectory(QCoreApplication::applicationDirPath());
+    //Check default playlist
+    if(!QFile::exists(QCoreApplication::applicationDirPath() + "/bin/all.m3u"))
+    {
+        //Create playlist with all songs
+        //For get all songs into 'allSongs' variable
+        Playlist::settingsDir->QDir::setCurrent(QCoreApplication::applicationDirPath() + "/music/");
+        Playlist::allSongs = Playlist::settingsDir->QDir::entryList(QStringList() << "*.mp3" << "*.MP3" << "*.wav" << "*.WAV", QDir::Files);
 
-    //For get all songs into 'allSongs' variable
-    Playlist::settingsDir->QDir::setCurrent(QCoreApplication::applicationDirPath() + "/music/");
-    Playlist::allSongs = Playlist::settingsDir->QDir::entryList(QStringList() << "*.mp3" << "*.MP3" << "*.wav" << "*.WAV", QDir::Files);
+        QMediaPlaylist *buffer = new QMediaPlaylist();
+
+        for(const QString &iter : Playlist::allSongs)
+            buffer->QMediaPlaylist::addMedia(QMediaContent(QUrl::fromLocalFile(iter)));//add song into playlist
+
+        if(buffer->QMediaPlaylist::save(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/all.m3u"), "m3u"))
+            delete buffer;
+
+        #ifndef Q_DEBUG
+        qDebug() << "Playlist 'all' created";
+        #endif
+    }
+    else
+    {
+        //Reboot songs inside playlist with all songs
+        //For get all songs into 'allSongs' variable
+        Playlist::settingsDir->QDir::setCurrent(QCoreApplication::applicationDirPath() + "/music/");
+        Playlist::allSongs = Playlist::settingsDir->QDir::entryList(QStringList() << "*.mp3" << "*.MP3" << "*.wav" << "*.WAV", QDir::Files);
+
+        QMediaPlaylist *buffer = new QMediaPlaylist();
+
+        buffer->QMediaPlaylist::load(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/all.m3u"), "m3u");
+        buffer->QMediaPlaylist::clear();
+
+        for(const QString &iter : Playlist::allSongs)
+            buffer->QMediaPlaylist::addMedia(QMediaContent(QUrl::fromLocalFile(iter)));//add song into playlist
+
+        if(buffer->QMediaPlaylist::save(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/all.m3u"), "m3u"))
+            delete buffer;
+
+        #ifndef Q_DEBUG
+        qDebug() << "Playlist 'all' already exists!";
+        #endif
+    }
 
     //For bin folder
     Playlist::settingsDir->QDir::setCurrent(QCoreApplication::applicationDirPath());
 
     //Check folder of settings/playlist
     if(Playlist::settingsDir->QDir::mkdir("bin"))
+        #ifndef Q_DEBUG
         qDebug() << "Folder 'bin' created";
+        #endif
     else
+        #ifndef Q_DEBUG
         qDebug() << "Folder 'bin' already exists!";
+        #endif
 
     /*---------------------------------signals with slots---------------------------------*/
     /*
@@ -92,9 +130,7 @@ Playlist::Playlist()
 Playlist::~Playlist()
 {
     delete Playlist::settingsDir;
-    delete Playlist::dialog;
     delete Playlist::currentPlaylist;
-    delete Playlist::defaultPlaylist;
 
     return;
 }
@@ -272,20 +308,14 @@ void Playlist::AddSongIntoPlayListFromDefaultPlayList(const QString &song, const
 /*--------------------------------------------------------------------------------------------------------------------------------------------------*/
 void Playlist::SetNextTrack()
 {
-    if(Playlist::currentPlaylistName == "all")
-        Playlist::defaultPlaylist->QMediaPlaylist::next();
-    else
-        Playlist::currentPlaylist->QMediaPlaylist::next();
+    Playlist::currentPlaylist->QMediaPlaylist::next();
 
     return;
 }
 
 void Playlist::SetPreviousTrack()
 {
-    if(Playlist::currentPlaylistName == "all")
-        Playlist::defaultPlaylist->QMediaPlaylist::previous();
-    else
-        Playlist::currentPlaylist->QMediaPlaylist::previous();
+    Playlist::currentPlaylist->QMediaPlaylist::previous();
 
     return;
 }
@@ -305,30 +335,6 @@ QString Playlist::GetCurrentPlayListName()
 QMediaPlaylist* Playlist::GetCurrentPlayList()
 {
     return Playlist::currentPlaylist;
-}
-
-QMediaPlaylist* Playlist::GetDefaultPlayList()
-{
-    return  Playlist::defaultPlaylist;
-}
-
-void Playlist::LoadDefaultPlayList()
-{
-    Playlist::allSongs.QStringList::clear();
-    Playlist::settingsDir->QDir::setCurrent(QCoreApplication::applicationDirPath() + "/music/");
-    Playlist::allSongs = Playlist::settingsDir->QDir::entryList(QStringList() << "*.mp3" << "*.MP3" << "*.wav" << "*.WAV", QDir::Files);
-    Playlist::settingsDir->QDir::setCurrent(QCoreApplication::applicationDirPath());
-
-    if(Playlist::CreateDefaultPlaylist(Playlist::defaultPlaylist))
-        #ifndef Q_DEBUG
-        qDebug() << "loaded default playlist";
-        #endif
-    else
-        #ifndef Q_DEBUG
-        qCritical() << "error: can't load default playlist";
-        #endif
-
-    return;
 }
 
 void Playlist::LoadPlayList(const QString &name)
@@ -390,15 +396,6 @@ QStringList Playlist::GetSongsFromCurrentPlayList(const QString &nameOfPlayList)
     return songs;
 }
 
-QStringList Playlist::GetSongsFromDeaultPlayList()
-{
-    Playlist::allSongs.QStringList::clear();
-    Playlist::settingsDir->QDir::setCurrent(QCoreApplication::applicationDirPath() + "/music/");
-    Playlist::allSongs = Playlist::settingsDir->QDir::entryList(QStringList() << "*.mp3" << "*.MP3" << "*.wav" << "*.WAV", QDir::Files);
-    Playlist::settingsDir->QDir::setCurrent(QCoreApplication::applicationDirPath());
-
-    return allSongs;
-}
 /*--------------------------------------------------------------------------------------------------------------------------------------------------*/
 /*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||METHODS PUBLIC|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
 /*--------------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -462,36 +459,6 @@ bool Playlist::LookingForPlayList(const QString &name, QMediaPlaylist *medialist
         return true;
     else
         return false;
-}
-
-bool Playlist::CreateDefaultPlaylist(QMediaPlaylist *medialist)
-{
-    if(QDir("music").QDir::exists() == false)
-        return false;
-    else
-    {
-        medialist->QMediaPlaylist::clear();
-
-        qDebug() << Playlist::allSongs;
-
-        for(const QString &iter : Playlist::allSongs)
-        {
-            medialist->QMediaPlaylist::addMedia(QMediaContent(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/music/" + iter)));
-
-            #ifndef Q_DEBUG
-            qDebug() << iter;
-            qDebug() << medialist->QMediaPlaylist::mediaCount();
-            #endif
-        }
-
-        medialist->setCurrentIndex(1);
-
-        if(medialist->QMediaPlaylist::save(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/" + "default" + ".m3u"), "m3u"))
-            return true;
-        else
-            return false;
-    }
-
 }
 
 bool Playlist::SavePlaylist(const QString &name, const QStringList &newListOfSongs, QMediaPlaylist *currentPlaylist)

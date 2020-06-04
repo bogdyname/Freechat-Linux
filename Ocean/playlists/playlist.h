@@ -37,7 +37,6 @@ public:
     /*
         1) set playlist for player class
             1.1) set current playlist
-            1.2) set default playlist (playlist with all songs)
         2) save
             2.1) save current playlist by name and media playlist
             2.2) save selected playlist by name
@@ -55,7 +54,6 @@ public:
 signals:
     /*----------------------------------------set playlist player----------------------------------------*/
     void SetCurrentPlayList(QMediaPlaylist *currentPlaylist);
-    void SetDefaultPlayList(QMediaPlaylist *defaultPlaylist);
     /*----------------------------------------save------------------------------------------*/
     void CallOutSaveCurrentPlayList(const QString &name, const QStringList &newListOfSongs, QMediaPlaylist *currentPlaylist);
     void CallOutSaveSelectedPlayList(const QString &name, const QStringList &newListOfSongs);
@@ -121,20 +119,15 @@ public slots:
     /*
         1) get name of current playlist
         2) get current playlist
-        3) get default playlist
         4) load all songs (default playlist)
         5) load playlist by name
         6) get songs from current playlist by name of playlist
-        7) get all songs (default playlist)
     */
 public:
     QString GetCurrentPlayListName(); //--------------------------------------------------------------------------------1) (DONE)
     QMediaPlaylist* GetCurrentPlayList(); //----------------------------------------------------------------------------2) (DONE)
-    QMediaPlaylist* GetDefaultPlayList(); //----------------------------------------------------------------------------3) (DONE)
-    void LoadDefaultPlayList(); //--------------------------------------------------------------------------------------4) (DONE)
     void LoadPlayList(const QString &name); //--------------------------------------------------------------------------5) (DONE)
     QStringList GetSongsFromCurrentPlayList(const QString &nameOfPlayList); //------------------------------------------6) (DONE)
-    QStringList GetSongsFromDeaultPlayList(); //------------------------------------------------------------------------7) (DONE)
     /*----------------------------------------Methods for get data about playlist----------------------------------------*/
 
 
@@ -143,7 +136,6 @@ public:
         1) create playlist by name of new playlist (get it via ui_getstring.h in ocean.cpp) and QFileDialog (pass paths of files in QStringList)
         2) delete playlist by name
         3) load playlist by name
-        4) load default playlist (all songs)
         5) save CURRENT playlist by name and songs inside changed playlist
         6) save playlist by name and songs inside changed playlist
         7) save playlist by name (only name)
@@ -158,7 +150,6 @@ private:
     bool CreatePlayList(const QString &name, const QStringList &list); //--------------------------------------------------------------------------------------------1) (DONE)
     bool RemovePlayList(const QString &name);//----------------------------------------------------------------------------------------------------------------------2)
     bool LookingForPlayList(const QString &name, QMediaPlaylist *medialist);//---------------------------------------------------------------------------------------3) (DONE)
-    bool CreateDefaultPlaylist(QMediaPlaylist *medialist);//---------------------------------------------------------------------------------------------------------4) (DONE)
     bool SavePlaylist(const QString &name, const QStringList &newListOfSongs, QMediaPlaylist *currentPlaylist);//----------------------------------------------------5) (DONE)
     bool SavePlaylist(const QString &name, const QStringList &newListOfSongs);//-------------------------------------------------------------------------------------6) (DONE)
     bool SavePlaylist(const QString &name);//------------------------------------------------------------------------------------------------------------------------7) (DONE)
@@ -173,12 +164,10 @@ private:
 
     /*--------------------------------------------------Objects of class--------------------------------------------------*/
 private:
-    QFileDialog *dialog = nullptr; //-------------------------- to open file dialog of system to get files
     QDir *settingsDir = nullptr; //---------------------------- works with dir and paths of system
     QStringList allSongs; //----------------------------------- list with paths of all songs
     QString currentPlaylistName; //---------------------------- name of playlist
     QMediaPlaylist *currentPlaylist = nullptr; //-------------- current playlist
-    QMediaPlaylist *defaultPlaylist = nullptr; //-------------- plsylist for all songs (default playlist)
     /*--------------------------------------------------Objects of class--------------------------------------------------*/
 };
 
