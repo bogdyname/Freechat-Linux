@@ -13,7 +13,7 @@ Playlist::Playlist()
 {
     try
     {
-        Playlist::settingsDir = new QDir();
+        Playlist::cd = new QDir();
         Playlist::currentPlaylist = new QMediaPlaylist();
     }
     catch(std::bad_alloc &exp)
@@ -36,27 +36,25 @@ Playlist::Playlist()
     {
         //Create playlist with all songs
         //For get all songs into 'allSongs' variable
-        Playlist::settingsDir->QDir::setCurrent(QCoreApplication::applicationDirPath() + "/music/");
-        Playlist::allSongs = Playlist::settingsDir->QDir::entryList(QStringList() << "*.mp3" << "*.MP3" << "*.wav" << "*.WAV", QDir::Files);
+        Playlist::cd->QDir::setCurrent(QCoreApplication::applicationDirPath() + "/music/");
+        Playlist::allSongs = Playlist::cd->QDir::entryList(QStringList() << "*.mp3" << "*.MP3" << "*.wav" << "*.WAV", QDir::Files);
 
         QMediaPlaylist *buffer = new QMediaPlaylist();
 
         for(const QString &iter : Playlist::allSongs)
-            buffer->QMediaPlaylist::addMedia(QMediaContent(QUrl::fromLocalFile(iter)));//add song into playlist
+            buffer->QMediaPlaylist::addMedia(QMediaContent(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/music/" + iter)));//add song into playlist
 
         if(buffer->QMediaPlaylist::save(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/all.m3u"), "m3u"))
             delete buffer;
 
-        #ifndef Q_DEBUG
         qDebug() << "Playlist 'all' created";
-        #endif
     }
     else
     {
         //Reboot songs inside playlist with all songs
         //For get all songs into 'allSongs' variable
-        Playlist::settingsDir->QDir::setCurrent(QCoreApplication::applicationDirPath() + "/music/");
-        Playlist::allSongs = Playlist::settingsDir->QDir::entryList(QStringList() << "*.mp3" << "*.MP3" << "*.wav" << "*.WAV", QDir::Files);
+        Playlist::cd->QDir::setCurrent(QCoreApplication::applicationDirPath() + "/music/");
+        Playlist::allSongs = Playlist::cd->QDir::entryList(QStringList() << "*.mp3" << "*.MP3" << "*.wav" << "*.WAV", QDir::Files);
 
         QMediaPlaylist *buffer = new QMediaPlaylist();
 
@@ -64,28 +62,22 @@ Playlist::Playlist()
         buffer->QMediaPlaylist::clear();
 
         for(const QString &iter : Playlist::allSongs)
-            buffer->QMediaPlaylist::addMedia(QMediaContent(QUrl::fromLocalFile(iter)));//add song into playlist
+            buffer->QMediaPlaylist::addMedia(QMediaContent(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/music/" + iter)));//add song into playlist
 
         if(buffer->QMediaPlaylist::save(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/all.m3u"), "m3u"))
             delete buffer;
 
-        #ifndef Q_DEBUG
         qDebug() << "Playlist 'all' already exists!";
-        #endif
     }
 
     //For bin folder
-    Playlist::settingsDir->QDir::setCurrent(QCoreApplication::applicationDirPath());
+    Playlist::cd->QDir::setCurrent(QCoreApplication::applicationDirPath());
 
     //Check folder of settings/playlist
-    if(Playlist::settingsDir->QDir::mkdir("bin"))
-        #ifndef Q_DEBUG
+    if(Playlist::cd->QDir::mkdir("bin"))
         qDebug() << "Folder 'bin' created";
-        #endif
     else
-        #ifndef Q_DEBUG
         qDebug() << "Folder 'bin' already exists!";
-        #endif
 
     /*---------------------------------signals with slots---------------------------------*/
     /*
@@ -129,7 +121,7 @@ Playlist::Playlist()
 
 Playlist::~Playlist()
 {
-    delete Playlist::settingsDir;
+    delete Playlist::cd;
     delete Playlist::currentPlaylist;
 
     return;
@@ -340,13 +332,9 @@ QMediaPlaylist* Playlist::GetCurrentPlayList()
 void Playlist::LoadPlayList(const QString &name)
 {
     if(Playlist::LookingForPlayList(name, Playlist::currentPlaylist))
-        #ifndef Q_DEBUG
         qDebug() << "loaded playlist";
-        #endif
     else
-        #ifndef Q_DEBUG
         qCritical() << "error: can't load playlist";
-        #endif
 
     return;
 }
@@ -364,18 +352,12 @@ QStringList Playlist::GetSongsFromCurrentPlayList(const QString &nameOfPlayList)
     QFile file;
     file.QFile::setFileName(path);
 
-    #ifndef Q_DEBUG
     qDebug() << path;
-    #endif
 
     if(file.QFile::exists())
     {
         if(!file.QFile::open(QFile::ReadOnly))
-        {
-            #ifndef Q_DEBUG
             qCritical() << "error: can't open playlist";
-            #endif
-        }
         else
         {
             QTextStream stream(&file);
@@ -387,13 +369,14 @@ QStringList Playlist::GetSongsFromCurrentPlayList(const QString &nameOfPlayList)
         }
     }
     else
-    {
-        #ifndef Q_DEBUG
         qCritical() << "error: file not exists";
-        #endif
-    }
 
     return songs;
+}
+
+const QStringList Playlist::GetAllTracks()
+{
+    return Playlist::allSongs;
 }
 
 /*--------------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -410,7 +393,7 @@ bool Playlist::CreatePlayList(const QString &name, const QStringList &list)
         return false;
 
     Playlist::CheckSettingsDir();
-    Playlist::settingsDir->QDir::setCurrent(QCoreApplication::applicationDirPath());
+    Playlist::cd->QDir::setCurrent(QCoreApplication::applicationDirPath());
 
     QMediaPlaylist *bufferPlaylist = new QMediaPlaylist();
 
@@ -466,7 +449,7 @@ bool Playlist::SavePlaylist(const QString &name, const QStringList &newListOfSon
     if(name == "" && newListOfSongs.QStringList::isEmpty())
         return false;
 
-    Playlist::settingsDir->QDir::setCurrent(QCoreApplication::applicationDirPath());
+    Playlist::cd->QDir::setCurrent(QCoreApplication::applicationDirPath());
     currentPlaylist->QMediaPlaylist::clear();
 
     for(const QString &iter : newListOfSongs)
@@ -490,7 +473,7 @@ bool Playlist::SavePlaylist(const QString &name, const QStringList &newListOfSon
     if(name == "" && newListOfSongs.QStringList::isEmpty())
         return false;
 
-    Playlist::settingsDir->QDir::setCurrent(QCoreApplication::applicationDirPath());
+    Playlist::cd->QDir::setCurrent(QCoreApplication::applicationDirPath());
 
     QMediaPlaylist *bufferPlaylist = new QMediaPlaylist();
 
@@ -540,7 +523,7 @@ bool Playlist::RenamePlayList(const QString &newName, QMediaPlaylist *currentPla
     if(newName == "")
         return false;
 
-    Playlist::settingsDir->QDir::setCurrent(QCoreApplication::applicationDirPath());
+    Playlist::cd->QDir::setCurrent(QCoreApplication::applicationDirPath());
 
     if(currentPlaylist->QMediaPlaylist::save(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/" + newName + ".m3u"), "m3u"))
         return true;
@@ -553,7 +536,7 @@ bool Playlist::RenamePlayList(const QString &newName, const QString &currentName
     if((newName == "") && (currentName == ""))
         return false;
 
-    Playlist::settingsDir->QDir::setCurrent(QCoreApplication::applicationDirPath());
+    Playlist::cd->QDir::setCurrent(QCoreApplication::applicationDirPath());
 
     QMediaPlaylist *bufferPlaylist = new QMediaPlaylist();
     bufferPlaylist->QMediaPlaylist::load(QCoreApplication::applicationDirPath() + "/bin/" + currentName + "m3u");
@@ -574,19 +557,15 @@ bool Playlist::CheckSettingsDir()
 {
     if(QDir("bin").QDir::exists() == false)
     {
-        Playlist::settingsDir->QDir::mkdir("bin");
+        Playlist::cd->QDir::mkdir("bin");
 
-        #ifndef Q_DEBUG
         qDebug() << "Folder 'bin' created";
-        #endif
 
         return false;
     }
     else
     {
-        #ifndef Q_DEBUG
         qCritical() << "Folder 'bin' already exists!";
-        #endif
 
         return true;
     }
@@ -597,7 +576,7 @@ bool Playlist::AddSongIntoPlayListByName(const QString &song, const QString &nam
     if((song == "") && (nameOfPlayList == ""))
         return false;
 
-    Playlist::settingsDir->QDir::setCurrent(QCoreApplication::applicationDirPath()); // set default playlist
+    Playlist::cd->QDir::setCurrent(QCoreApplication::applicationDirPath()); // set default playlist
     const QString formatOfSong = Playlist::GetFormatOfSong(nameOfCurrentPlayList, index); // get format by index inside current playlist
 
     QMediaPlaylist *bufferPlaylist = new QMediaPlaylist();
@@ -656,6 +635,60 @@ QString Playlist::ParseStringToGetFormat(const QString &string)
             buffer.QString::push_front(*iter);
         }
     }
+
+    return buffer;
+}
+
+QStringList Playlist::ParseToGetFullPathOfTracks(const QStringList &list)
+{
+    Playlist::cd->QDir::setCurrent(QCoreApplication::applicationDirPath() + "/music/");
+    QStringList allSongs = Playlist::cd->QDir::entryList(QStringList() << "*.mp3" << "*.MP3" << "*.wav" << "*.WAV", QDir::Files);
+    Playlist::cd->QDir::setCurrent(QCoreApplication::applicationDirPath());
+
+    QStringList bufferlist = {}; //july.mp3 //july
+
+    for(const QString &iterForAllSongs : allSongs)
+    {
+        QString::const_iterator iter = iterForAllSongs.QString::end() - 5; //start after dot
+        QString buffer = "";
+
+        qDebug() << "buffer: " << buffer;
+        qDebug() << "list: " << iterForAllSongs;
+
+        for(; iter != iterForAllSongs.QString::begin() - 1; --iter)
+        {
+                //unix like      //windows
+            if(!(*iter == "/") || !(*iter == "\\"))
+                buffer.QString::push_front(*iter); //if char not '/' or '\' write chat into buffer
+            else
+                break; //else just break cycle
+        }
+        //now buffer = 'july'
+
+        for(const QString &iterForList : list)
+            if(iterForList == buffer)
+            {
+                qDebug() << "buffer: " << buffer;
+                qDebug() << "list: " << iterForList;
+                bufferlist.QStringList::push_back(QCoreApplication::applicationDirPath() + "/music/" + iterForAllSongs);
+            }
+    }
+
+    return bufferlist;
+}
+
+QString Playlist::ParseStringToRemoveFormatAndCurrentPath(const QString &string)
+{
+    QString::const_iterator iter = string.QString::end() - 5;
+    QString buffer = "";
+
+    qDebug() << "FULL PATH: " << string;
+
+    for(; iter != string.QString::begin() - 1; --iter)
+        if(*iter == "/" || *iter == "\\")
+            break;
+        else
+            buffer.QString::push_front(*iter);
 
     return buffer;
 }

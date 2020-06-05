@@ -183,8 +183,6 @@ private slots:
 
 private:
     QStringList GetAllItemsFromList();
-    QStringList ParseToGetFullPathOfTracks(const QStringList &list);
-    QString ParseStringToRemoveFormat(const QString &string);
 
 private:
     //UI--------------------------------------------------------------
