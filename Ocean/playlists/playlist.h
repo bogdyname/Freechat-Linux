@@ -119,16 +119,21 @@ public slots:
     /*
         1) get name of current playlist
         2) get current playlist
-        4) load all songs (default playlist)
-        5) load playlist by name
-        6) get songs from current playlist by name of playlist
+        3) load all songs (default playlist)
+        4) load playlist by name
+        5) get songs from current playlist by name of playlist
+        6) Parser for song to get full path of tracks
+        7) Parser to remove format and full path
     */
 public:
     QString GetCurrentPlayListName(); //--------------------------------------------------------------------------------1) (DONE)
     QMediaPlaylist* GetCurrentPlayList(); //----------------------------------------------------------------------------2) (DONE)
-    void LoadPlayList(const QString &name); //--------------------------------------------------------------------------5) (DONE)
-    QStringList GetSongsFromCurrentPlayList(const QString &nameOfPlayList); //------------------------------------------6) (DONE)
-    /*----------------------------------------Methods for get data about playlist----------------------------------------*/
+    void LoadPlayList(const QString &name); //--------------------------------------------------------------------------3) (DONE)
+    QStringList GetSongsFromCurrentPlayList(const QString &nameOfPlayList); //------------------------------------------4) (DONE)
+    const QStringList GetAllTracks();//---------------------------------------------------------------------------------5) (DONE)
+    QStringList ParseToGetFullPathOfTracks(const QStringList &list);//--------------------------------------------------6) (DONE)
+    QString ParseStringToRemoveFormatAndCurrentPath(const QString &string);//-------------------------------------------7) (DONE)
+    /*-----------------------------------------Methods for get data about playlist----------------------------------------*/
 
 
     /*----------------------------------------Methods for call it in Private SLOTS----------------------------------------*/
@@ -164,7 +169,7 @@ private:
 
     /*--------------------------------------------------Objects of class--------------------------------------------------*/
 private:
-    QDir *settingsDir = nullptr; //---------------------------- works with dir and paths of system
+    QDir *cd = nullptr; //---------------------------- works with dir and paths of system
     QStringList allSongs; //----------------------------------- list with paths of all songs
     QString currentPlaylistName; //---------------------------- name of playlist
     QMediaPlaylist *currentPlaylist = nullptr; //-------------- current playlist
