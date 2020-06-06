@@ -311,6 +311,14 @@ void Playlist::SetPreviousTrack()
 
     return;
 }
+
+void Playlist::SetTrackByIndex(QListWidgetItem *indexOfTrack)
+{
+    const unsigned short int index = indexOfTrack->listWidget()->row(indexOfTrack);
+    Playlist::currentPlaylist->QMediaPlaylist::setCurrentIndex(index);
+
+    return;
+}
 /*--------------------------------------------------------------------------------------------------------------------------------------------------*/
 /*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||SLOTS PUBLIC|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
 /*--------------------------------------------------------------------------------------------------------------------------------------------------*/
