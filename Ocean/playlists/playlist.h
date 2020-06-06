@@ -18,6 +18,7 @@
 #include <QFileDialog>
 #include <QMediaObject>
 #include <QMediaPlaylist>
+#include <QListWidgetItem>
 #include <QCoreApplication>
 
 class Playlist : public QMediaPlaylist
@@ -108,10 +109,12 @@ private slots:
     /*
         1) set next track
         2) set previuos track
+        3) set track by index
     */
 public slots:
     void SetNextTrack();
     void SetPreviousTrack();
+    void SetTrackByIndex(QListWidgetItem *indexOfTrack);
     /*--------------------------------------------------------SLOTS--------------------------------------------------------*/
 
 

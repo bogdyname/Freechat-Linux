@@ -187,6 +187,7 @@ Ocean::Ocean(QWidget *parent)
     3)Playlist manager
         3.1) next track
         3.2) previous track
+        3.3) set track by index
     ---------------------Managers---------------------
 
     -----------------------UI-------------------------
@@ -227,6 +228,7 @@ Ocean::Ocean(QWidget *parent)
     //Playlist manager
     QObject::connect(Ocean::nextTrack, &QPushButton::clicked, Ocean::playlistmanager, &Playlist::SetNextTrack);
     QObject::connect(Ocean::previousTrack, &QPushButton::clicked, Ocean::playlistmanager, &Playlist::SetPreviousTrack);
+    QObject::connect(Ocean::musicList, &QListWidget::itemDoubleClicked, Ocean::playlistmanager, &Playlist::SetTrackByIndex);
 
     //UI-----------------------------------------------
     //UI Lists
@@ -335,6 +337,7 @@ void Ocean::PassNamesOfSongsToMusicList(const QStringList &songs)
     for(QString &iter : buffer)
         iter = Ocean::playlistmanager->Playlist::ParseStringToRemoveFormatAndCurrentPath(iter);
 
+    Ocean::musicList->QListWidget::clear();
     Ocean::musicList->QListWidget::addItems(buffer);
 
     return;
@@ -413,10 +416,8 @@ void Ocean::ParseMusicList(const QString &name)
     QListWidgetItem *item;
 
     for (unsigned short int iter = 0; iter < Ocean::musicList->QListWidget::selectedItems().QList::size(); ++iter)
-    {
         // Get current item on selected row (music list)
         item = Ocean::musicList->QListWidget::item(Ocean::musicList->QListWidget::currentRow());
-    }
 
     //REBUILD WITH AND TEST IT
     //emit Ocean::playlistmanager->Playlist::CallOutAddSongIntoPlayList(item->QListWidgetItem::text(), //name of song
