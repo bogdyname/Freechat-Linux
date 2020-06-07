@@ -140,13 +140,9 @@ void Playlist::SaveCurrentPlayList(const QString &name, const QStringList &newLi
         return;
 
     if(Playlist::SavePlaylist(name, newListOfSongs, currentPlaylist))
-        #ifndef Q_DEBUG
         qDebug() << "playlist successed saved";
-        #endif
     else
-        #ifndef Q_DEBUG
         qCritical() << "error: can't save playlist";
-        #endif
 
     return;
 }
@@ -157,13 +153,9 @@ void Playlist::SaveSelectedPlayList(const QString &name, const QStringList &newL
         return;
 
     if(Playlist::SavePlaylist(name, newListOfSongs))
-        #ifndef Q_DEBUG
         qDebug() << "playlist successed saved";
-        #endif
     else
-        #ifndef Q_DEBUG
         qCritical() << "error: can't save playlist";
-        #endif
 
     return;
 }
@@ -174,13 +166,9 @@ void Playlist::SaveNewPlayList(const QString &name)
         return;
 
     if(Playlist::SavePlaylist(name))
-        #ifndef Q_DEBUG
         qDebug() << "playlist successed saved";
-        #endif
     else
-        #ifndef Q_DEBUG
         qCritical() << "error: can't save playlist";
-        #endif
 
     return;
 }
@@ -191,13 +179,9 @@ void Playlist::RenameCurrentPlayList(const QString &newName, QMediaPlaylist *cur
         return;
 
     if(Playlist::RenamePlayList(newName, currentPlaylist))
-        #ifndef Q_DEBUG
         qDebug() << "playlist successed renamed with new name: " << newName;
-        #endif
     else
-        #ifndef Q_DEBUG
         qCritical() << "error: can't rename playlist " << newName;
-        #endif
 }
 
 void Playlist::RenameSelectedPlayList(const QString &newName, const QString &currentName)
@@ -207,16 +191,12 @@ void Playlist::RenameSelectedPlayList(const QString &newName, const QString &cur
 
     if(Playlist::RenamePlayList(newName, currentName))
     {
-        #ifndef Q_DEBUG
         qDebug() << "Playlist name: " << currentName;
         qDebug() << "Playlist new name: " << newName;
         qDebug() << "playlist successed renamed";
-        #endif
     }
     else
-        #ifndef Q_DEBUG
         qCritical() << "error: can't rename playlist";
-        #endif
 
     return;
 }
@@ -235,13 +215,9 @@ void Playlist::CreateNewPlayList(const QString &name, const QStringList &tracks)
         return;
 
     if(Playlist::CreatePlayList(name, tracks))
-        #ifndef Q_DEBUG
         qDebug() << "play list successed created! " + name;
-        #endif
     else
-        #ifndef Q_DEBUG
         qCritical() << "error create play list! " + name;
-        #endif
 
     return;
 }
@@ -252,13 +228,9 @@ void Playlist::RemovePlayListByName(const QString &name)
         return;
 
     if(Playlist::RemovePlayList(name))
-        #ifndef Q_DEBUG
         qDebug() << "playlist successed removed: " << name;
-        #endif
     else
-        #ifndef Q_DEBUG
         qCritical() << "error: can't remove playlist " << name;
-        #endif
 
     return;
 }
@@ -266,13 +238,9 @@ void Playlist::RemovePlayListByName(const QString &name)
 void Playlist::AddSongIntoPlayList(const QString &song, const QString &nameOfPlayList, const QString &nameOfCurrentPlayList, const unsigned short int &index)
 {
     if(Playlist::AddSongIntoPlayListByName(song, nameOfPlayList, nameOfCurrentPlayList, index))
-        #ifndef Q_DEBUG
         qDebug() << "song successed added into '" << nameOfPlayList << "' -" << song;
-        #endif
     else
-        #ifndef Q_DEBUG
         qCritical() << "error: can't add sog into playlist '" << nameOfPlayList << "' -" << song;
-        #endif
 
     return;
 }
@@ -280,13 +248,9 @@ void Playlist::AddSongIntoPlayList(const QString &song, const QString &nameOfPla
 void Playlist::AddSongIntoPlayListFromDefaultPlayList(const QString &song, const QString &nameOfPlayList, const unsigned short int &index)
 {
     if(Playlist::AddSongIntoPlayListByName(song, nameOfPlayList, "default", index))
-        #ifndef Q_DEBUG
         qDebug() << "song successed added into '" << nameOfPlayList << "' -" << song;
-        #endif
     else
-        #ifndef Q_DEBUG
         qCritical() << "error: can't add sog into playlist '" << nameOfPlayList << "' -" << song;
-        #endif
 
     return;
 }
@@ -464,10 +428,8 @@ bool Playlist::SavePlaylist(const QString &name, const QStringList &newListOfSon
     {
         currentPlaylist->QMediaPlaylist::addMedia(QMediaContent(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/music/" + iter)));
 
-        #ifndef Q_DEBUG
         qDebug() << iter;
         qDebug() << currentPlaylist->QMediaPlaylist::mediaCount();
-        #endif
     }
 
     if(currentPlaylist->QMediaPlaylist::save(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/" + name + ".m3u"), "m3u"))
@@ -489,10 +451,8 @@ bool Playlist::SavePlaylist(const QString &name, const QStringList &newListOfSon
     {
         bufferPlaylist->QMediaPlaylist::addMedia(QMediaContent(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/music/" + iter)));
 
-        #ifndef Q_DEBUG
         qDebug() << iter;
         qDebug() << bufferPlaylist->QMediaPlaylist::mediaCount();
-        #endif
     }
 
     if(bufferPlaylist->QMediaPlaylist::save(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/" + name + ".m3u"), "m3u"))
