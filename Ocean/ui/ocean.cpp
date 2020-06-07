@@ -224,7 +224,7 @@ Ocean::Ocean(QWidget *parent)
     //Player manager
     QObject::connect(Ocean::playTrack, &QPushButton::clicked, Ocean::playermanager, &QMediaPlayer::play);
     QObject::connect(Ocean::stopTrack, &QPushButton::clicked, Ocean::playermanager, &QMediaPlayer::stop);
-    QObject::connect(Ocean::playlistmanager, &Playlist::SetCurrentPlayList, Ocean::playermanager, &QMediaPlayer::setPlaylist);
+    QObject::connect(Ocean::playlistmanager, &Playlist::SetCurrentPlayList, Ocean::playermanager, &QMediaPlayer::setPlaylist); //check THIS SIDE BY DOUBLE CLICKED IN PLAYLIST WODGET
     //Playlist manager
     QObject::connect(Ocean::nextTrack, &QPushButton::clicked, Ocean::playlistmanager, &Playlist::SetNextTrack);
     QObject::connect(Ocean::previousTrack, &QPushButton::clicked, Ocean::playlistmanager, &Playlist::SetPreviousTrack);
@@ -236,7 +236,7 @@ Ocean::Ocean(QWidget *parent)
     QObject::connect(Ocean::playLists, &QListWidget::itemDoubleClicked, this, &Ocean::GetNameOfSelectedPlaylist);
     QObject::connect(Ocean::playLists, &QListWidget::itemDoubleClicked, this, &Ocean::GetNamesOfSongsToMusicList);
     QObject::connect(Ocean::playLists, &QListWidget::itemClicked, this, &Ocean::GetNamesOfSongsToMusicList);
-    QObject::connect(Ocean::playLists, &QListWidget::itemDoubleClicked, this, &Ocean::SetPlayList);
+    QObject::connect(Ocean::playLists, &QListWidget::itemDoubleClicked, this, &Ocean::SetPlayList);                           //check THIS SIDE BY DOUBLE CLICKED IN PLAYLIST WODGET
     QObject::connect(Ocean::playLists, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(ShowContextMenuOfPlayList(QPoint)));
     QObject::connect(Ocean::musicList, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(ShowContextMenuOfMusicList(QPoint)));
     QObject::connect(this, &Ocean::CallOutPassNamesOfSongsToMusicList, this, &Ocean::PassNamesOfSongsToMusicList);
