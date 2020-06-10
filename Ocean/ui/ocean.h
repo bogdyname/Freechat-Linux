@@ -167,15 +167,13 @@ private slots:
         1) Timer for Ocean::getStringFromUser
         2) Timer for Ocean::getStringWithSelectedPlaylist
         3) Timer for Ocean::getAddedTracksFromWidget
-        4) Get name of selected playlist
-        5) Get names of playlists from 'bin' dir
-        6) Create widget after widget for get string from user
+        4) Get names of playlists from 'bin' dir
+        5) Create widget after widget for get string from user
     */
 
     void IfgetStringFromUserClosed();//-----------------------------------------1
     void IfgetStringWithSelectedPlaylistClosed();//-----------------------------2
     void IfgetAddedTracksFromWidgetClosed();//----------------------------------3
-    void GetNameOfSelectedPlaylist(QListWidgetItem *item);//--------------------4
     QStringList GetNamesOfPlaylistsFromBinDir();//------------------------------5
     void CallWidgetAfterCreatePlaylistSlot();//---------------------------------6
 
@@ -214,7 +212,6 @@ private:
     //TOOLS-----------------------------------------------------------
     //ToolS for widgets
     QTimer *timerForCheckWidgets = nullptr;
-    QString currentPlaylist;
     QStringList bufferOfAddedTracks = {};
     QDir *cd = nullptr;
     //TOOLS-----------------------------------------------------------

@@ -85,6 +85,8 @@ void AddMusicWidget::DoubleClickedAddedSongsList(QListWidgetItem *item)
 
 void AddMusicWidget::ClickedCancel()
 {
+    AddMusicWidget::allSongs->QListWidget::clear();
+    AddMusicWidget::addedSongs->QListWidget::clear();
     emit this->AddMusicWidget::BreakeWidget();
 
     return;
@@ -92,6 +94,8 @@ void AddMusicWidget::ClickedCancel()
 
 void AddMusicWidget::ClickedOkay()
 {
+    AddMusicWidget::allSongs->QListWidget::clear();
+    AddMusicWidget::addedSongs->QListWidget::clear();
     emit this->AddMusicWidget::SendListWithSongs(AddMusicWidget::GetAddedSongsFromListWidget());
 
     return;
