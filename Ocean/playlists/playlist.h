@@ -36,8 +36,6 @@ public:
 
     /*-------------------------------------------------------SIGNALS-------------------------------------------------------*/
     /*
-        1) set playlist for player class
-            1.1) set current playlist
         2) save
             2.1) save current playlist by name and media playlist
             2.2) save selected playlist by name
@@ -53,8 +51,6 @@ public:
            7.2) add song into platlist from all songs (default playlist)
     */
 signals:
-    /*----------------------------------------set playlist player----------------------------------------*/
-    void SetCurrentPlayList(QMediaPlaylist *currentPlaylist);
     /*----------------------------------------save------------------------------------------*/
     void CallOutSaveCurrentPlayList(const QString &name, const QStringList &newListOfSongs, QMediaPlaylist *currentPlaylist);
     void CallOutSaveSelectedPlayList(const QString &name, const QStringList &newListOfSongs);

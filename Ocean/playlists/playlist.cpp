@@ -54,7 +54,7 @@ Playlist::Playlist()
         //Reboot songs inside playlist with all songs
         //For get all songs into 'allSongs' variable
         Playlist::cd->QDir::setCurrent(QCoreApplication::applicationDirPath() + "/music/");
-        Playlist::allSongs = Playlist::cd->QDir::entryList(QStringList() << "*.mp3" << "*.MP3" << "*.wav" << "*.WAV", QDir::Files);
+        Playlist::allSongs = Playlist::cd->QDir::entryList(QStringList() << "*.mp3" << "*.MP3" << "*.wav" << "*.WAV" << "*.m4a" << "*.M4A", QDir::Files);
 
         QMediaPlaylist *buffer = new QMediaPlaylist();
 
@@ -191,7 +191,7 @@ void Playlist::RenameSelectedPlayList(const QString &newName, const QString &cur
 
     if(Playlist::RenamePlayList(newName, currentName))
     {
-        qDebug() << "Playlist name: " << currentName;
+        qDebug() << "Playlist current name: " << currentName;
         qDebug() << "Playlist new name: " << newName;
         qDebug() << "playlist successed renamed";
     }
@@ -406,9 +406,8 @@ bool Playlist::LookingForPlayList(const QString &name, QMediaPlaylist *medialist
 
     Playlist::CheckSettingsDir();
 
-    medialist->QMediaPlaylist::clear();
     medialist->QMediaPlaylist::load(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/" + name), "m3u");
-    medialist->setCurrentIndex(1);
+    medialist->setCurrentIndex(0);
 
     if(!medialist->QMediaPlaylist::isEmpty())
         return true;

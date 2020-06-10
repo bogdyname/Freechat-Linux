@@ -10,7 +10,6 @@ CONFIG += c++17
 
 DEFINES += QT_DEPRECATED_WARNINGS
 
-
 SOURCES += \
     imports/importmanager.cpp \
     main.cpp \

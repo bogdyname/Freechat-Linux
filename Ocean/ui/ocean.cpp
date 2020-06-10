@@ -158,8 +158,6 @@ Ocean::Ocean(QWidget *parent)
     //Timer for check widget of create playlist
     Ocean::timerForCheckWidgets->QTimer::setInterval(500);
     Ocean::timerForCheckWidgets->QTimer::start();
-    //String to get selected playlist
-    Ocean::currentPlaylist = "";
 
     //Load playlists
     QStringList buffer = Ocean::GetNamesOfPlaylistsFromBinDir();
@@ -224,7 +222,6 @@ Ocean::Ocean(QWidget *parent)
     //Player manager
     QObject::connect(Ocean::playTrack, &QPushButton::clicked, Ocean::playermanager, &QMediaPlayer::play);
     QObject::connect(Ocean::stopTrack, &QPushButton::clicked, Ocean::playermanager, &QMediaPlayer::stop);
-    QObject::connect(Ocean::playlistmanager, &Playlist::SetCurrentPlayList, Ocean::playermanager, &QMediaPlayer::setPlaylist); //check THIS SIDE BY DOUBLE CLICKED IN PLAYLIST WODGET
     //Playlist manager
     QObject::connect(Ocean::nextTrack, &QPushButton::clicked, Ocean::playlistmanager, &Playlist::SetNextTrack);
     QObject::connect(Ocean::previousTrack, &QPushButton::clicked, Ocean::playlistmanager, &Playlist::SetPreviousTrack);
@@ -232,13 +229,14 @@ Ocean::Ocean(QWidget *parent)
 
     //UI-----------------------------------------------
     //UI Lists
-    QObject::connect(Ocean::playLists, &QListWidget::itemClicked, this, &Ocean::GetNameOfSelectedPlaylist);
-    QObject::connect(Ocean::playLists, &QListWidget::itemDoubleClicked, this, &Ocean::GetNameOfSelectedPlaylist);
-    QObject::connect(Ocean::playLists, &QListWidget::itemDoubleClicked, this, &Ocean::GetNamesOfSongsToMusicList);
     QObject::connect(Ocean::playLists, &QListWidget::itemClicked, this, &Ocean::GetNamesOfSongsToMusicList);
-    QObject::connect(Ocean::playLists, &QListWidget::itemDoubleClicked, this, &Ocean::SetPlayList);                           //check THIS SIDE BY DOUBLE CLICKED IN PLAYLIST WODGET
+
+    QObject::connect(Ocean::playLists, &QListWidget::itemDoubleClicked, this, &Ocean::SetPlayList);
+    QObject::connect(Ocean::playLists, &QListWidget::itemDoubleClicked, this, &Ocean::GetNamesOfSongsToMusicList);
+
     QObject::connect(Ocean::playLists, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(ShowContextMenuOfPlayList(QPoint)));
     QObject::connect(Ocean::musicList, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(ShowContextMenuOfMusicList(QPoint)));
+
     QObject::connect(this, &Ocean::CallOutPassNamesOfSongsToMusicList, this, &Ocean::PassNamesOfSongsToMusicList);
     QObject::connect(this, &Ocean::CallOutToCreateWindowThisWidgetToGetAddedTracks, this, &Ocean::CallWidgetAfterCreatePlaylistSlot);
     //Widget for get string from user
@@ -491,8 +489,7 @@ void Ocean::SetPlayList(QListWidgetItem *item)
     emit Ocean::playlistmanager->Playlist::CallOutSetCurrentPlayListName(item->QListWidgetItem::text());
     //load
     Ocean::playlistmanager->Playlist::LoadPlayList(Ocean::playlistmanager->Playlist::GetCurrentPlayListName() + ".m3u");
-    //Emit signal from Playlist.h with current playlist
-    emit Ocean::playlistmanager->Playlist::SetCurrentPlayList(Ocean::playlistmanager->Playlist::GetCurrentPlayList());
+    Ocean::playermanager->QMediaPlayer::setPlaylist(Ocean::playlistmanager->Playlist::GetCurrentPlayList());
     //show songs in music list
     emit this->Ocean::CallOutPassNamesOfSongsToMusicList(Ocean::playlistmanager->Playlist::GetSongsFromCurrentPlayList(item->QListWidgetItem::text() + ".m3u"));
 
@@ -585,15 +582,6 @@ void Ocean::IfgetAddedTracksFromWidgetClosed()
         this->QWidget::setEnabled(true);
     else
         this->QWidget::setDisabled(true);
-
-    return;
-}
-
-void Ocean::GetNameOfSelectedPlaylist(QListWidgetItem *item)
-{
-    Ocean::currentPlaylist = item->QListWidgetItem::text();
-
-    qDebug() << "Selected playlist: " << Ocean::currentPlaylist;
 
     return;
 }
