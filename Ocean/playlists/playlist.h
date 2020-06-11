@@ -127,7 +127,7 @@ public slots:
 public:
     QString GetCurrentPlayListName(); //--------------------------------------------------------------------------------1) (DONE)
     QMediaPlaylist* GetCurrentPlayList(); //----------------------------------------------------------------------------2) (DONE)
-    void LoadPlayList(const QString &name); //--------------------------------------------------------------------------3) (DONE)
+    bool LoadPlayList(const QString &name); //--------------------------------------------------------------------------3) (DONE)
     QStringList GetSongsFromCurrentPlayList(const QString &nameOfPlayList); //------------------------------------------4) (DONE)
     const QStringList GetAllTracks();//---------------------------------------------------------------------------------5) (DONE)
     QStringList ParseToGetFullPathOfTracks(const QStringList &list);//--------------------------------------------------6) (DONE)
