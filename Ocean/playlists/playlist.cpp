@@ -301,14 +301,18 @@ QMediaPlaylist* Playlist::GetCurrentPlayList()
     return Playlist::currentPlaylist;
 }
 
-void Playlist::LoadPlayList(const QString &name)
+bool Playlist::LoadPlayList(const QString &name)
 {
     if(Playlist::LookingForPlayList(name, Playlist::currentPlaylist))
+    {
         qDebug() << "loaded playlist";
+        return true;
+    }
     else
+    {
         qCritical() << "error: can't load playlist";
-
-    return;
+        return false;
+    }
 }
 
 QStringList Playlist::GetSongsFromCurrentPlayList(const QString &nameOfPlayList)
@@ -609,7 +613,7 @@ QString Playlist::ParseStringToGetFormat(const QString &string)
 QStringList Playlist::ParseToGetFullPathOfTracks(const QStringList &list)
 {
     Playlist::cd->QDir::setCurrent(QCoreApplication::applicationDirPath() + "/music/");
-    QStringList allSongs = Playlist::cd->QDir::entryList(QStringList() << "*.mp3" << "*.MP3" << "*.wav" << "*.WAV", QDir::Files);
+    QStringList allSongs = Playlist::cd->QDir::entryList(QStringList() << "*.mp3" << "*.MP3" << "*.wav" << "*.WAV" << "*.m4a" << "*.M4A", QDir::Files);
     Playlist::cd->QDir::setCurrent(QCoreApplication::applicationDirPath());
 
     QStringList bufferlist = {}; //july.mp3 //july
