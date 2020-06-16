@@ -365,6 +365,9 @@ const QStringList Playlist::GetAllTracks()
 /*--------------------------------------------------------------------------------------------------------------------------------------------------*/
 bool Playlist::CreatePlayList(const QString &name, const QStringList &list)
 {
+    qDebug() << "Name of playlist: " << name;
+    qDebug() << "SONGS: " << list;
+
     if((name == "") || (list.QStringList::isEmpty()))
         return false;
 

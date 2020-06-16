@@ -94,9 +94,10 @@ void AddMusicWidget::ClickedCancel()
 
 void AddMusicWidget::ClickedOkay()
 {
+    emit this->AddMusicWidget::SendListWithSongs(AddMusicWidget::GetAddedSongsFromListWidget());
+
     AddMusicWidget::allSongs->QListWidget::clear();
     AddMusicWidget::addedSongs->QListWidget::clear();
-    emit this->AddMusicWidget::SendListWithSongs(AddMusicWidget::GetAddedSongsFromListWidget());
 
     return;
 }
