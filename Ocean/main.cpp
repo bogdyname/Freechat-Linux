@@ -10,15 +10,15 @@
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
+    QApplication app(argc, argv);
 
     QFile *file = new QFile(":/style.css");
-    file->QIODevice::open(QFile::ReadOnly);
-    a.QApplication::setStyleSheet(file->QIODevice::readAll());
+    file->QFile::open(QFile::ReadOnly);
+    app.QApplication::setStyleSheet(file->QFile::readAll());
 
     Ocean window;
 
     window.QWidget::show();
 
-    return a.QApplication::exec();
+    return app.QApplication::exec();
 }
