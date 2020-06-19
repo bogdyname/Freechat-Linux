@@ -493,8 +493,7 @@ void Ocean::SetPlayList(QListWidgetItem *item)
         Ocean::playermanager->QMediaPlayer::setPlaylist(Ocean::playlistmanager->Playlist::GetCurrentPlayList());
         Ocean::playermanager->QMediaPlayer::play();
     }
-    else
-        qDebug() << "ERRRRRORRR";
+
     //show songs in music list
     emit this->Ocean::CallOutPassNamesOfSongsToMusicList(Ocean::playlistmanager->Playlist::GetSongsFromCurrentPlayList(item->QListWidgetItem::text() + ".m3u"));
 
