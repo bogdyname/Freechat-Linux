@@ -95,7 +95,7 @@ void ImportManager::SaveFilesIntoMusicFolderAndDeleteIt(const QStringList &paths
     {
         ImportManager::mp3File->QFile::setFileName(iter);
 
-        if(ImportManager::mp3File->QFile::open(QIODevice::ReadOnly))
+        if(ImportManager::mp3File->QFile::open(QFile::ReadOnly))
         {
             const QString nameOfSong = ImportManager::GetNameOfSongFromCurrentPath(iter);
 
@@ -132,9 +132,9 @@ void ImportManager::SaveFilesIntoMusicFolderOnlyCopy(const QStringList &pathsOfm
     {
         ImportManager::mp3File->QFile::setFileName(iter);
 
-        if(ImportManager::mp3File->QFile::open(QIODevice::ReadOnly))
+        if(ImportManager::mp3File->QFile::open(QFile::ReadOnly))
         {
-            const QString nameOfSong = ImportManager::GetNameOfSongFromCurrentPath(iter);
+            const QString nameOfSong(ImportManager::GetNameOfSongFromCurrentPath(iter));
 
             ImportManager::CheckDir();
             ImportManager::mp3File->QFile::copy(iter, ImportManager::musicDir->QDir::currentPath() + "/music/" + nameOfSong);
@@ -184,6 +184,9 @@ QString ImportManager::GetNameOfSongFromCurrentPath(const QString nameOfSong)
 {
     QString::const_iterator iter = nameOfSong.QString::end();
     QString buffer = "";
+
+    if(*iter == NULL)
+        iter = nameOfSong.QString::end() - 1;
 
     for(; iter != nameOfSong.QString::begin(); --iter)
     {
