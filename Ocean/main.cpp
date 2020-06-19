@@ -6,10 +6,13 @@
 
 #include "ui/ocean.h"
 #include <QApplication>
+#include <QTextCodec>
 #include <QFile>
 
 int main(int argc, char *argv[])
 {
+    QTextCodec::setCodecForLocale(QTextCodec::codecForName("utf-8"));
+
     QApplication app(argc, argv);
 
     QFile *file = new QFile(":/style.css");
