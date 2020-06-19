@@ -323,7 +323,7 @@ void Ocean::GetNamesOfSongsToMusicList(QListWidgetItem *item)
 {
     Ocean::musicList->QListWidget::clear();
 
-    emit this->Ocean::CallOutPassNamesOfSongsToMusicList(Ocean::playlistmanager->Playlist::GetSongsFromCurrentPlayList(item->QListWidgetItem::text() + ".m3u"));
+    emit this->Ocean::CallOutPassNamesOfSongsToMusicList(Ocean::playlistmanager->Playlist::GetSongsFromCurrentPlayList(item->QListWidgetItem::text() + ".m3u8"));
 
     return;
 }
@@ -488,14 +488,15 @@ void Ocean::SetPlayList(QListWidgetItem *item)
     //set name of playlist
     emit Ocean::playlistmanager->Playlist::CallOutSetCurrentPlayListName(item->QListWidgetItem::text());
     //load
-    if(Ocean::playlistmanager->Playlist::LoadPlayList(Ocean::playlistmanager->Playlist::GetCurrentPlayListName() + ".m3u"))
+    if(Ocean::playlistmanager->Playlist::LoadPlayList(Ocean::playlistmanager->Playlist::GetCurrentPlayListName() + ".m3u8"))
     {
         Ocean::playermanager->QMediaPlayer::setPlaylist(Ocean::playlistmanager->Playlist::GetCurrentPlayList());
+        //Ocean::playermanager->QMediaPlayer::setMedia(QUrl("/root/Ocean/build-Ocean-Desktop_Qt_5_13_0_GCC_64bit-Debug/music/Нервы - Самый Дорогой Человек.mp3"));
         Ocean::playermanager->QMediaPlayer::play();
     }
 
     //show songs in music list
-    emit this->Ocean::CallOutPassNamesOfSongsToMusicList(Ocean::playlistmanager->Playlist::GetSongsFromCurrentPlayList(item->QListWidgetItem::text() + ".m3u"));
+    emit this->Ocean::CallOutPassNamesOfSongsToMusicList(Ocean::playlistmanager->Playlist::GetSongsFromCurrentPlayList(item->QListWidgetItem::text() + ".m3u8"));
 
     return;
 }
@@ -593,7 +594,7 @@ void Ocean::IfgetAddedTracksFromWidgetClosed()
 QStringList Ocean::GetNamesOfPlaylistsFromBinDir()
 {
     Ocean::cd->QDir::setCurrent(QCoreApplication::applicationDirPath() + "/bin/");
-    QStringList playlists = cd->QDir::entryList(QStringList() << "*.m3u" << "*.M3U", QDir::Files);
+    QStringList playlists = cd->QDir::entryList(QStringList() << "*.m3u8" << "*.M3U8", QDir::Files);
     Ocean::cd->QDir::setCurrent(QCoreApplication::applicationDirPath());
 
     return playlists;
