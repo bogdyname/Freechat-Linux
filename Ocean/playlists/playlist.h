@@ -106,11 +106,13 @@ private slots:
         1) set next track
         2) set previuos track
         3) set track by index
+        4) check default playlist
     */
 public slots:
     void SetNextTrack();
     void SetPreviousTrack();
     void SetTrackByIndex(QListWidgetItem *indexOfTrack);
+    void CheckDefaultPlayList();
     /*--------------------------------------------------------SLOTS--------------------------------------------------------*/
 
 

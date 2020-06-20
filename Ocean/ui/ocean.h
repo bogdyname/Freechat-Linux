@@ -25,6 +25,7 @@
 #include <QTextBrowser>
 #include <QMediaPlayer>
 #include <QResizeEvent>
+#include <QMediaContent>
 #include <QMediaPlaylist>
 #include "ui_ocean.h"
 
@@ -120,6 +121,7 @@ private slots:
     // SLOTS for managers --------------------------------------------------------- 3
     // Slot for set Playlist
     void SetPlayList(QListWidgetItem *item);
+    void SetCurrentPlayList();
     // SLOTS for managers --------------------------------------------------------- 3
 
     /*---------------------------------------------MANAGERS-------------------------------------------*/

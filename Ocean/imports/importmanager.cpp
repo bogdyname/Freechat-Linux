@@ -63,6 +63,8 @@ void ImportManager::CallFileDialogWithDel()
     else
         ImportManager::SaveFilesIntoMusicFolderAndDeleteIt(pathOfFiles);
 
+    emit this->ImportManager::CallOutToCheckSongsInsideDefaultPlayList();
+
     return;
 }
 
@@ -74,6 +76,8 @@ void ImportManager::CallFileDialogOnlyCopy()
         return;
     else
         ImportManager::SaveFilesIntoMusicFolderOnlyCopy(pathOfFiles);
+
+    emit this->ImportManager::CallOutToCheckSongsInsideDefaultPlayList();
 
     return;
 }
@@ -160,6 +164,9 @@ void ImportManager::SaveFilesIntoMusicFolderOnlyCopy(const QStringList &pathsOfm
 
 bool ImportManager::CheckDir()
 {
+    //current path of app
+    ImportManager::musicDir->QDir::setCurrent(QCoreApplication::applicationDirPath());
+
     if(QDir("music").QDir::exists() == false)
     {
         ImportManager::musicDir->QDir::mkdir("music");

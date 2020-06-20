@@ -28,6 +28,7 @@ public slots:
 
 public:
     QMediaPlayer* GetPlayer();
+    qint64 GetPositionOfTrack();
 
 private:
     bool SetModOfPlayer(const unsigned short int &mod);

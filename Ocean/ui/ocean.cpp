@@ -178,6 +178,7 @@ Ocean::Ocean(QWidget *parent)
     1)Import manager connect
         1.1) Add new music and delete it via button
         1.2) Add new music (only copy) via button
+        1.3) Check added track to pass it into all songs
     2)Player manager
         2.1) play track
         2.2) stop track
@@ -219,6 +220,8 @@ Ocean::Ocean(QWidget *parent)
     //Import manager
     QObject::connect(Ocean::buttonForAddMusicWithDel, SIGNAL(clicked(bool)), Ocean::importManager, SLOT(CallFileDialogWithDel()));
     QObject::connect(Ocean::buttonForAddMusicOnlyCopy, SIGNAL(clicked(bool)), Ocean::importManager, SLOT(CallFileDialogOnlyCopy()));
+    QObject::connect(Ocean::importManager, &ImportManager::CallOutToCheckSongsInsideDefaultPlayList, Ocean::playlistmanager, &Playlist::CheckDefaultPlayList);
+    QObject::connect(Ocean::importManager, &ImportManager::CallOutToCheckSongsInsideDefaultPlayList, this, &Ocean::SetCurrentPlayList);
     //Player manager
     QObject::connect(Ocean::playTrack, &QPushButton::clicked, Ocean::playermanager, &QMediaPlayer::play);
     QObject::connect(Ocean::stopTrack, &QPushButton::clicked, Ocean::playermanager, &QMediaPlayer::stop);
@@ -487,6 +490,9 @@ void Ocean::SetPlayList(QListWidgetItem *item)
 {
     //set name of playlist
     emit Ocean::playlistmanager->Playlist::CallOutSetCurrentPlayListName(item->QListWidgetItem::text());
+
+    Ocean::playlistmanager->GetCurrentPlayList()->clear();
+
     //load
     if(Ocean::playlistmanager->Playlist::LoadPlayList(Ocean::playlistmanager->Playlist::GetCurrentPlayListName() + ".m3u8"))
     {
@@ -497,6 +503,39 @@ void Ocean::SetPlayList(QListWidgetItem *item)
 
     //show songs in music list
     emit this->Ocean::CallOutPassNamesOfSongsToMusicList(Ocean::playlistmanager->Playlist::GetSongsFromCurrentPlayList(item->QListWidgetItem::text() + ".m3u8"));
+
+    return;
+}
+
+void Ocean::SetCurrentPlayList()
+{
+    if(Ocean::playlistmanager->Playlist::GetCurrentPlayListName() == "all")
+    {
+        const qint64 position = Ocean::playermanager->Player::GetPositionOfTrack();
+
+        //bug here on this side
+        //need to check index by name of track (maybe)
+        const unsigned short int index = Ocean::playlistmanager->GetCurrentPlayList()->currentIndex();
+
+        qDebug() << "position: " << position << "index: " << index;
+
+        Ocean::playlistmanager->GetCurrentPlayList()->clear();
+
+        //load
+        if(Ocean::playlistmanager->Playlist::LoadPlayList(Ocean::playlistmanager->Playlist::GetCurrentPlayListName() + ".m3u8"))
+        {
+            //set playlist
+            Ocean::playermanager->QMediaPlayer::setPlaylist(Ocean::playlistmanager->Playlist::GetCurrentPlayList());
+            //set current track
+            Ocean::playlistmanager->Playlist::GetCurrentPlayList()->QMediaPlaylist::setCurrentIndex(index);
+            //set current position
+            Ocean::playermanager->Player::GetPlayer()->setPosition(position);
+            //play this track
+            Ocean::playermanager->QMediaPlayer::play();
+        }
+    }
+    else
+        return;
 
     return;
 }
