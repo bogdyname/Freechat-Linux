@@ -25,6 +25,9 @@ public:
     ImportManager();
     ~ImportManager();
 
+signals:
+    void CallOutToCheckSongsInsideDefaultPlayList();
+
     //Slots for call them in main UI file (Ocean.h/cpp)
 public slots:
     void CallFileDialogWithDel();

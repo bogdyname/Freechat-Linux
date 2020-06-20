@@ -31,44 +31,7 @@ Playlist::Playlist()
         abort();
     }
 
-    //Check default playlist
-    if(!QFile::exists(QCoreApplication::applicationDirPath() + "/bin/all.m3u8"))
-    {
-        //Create playlist with all songs
-        //For get all songs into 'allSongs' variable
-        Playlist::cd->QDir::setCurrent(QCoreApplication::applicationDirPath() + "/music/");
-        Playlist::allSongs = Playlist::cd->QDir::entryList(QStringList() << "*.mp3" << "*.MP3" << "*.wav" << "*.WAV", QDir::Files);
-
-        QMediaPlaylist *buffer = new QMediaPlaylist();
-
-        for(const QString &iter : Playlist::allSongs)
-            buffer->QMediaPlaylist::addMedia(QMediaContent(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/music/" + iter)));//add song into playlist
-
-        if(buffer->QMediaPlaylist::save(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/all.m3u8"), "m3u8"))
-            delete buffer;
-
-        qDebug() << "Playlist 'all' created";
-    }
-    else
-    {
-        //Reboot songs inside playlist with all songs
-        //For get all songs into 'allSongs' variable
-        Playlist::cd->QDir::setCurrent(QCoreApplication::applicationDirPath() + "/music/");
-        Playlist::allSongs = Playlist::cd->QDir::entryList(QStringList() << "*.mp3" << "*.MP3" << "*.wav" << "*.WAV" << "*.m4a" << "*.M4A", QDir::Files);
-
-        QMediaPlaylist *buffer = new QMediaPlaylist();
-
-        buffer->QMediaPlaylist::load(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/all.m3u8"), "m3u8");
-        buffer->QMediaPlaylist::clear();
-
-        for(const QString &iter : Playlist::allSongs)
-            buffer->QMediaPlaylist::addMedia(QMediaContent(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/music/" + iter)));//add song into playlist
-
-        if(buffer->QMediaPlaylist::save(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/all.m3u8"), "m3u8"))
-            delete buffer;
-
-        qDebug() << "Playlist 'all' already exists!";
-    }
+    this->Playlist::CheckDefaultPlayList();
 
     //For bin folder
     Playlist::cd->QDir::setCurrent(QCoreApplication::applicationDirPath());
@@ -280,6 +243,50 @@ void Playlist::SetTrackByIndex(QListWidgetItem *indexOfTrack)
 {
     const unsigned short int index = indexOfTrack->listWidget()->row(indexOfTrack);
     Playlist::currentPlaylist->QMediaPlaylist::setCurrentIndex(index);
+
+    return;
+}
+
+void Playlist::CheckDefaultPlayList()
+{
+    //Check default playlist
+    if(!QFile::exists(QCoreApplication::applicationDirPath() + "/bin/all.m3u8"))
+    {
+        //Create playlist with all songs
+        //For get all songs into 'allSongs' variable
+        Playlist::cd->QDir::setCurrent(QCoreApplication::applicationDirPath() + "/music/");
+        Playlist::allSongs = Playlist::cd->QDir::entryList(QStringList() << "*.mp3" << "*.MP3" << "*.wav" << "*.WAV", QDir::Files);
+
+        QMediaPlaylist *buffer = new QMediaPlaylist();
+
+        for(const QString &iter : Playlist::allSongs)
+            buffer->QMediaPlaylist::addMedia(QMediaContent(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/music/" + iter)));//add song into playlist
+
+        if(buffer->QMediaPlaylist::save(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/all.m3u8"), "m3u8"))
+            delete buffer;
+
+        qDebug() << "Playlist 'all' created";
+    }
+    else
+    {
+        //Reboot songs inside playlist with all songs
+        //For get all songs into 'allSongs' variable
+        Playlist::cd->QDir::setCurrent(QCoreApplication::applicationDirPath() + "/music/");
+        Playlist::allSongs = Playlist::cd->QDir::entryList(QStringList() << "*.mp3" << "*.MP3" << "*.wav" << "*.WAV" << "*.m4a" << "*.M4A", QDir::Files);
+
+        QMediaPlaylist *buffer = new QMediaPlaylist();
+
+        buffer->QMediaPlaylist::load(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/all.m3u8"), "m3u8");
+        buffer->QMediaPlaylist::clear();
+
+        for(const QString &iter : Playlist::allSongs)
+            buffer->QMediaPlaylist::addMedia(QMediaContent(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/music/" + iter)));//add song into playlist
+
+        if(buffer->QMediaPlaylist::save(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/all.m3u8"), "m3u8"))
+            delete buffer;
+
+        qDebug() << "Playlist 'all' already exists!";
+    }
 
     return;
 }

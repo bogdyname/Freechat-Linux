@@ -76,6 +76,11 @@ QMediaPlayer* Player::GetPlayer()
     return Player::player;
 }
 
+qint64 Player::GetPositionOfTrack()
+{
+    return Player::player->QMediaPlayer::position();
+}
+
 bool Player::SetModOfPlayer(const unsigned short int &mod)
 {
     switch(mod)
