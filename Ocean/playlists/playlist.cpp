@@ -410,8 +410,6 @@ QString Playlist::ParseStringToRemoveFormatAndCurrentPath(const QString &string)
     else
         iter = string.QString::end() - 5;
 
-    qDebug() << "FULL PATH: " << string;
-
     for(; iter != string.QString::begin() - 1; --iter)
         if(*iter == "/" || *iter == "\\")
             break;

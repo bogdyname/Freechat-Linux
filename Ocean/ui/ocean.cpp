@@ -497,7 +497,6 @@ void Ocean::SetPlayList(QListWidgetItem *item)
     if(Ocean::playlistmanager->Playlist::LoadPlayList(Ocean::playlistmanager->Playlist::GetCurrentPlayListName() + ".m3u8"))
     {
         Ocean::playermanager->QMediaPlayer::setPlaylist(Ocean::playlistmanager->Playlist::GetCurrentPlayList());
-        //Ocean::playermanager->QMediaPlayer::setMedia(QUrl("/root/Ocean/build-Ocean-Desktop_Qt_5_13_0_GCC_64bit-Debug/music/Нервы - Самый Дорогой Человек.mp3"));
         Ocean::playermanager->QMediaPlayer::play();
     }
 
@@ -511,31 +510,52 @@ void Ocean::SetCurrentPlayList()
 {
     if(Ocean::playlistmanager->Playlist::GetCurrentPlayListName() == "all")
     {
-        const qint64 position = Ocean::playermanager->Player::GetPositionOfTrack();
+        //ZERO ON THISA SPOT
+        //NEED TO FIX IT!!!!!!!!!!!
+        qint64 position = Ocean::playermanager->Player::GetPositionOfTrack();
 
         //bug here on this side
         //need to check index by name of track (maybe)
-        const unsigned short int index = Ocean::playlistmanager->GetCurrentPlayList()->currentIndex();
+        const unsigned short int index = Ocean::playlistmanager->Playlist::GetCurrentPlayList()->QMediaPlaylist::currentIndex();
+        QString nameOfSongBuffer = "";
 
-        qDebug() << "position: " << position << "index: " << index;
+        //save current track by name
+        for(unsigned short int iter = 0; iter < Ocean::musicList->QListWidget::count(); ++iter)
+            if(iter == index)
+                nameOfSongBuffer = Ocean::musicList->QListWidget::item(index)->QListWidgetItem::text();
 
-        Ocean::playlistmanager->GetCurrentPlayList()->clear();
+        //clear current playlist 'buffer of player'
+        Ocean::playlistmanager->Playlist::GetCurrentPlayList()->QMediaPlaylist::clear();
 
         //load
         if(Ocean::playlistmanager->Playlist::LoadPlayList(Ocean::playlistmanager->Playlist::GetCurrentPlayListName() + ".m3u8"))
         {
             //set playlist
             Ocean::playermanager->QMediaPlayer::setPlaylist(Ocean::playlistmanager->Playlist::GetCurrentPlayList());
+
+            //show songs in music list
+            emit this->Ocean::CallOutPassNamesOfSongsToMusicList(Ocean::playlistmanager->Playlist::GetSongsFromCurrentPlayList("all.m3u8"));
+
+            //index for set last track by index
+            unsigned short int newIndex = 0;
+
+            //find current track
+            for(unsigned short int iter = 0; iter < Ocean::musicList->QListWidget::count(); ++iter)
+            {
+                QString bufferOfTrackName = Ocean::musicList->QListWidget::item(iter)->QListWidgetItem::text();
+
+                if(nameOfSongBuffer == bufferOfTrackName)
+                    newIndex = iter;
+            }
+
             //set current track
-            Ocean::playlistmanager->Playlist::GetCurrentPlayList()->QMediaPlaylist::setCurrentIndex(index);
+            Ocean::playlistmanager->Playlist::GetCurrentPlayList()->QMediaPlaylist::setCurrentIndex(newIndex);
             //set current position
             Ocean::playermanager->Player::GetPlayer()->setPosition(position);
             //play this track
             Ocean::playermanager->QMediaPlayer::play();
         }
     }
-    else
-        return;
 
     return;
 }
