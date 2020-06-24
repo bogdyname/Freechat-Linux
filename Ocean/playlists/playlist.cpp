@@ -57,10 +57,12 @@ Playlist::Playlist()
         4.1) create new playlist
      * Remove -------------------------
         5.1) remove playlist by name
+        5.2) remove track by index from current playlist
+        5.3) remove track by index from &name
      * Add ----------------------------
         6.1) add song into playlist by index
         6.2) add song into platlist from all songs (default playlist)
-        6.3) add tracks into NEW playlist
+        6.3) add song into NEW playlist
     */
     //Save
     QObject::connect(this, &Playlist::CallOutSaveCurrentPlayList, this, &Playlist::SaveCurrentPlayList);
@@ -75,6 +77,8 @@ Playlist::Playlist()
     QObject::connect(this, &Playlist::CallOutCreateNewPlayList, this, &Playlist::CreateNewPlayList);
     //Remove
     QObject::connect(this, &Playlist::CallOutRemovePlayListByName, this, &Playlist::RemovePlayListByName);
+    QObject::connect(this, &Playlist::CallOutRemoveTrackFromCurrentPlayListByIndex, this, &Playlist::RemoveTrackFromCurrentPlayListByIndex);
+    QObject::connect(this, &Playlist::CallOutRemoveTrackFromPlayListByIndex, this, &Playlist::RemoveTrackFromPlayListByIndex);
     //Add song
     QObject::connect(this, &Playlist::CallOutAddSongIntoPlayList, this, &Playlist::AddSongIntoPlayList);
     QObject::connect(this, &Playlist::CallOutAddSongIntoPlayListFromDefaultPlayList, this, &Playlist::AddSongIntoPlayListFromDefaultPlayList);
@@ -198,6 +202,29 @@ void Playlist::RemovePlayListByName(const QString &name)
     return;
 }
 
+void Playlist::RemoveTrackFromCurrentPlayListByIndex(const unsigned short int &indexOfTrack)
+{
+    if(Playlist::RemoveTrackByIndex(indexOfTrack))
+        qDebug() << "track removed by index from current playlist: " << indexOfTrack;
+    else
+        qCritical() << "Error: can't remove track by index: " << indexOfTrack;
+
+    return;
+}
+
+void Playlist::RemoveTrackFromPlayListByIndex(const unsigned short int &indexOfTrack, const QString &name)
+{
+    if(name == "")
+        return;
+
+    if(Playlist::RemoveTrackByIndex(indexOfTrack, name))
+        qDebug() << "track removed by index from " << name <<  "playlist: " << indexOfTrack;
+    else
+        qCritical() << "Error: can't remove track by index: " << indexOfTrack << "from " << name;
+
+    return;
+}
+
 void Playlist::AddSongIntoPlayList(const QString &song, const QString &nameOfPlayList, const QString &nameOfCurrentPlayList, const unsigned short int &index)
 {
     if(Playlist::AddSongIntoPlayListByName(song, nameOfPlayList, nameOfCurrentPlayList, index))
@@ -306,6 +333,13 @@ QString Playlist::GetCurrentPlayListName()
 QMediaPlaylist* Playlist::GetCurrentPlayList()
 {
     return Playlist::currentPlaylist;
+}
+
+void Playlist::ClearMadiaInsideCurrentPlaylist()
+{
+    Playlist::currentPlaylist->QMediaPlaylist::clear();
+
+    return;
 }
 
 bool Playlist::LoadPlayList(const QString &name)
@@ -627,6 +661,35 @@ bool Playlist::AddSongIntoPlayListByName(const QString &song, const QString &nam
         delete bufferPlaylist;
         return false;
     }
+}
+
+bool Playlist::RemoveTrackByIndex(const unsigned short int &index)
+{
+    bool result;
+
+    Playlist::currentPlaylist->QMediaPlaylist::removeMedia(index) ?
+                result = true : result = false;
+
+    return result;
+}
+
+bool Playlist::RemoveTrackByIndex(const unsigned short int &index, const QString &name)
+{
+   QMediaPlaylist *buffer = new QMediaPlaylist();
+   buffer->QMediaPlaylist::load(QCoreApplication::applicationDirPath() + "/bin/" + name, "m3u8");
+
+   buffer->QMediaPlaylist::removeMedia(index);
+
+   if(buffer->QMediaPlaylist::save(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/" + name + ".m3u8"), "m3u8"))
+   {
+       delete buffer;
+       return true;
+   }
+   else
+   {
+       delete buffer;
+       return false;
+   }
 }
 
 QString Playlist::GetFormatOfSong(const QString &nameOfPlayList, const unsigned short int &index)

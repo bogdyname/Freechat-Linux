@@ -64,6 +64,8 @@ signals:
     void CallOutCreateNewPlayList(const QString &name, const QStringList &tracks);
     /*----------------------------------------delete----------------------------------------*/
     void CallOutRemovePlayListByName(const QString &name);
+    void CallOutRemoveTrackFromCurrentPlayListByIndex(const unsigned short int &indexOfTrack);
+    void CallOutRemoveTrackFromPlayListByIndex(const unsigned short int &indexOfTrack, const QString &name);
     /*--------------------------------add song into playlist--------------------------------*/
     void CallOutAddSongIntoPlayList(const QString &song, const QString &nameOfPlayList, const QString &nameOfCurrentPlayList, const unsigned short int &index);
     void CallOutAddSongIntoPlayListFromDefaultPlayList(const QString &song, const QString &nameOfPlayList, const unsigned short int &index);
@@ -98,6 +100,8 @@ private slots:
     void CreateNewPlayList(const QString &name, const QStringList &tracks);
     /*----------------------------------------delete----------------------------------------*/
     void RemovePlayListByName(const QString &name);
+    void RemoveTrackFromCurrentPlayListByIndex(const unsigned short int &indexOfTrack);
+    void RemoveTrackFromPlayListByIndex(const unsigned short int &indexOfTrack, const QString &name);
     /*--------------------------------add song into playlist--------------------------------*/
     void AddSongIntoPlayList(const QString &song, const QString &nameOfPlayList, const QString &nameOfCurrentPlayList, const unsigned short int &index);
     void AddSongIntoPlayListFromDefaultPlayList(const QString &song, const QString &nameOfPlayList, const unsigned short int &index);
@@ -129,6 +133,7 @@ public slots:
 public:
     QString GetCurrentPlayListName(); //--------------------------------------------------------------------------------1) (DONE)
     QMediaPlaylist* GetCurrentPlayList(); //----------------------------------------------------------------------------2) (DONE)
+    void ClearMadiaInsideCurrentPlaylist();
     bool LoadPlayList(const QString &name); //--------------------------------------------------------------------------3) (DONE)
     QStringList GetSongsFromCurrentPlayList(const QString &nameOfPlayList); //------------------------------------------4) (DONE)
     const QStringList GetAllTracks();//---------------------------------------------------------------------------------5) (DONE)
@@ -163,6 +168,8 @@ private:
     bool RenamePlayList(const QString &newName, const QString &currentName); //--------------------------------------------------------------------------------------9)
     bool CheckSettingsDir();//--------------------------------------------------------------------------------------------------------------------------------------10) (DONE)
     bool AddSongIntoPlayListByName(const QString &song, const QString &nameOfPlayList, const QString &nameOfCurrentPlayList, const unsigned short int &index); //---11)
+    bool RemoveTrackByIndex(const unsigned short int &index);
+    bool RemoveTrackByIndex(const unsigned short int &index, const QString &buffer);
     QString GetFormatOfSong(const QString &nameOfPlayList, const unsigned short int &index); //---------------------------------------------------------------------12) (DONE)
     QString ParseStringToGetFormat(const QString &string);//--------------------------------------------------------------------------------------------------------13) (DONE)
     /*----------------------------------------Methods for call it in Private SLOTS----------------------------------------*/

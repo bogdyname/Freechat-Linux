@@ -491,7 +491,7 @@ void Ocean::SetPlayList(QListWidgetItem *item)
     //set name of playlist
     emit Ocean::playlistmanager->Playlist::CallOutSetCurrentPlayListName(item->QListWidgetItem::text());
 
-    Ocean::playlistmanager->GetCurrentPlayList()->clear();
+    Ocean::playlistmanager->Playlist::ClearMadiaInsideCurrentPlaylist();
 
     //load
     if(Ocean::playlistmanager->Playlist::LoadPlayList(Ocean::playlistmanager->Playlist::GetCurrentPlayListName() + ".m3u8"))
@@ -525,7 +525,7 @@ void Ocean::SetCurrentPlayList()
                 nameOfSongBuffer = Ocean::musicList->QListWidget::item(index)->QListWidgetItem::text();
 
         //clear current playlist 'buffer of player'
-        Ocean::playlistmanager->Playlist::GetCurrentPlayList()->QMediaPlaylist::clear();
+        Ocean::playlistmanager->Playlist::ClearMadiaInsideCurrentPlaylist();
 
         //load
         if(Ocean::playlistmanager->Playlist::LoadPlayList(Ocean::playlistmanager->Playlist::GetCurrentPlayListName() + ".m3u8"))
