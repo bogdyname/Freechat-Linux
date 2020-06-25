@@ -63,6 +63,9 @@ Playlist::Playlist()
         6.1) add song into playlist by index
         6.2) add song into platlist from all songs (default playlist)
         6.3) add song into NEW playlist
+     * Move ---------------------------
+       7.1)
+       7.2)
     */
     //Save
     QObject::connect(this, &Playlist::CallOutSaveCurrentPlayList, this, &Playlist::SaveCurrentPlayList);
@@ -82,6 +85,9 @@ Playlist::Playlist()
     //Add song
     QObject::connect(this, &Playlist::CallOutAddSongIntoPlayList, this, &Playlist::AddSongIntoPlayList);
     QObject::connect(this, &Playlist::CallOutAddSongIntoPlayListFromDefaultPlayList, this, &Playlist::AddSongIntoPlayListFromDefaultPlayList);
+    //Move song
+    QObject::connect(this, &Playlist::CallOutMoveSongInsideCurrentPlayList, this, &Playlist::MoveSongInsideCurrentPlayList);
+    QObject::connect(this, &Playlist::CallOutMoveSongInsidePlayListByName, this, &Playlist::MoveSongInsidePlayListByName);
 
     return;
 }
@@ -241,6 +247,29 @@ void Playlist::AddSongIntoPlayListFromDefaultPlayList(const QString &song, const
         qDebug() << "song successed added into '" << nameOfPlayList << "' -" << song;
     else
         qCritical() << "error: can't add sog into playlist '" << nameOfPlayList << "' -" << song;
+
+    return;
+}
+
+void Playlist::MoveSongInsideCurrentPlayList(const unsigned short int &currentIndex, const unsigned short int &newIndex)
+{
+    if(Playlist::MoveSongInsidePlaylistByIndex(currentIndex, newIndex))
+        qDebug() << "track is moved into " << newIndex << "from " << currentIndex;
+    else
+        qCritical() << "error: can't move track into new index";
+
+    return;
+}
+
+void Playlist::MoveSongInsidePlayListByName(const unsigned short int &currentIndex, const unsigned short int &newIndex, const QString &name)
+{
+    if(name == "")
+        return;
+
+    if(Playlist::MoveSongInsidePlaylistByIndex(currentIndex, newIndex, name))
+        qDebug() << "track is moved into " << newIndex << "from " << currentIndex;
+    else
+        qCritical() << "error: can't move track into new index";
 
     return;
 }
@@ -690,6 +719,35 @@ bool Playlist::RemoveTrackByIndex(const unsigned short int &index, const QString
        delete buffer;
        return false;
    }
+}
+
+bool Playlist::MoveSongInsidePlaylistByIndex(const unsigned short int &currentIndex, const unsigned short int &newIndex)
+{
+    Playlist::currentPlaylist->QMediaPlaylist::moveMedia(currentIndex, newIndex);
+
+    if(Playlist::currentPlaylist->QMediaPlaylist::save(QCoreApplication::applicationDirPath() + "/bin/" + currentPlaylistName, "m3u8"))
+        return true;
+    else
+        return false;
+}
+
+bool Playlist::MoveSongInsidePlaylistByIndex(const unsigned short int &currentIndex, const unsigned short int &newIndex, const QString &name)
+{
+    QMediaPlaylist *buffer = new QMediaPlaylist();
+    buffer->QMediaPlaylist::load(QCoreApplication::applicationDirPath() + "/bin/" + name, "m3u8");
+
+    buffer->QMediaPlaylist::moveMedia(currentIndex, newIndex);
+
+    if(buffer->QMediaPlaylist::save(QCoreApplication::applicationDirPath() + "/bin/" + name, "m3u8"))
+    {
+        delete buffer;
+        return true;
+    }
+    else
+    {
+        delete buffer;
+        return false;
+    }
 }
 
 QString Playlist::GetFormatOfSong(const QString &nameOfPlayList, const unsigned short int &index)

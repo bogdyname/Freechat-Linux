@@ -45,10 +45,16 @@ public:
             3.2) rename selected playlist by name
         4) set playlist via Playlist::GetCurrentPlayListName()
         5) create playlist by name
-        6) delete playlist by name
-        7)
+        6) delete playlist and tracks from playlist
+           6.1) remove playlist by name
+           6.2) remove track from current play list by index
+           6.3) remove track by index from playlist by name
+        7) add songs
            7.1) add song into playlist from other playlist by index
            7.2) add song into platlist from all songs (default playlist)
+        8) move and sort playlist
+           8.1) move track to &index by index from current playlist
+           8.2) move track to &index by index from playlist by name
     */
 signals:
     /*----------------------------------------save------------------------------------------*/
@@ -69,6 +75,9 @@ signals:
     /*--------------------------------add song into playlist--------------------------------*/
     void CallOutAddSongIntoPlayList(const QString &song, const QString &nameOfPlayList, const QString &nameOfCurrentPlayList, const unsigned short int &index);
     void CallOutAddSongIntoPlayListFromDefaultPlayList(const QString &song, const QString &nameOfPlayList, const unsigned short int &index);
+    /*-------------------------------move song inside playlist------------------------------*/
+    void CallOutMoveSongInsideCurrentPlayList(const unsigned short int &currentIndex, const unsigned short int &newIndex);
+    void CallOutMoveSongInsidePlayListByName(const unsigned short int &currentIndex, const unsigned short int &newIndex, const QString &name);
     /*-------------------------------------------------------SIGNALS-------------------------------------------------------*/
 
 
@@ -105,6 +114,9 @@ private slots:
     /*--------------------------------add song into playlist--------------------------------*/
     void AddSongIntoPlayList(const QString &song, const QString &nameOfPlayList, const QString &nameOfCurrentPlayList, const unsigned short int &index);
     void AddSongIntoPlayListFromDefaultPlayList(const QString &song, const QString &nameOfPlayList, const unsigned short int &index);
+    /*-------------------------------move song inside playlist------------------------------*/
+    void MoveSongInsideCurrentPlayList(const unsigned short int &currentIndex, const unsigned short int &newIndex);
+    void MoveSongInsidePlayListByName(const unsigned short int &currentIndex, const unsigned short int &newIndex, const QString &name);
 
     /*
         1) set next track
@@ -169,7 +181,9 @@ private:
     bool CheckSettingsDir();//--------------------------------------------------------------------------------------------------------------------------------------10) (DONE)
     bool AddSongIntoPlayListByName(const QString &song, const QString &nameOfPlayList, const QString &nameOfCurrentPlayList, const unsigned short int &index); //---11)
     bool RemoveTrackByIndex(const unsigned short int &index);
-    bool RemoveTrackByIndex(const unsigned short int &index, const QString &buffer);
+    bool RemoveTrackByIndex(const unsigned short int &index, const QString &name);
+    bool MoveSongInsidePlaylistByIndex(const unsigned short int &currentIndex, const unsigned short int &newIndex);
+    bool MoveSongInsidePlaylistByIndex(const unsigned short int &currentIndex, const unsigned short int &newIndex, const QString &name);
     QString GetFormatOfSong(const QString &nameOfPlayList, const unsigned short int &index); //---------------------------------------------------------------------12) (DONE)
     QString ParseStringToGetFormat(const QString &string);//--------------------------------------------------------------------------------------------------------13) (DONE)
     /*----------------------------------------Methods for call it in Private SLOTS----------------------------------------*/
