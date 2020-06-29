@@ -115,6 +115,7 @@ private slots:
     void EraseItemFromPlayList();
     void CreatePlaylist();
     void RenamePlaylist();
+    void Rename(const QListWidgetItem *item, QString buffer);
     void SavePlaylist();
     // Context Menu of Playlists -------------------------------------------------- 2
 

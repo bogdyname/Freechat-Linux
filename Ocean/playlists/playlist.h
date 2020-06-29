@@ -62,7 +62,7 @@ signals:
     void CallOutSaveSelectedPlayList(const QString &name, const QStringList &newListOfSongs);
     void CallOutSaveNewPlayList(const QString &name);
     /*----------------------------------------rename----------------------------------------*/
-    void CallOutRenameCurrentPlayList(QString &newName, QMediaPlaylist *currentPlaylist);
+    void CallOutRenameCurrentPlayList(const QString &newName, QMediaPlaylist *currentPlaylist);
     void CallOutRenameSelectedPlayList(const QString &newName, const QString &currentName);
     /*----------------------------------------set playlist----------------------------------*/
     void CallOutSetCurrentPlayListName(const QString &nameOfCurrentPlaylist);
