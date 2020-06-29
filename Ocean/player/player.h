@@ -27,8 +27,9 @@ public slots:
     void CallSetVolume(const unsigned short int &volume);
 
 public:
-    QMediaPlayer* GetPlayer();
+    const QMediaPlayer* GetPlayer();
     qint64 GetPositionOfTrack();
+    void SetPositionOfTrack(const qint64 &position);
 
 private:
     bool SetModOfPlayer(const unsigned short int &mod);

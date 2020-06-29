@@ -37,10 +37,15 @@ Playlist::Playlist()
     Playlist::cd->QDir::setCurrent(QCoreApplication::applicationDirPath());
 
     //Check folder of settings/playlist
-    if(Playlist::cd->QDir::mkdir("bin"))
+    try
+    {
+        Playlist::cd->QDir::mkdir("bin");
         qDebug() << "Folder 'bin' created";
-    else
+    }
+    catch(...)
+    {
         qDebug() << "Folder 'bin' already exists!";
+    }
 
     /*---------------------------------signals with slots---------------------------------*/
     /*
@@ -64,8 +69,8 @@ Playlist::Playlist()
         6.2) add song into platlist from all songs (default playlist)
         6.3) add song into NEW playlist
      * Move ---------------------------
-       7.1)
-       7.2)
+       7.1) move track to &index by index from current playlist
+       7.2) move track to &index by index from playlist by name
     */
     //Save
     QObject::connect(this, &Playlist::CallOutSaveCurrentPlayList, this, &Playlist::SaveCurrentPlayList);
@@ -354,7 +359,7 @@ void Playlist::CheckDefaultPlayList()
 /*--------------------------------------------------------------------------------------------------------------------------------------------------*/
 /*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||METHODS PUBLIC|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
 /*--------------------------------------------------------------------------------------------------------------------------------------------------*/
-QString Playlist::GetCurrentPlayListName()
+const QString Playlist::GetCurrentPlayListName()
 {
     return Playlist::currentPlaylistName;
 }
@@ -362,13 +367,6 @@ QString Playlist::GetCurrentPlayListName()
 QMediaPlaylist* Playlist::GetCurrentPlayList()
 {
     return Playlist::currentPlaylist;
-}
-
-void Playlist::ClearMadiaInsideCurrentPlaylist()
-{
-    Playlist::currentPlaylist->QMediaPlaylist::clear();
-
-    return;
 }
 
 bool Playlist::LoadPlayList(const QString &name)
@@ -423,63 +421,6 @@ QStringList Playlist::GetSongsFromCurrentPlayList(const QString &nameOfPlayList)
 const QStringList Playlist::GetAllTracks()
 {
     return Playlist::allSongs;
-}
-
-QStringList Playlist::ParseToGetFullPathOfTracks(const QStringList &list)
-{
-    Playlist::cd->QDir::setCurrent(QCoreApplication::applicationDirPath() + "/music/");
-    QStringList allSongs = Playlist::cd->QDir::entryList(QStringList() << "*.mp3" << "*.MP3" << "*.wav" << "*.WAV" << "*.m4a" << "*.M4A", QDir::Files);
-    Playlist::cd->QDir::setCurrent(QCoreApplication::applicationDirPath());
-
-    QStringList bufferlist = {}; //july.mp3 //july
-
-    for(const QString &iterForAllSongs : allSongs)
-    {
-        QString::const_iterator iter = iterForAllSongs.QString::end() - 5; //start after dot
-        QString buffer = "";
-
-        qDebug() << "buffer: " << buffer;
-        qDebug() << "list: " << iterForAllSongs;
-
-        for(; iter != iterForAllSongs.QString::begin() - 1; --iter)
-        {
-                //unix like      //windows
-            if(!(*iter == "/") || !(*iter == "\\"))
-                buffer.QString::push_front(*iter); //if char not '/' or '\' write chat into buffer
-            else
-                break; //else just break cycle
-        }
-        //now buffer = 'july'
-
-        for(const QString &iterForList : list)
-            if(iterForList == buffer)
-            {
-                qDebug() << "buffer: " << buffer;
-                qDebug() << "list: " << iterForList;
-                bufferlist.QStringList::push_back(QCoreApplication::applicationDirPath() + "/music/" + iterForAllSongs);
-            }
-    }
-
-    return bufferlist;
-}
-
-QString Playlist::ParseStringToRemoveFormatAndCurrentPath(const QString &string)
-{
-    QString::const_iterator iter = string.QString::end() - 1;
-    QString buffer = "";
-
-    if(*iter == "8")
-        iter = string.QString::end() - 6;
-    else
-        iter = string.QString::end() - 5;
-
-    for(; iter != string.QString::begin() - 1; --iter)
-        if(*iter == "/" || *iter == "\\")
-            break;
-        else
-            buffer.QString::push_front(*iter);
-
-    return buffer;
 }
 /*--------------------------------------------------------------------------------------------------------------------------------------------------*/
 /*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||METHODS PUBLIC|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
@@ -674,7 +615,7 @@ bool Playlist::AddSongIntoPlayListByName(const QString &song, const QString &nam
         return false;
 
     Playlist::cd->QDir::setCurrent(QCoreApplication::applicationDirPath()); // set default playlist
-    const QString formatOfSong = Playlist::GetFormatOfSong(nameOfCurrentPlayList, index); // get format by index inside current playlist
+    const QString formatOfSong = Playlist::ParserToGetFormatOfSong(nameOfCurrentPlayList, index); // get format by index inside current playlist
 
     QMediaPlaylist *bufferPlaylist = new QMediaPlaylist();
     bufferPlaylist->QMediaPlaylist::load(QCoreApplication::applicationDirPath() + "/bin/" + nameOfPlayList, "m3u8"); // load playlist
@@ -749,8 +690,72 @@ bool Playlist::MoveSongInsidePlaylistByIndex(const unsigned short int &currentIn
         return false;
     }
 }
+/*--------------------------------------------------------------------------------------------------------------------------------------------------*/
+/*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||METHODS PRIVATE||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
+/*--------------------------------------------------------------------------------------------------------------------------------------------------*/
 
-QString Playlist::GetFormatOfSong(const QString &nameOfPlayList, const unsigned short int &index)
+
+/*--------------------------------------------------------------------------------------------------------------------------------------------------*/
+/*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||PARSERS||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
+/*--------------------------------------------------------------------------------------------------------------------------------------------------*/
+QStringList Playlist::ParseToGetFullPathOfTracks(const QStringList &list)
+{
+    Playlist::cd->QDir::setCurrent(QCoreApplication::applicationDirPath() + "/music/");
+    QStringList allSongs = Playlist::cd->QDir::entryList(QStringList() << "*.mp3" << "*.MP3" << "*.wav" << "*.WAV" << "*.m4a" << "*.M4A", QDir::Files);
+    Playlist::cd->QDir::setCurrent(QCoreApplication::applicationDirPath());
+
+    QStringList bufferlist = {}; //july.mp3 //july
+
+    for(const QString &iterForAllSongs : allSongs)
+    {
+        QString::const_iterator iter = iterForAllSongs.QString::end() - 5; //start after dot
+        QString buffer = "";
+
+        qDebug() << "buffer: " << buffer;
+        qDebug() << "list: " << iterForAllSongs;
+
+        for(; iter != iterForAllSongs.QString::begin() - 1; --iter)
+        {
+                //unix like      //windows
+            if(!(*iter == "/") || !(*iter == "\\"))
+                buffer.QString::push_front(*iter); //if char not '/' or '\' write chat into buffer
+            else
+                break; //else just break cycle
+        }
+        //now buffer = 'july'
+
+        for(const QString &iterForList : list)
+            if(iterForList == buffer)
+            {
+                qDebug() << "buffer: " << buffer;
+                qDebug() << "list: " << iterForList;
+                bufferlist.QStringList::push_back(QCoreApplication::applicationDirPath() + "/music/" + iterForAllSongs);
+            }
+    }
+
+    return bufferlist;
+}
+
+QString Playlist::ParseStringToRemoveFormatAndCurrentPath(const QString &string)
+{
+    QString::const_iterator iter = string.QString::end() - 1;
+    QString buffer = "";
+
+    if(*iter == "8")
+        iter = string.QString::end() - 6;
+    else
+        iter = string.QString::end() - 5;
+
+    for(; iter != string.QString::begin() - 1; --iter)
+        if(*iter == "/" || *iter == "\\")
+            break;
+        else
+            buffer.QString::push_front(*iter);
+
+    return buffer;
+}
+
+QString Playlist::ParserToGetFormatOfSong(const QString &nameOfPlayList, const unsigned short int &index)
 {
     if(nameOfPlayList == "")
         return "";
@@ -794,5 +799,5 @@ QString Playlist::ParseStringToGetFormat(const QString &string)
     return buffer;
 }
 /*--------------------------------------------------------------------------------------------------------------------------------------------------*/
-/*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||METHODS PRIVATE||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
+/*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||PARSERS||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
 /*--------------------------------------------------------------------------------------------------------------------------------------------------*/
