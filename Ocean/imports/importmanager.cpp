@@ -82,9 +82,22 @@ void ImportManager::CallFileDialogOnlyCopy()
     return;
 }
 
-void ImportManager::DeleteMusic()
+void ImportManager::DeleteMusicFromApp(const QString &song)
 {
+    if(ImportManager::DeleteMusic(song))
+        qDebug() << "all music delete";
+    else
+        qDebug() << "error: can't delete";
 
+    return;
+}
+
+void ImportManager::DeleteAllMusicFromApp()
+{
+    if(ImportManager::DeleteAllMusic())
+        qDebug() << "all music delete";
+    else
+        qDebug() << "error: can't delete";
 
     return;
 }
@@ -92,9 +105,6 @@ void ImportManager::DeleteMusic()
 //Methods for save files
 void ImportManager::SaveFilesIntoMusicFolderAndDeleteIt(const QStringList &pathsOfmp3)
 {
-    if(pathsOfmp3.QStringList::isEmpty())
-        return;
-
     for(const QString &iter : pathsOfmp3)
     {
         ImportManager::mp3File->QFile::setFileName(iter);
@@ -129,9 +139,6 @@ void ImportManager::SaveFilesIntoMusicFolderAndDeleteIt(const QStringList &paths
 
 void ImportManager::SaveFilesIntoMusicFolderOnlyCopy(const QStringList &pathsOfmp3)
 {
-    if(pathsOfmp3.QStringList::isEmpty())
-        return;
-
     for(const QString &iter : pathsOfmp3)
     {
         ImportManager::mp3File->QFile::setFileName(iter);
@@ -187,6 +194,66 @@ bool ImportManager::CheckDir()
     }
 }
 
+bool ImportManager::DeleteMusic(const QString &song)
+{
+    try
+    {
+        QFile *bufferMP3 = new QFile(QCoreApplication::applicationDirPath() + "/music/" + song + ".mp3");
+        QFile *bufferWAV = new QFile(QCoreApplication::applicationDirPath() + "/music/" + song + ".wav");
+        QFile *bufferM4A = new QFile(QCoreApplication::applicationDirPath() + "/music/" + song + ".m4a");
+
+        bufferMP3->QFile::remove();
+        bufferWAV->QFile::remove();
+        bufferM4A->QFile::remove();
+
+        delete bufferMP3;
+        delete bufferWAV;
+        delete bufferM4A;
+
+        return true;
+    }
+    catch(...)
+    {
+        qDebug() << "error: can't remove song from app - " << song;
+
+        return false;
+    }
+}
+
+bool ImportManager::DeleteAllMusic()
+{
+    QStringList allSongs = ImportManager::musicDir->QDir::entryList(QStringList() << "*.mp3" << "*.MP3" << "*.wav" << "*.WAV" << "*.m4a" << "*.M4A", QDir::Files);
+
+    if(!allSongs.QList::isEmpty())
+    {
+        try
+        {
+            QFile *bufferMP3 = new QFile();
+            QFile *bufferWAV = new QFile();
+            QFile *bufferM4A = new QFile();
+
+            for(const QString &iterForAllSongs : allSongs)
+            {
+                bufferMP3->QFile::remove(QCoreApplication::applicationDirPath() + "/music/" + iterForAllSongs + ".mp3");
+                bufferWAV->QFile::remove(QCoreApplication::applicationDirPath() + "/music/" + iterForAllSongs + ".wav");
+                bufferM4A->QFile::remove(QCoreApplication::applicationDirPath() + "/music/" + iterForAllSongs + ".m4a");
+            }
+
+            delete bufferMP3;
+            delete bufferWAV;
+            delete bufferM4A;
+
+            return true;
+        }
+        catch(...)
+        {
+            qDebug() << "error: can't remove all music";
+        }
+    }
+
+    return false;
+}
+
 QString ImportManager::GetNameOfSongFromCurrentPath(const QString nameOfSong)
 {
     QString::const_iterator iter = nameOfSong.QString::end();
@@ -205,11 +272,4 @@ QString ImportManager::GetNameOfSongFromCurrentPath(const QString nameOfSong)
     }
 
     return buffer;
-}
-
-bool ImportManager::DeleteMusicFromMusicFolder()
-{
-
-
-    return true;
 }

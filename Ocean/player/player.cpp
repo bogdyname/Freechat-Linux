@@ -71,7 +71,7 @@ void Player::CallSetVolume(const unsigned short int &volume)
 }
 
 //Methods
-QMediaPlayer* Player::GetPlayer()
+const QMediaPlayer* Player::GetPlayer()
 {
     return Player::player;
 }
@@ -79,6 +79,13 @@ QMediaPlayer* Player::GetPlayer()
 qint64 Player::GetPositionOfTrack()
 {
     return Player::player->position();
+}
+
+void Player::SetPositionOfTrack(const qint64 &position)
+{
+    Player::player->QMediaPlayer::setPosition(position);
+
+    return;
 }
 
 bool Player::SetModOfPlayer(const unsigned short int &mod)
