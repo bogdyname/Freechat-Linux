@@ -54,6 +54,8 @@ public:
            5.1) remove playlist by name
            5.2) remove track from current play list by index
            5.3) remove track by index from playlist by name
+           5.4) remove all tracks from current playlist
+           5.5) remove all tracks from playlist by name
         6) add songs
            6.1) add song into playlist from other playlist by index
            6.2) add song into platlist from all songs (default playlist)
@@ -79,6 +81,8 @@ signals:
     void CallOutRemovePlayListByName(const QString &name);
     void CallOutRemoveTrackFromCurrentPlayListByIndex(const unsigned short int &indexOfTrack);
     void CallOutRemoveTrackFromPlayListByIndex(const unsigned short int &indexOfTrack, const QString &name);
+    void CallOutRemoveAllTracksFromCurrentPlayList();
+    void CallOutRemoveAllTracksFromPlayListByName(const QString &name);
     /*--------------------------------add song into playlist--------------------------------*/
     void CallOutAddSongIntoPlayList(const QString &song, const QString &nameOfPlayList, const QString &nameOfCurrentPlayList, const unsigned short int &index);
     void CallOutAddSongIntoPlayListFromDefaultPlayList(const QString &song, const QString &nameOfPlayList, const unsigned short int &index);
@@ -105,6 +109,8 @@ private slots:
     void RemovePlayListByName(const QString &name);
     void RemoveTrackFromCurrentPlayListByIndex(const unsigned short int &indexOfTrack);
     void RemoveTrackFromPlayListByIndex(const unsigned short int &indexOfTrack, const QString &name);
+    void RemoveAllTracksFromCurrentPlayList();
+    void RemoveAllTracksFromPlayListByName(const QString &name);
     /*--------------------------------add song into playlist--------------------------------*/
     void AddSongIntoPlayList(const QString &song, const QString &nameOfPlayList, const QString &nameOfCurrentPlayList, const unsigned short int &index);
     void AddSongIntoPlayListFromDefaultPlayList(const QString &song, const QString &nameOfPlayList, const unsigned short int &index);
@@ -205,6 +211,8 @@ private:
     bool AddSongIntoPlayListByName(const QString &song, const QString &nameOfPlayList, const QString &nameOfCurrentPlayList, const unsigned short int &index); //---11)
     bool RemoveTrackByIndex(const unsigned short int &index); //----------------------------------------------------------------------------------------------------12)
     bool RemoveTrackByIndex(const unsigned short int &index, const QString &name); //-------------------------------------------------------------------------------13)
+    bool RemoveAllTracks();
+    bool RemoveAllTracks(const QString &name);
     bool MoveSongInsidePlaylistByIndex(const unsigned short int &currentIndex, const unsigned short int &newIndex); //----------------------------------------------14)
     bool MoveSongInsidePlaylistByIndex(const unsigned short int &currentIndex, const unsigned short int &newIndex, const QString &name); //-------------------------15)
     /*----------------------------------------Methods to call it in Private SLOTS----------------------------------------*/
