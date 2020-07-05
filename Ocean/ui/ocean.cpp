@@ -25,6 +25,7 @@ Ocean::Ocean(QWidget *parent)
         Ocean::playLists = new QListWidget();
         Ocean::musicList = new QListWidget();
         Ocean::playTrack = new QPushButton();
+        Ocean::pauseTrack = new QPushButton();
         Ocean::stopTrack = new QPushButton();
         Ocean::nextTrack = new QPushButton();
         Ocean::previousTrack = new QPushButton();
@@ -66,8 +67,9 @@ Ocean::Ocean(QWidget *parent)
     //Player
     Ocean::ui->buttonsOfPlayer->QHBoxLayout::addWidget(Ocean::stopTrack);
     Ocean::ui->buttonsOfPlayer->QHBoxLayout::addWidget(Ocean::previousTrack);
-    Ocean::ui->buttonsOfPlayer->QHBoxLayout::addWidget(Ocean::playTrack);
     Ocean::ui->buttonsOfPlayer->QHBoxLayout::addWidget(Ocean::nextTrack);
+    Ocean::ui->buttonsOfPlayer->QHBoxLayout::addWidget(Ocean::pauseTrack);
+    Ocean::ui->buttonsOfPlayer->QHBoxLayout::addWidget(Ocean::playTrack);
     Ocean::ui->sliderOfPlayer->QHBoxLayout::addWidget(Ocean::sliderOfTrack);
 
     //Left side
@@ -146,8 +148,9 @@ Ocean::Ocean(QWidget *parent)
     //Buttons for player
     Ocean::stopTrack->QPushButton::setText("Stop");
     Ocean::previousTrack->QPushButton::setText("Previous");
-    Ocean::playTrack->QPushButton::setText("Play");
     Ocean::nextTrack->QPushButton::setText("Next");
+    Ocean::pauseTrack->QPushButton::setText("Pause");
+    Ocean::playTrack->QPushButton::setText("Play");
     /*--------------------------------------------------UI--------------------------------------------------*/
 
     /*--------------------------------------------------MANAGERS--------------------------------------------------*/
@@ -229,6 +232,7 @@ Ocean::Ocean(QWidget *parent)
     QObject::connect(Ocean::importManager, &ImportManager::CallOutToCheckSongsInsideDefaultPlayList, this, &Ocean::SetCurrentPlayList);
     //Player manager
     QObject::connect(Ocean::playTrack, &QPushButton::clicked, Ocean::playermanager, &QMediaPlayer::play);
+    QObject::connect(Ocean::pauseTrack, &QPushButton::clicked, Ocean::playermanager, &QMediaPlayer::pause);
     QObject::connect(Ocean::stopTrack, &QPushButton::clicked, Ocean::playermanager, &QMediaPlayer::stop);
     //Playlist manager
     QObject::connect(Ocean::nextTrack, &QPushButton::clicked, Ocean::playlistmanager, &Playlist::SetNextTrack);
@@ -281,6 +285,7 @@ Ocean::~Ocean()
     delete Ocean::playLists;
     delete Ocean::musicList;
     delete Ocean::playTrack;
+    delete Ocean::pauseTrack;
     delete Ocean::stopTrack;
     delete Ocean::nextTrack;
     delete Ocean::previousTrack;
@@ -429,8 +434,8 @@ void Ocean::ParseMusicList(const QString &name)
 {
     QListWidgetItem *item;
 
+    // Get current item on selected row (music list)
     for (unsigned short int iter = 0; iter < Ocean::musicList->QListWidget::selectedItems().QList::size(); ++iter)
-        // Get current item on selected row (music list)
         item = Ocean::musicList->QListWidget::item(Ocean::musicList->QListWidget::currentRow());
 
     //REBUILD WITH AND TEST IT
@@ -443,12 +448,21 @@ void Ocean::ParseMusicList(const QString &name)
     return;
 }
 
-//TTS
 void Ocean::EraseItemFromPlayList()
 {
     for (unsigned short int iter = 0; iter < Ocean::playLists->QListWidget::selectedItems().QList::size(); ++iter)
     {
         QListWidgetItem *item = Ocean::playLists->QListWidget::takeItem(Ocean::playLists->QListWidget::currentRow());
+
+        if(item->text() == Ocean::playlistmanager->GetCurrentPlayListName())
+        {
+            //clear current playlist
+            Ocean::musicList->QListWidget::clear();
+            Ocean::playlistmanager->Playlist::GetCurrentPlayList()->QMediaPlaylist::clear();
+            Ocean::playermanager->QMediaPlayer::stop();
+        }
+
+        Ocean::playlistmanager->Playlist::CallOutRemovePlayListByName(item->text());
 
         delete item;
     }

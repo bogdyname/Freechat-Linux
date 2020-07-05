@@ -277,6 +277,7 @@ private:
 
     //player
     QPushButton *playTrack = nullptr;
+    QPushButton *pauseTrack = nullptr;
     QPushButton *stopTrack = nullptr;
     QPushButton *nextTrack = nullptr;
     QPushButton *previousTrack = nullptr;
