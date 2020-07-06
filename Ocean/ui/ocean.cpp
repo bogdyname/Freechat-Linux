@@ -187,10 +187,11 @@ Ocean::Ocean(QWidget *parent)
         1.1) Add new music and delete it via button
         1.2) Add new music (only copy) via button
         1.3) Check added track to pass it into all songs
+        1.4) Set current playlist after added new track
     2)Player manager
         2.1) play track
-        2.2) stop track
-        2.3) set current playlist via playlist manager (emited signal from SLOT(SetPlayList(QListWidgetItem *)))
+        2.2) pause track
+        2.3) stop track
     3)Playlist manager
         3.1) next track
         3.2) previous track
@@ -199,14 +200,13 @@ Ocean::Ocean(QWidget *parent)
 
     -----------------------UI-------------------------
     4)UI lists widgets
-        4.1) set name of selected playlist (itemClicked)
-        4.2) set name of selected playlist (itemDoubleClicked)
-        4.3) set playlist then item clicked (UI only)
+        4.1) get name of song of selected playlist (one click)
+        4.2) set playlist then item double clicked
+        4.3) get name of song of selected playlist (two click)
         4.4) Context Menu for playlist
         4.5) Context Menu for music list
         4.6) show songs in music list
-        4.7) add tracks into music list
-        4.8) create widget after get name of NEW playlist
+        4.7) create widget after get name of NEW playlist
     5)Widget of create playlist
         5.1) close widget of create playlist via cancel button
         5.2) close widget of create playlist via okay button and pass QString into slot
@@ -219,8 +219,11 @@ Ocean::Ocean(QWidget *parent)
     -----------------------UI-------------------------
 
     ----------------------Tools-----------------------
-    7)Timer for check CreateListWidget
-        7.1) check widget of create playlist (UI --> 5) to close it if pressed keys Alt+F4
+    8)Timer for check CreateListWidget
+        8.1) check widget of create playlist | to close it if pressed keys Alt+F4
+        8.2) check widget of select playlist | to close it if pressed keys Alt+F4
+        8.2) check widget of added music into playlist | to close it if pressed keys Alt+F4
+    9)Timer for check default playlist 'all'
     ----------------------Tools-----------------------
     */
 
@@ -242,16 +245,13 @@ Ocean::Ocean(QWidget *parent)
     //UI-----------------------------------------------
     //UI Lists
     QObject::connect(Ocean::playLists, &QListWidget::itemClicked, this, &Ocean::GetNamesOfSongsToMusicList);
-
     QObject::connect(Ocean::playLists, &QListWidget::itemDoubleClicked, this, &Ocean::SetPlayList);
     QObject::connect(Ocean::playLists, &QListWidget::itemDoubleClicked, this, &Ocean::GetNamesOfSongsToMusicList);
-
-    QObject::connect(Ocean::playLists, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(ShowContextMenuOfPlayList(QPoint)));
-    QObject::connect(Ocean::musicList, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(ShowContextMenuOfMusicList(QPoint)));
-
+    QObject::connect(Ocean::playLists, &QWidget::customContextMenuRequested, this, &Ocean::ShowContextMenuOfPlayList);
+    QObject::connect(Ocean::musicList, &QWidget::customContextMenuRequested, this, &Ocean::ShowContextMenuOfMusicList);
     QObject::connect(this, &Ocean::CallOutPassNamesOfSongsToMusicList, this, &Ocean::PassNamesOfSongsToMusicList);
     QObject::connect(this, &Ocean::CallOutToCreateWindowThisWidgetToGetAddedTracks, this, &Ocean::CallWidgetAfterCreatePlaylistSlot);
-    //Widget for get string from user
+    //Widget for get string from user (create new playlist)
     QObject::connect(Ocean::getStringFromUser, &GetStringWidget::BreakeWidget, this, &Ocean::ClosegetStringFromUserViaCancel);
     QObject::connect(Ocean::getStringFromUser, &GetStringWidget::SendName, this, &Ocean::ClosegetStringFromUserViaOkay);
     //Widget for get name of playlist from user
@@ -266,7 +266,6 @@ Ocean::Ocean(QWidget *parent)
     QObject::connect(Ocean::timerForCheckWidgets, &QTimer::timeout, this, &Ocean::IfgetStringFromUserClosed);
     QObject::connect(Ocean::timerForCheckWidgets, &QTimer::timeout, this, &Ocean::IfgetStringWithSelectedPlaylistClosed);
     QObject::connect(Ocean::timerForCheckWidgets, &QTimer::timeout, this, &Ocean::IfgetAddedTracksFromWidgetClosed);
-
     //Timer for check default playlist (inside Ocean::playLists zero iter "all")
     QObject::connect(Ocean::timerForCheckDefaultPlayList, &QTimer::timeout, this, &Ocean::WriteDefaultPlayList);
 
@@ -312,6 +311,36 @@ Ocean::~Ocean()
     return;
 }
 
+
+/*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
+/*||||||||||||||||||||||||||||||||||||||||||||||||||this->QWidget||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
+/*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
+
+/*--------------------------------------------------------------------------------------------------------------------------------------------------*/
+/*||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||Events for MainWindow|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
+/*--------------------------------------------------------------------------------------------------------------------------------------------------*/
+void Ocean::resizeEvent(QResizeEvent *event)
+{
+    QMainWindow::resizeEvent(event);
+
+    int short h = event->QResizeEvent::size().QSize::height();
+    int short w = event->QResizeEvent::size().QSize::width();
+
+    if((h <= 200) || (w <= 400))
+        Ocean::Hidder();
+    else
+        Ocean::Shower();
+
+    return;
+}
+/*--------------------------------------------------------------------------------------------------------------------------------------------------*/
+/*||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||Events for MainWindow|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
+/*--------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+
+/*--------------------------------------------------------------------------------------------------------------------------------------------------*/
+/*||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||Slots for MainWindow||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
+/*--------------------------------------------------------------------------------------------------------------------------------------------------*/
 void Ocean::Hidder()
 {
     Ocean::spacer->QSpacerItem::changeSize(0, 0);
@@ -357,24 +386,24 @@ void Ocean::PassNamesOfSongsToMusicList(const QStringList &songs)
 
     return;
 }
+/*--------------------------------------------------------------------------------------------------------------------------------------------------*/
+/*||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||Slots for MainWindow||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
+/*--------------------------------------------------------------------------------------------------------------------------------------------------*/
 
-void Ocean::ShowContextMenuOfPlayList(const QPoint &point)
-{
-    QPoint globalPoint = Ocean::playLists->QWidget::mapToGlobal(point);
 
-    // Create menu and insert some actions
-    QMenu myMenu;
-    myMenu.QMenu::addAction("Save", this, SLOT(SavePlaylist()));
-    myMenu.QMenu::addAction("Rename", this, SLOT(RenamePlaylist()));
-    myMenu.QMenu::addAction("Create", this, SLOT(CreatePlaylist()));
-    myMenu.QMenu::addAction("Delete", this, SLOT(EraseItemFromPlayList()));
+/*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
+/*||||||||||||||||||||||||||||||||||||||||||||||||||this->QWidget||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
+/*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
 
-    // Show context menu at handling position
-    myMenu.QMenu::exec(globalPoint);
 
-    return;
-}
 
+/*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
+/*|||||||||||||||||||||||||||||||||||||||||||||||||||||MANAGERS||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
+/*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
+
+/*--------------------------------------------------------------------------------------------------------------------------------------------------*/
+/*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||Context Menu of Music list|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
+/*--------------------------------------------------------------------------------------------------------------------------------------------------*/
 void Ocean::ShowContextMenuOfMusicList(const QPoint &point)
 {
     QPoint globalPoint = Ocean::playLists->QWidget::mapToGlobal(point);
@@ -438,10 +467,6 @@ void Ocean::EraseItemFromMusicList()
     return;
 }
 
-
-/*--------------------------------------------------------------------------------------------------------------------------------------------------*/
-/*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||PLAYLIST|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
-/*--------------------------------------------------------------------------------------------------------------------------------------------------*/
 void Ocean::AddSongIntoPlayListByIndex()
 {
     Ocean::getStringWithSelectedPlaylist->SelectPlaylist::PassAllPlaylistsIntoWidget(Ocean::GetAllItemsFromList());
@@ -467,6 +492,30 @@ void Ocean::ParseMusicList(const QString &name)
                                                             //name, //current playlist
                                                             //Ocean::musicList->QListWidget::currentRow()); //index of song
 
+
+    return;
+}
+/*--------------------------------------------------------------------------------------------------------------------------------------------------*/
+/*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||Context Menu of Music list|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
+/*--------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+
+/*--------------------------------------------------------------------------------------------------------------------------------------------------*/
+/*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||Context Menu of Playlists||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
+/*--------------------------------------------------------------------------------------------------------------------------------------------------*/
+void Ocean::ShowContextMenuOfPlayList(const QPoint &point)
+{
+    QPoint globalPoint = Ocean::playLists->QWidget::mapToGlobal(point);
+
+    // Create menu and insert some actions
+    QMenu myMenu;
+    myMenu.QMenu::addAction("Save", this, SLOT(SavePlaylist()));
+    myMenu.QMenu::addAction("Rename", this, SLOT(RenamePlaylist()));
+    myMenu.QMenu::addAction("Create", this, SLOT(CreatePlaylist()));
+    myMenu.QMenu::addAction("Delete", this, SLOT(EraseItemFromPlayList()));
+
+    // Show context menu at handling position
+    myMenu.QMenu::exec(globalPoint);
 
     return;
 }
@@ -550,6 +599,14 @@ void Ocean::SavePlaylist()
 
     return;
 }
+/*--------------------------------------------------------------------------------------------------------------------------------------------------*/
+/*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||Context Menu of Playlists||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
+/*--------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+
+/*--------------------------------------------------------------------------------------------------------------------------------------------------*/
+/*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||Set PLAYLIST|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
+/*--------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 void Ocean::SetPlayList(QListWidgetItem *item)
 {
@@ -626,9 +683,18 @@ void Ocean::SetCurrentPlayList()
     return;
 }
 /*--------------------------------------------------------------------------------------------------------------------------------------------------*/
-/*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||PLAYLIST|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
+/*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||Set PLAYLIST|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
 /*--------------------------------------------------------------------------------------------------------------------------------------------------*/
 
+/*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
+/*|||||||||||||||||||||||||||||||||||||||||||||||||||||MANAGERS||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
+/*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
+
+
+
+/*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
+/*||||||||||||||||||||||||||||||||||||||||||||||||||||||||UI|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
+/*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
 
 /*--------------------------------------------------------------------------------------------------------------------------------------------------*/
 /*||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||GET STRING WIDGET|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
@@ -648,16 +714,6 @@ void Ocean::ClosegetStringFromUserViaOkay()
 
     //create widget to add tracks into new playlist
     emit this->Ocean::CallOutToCreateWindowThisWidgetToGetAddedTracks();
-
-    return;
-}
-
-void Ocean::IfgetStringFromUserClosed()
-{
-    if(Ocean::getStringFromUser->QWidget::isHidden())
-        this->QWidget::setEnabled(true);
-    else
-        this->QWidget::setDisabled(true);
 
     return;
 }
@@ -684,35 +740,17 @@ void Ocean::ClosegetStringWithSelectedPlaylistViaCancel()
 
     return;
 }
-
-void Ocean::IfgetStringWithSelectedPlaylistClosed()
-{
-    if(Ocean::getStringWithSelectedPlaylist->QWidget::isHidden())
-        this->QWidget::setEnabled(true);
-    else
-        this->QWidget::setDisabled(true);
-
-    return;
-}
 /*--------------------------------------------------------------------------------------------------------------------------------------------------*/
 /*||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||SELECT PLAYLIST|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
 /*--------------------------------------------------------------------------------------------------------------------------------------------------*/
 
-
+/*--------------------------------------------------------------------------------------------------------------------------------------------------*/
+/*||||||||||||||||||||||||||||||||||||||||||||||||||||||||||Widget for get added tracks from widget|||||||||||||||||||||||||||||||||||||||||||||||||*/
+/*--------------------------------------------------------------------------------------------------------------------------------------------------*/
 void Ocean::ClosegetAddedTracksFromWidgetViaCancel()
 {
     this->QWidget::setEnabled(true);
     Ocean::getAddedTracksFromWidget->QWidget::hide();
-
-    return;
-}
-
-void Ocean::IfgetAddedTracksFromWidgetClosed()
-{
-    if(Ocean::getAddedTracksFromWidget->QWidget::isHidden())
-        this->QWidget::setEnabled(true);
-    else
-        this->QWidget::setDisabled(true);
 
     return;
 }
@@ -730,6 +768,51 @@ void Ocean::PassAddedTracksIntoBuffer(const QStringList &list)
 
     this->QWidget::setEnabled(true);
     Ocean::getAddedTracksFromWidget->QWidget::hide();
+
+    return;
+}
+/*--------------------------------------------------------------------------------------------------------------------------------------------------*/
+/*||||||||||||||||||||||||||||||||||||||||||||||||||||||||||Widget for get added tracks from widget|||||||||||||||||||||||||||||||||||||||||||||||||*/
+/*--------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+/*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
+/*||||||||||||||||||||||||||||||||||||||||||||||||||||||||UI|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
+/*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
+
+
+//REFACTORED THIS CODE (make one SLOT)
+//REFACTORED THIS CODE (make one SLOT)
+//REFACTORED THIS CODE (make one SLOT)
+/*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
+/*||||||||||||||||||||||||||||||||||||||||||||||||||||||Tools||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
+/*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
+
+void Ocean::IfgetStringFromUserClosed()
+{
+    if(Ocean::getStringFromUser->QWidget::isHidden())
+        this->QWidget::setEnabled(true);
+    else
+        this->QWidget::setDisabled(true);
+
+    return;
+}
+
+void Ocean::IfgetStringWithSelectedPlaylistClosed()
+{
+    if(Ocean::getStringWithSelectedPlaylist->QWidget::isHidden())
+        this->QWidget::setEnabled(true);
+    else
+        this->QWidget::setDisabled(true);
+
+    return;
+}
+
+void Ocean::IfgetAddedTracksFromWidgetClosed()
+{
+    if(Ocean::getAddedTracksFromWidget->QWidget::isHidden())
+        this->QWidget::setEnabled(true);
+    else
+        this->QWidget::setDisabled(true);
 
     return;
 }
@@ -767,6 +850,16 @@ void Ocean::WriteDefaultPlayList()
     return;
 }
 
+/*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
+/*||||||||||||||||||||||||||||||||||||||||||||||||||||||Tools||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
+/*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
+
+
+
+/*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
+/*|||||||||||||||||||||||||||||||||||||||||||||||||METHODS FOR UI||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
+/*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
+
 QStringList Ocean::GetAllItemsFromList()
 {
     QStringList list;
@@ -780,17 +873,6 @@ QStringList Ocean::GetAllItemsFromList()
     return  list;
 }
 
-void Ocean::resizeEvent(QResizeEvent *event)
-{
-    QMainWindow::resizeEvent(event);
-
-    int short h = event->QResizeEvent::size().QSize::height();
-    int short w = event->QResizeEvent::size().QSize::width();
-
-    if((h <= 200) || (w <= 400))
-        Ocean::Hidder();
-    else
-        Ocean::Shower();
-
-    return;
-}
+/*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
+/*|||||||||||||||||||||||||||||||||||||||||||||||||METHODS FOR UI||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
+/*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/

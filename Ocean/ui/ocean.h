@@ -104,7 +104,7 @@ private slots:
     /*
         1) Context Menu of Music list
         2) Context Menu of Playlists
-        3) Slots for Ocean::playlistmanager
+        3) Set play list (current after new tracks in app || or just set playlist by name)
     */
 
     //||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
@@ -147,11 +147,11 @@ private slots:
 
     //||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 
-    // SLOTS for managers --------------------------------------------------------- 3
-    // Slot for set Playlist
+    // Set Playlist --------------------------------------------------------------- 3
+    // Set Playlist
     void SetPlayList(QListWidgetItem *item);
     void SetCurrentPlayList();
-    // SLOTS for managers --------------------------------------------------------- 3
+    // Set Playlist --------------------------------------------------------------- 3
 
     //||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 
@@ -225,6 +225,9 @@ private slots:
         6) Write name of default playlist 'all' into QListWidget
     */
 
+    //REFACTORED THIS CODE (make one SLOT)
+    //REFACTORED THIS CODE (make one SLOT)
+    //REFACTORED THIS CODE (make one SLOT)
     void IfgetStringFromUserClosed();//-----------------------------------------1
     void IfgetStringWithSelectedPlaylistClosed();//-----------------------------2
     void IfgetAddedTracksFromWidgetClosed();//----------------------------------3
