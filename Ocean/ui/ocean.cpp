@@ -633,12 +633,15 @@ void Ocean::SetCurrentPlayList()
 {
     if(Ocean::playlistmanager->Playlist::GetCurrentPlayListName() == "all")
     {
-        //ZERO ON THISA SPOT
-        //NEED TO FIX IT!!!!!!!!!!!
+        //BUG HERE
+        // -- PROG CRACHED
+        // need to fix for get current position of track in ocean.cpp
         qint64 position = Ocean::playermanager->Player::GetPositionOfTrack();
 
-        //bug here on this side
-        //need to check index by name of track (maybe)
+        //ZERO ON THISA SPOT
+        //NEED TO FIX IT!!!!!!!!!!!
+        qDebug() << "position " << position;
+
         const unsigned short int index = Ocean::playlistmanager->Playlist::GetCurrentPlayList()->QMediaPlaylist::currentIndex();
         QString nameOfSongBuffer = "";
 
@@ -780,9 +783,7 @@ void Ocean::PassAddedTracksIntoBuffer(const QStringList &list)
 /*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
 
 
-//REFACTORED THIS CODE (make one SLOT)
-//REFACTORED THIS CODE (make one SLOT)
-//REFACTORED THIS CODE (make one SLOT)
+
 /*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
 /*||||||||||||||||||||||||||||||||||||||||||||||||||||||Tools||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
 /*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/

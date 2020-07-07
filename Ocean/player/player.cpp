@@ -29,6 +29,11 @@ Player::Player()
         abort();
     }
 
+    //BUG HERE
+    // -- PROG CRACHED
+    // need to fix for get current position of track in ocean.cpp
+    QObject::connect(Player::player, &QMediaPlayer::positionChanged, Player::player, &QMediaPlayer::setPosition);
+
     return;
 }
 
@@ -78,7 +83,7 @@ const QMediaPlayer* Player::GetPlayer()
 
 qint64 Player::GetPositionOfTrack()
 {
-    return Player::player->position();
+    return Player::player->QMediaPlayer::position();
 }
 
 void Player::SetPositionOfTrack(const qint64 &position)
