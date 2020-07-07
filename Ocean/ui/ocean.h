@@ -225,9 +225,6 @@ private slots:
         6) Write name of default playlist 'all' into QListWidget
     */
 
-    //REFACTORED THIS CODE (make one SLOT)
-    //REFACTORED THIS CODE (make one SLOT)
-    //REFACTORED THIS CODE (make one SLOT)
     void IfgetStringFromUserClosed();//-----------------------------------------1
     void IfgetStringWithSelectedPlaylistClosed();//-----------------------------2
     void IfgetAddedTracksFromWidgetClosed();//----------------------------------3
