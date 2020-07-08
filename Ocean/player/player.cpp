@@ -29,10 +29,9 @@ Player::Player()
         abort();
     }
 
-    //BUG HERE
-    // -- PROG CRACHED
-    // need to fix for get current position of track in ocean.cpp
-    QObject::connect(Player::player, &QMediaPlayer::positionChanged, Player::player, &QMediaPlayer::setPosition);
+    QMediaObject::setNotifyInterval(500);
+
+    QObject::connect(Player::player, &QMediaPlayer::positionChanged, this, &Player::ChangedPosition);
 
     return;
 }
@@ -75,6 +74,15 @@ void Player::CallSetVolume(const unsigned short int &volume)
     return;
 }
 
+void Player::ChangedPosition(qint64 position)
+{
+    Player::currentPosition = position;
+
+    qDebug() << "current position: " << currentPosition;
+
+    return;
+}
+
 //Methods
 const QMediaPlayer* Player::GetPlayer()
 {
@@ -83,10 +91,10 @@ const QMediaPlayer* Player::GetPlayer()
 
 qint64 Player::GetPositionOfTrack()
 {
-    return Player::player->QMediaPlayer::position();
+    return this->Player::currentPosition;
 }
 
-void Player::SetPositionOfTrack(const qint64 &position)
+void Player::SetPositionOfTrack(const qint64 position)
 {
     Player::player->QMediaPlayer::setPosition(position);
 
