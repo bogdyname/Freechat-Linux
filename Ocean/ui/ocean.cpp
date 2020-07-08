@@ -633,12 +633,8 @@ void Ocean::SetCurrentPlayList()
 {
     if(Ocean::playlistmanager->Playlist::GetCurrentPlayListName() == "all")
     {
-        //ZERO ON THISA SPOT
-        //NEED TO FIX IT!!!!!!!!!!!
-        qint64 position = Ocean::playermanager->Player::GetPositionOfTrack();
+        qDebug() << "!!!!!!!!!!!!!!!!position " << Ocean::playermanager->Player::GetPositionOfTrack();
 
-        //bug here on this side
-        //need to check index by name of track (maybe)
         const unsigned short int index = Ocean::playlistmanager->Playlist::GetCurrentPlayList()->QMediaPlaylist::currentIndex();
         QString nameOfSongBuffer = "";
 
@@ -673,10 +669,10 @@ void Ocean::SetCurrentPlayList()
 
             //set current track
             Ocean::playlistmanager->Playlist::GetCurrentPlayList()->QMediaPlaylist::setCurrentIndex(newIndex);
-            //set current position
-            Ocean::playermanager->Player::SetPositionOfTrack(position);
             //play this track
             Ocean::playermanager->QMediaPlayer::play();
+            //set current position
+            Ocean::playermanager->Player::SetPositionOfTrack(Ocean::playermanager->Player::GetPositionOfTrack());
         }
     }
 
@@ -780,9 +776,7 @@ void Ocean::PassAddedTracksIntoBuffer(const QStringList &list)
 /*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
 
 
-//REFACTORED THIS CODE (make one SLOT)
-//REFACTORED THIS CODE (make one SLOT)
-//REFACTORED THIS CODE (make one SLOT)
+
 /*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
 /*||||||||||||||||||||||||||||||||||||||||||||||||||||||Tools||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
 /*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/

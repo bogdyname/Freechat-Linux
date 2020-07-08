@@ -29,6 +29,10 @@ Player::Player()
         abort();
     }
 
+    QMediaObject::setNotifyInterval(500);
+
+    QObject::connect(Player::player, &QMediaPlayer::positionChanged, this, &Player::ChangedPosition);
+
     return;
 }
 
@@ -70,6 +74,15 @@ void Player::CallSetVolume(const unsigned short int &volume)
     return;
 }
 
+void Player::ChangedPosition(qint64 position)
+{
+    Player::currentPosition = position;
+
+    qDebug() << "current position: " << currentPosition;
+
+    return;
+}
+
 //Methods
 const QMediaPlayer* Player::GetPlayer()
 {
@@ -78,10 +91,10 @@ const QMediaPlayer* Player::GetPlayer()
 
 qint64 Player::GetPositionOfTrack()
 {
-    return Player::player->position();
+    return this->Player::currentPosition;
 }
 
-void Player::SetPositionOfTrack(const qint64 &position)
+void Player::SetPositionOfTrack(const qint64 position)
 {
     Player::player->QMediaPlayer::setPosition(position);
 

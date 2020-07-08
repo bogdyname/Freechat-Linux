@@ -9,6 +9,7 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
+#include <QTimer>
 #include <QMediaObject>
 #include <QMediaPlayer>
 #include <QMediaPlaylist>
@@ -26,10 +27,13 @@ public slots:
     void CallSetPlayList(QMediaPlaylist *playlist);
     void CallSetVolume(const unsigned short int &volume);
 
+private slots:
+    void ChangedPosition(qint64 position);
+
 public:
     const QMediaPlayer* GetPlayer();
     qint64 GetPositionOfTrack();
-    void SetPositionOfTrack(const qint64 &position);
+    void SetPositionOfTrack(const qint64 position);
 
 private:
     bool SetModOfPlayer(const unsigned short int &mod);
@@ -38,6 +42,7 @@ private:
 
 private:
     QMediaPlayer *player = nullptr;
+    qint64 currentPosition;
 };
 
 #endif
