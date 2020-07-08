@@ -633,14 +633,7 @@ void Ocean::SetCurrentPlayList()
 {
     if(Ocean::playlistmanager->Playlist::GetCurrentPlayListName() == "all")
     {
-        //BUG HERE
-        // -- PROG CRACHED
-        // need to fix for get current position of track in ocean.cpp
-        qint64 position = Ocean::playermanager->Player::GetPositionOfTrack();
-
-        //ZERO ON THISA SPOT
-        //NEED TO FIX IT!!!!!!!!!!!
-        qDebug() << "position " << position;
+        qDebug() << "!!!!!!!!!!!!!!!!position " << Ocean::playermanager->Player::GetPositionOfTrack();
 
         const unsigned short int index = Ocean::playlistmanager->Playlist::GetCurrentPlayList()->QMediaPlaylist::currentIndex();
         QString nameOfSongBuffer = "";
@@ -676,10 +669,10 @@ void Ocean::SetCurrentPlayList()
 
             //set current track
             Ocean::playlistmanager->Playlist::GetCurrentPlayList()->QMediaPlaylist::setCurrentIndex(newIndex);
-            //set current position
-            Ocean::playermanager->Player::SetPositionOfTrack(position);
             //play this track
             Ocean::playermanager->QMediaPlayer::play();
+            //set current position
+            Ocean::playermanager->Player::SetPositionOfTrack(Ocean::playermanager->Player::GetPositionOfTrack());
         }
     }
 
