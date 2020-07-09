@@ -658,52 +658,62 @@ bool Playlist::AddSongIntoPlayListByName(const QString &song, const QString &nam
 //BUG HERE
 bool Playlist::RemoveTrackByIndex(const unsigned short int &index)
 {
-    bool result = false;
+    qDebug() << "DATA: " << Playlist::currentPlaylist->QMediaPlaylist::mediaCount();
+    qDebug() << "index: " << index;
 
-    Playlist::currentPlaylist->QMediaPlaylist::removeMedia(index) ?
-                result = true : result = false;
-
-    Playlist::currentPlaylist->QMediaPlaylist::save(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/" + Playlist::currentPlaylistName + ".m3u8"), "m3u8");
-
-    return result;
+    if(Playlist::currentPlaylist->QMediaPlaylist::removeMedia(index))
+        if(Playlist::currentPlaylist->QMediaPlaylist::save(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/" + Playlist::currentPlaylistName + ".m3u8"), "m3u8"))
+            return true;
+        else
+            return false;
+    else
+        return false;
 }
 
 //BUG HERE
 bool Playlist::RemoveTrackByIndex(const unsigned short int &index, const QString &name)
 {
+   qDebug() << "DATA: " << Playlist::currentPlaylist->QMediaPlaylist::mediaCount();
+   qDebug() << "index and name: " << index << name;
+
    QMediaPlaylist *buffer = new QMediaPlaylist();
-   buffer->QMediaPlaylist::load(QCoreApplication::applicationDirPath() + "/bin/" + name, "m3u8");
+   buffer->QMediaPlaylist::load(QCoreApplication::applicationDirPath() + "/bin/" + name + ".m3u8", "m3u8");
 
-   buffer->QMediaPlaylist::removeMedia(index);
-
-   if(buffer->QMediaPlaylist::save(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/" + name + ".m3u8"), "m3u8"))
+   if(buffer->QMediaPlaylist::removeMedia(index))
    {
-       delete buffer;
-       return true;
+       if(buffer->QMediaPlaylist::save(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/" + name + ".m3u8"), "m3u8"))
+       {
+           delete buffer;
+           return true;
+       }
+       else
+       {
+           delete buffer;
+           return false;
+       }
    }
    else
-   {
-       delete buffer;
        return false;
-   }
 }
 
 //BUG HERE
 bool Playlist::RemoveAllTracks()
 {
-    bool result = false;
+    qDebug() << "DATA: " << Playlist::currentPlaylist->QMediaPlaylist::mediaCount();
 
-    Playlist::currentPlaylist->QMediaPlaylist::removeMedia(0, QMediaPlaylist::mediaCount() - 1) ?
-                result = true : result = false;
-
-    return result;
+    if(Playlist::currentPlaylist->QMediaPlaylist::removeMedia(0, QMediaPlaylist::mediaCount() - 1))
+        return true;
+    else
+        return false;
 }
 
 //BUG HERE
 bool Playlist::RemoveAllTracks(const QString &name)
 {
+    qDebug() << "DATA: " << Playlist::currentPlaylist->QMediaPlaylist::mediaCount();
+
     QMediaPlaylist *buffer = new QMediaPlaylist();
-    buffer->QMediaPlaylist::load(QCoreApplication::applicationDirPath() + "/bin/" + name, "m3u8");
+    buffer->QMediaPlaylist::load(QCoreApplication::applicationDirPath() + "/bin/" + name + ".m3u8", "m3u8");
 
     buffer->QMediaPlaylist::removeMedia(0, QMediaPlaylist::mediaCount() - 1);
 

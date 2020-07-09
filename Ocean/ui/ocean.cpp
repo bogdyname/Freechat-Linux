@@ -425,12 +425,14 @@ void Ocean::EraseAllItemsFromMusicList()
 
     for(unsigned short int iter = 0; iter < Ocean::playLists->QListWidget::selectedItems().QList::size(); ++iter)
     {
-        QListWidgetItem *item = Ocean::playLists->QListWidget::takeItem(Ocean::musicList->QListWidget::currentRow());
+        QListWidgetItem *item = Ocean::playLists->QListWidget::takeItem(Ocean::playLists->QListWidget::currentRow());
 
-        if(item->text() == Ocean::playlistmanager->GetCurrentPlayListName())
-            Ocean::playlistmanager->Playlist::CallOutRemoveAllTracksFromCurrentPlayList();
+        if(item->text() == Ocean::playlistmanager->Playlist::GetCurrentPlayListName())
+            emit Ocean::playlistmanager->Playlist::CallOutRemoveAllTracksFromCurrentPlayList();
         else
-            Ocean::playlistmanager->Playlist::CallOutRemoveAllTracksFromPlayListByName(item->text());
+            emit Ocean::playlistmanager->Playlist::CallOutRemoveAllTracksFromPlayListByName(item->text());
+
+        item = nullptr;
     }
 
     return;
@@ -452,12 +454,14 @@ void Ocean::EraseItemFromMusicList()
         //remove from current playlist
         for(unsigned short int iterPlayList = 0; iterPlayList < Ocean::playLists->QListWidget::selectedItems().QList::size(); ++iterPlayList)
         {
-            QListWidgetItem *playlistIter = Ocean::playLists->QListWidget::item(Ocean::musicList->QListWidget::currentRow());
+            QListWidgetItem *playlistIter = Ocean::playLists->QListWidget::item(Ocean::playLists->QListWidget::currentRow());
 
-            if(playlistIter->text() == Ocean::playlistmanager->Playlist::GetCurrentPlayListName())
-                Ocean::playlistmanager->Playlist::CallOutRemoveTrackFromCurrentPlayListByIndex(iter);
+            if(playlistIter->QListWidgetItem::text() == Ocean::playlistmanager->Playlist::GetCurrentPlayListName())
+                emit Ocean::playlistmanager->Playlist::CallOutRemoveTrackFromCurrentPlayListByIndex(Ocean::musicList->QListWidget::currentRow());
             else
-                Ocean::playlistmanager->Playlist::CallOutRemoveTrackFromPlayListByIndex(iter, playlistIter->text());
+                emit Ocean::playlistmanager->Playlist::CallOutRemoveTrackFromPlayListByIndex(Ocean::musicList->QListWidget::currentRow(), playlistIter->text());
+
+            playlistIter = nullptr;
         }
 
         // And remove it
