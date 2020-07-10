@@ -513,10 +513,9 @@ void Ocean::ShowContextMenuOfPlayList(const QPoint &point)
 
     // Create menu and insert some actions
     QMenu myMenu;
-    myMenu.QMenu::addAction("Save", this, SLOT(SavePlaylist()));
-    myMenu.QMenu::addAction("Rename", this, SLOT(RenamePlaylist()));
     myMenu.QMenu::addAction("Create", this, SLOT(CreatePlaylist()));
     myMenu.QMenu::addAction("Delete", this, SLOT(EraseItemFromPlayList()));
+    myMenu.QMenu::addAction("Rename", this, SLOT(RenamePlaylist()));
 
     // Show context menu at handling position
     myMenu.QMenu::exec(globalPoint);
@@ -584,22 +583,6 @@ void Ocean::Rename(const QListWidgetItem *item, QString buffer)
     item->text() == Ocean::playlistmanager->Playlist::GetCurrentPlayListName() ?
     emit Ocean::playlistmanager->Playlist::CallOutRenameCurrentPlayList(item->text(), Ocean::playlistmanager->Playlist::GetCurrentPlayList()) :
     emit Ocean::playlistmanager->Playlist::CallOutRenameSelectedPlayList(buffer, item->text());
-
-    return;
-}
-
-//TTS
-void Ocean::SavePlaylist()
-{
-    for(unsigned short int iter = 0; iter < Ocean::playLists->QListWidget::selectedItems().size(); ++iter)
-    {
-        // Get curent item on selected row
-        QListWidgetItem *item = Ocean::playLists->QListWidget::item(Ocean::playLists->QListWidget::currentRow());
-
-        qDebug() << item->text();
-
-        //create if() for QMediaPlaylist (currentPlaylist || other playlist)
-    }
 
     return;
 }
