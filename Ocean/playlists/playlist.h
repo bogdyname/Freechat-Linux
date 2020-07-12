@@ -79,8 +79,8 @@ signals:
     void CallOutCreateNewPlayList(const QString &name, const QStringList &tracks);
     /*----------------------------------------delete----------------------------------------*/
     void CallOutRemovePlayListByName(const QString &name);
-    void CallOutRemoveTrackFromCurrentPlayListByIndex(const unsigned short int &indexOfTrack);
-    void CallOutRemoveTrackFromPlayListByIndex(const unsigned short int &indexOfTrack, const QString &name);
+    void CallOutRemoveTrackFromCurrentPlayListByIndex(const int &indexOfTrack);
+    void CallOutRemoveTrackFromPlayListByIndex(const int &indexOfTrack, const QString &name);
     void CallOutRemoveAllTracksFromCurrentPlayList();
     void CallOutRemoveAllTracksFromPlayListByName(const QString &name);
     /*--------------------------------add song into playlist--------------------------------*/
@@ -107,8 +107,8 @@ private slots:
     void CreateNewPlayList(const QString &name, const QStringList &tracks);
     /*----------------------------------------delete----------------------------------------*/
     void RemovePlayListByName(const QString &name);
-    void RemoveTrackFromCurrentPlayListByIndex(const unsigned short int &indexOfTrack);
-    void RemoveTrackFromPlayListByIndex(const unsigned short int &indexOfTrack, const QString &name);
+    void RemoveTrackFromCurrentPlayListByIndex(const int &indexOfTrack);
+    void RemoveTrackFromPlayListByIndex(const int &indexOfTrack, const QString &name);
     void RemoveAllTracksFromCurrentPlayList();
     void RemoveAllTracksFromPlayListByName(const QString &name);
     /*--------------------------------add song into playlist--------------------------------*/
@@ -209,8 +209,8 @@ private:
     bool RenamePlayList(const QString &newName, const QString &currentName); //--------------------------------------------------------------------------------------9)
     bool CheckSettingsDir();//--------------------------------------------------------------------------------------------------------------------------------------10) (DONE)
     bool AddSongIntoPlayListByName(const QString &song, const QString &nameOfPlayList, const QString &nameOfCurrentPlayList, const unsigned short int &index); //---11)
-    bool RemoveTrackByIndex(const unsigned short int &index); //----------------------------------------------------------------------------------------------------12)
-    bool RemoveTrackByIndex(const unsigned short int &index, const QString &name); //-------------------------------------------------------------------------------13)
+    bool RemoveTrackByIndex(const int &index); //----------------------------------------------------------------------------------------------------12)
+    bool RemoveTrackByIndex(const int &index, const QString &name); //-------------------------------------------------------------------------------13)
     bool RemoveAllTracks();
     bool RemoveAllTracks(const QString &name);
     bool MoveSongInsidePlaylistByIndex(const unsigned short int &currentIndex, const unsigned short int &newIndex); //----------------------------------------------14)
