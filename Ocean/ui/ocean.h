@@ -136,13 +136,11 @@ private slots:
         1) Delete item from QListWidget (Ocean::playLists)
         2) Create playlist via own widget (Ocean::getStringFromUser)
         3) Rename playlist via own widget (Ocean::getStringFromUser)
-        4) Save playlist via own object for QMediaPlaylist (Ocean::playlistmanager)
     */
     void EraseItemFromPlayList();
     void CreatePlaylist();
     void RenamePlaylist();
     void Rename(const QListWidgetItem *item, QString buffer);
-    void SavePlaylist();
     // Context Menu of Playlists -------------------------------------------------- 2
 
     //||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
