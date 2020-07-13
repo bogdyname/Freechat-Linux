@@ -148,6 +148,7 @@ private slots:
     // Set Playlist --------------------------------------------------------------- 3
     // Set Playlist
     void SetPlayList(QListWidgetItem *item);
+    void SetPlayListByTrack(QListWidgetItem *item);
     void SetCurrentPlayList();
     // Set Playlist --------------------------------------------------------------- 3
 

@@ -195,7 +195,7 @@ Ocean::Ocean(QWidget *parent)
     3)Playlist manager
         3.1) next track
         3.2) previous track
-        3.3) set track by index
+        3.3) set playlist by track (set track by index)
     ---------------------Managers---------------------
 
     -----------------------UI-------------------------
@@ -240,7 +240,7 @@ Ocean::Ocean(QWidget *parent)
     //Playlist manager
     QObject::connect(Ocean::nextTrack, &QPushButton::clicked, Ocean::playlistmanager, &Playlist::SetNextTrack);
     QObject::connect(Ocean::previousTrack, &QPushButton::clicked, Ocean::playlistmanager, &Playlist::SetPreviousTrack);
-    QObject::connect(Ocean::musicList, &QListWidget::itemDoubleClicked, Ocean::playlistmanager, &Playlist::SetTrackByIndex);
+    QObject::connect(Ocean::musicList, &QListWidget::itemDoubleClicked, this, &Ocean::SetPlayListByTrack);
 
     //UI-----------------------------------------------
     //UI Lists
@@ -473,9 +473,6 @@ void Ocean::EraseItemFromMusicList()
                 emit this->Ocean::CallOutPassNamesOfSongsToMusicList(Ocean::playlistmanager->Playlist::GetSongsFromCurrentPlayList(playlistIter->text() + ".m3u8"));
             }
         }
-
-        // And remove it
-        Ocean::musicList->QListWidget::removeItemWidget(item);
     }
 
     return;
@@ -625,6 +622,37 @@ void Ocean::SetPlayList(QListWidgetItem *item)
 
     //show songs in music list
     emit this->Ocean::CallOutPassNamesOfSongsToMusicList(Ocean::playlistmanager->Playlist::GetSongsFromCurrentPlayList(item->QListWidgetItem::text() + ".m3u8"));
+
+    return;
+}
+
+void Ocean::SetPlayListByTrack(QListWidgetItem *item)
+{
+    for(unsigned short int iterPlayList = 0; iterPlayList < Ocean::playLists->QListWidget::selectedItems().QList::size(); ++iterPlayList)
+    {
+        //playlist
+        QListWidgetItem *iter = Ocean::playLists->QListWidget::item(Ocean::playLists->QListWidget::currentRow());
+
+        //set name of playlist
+        emit Ocean::playlistmanager->Playlist::CallOutSetCurrentPlayListName(iter->QListWidgetItem::text());
+
+        //clear current playlist
+        Ocean::playlistmanager->Playlist::GetCurrentPlayList()->QMediaPlaylist::clear();
+
+        //load
+        if(Ocean::playlistmanager->Playlist::LoadPlayList(Ocean::playlistmanager->Playlist::GetCurrentPlayListName()))
+        {
+            Ocean::playermanager->QMediaPlayer::setPlaylist(Ocean::playlistmanager->Playlist::GetCurrentPlayList());
+            Ocean::playermanager->QMediaPlayer::play();
+
+            //set track by index and play it
+            const int index = item->QListWidgetItem::listWidget()->QListWidget::row(item);
+            Ocean::playlistmanager->Playlist::SetTrackByIndex(index);
+        }
+
+        //show songs in music list
+        emit this->Ocean::CallOutPassNamesOfSongsToMusicList(Ocean::playlistmanager->Playlist::GetSongsFromCurrentPlayList(iter->QListWidgetItem::text() + ".m3u8"));
+    }
 
     return;
 }
