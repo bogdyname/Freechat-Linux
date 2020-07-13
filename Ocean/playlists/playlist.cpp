@@ -91,7 +91,7 @@ Playlist::Playlist()
     QObject::connect(this, &Playlist::CallOutRemoveAllTracksFromPlayListByName, this, &Playlist::RemoveAllTracksFromPlayListByName);
     //Add song
     QObject::connect(this, &Playlist::CallOutAddSongIntoPlayList, this, &Playlist::AddSongIntoPlayList);
-    QObject::connect(this, &Playlist::CallOutAddSongIntoPlayListFromDefaultPlayList, this, &Playlist::AddSongIntoPlayListFromDefaultPlayList);
+    QObject::connect(this, &Playlist::CallOutAddSongIntoPlayListFromCurrentPlayList, this, &Playlist::AddSongIntoPlayListFromCurrentPlayList);
     //Move song
     QObject::connect(this, &Playlist::CallOutMoveSongInsideCurrentPlayList, this, &Playlist::MoveSongInsideCurrentPlayList);
     QObject::connect(this, &Playlist::CallOutMoveSongInsidePlayListByName, this, &Playlist::MoveSongInsidePlayListByName);
@@ -114,6 +114,8 @@ Playlist::~Playlist()
 /*--------------------------------------------------------------------------------------------------------------------------------------------------*/
 /*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||SLOTS PRIVATE||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
 /*--------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+/*---------------------------------------SAVE METHODS---------------------------------------*/
 void Playlist::SaveCurrentPlayList(const QString &name, const QStringList &newListOfSongs, QMediaPlaylist *currentPlaylist)
 {
     if(name == "" && newListOfSongs.QStringList::isEmpty())
@@ -152,7 +154,10 @@ void Playlist::SaveNewPlayList(const QString &name)
 
     return;
 }
+/*---------------------------------------SAVE METHODS---------------------------------------*/
 
+
+/*--------------------------------------RENAME METHODS--------------------------------------*/
 void Playlist::RenameCurrentPlayList(const QString &newName, QMediaPlaylist *currentPlaylist)
 {
     if(newName == "")
@@ -180,7 +185,10 @@ void Playlist::RenameSelectedPlayList(const QString &newName, const QString &cur
 
     return;
 }
+/*--------------------------------------RENAME METHODS--------------------------------------*/
 
+
+/*----------------------------------------SETTINGS METHODS------------------------------------*/
 void Playlist::SetCurrentPlayListName(const QString &nameOfCurrentPlaylist)
 {
     Playlist::currentPlaylistName.QString::clear();
@@ -188,7 +196,10 @@ void Playlist::SetCurrentPlayListName(const QString &nameOfCurrentPlaylist)
 
     return;
 }
+/*----------------------------------------SETTINGS METHODS------------------------------------*/
 
+
+/*----------------------------------------CREATE METHODS--------------------------------------*/
 void Playlist::CreateNewPlayList(const QString &name, const QStringList &tracks)
 {
     if(name == "")
@@ -201,7 +212,10 @@ void Playlist::CreateNewPlayList(const QString &name, const QStringList &tracks)
 
     return;
 }
+/*----------------------------------------CREATE METHODS--------------------------------------*/
 
+
+/*----------------------------------------DELETE METHODS--------------------------------------*/
 void Playlist::RemovePlayListByName(const QString &name)
 {
     if(name == "")
@@ -214,7 +228,10 @@ void Playlist::RemovePlayListByName(const QString &name)
 
     return;
 }
+/*----------------------------------------DELETE METHODS--------------------------------------*/
 
+
+/*--------------------------------------REMOVE METHODS--------------------------------------*/
 void Playlist::RemoveTrackFromCurrentPlayListByIndex(const int &indexOfTrack)
 {
     if(Playlist::RemoveTrackByIndex(indexOfTrack))
@@ -257,8 +274,11 @@ void Playlist::RemoveAllTracksFromPlayListByName(const QString &name)
 
     return;
 }
+/*--------------------------------------REMOVE METHODS--------------------------------------*/
 
-void Playlist::AddSongIntoPlayList(const QString &song, const QString &nameOfPlayList, const QString &nameOfCurrentPlayList, const unsigned short int &index)
+
+/*------------------------------------------ADD METHODS--------------------------------------*/
+void Playlist::AddSongIntoPlayList(const QString &song, const QString &nameOfPlayList, const QString &nameOfCurrentPlayList, const int &index)
 {
     if(Playlist::AddSongIntoPlayListByName(song, nameOfPlayList, nameOfCurrentPlayList, index))
         qDebug() << "song successed added into '" << nameOfPlayList << "' -" << song;
@@ -268,7 +288,7 @@ void Playlist::AddSongIntoPlayList(const QString &song, const QString &nameOfPla
     return;
 }
 
-void Playlist::AddSongIntoPlayListFromDefaultPlayList(const QString &song, const QString &nameOfPlayList, const unsigned short int &index)
+void Playlist::AddSongIntoPlayListFromCurrentPlayList(const QString &song, const QString &nameOfPlayList, const int &index)
 {
     if(Playlist::AddSongIntoPlayListByName(song, nameOfPlayList, "default", index))
         qDebug() << "song successed added into '" << nameOfPlayList << "' -" << song;
@@ -277,8 +297,11 @@ void Playlist::AddSongIntoPlayListFromDefaultPlayList(const QString &song, const
 
     return;
 }
+/*------------------------------------------ADD METHODS--------------------------------------*/
 
-void Playlist::MoveSongInsideCurrentPlayList(const unsigned short int &currentIndex, const unsigned short int &newIndex)
+
+/*---------------------------------------MOVE METHODS---------------------------------------*/
+void Playlist::MoveSongInsideCurrentPlayList(const int &currentIndex, const int &newIndex)
 {
     if(Playlist::MoveSongInsidePlaylistByIndex(currentIndex, newIndex))
         qDebug() << "track is moved into " << newIndex << "from " << currentIndex;
@@ -288,7 +311,7 @@ void Playlist::MoveSongInsideCurrentPlayList(const unsigned short int &currentIn
     return;
 }
 
-void Playlist::MoveSongInsidePlayListByName(const unsigned short int &currentIndex, const unsigned short int &newIndex, const QString &name)
+void Playlist::MoveSongInsidePlayListByName(const int &currentIndex, const int &newIndex, const QString &name)
 {
     if(name == "")
         return;
@@ -300,6 +323,8 @@ void Playlist::MoveSongInsidePlayListByName(const unsigned short int &currentInd
 
     return;
 }
+/*---------------------------------------MOVE METHODS---------------------------------------*/
+
 /*--------------------------------------------------------------------------------------------------------------------------------------------------*/
 /*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||SLOTS PRIVATE||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
 /*--------------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -322,10 +347,9 @@ void Playlist::SetPreviousTrack()
     return;
 }
 
-void Playlist::SetTrackByIndex(QListWidgetItem *indexOfTrack)
+void Playlist::SetTrackByIndex(const int &indexOfTrack)
 {
-    const unsigned short int index = indexOfTrack->listWidget()->row(indexOfTrack);
-    Playlist::currentPlaylist->QMediaPlaylist::setCurrentIndex(index);
+    Playlist::currentPlaylist->QMediaPlaylist::setCurrentIndex(indexOfTrack);
 
     return;
 }
@@ -452,6 +476,8 @@ const QStringList Playlist::GetAllTracks()
 /*--------------------------------------------------------------------------------------------------------------------------------------------------*/
 /*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||METHODS PRIVATE||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
 /*--------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+/*----------------------------------------CREATE METHODS--------------------------------------*/
 bool Playlist::CreatePlayList(const QString &name, const QStringList &list)
 {
     if((name == "") || (list.QStringList::isEmpty()))
@@ -476,7 +502,10 @@ bool Playlist::CreatePlayList(const QString &name, const QStringList &list)
         return false;
     }
 }
+/*----------------------------------------CREATE METHODS--------------------------------------*/
 
+
+/*----------------------------------------DELETE METHODS--------------------------------------*/
 bool Playlist::RemovePlayList(const QString &name)
 {
     if(name == "")
@@ -491,7 +520,10 @@ bool Playlist::RemovePlayList(const QString &name)
     else
         return false;
 }
+/*----------------------------------------DELETE METHODS--------------------------------------*/
 
+
+/*----------------------------------------LOAD METHODS---------------------------------------*/
 bool Playlist::LookingForPlayList(const QString &name, QMediaPlaylist *medialist)
 {
     if(name == "")
@@ -507,7 +539,10 @@ bool Playlist::LookingForPlayList(const QString &name, QMediaPlaylist *medialist
     else
         return false;
 }
+/*----------------------------------------LOAD METHODS---------------------------------------*/
 
+
+/*---------------------------------------SAVE METHODS---------------------------------------*/
 bool Playlist::SavePlaylist(const QString &name, const QStringList &newListOfSongs, QMediaPlaylist *currentPlaylist)
 {
     if(name == "" && newListOfSongs.QStringList::isEmpty())
@@ -577,7 +612,10 @@ bool Playlist::SavePlaylist(const QString &name)
         return false;
     }
 }
+/*---------------------------------------SAVE METHODS---------------------------------------*/
 
+
+/*--------------------------------------RENAME METHODS--------------------------------------*/
 bool Playlist::RenamePlayList(const QString &newName, QMediaPlaylist *currentPlaylist)
 {
     if(newName == "")
@@ -612,7 +650,10 @@ bool Playlist::RenamePlayList(const QString &newName, const QString &currentName
         return false;
     }
 }
+/*--------------------------------------RENAME METHODS--------------------------------------*/
 
+
+/*----------------------------------------SETTINGS METHODS------------------------------------*/
 bool Playlist::CheckSettingsDir()
 {
     if(QDir("bin").QDir::exists() == false)
@@ -630,8 +671,11 @@ bool Playlist::CheckSettingsDir()
         return true;
     }
 }
+/*----------------------------------------SETTINGS METHODS------------------------------------*/
 
-bool Playlist::AddSongIntoPlayListByName(const QString &song, const QString &nameOfPlayList, const QString &nameOfCurrentPlayList, const unsigned short int &index)
+
+/*------------------------------------------ADD METHODS--------------------------------------*/
+bool Playlist::AddSongIntoPlayListByName(const QString &song, const QString &nameOfPlayList, const QString &nameOfCurrentPlayList, const int &index)
 {
     if((song == "") && (nameOfPlayList == ""))
         return false;
@@ -654,14 +698,40 @@ bool Playlist::AddSongIntoPlayListByName(const QString &song, const QString &nam
         return false;
     }
 }
+/*------------------------------------------ADD METHODS--------------------------------------*/
 
+
+/*--------------------------------------REMOVE METHODS--------------------------------------*/
 bool Playlist::RemoveTrackByIndex(const int &index)
 {
+    QFile *buffer = new QFile(QCoreApplication::applicationDirPath() + "/bin/all.m3u8");
+    QTextStream stream(buffer);
+    QString fullpathOfTrack = "";
+
+    if(buffer->QFile::open(QIODevice::ReadOnly))
+    {
+        // read specific line by index
+        for(int iterOfFile = 0; iterOfFile < index; ++iterOfFile)
+            fullpathOfTrack = stream.QTextStream::readLine().QString::trimmed();
+
+        delete buffer;
+    }
+    else
+    {
+        delete buffer;
+        return false;
+    }
+
     if(Playlist::currentPlaylist->QMediaPlaylist::removeMedia(index))
+    {
+        //remove track from app by index
+        Playlist::cd->QDir::remove(fullpathOfTrack);
+
         if(Playlist::currentPlaylist->QMediaPlaylist::save(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/" + Playlist::currentPlaylistName + ".m3u8"), "m3u8"))
             return true;
         else
             return false;
+    }
     else
         return false;
 }
@@ -728,8 +798,11 @@ bool Playlist::RemoveAllTracks(const QString &name)
         return false;
     }
 }
+/*--------------------------------------REMOVE METHODS--------------------------------------*/
 
-bool Playlist::MoveSongInsidePlaylistByIndex(const unsigned short int &currentIndex, const unsigned short int &newIndex)
+
+/*---------------------------------------MOVE METHODS---------------------------------------*/
+bool Playlist::MoveSongInsidePlaylistByIndex(const int &currentIndex, const int &newIndex)
 {
     Playlist::currentPlaylist->QMediaPlaylist::moveMedia(currentIndex, newIndex);
 
@@ -739,7 +812,7 @@ bool Playlist::MoveSongInsidePlaylistByIndex(const unsigned short int &currentIn
         return false;
 }
 
-bool Playlist::MoveSongInsidePlaylistByIndex(const unsigned short int &currentIndex, const unsigned short int &newIndex, const QString &name)
+bool Playlist::MoveSongInsidePlaylistByIndex(const int &currentIndex, const int &newIndex, const QString &name)
 {
     QMediaPlaylist *buffer = new QMediaPlaylist();
     buffer->QMediaPlaylist::load(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/" + name + ".m3u8"), "m3u8");
@@ -757,6 +830,8 @@ bool Playlist::MoveSongInsidePlaylistByIndex(const unsigned short int &currentIn
         return false;
     }
 }
+/*---------------------------------------MOVE METHODS---------------------------------------*/
+
 /*--------------------------------------------------------------------------------------------------------------------------------------------------*/
 /*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||METHODS PRIVATE||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
 /*--------------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -822,7 +897,7 @@ QString Playlist::ParseStringToRemoveFormatAndCurrentPath(const QString &string)
     return buffer;
 }
 
-QString Playlist::ParserToGetFormatOfSong(const QString &nameOfPlayList, const unsigned short int &index)
+QString Playlist::ParserToGetFormatOfSong(const QString &nameOfPlayList, const int &index)
 {
     if(nameOfPlayList == "")
         return "";
@@ -835,7 +910,7 @@ QString Playlist::ParserToGetFormatOfSong(const QString &nameOfPlayList, const u
         QTextStream playRead(&buffer);
 
         // read specific line by index
-        for(unsigned short int iterOfFile = 0; iterOfFile < index; ++iterOfFile)
+        for(int iterOfFile = 0; iterOfFile < index; ++iterOfFile)
             format = playRead.QTextStream::readLine().QString::trimmed();
 
         // parse string to get format of song
