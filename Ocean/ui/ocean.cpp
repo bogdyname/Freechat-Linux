@@ -488,21 +488,24 @@ void Ocean::AddSongIntoPlayListByIndex()
     return;
 }
 
-//TTS
 void Ocean::ParseMusicList(const QString &name)
 {
-    QListWidgetItem *item;
+    //selected item of music list
+    for (unsigned short int iter = 0; iter < musicList->selectedItems().size(); ++iter)
+    {
+        QListWidgetItem *trackCurrent = musicList->item(musicList->currentRow());
 
-    // Get current item on selected row (music list)
-    for (unsigned short int iter = 0; iter < Ocean::musicList->QListWidget::selectedItems().QList::size(); ++iter)
-        item = Ocean::musicList->QListWidget::item(Ocean::musicList->QListWidget::currentRow());
+        //current item of playlist
+        for (unsigned short int iter = 0; iter < playLists->selectedItems().size(); ++iter)
+        {
+            QListWidgetItem *playlistCurrent = playLists->item(playLists->currentRow());
 
-    //REBUILD WITH AND TEST IT
-    //emit Ocean::playlistmanager->Playlist::CallOutAddSongIntoPlayList(item->QListWidgetItem::text(), //name of song
-                                                            //Ocean::getStringWithSelectedPlaylist->SelectPlaylist::GetNameOfSelectedPlaylist(), //playlist
-                                                            //name, //current playlist
-                                                            //Ocean::musicList->QListWidget::currentRow()); //index of song
-
+            emit playlistmanager->CallOutAddSongIntoPlayList(trackCurrent->text(), //name of song
+                                                                    name, //selected playlist
+                                                                    playlistCurrent->text(), //current playlist
+                                                                    musicList->currentRow()); //index of song
+        }
+    }
 
     return;
 }

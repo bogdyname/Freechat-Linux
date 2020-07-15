@@ -66,8 +66,6 @@ Playlist::Playlist()
         5.3) remove track by index from &name
      * Add ----------------------------
         6.1) add song into playlist by index
-        6.2) add song into platlist from all songs (default playlist)
-        6.3) add song into NEW playlist
      * Move ---------------------------
        7.1) move track to &index by index from current playlist
        7.2) move track to &index by index from playlist by name
@@ -91,7 +89,6 @@ Playlist::Playlist()
     QObject::connect(this, &Playlist::CallOutRemoveAllTracksFromPlayListByName, this, &Playlist::RemoveAllTracksFromPlayListByName);
     //Add song
     QObject::connect(this, &Playlist::CallOutAddSongIntoPlayList, this, &Playlist::AddSongIntoPlayList);
-    QObject::connect(this, &Playlist::CallOutAddSongIntoPlayListFromCurrentPlayList, this, &Playlist::AddSongIntoPlayListFromCurrentPlayList);
     //Move song
     QObject::connect(this, &Playlist::CallOutMoveSongInsideCurrentPlayList, this, &Playlist::MoveSongInsideCurrentPlayList);
     QObject::connect(this, &Playlist::CallOutMoveSongInsidePlayListByName, this, &Playlist::MoveSongInsidePlayListByName);
@@ -281,16 +278,6 @@ void Playlist::RemoveAllTracksFromPlayListByName(const QString &name)
 void Playlist::AddSongIntoPlayList(const QString &song, const QString &nameOfPlayList, const QString &nameOfCurrentPlayList, const int &index)
 {
     if(Playlist::AddSongIntoPlayListByName(song, nameOfPlayList, nameOfCurrentPlayList, index))
-        qDebug() << "song successed added into '" << nameOfPlayList << "' -" << song;
-    else
-        qCritical() << "error: can't add sog into playlist '" << nameOfPlayList << "' -" << song;
-
-    return;
-}
-
-void Playlist::AddSongIntoPlayListFromCurrentPlayList(const QString &song, const QString &nameOfPlayList, const int &index)
-{
-    if(Playlist::AddSongIntoPlayListByName(song, nameOfPlayList, "default", index))
         qDebug() << "song successed added into '" << nameOfPlayList << "' -" << song;
     else
         qCritical() << "error: can't add sog into playlist '" << nameOfPlayList << "' -" << song;
@@ -681,7 +668,7 @@ bool Playlist::AddSongIntoPlayListByName(const QString &song, const QString &nam
         return false;
 
     Playlist::cd->QDir::setCurrent(QCoreApplication::applicationDirPath()); // set default path
-    const QString formatOfSong = Playlist::ParserToGetFormatOfSong(nameOfCurrentPlayList, index); // get format by index inside current playlist
+    const QString formatOfSong = Playlist::ParserToGetFormatOfSong(nameOfCurrentPlayList, index); // get format by index inside selected playlist
 
     QMediaPlaylist *bufferPlaylist = new QMediaPlaylist();
     bufferPlaylist->QMediaPlaylist::load(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/" + nameOfPlayList + ".m3u8"), "m3u8"); // load playlist
@@ -905,12 +892,12 @@ QString Playlist::ParserToGetFormatOfSong(const QString &nameOfPlayList, const i
     QFile buffer(QCoreApplication::applicationDirPath() + "/bin/" + nameOfPlayList + ".m3u8");
     QString format = "";
 
-    if(buffer.QIODevice::open(QIODevice::ReadOnly))
+    if(buffer.open(QIODevice::ReadOnly))
     {
         QTextStream playRead(&buffer);
 
         // read specific line by index
-        for(int iterOfFile = 0; iterOfFile < index; ++iterOfFile)
+        for(int iterOfFile = 0; iterOfFile <= index; ++iterOfFile)
             format = playRead.QTextStream::readLine().QString::trimmed();
 
         // parse string to get format of song
@@ -922,7 +909,7 @@ QString Playlist::ParserToGetFormatOfSong(const QString &nameOfPlayList, const i
 
 QString Playlist::ParseStringToGetFormat(const QString &string)
 {
-    QString::const_iterator iter = string.QString::end();
+    QString::const_iterator iter = string.QString::end() - 1;
     QString buffer = "";
 
     for(; iter != string.QString::begin(); --iter)
