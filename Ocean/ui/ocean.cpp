@@ -274,39 +274,68 @@ Ocean::Ocean(QWidget *parent)
 
 Ocean::~Ocean()
 {
-    //UI
-    delete Ocean::ownImage;
-    delete Ocean::spacer;
-    delete Ocean::ui;
-    delete Ocean::imageOfPlayList;
-    delete Ocean::sortBy;
-    delete Ocean::sliderOfTrack;
-    delete Ocean::sliderOfVolume;
-    delete Ocean::playLists;
-    delete Ocean::musicList;
-    delete Ocean::playTrack;
-    delete Ocean::pauseTrack;
-    delete Ocean::stopTrack;
-    delete Ocean::nextTrack;
-    delete Ocean::previousTrack;
-    delete Ocean::buttonForAddMusicWithDel;
-    delete Ocean::buttonForAddMusicOnlyCopy;
+    qDebug() << "Destructor from Ocean.cpp";
 
     //Tools
-    delete Ocean::timerForCheckWidgets;
-    delete Ocean::timerForCheckDefaultPlayList;
-    delete Ocean::cd;
+    Free(timerForCheckWidgets);
+    Free(timerForCheckDefaultPlayList);
+    Free(cd);
 
     //Own classes
     //managers
-    delete Ocean::importManager;
-    delete Ocean::playlistmanager;
-    delete Ocean::playermanager;
+    Free(importManager);
+    Free(playlistmanager);
+    Free(playermanager);
+
+    //TTS
+    qDebug() << "playlistmanager pointer: " << hex << &playermanager;
+    qDebug() << "playlistmanager pointer: " << hex << &playermanager;
 
     //widgets
-    delete Ocean::getAddedTracksFromWidget;
-    delete Ocean::getStringFromUser;
-    delete Ocean::getStringWithSelectedPlaylist;
+    Free(getAddedTracksFromWidget);
+    Free(getStringFromUser);
+    Free(getStringWithSelectedPlaylist);
+
+
+
+
+    //OUT HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    //UI
+    Free(ownImage);
+    Free(spacer);
+    Free(sortBy);
+    Free(imageOfPlayList);
+    Free(sliderOfTrack);
+    Free(sliderOfVolume);
+    Free(playLists);
+    Free(musicList);
+    Free(playTrack);
+    Free(pauseTrack);
+    Free(stopTrack);
+    Free(nextTrack);
+    Free(previousTrack);
+    Free(buttonForAddMusicWithDel);
+    Free(buttonForAddMusicOnlyCopy);
+    Free(ui);
+
+    /*
+    delete ownImage;
+    delete spacer;
+    delete sortBy;
+    delete imageOfPlayList;
+    delete sliderOfTrack;
+    delete sliderOfVolume;
+    delete playLists;
+    delete musicList;
+    delete playTrack;
+    delete pauseTrack;
+    delete stopTrack;
+    delete nextTrack;
+    delete previousTrack;
+    delete buttonForAddMusicWithDel;
+    delete buttonForAddMusicOnlyCopy;
+    delete ui;
+    */
 
     return;
 }
@@ -811,6 +840,16 @@ void Ocean::PassAddedTracksIntoBuffer(const QStringList &list)
 /*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
 /*||||||||||||||||||||||||||||||||||||||||||||||||||||||Tools||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
 /*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
+
+template <class T>
+void Ocean::Free(T &object)
+{
+    object.~T();
+    delete object;
+    object = NULL;
+
+    return;
+}
 
 void Ocean::IfgetStringFromUserClosed()
 {

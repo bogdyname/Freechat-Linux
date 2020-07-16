@@ -38,6 +38,8 @@ Player::Player()
 
 Player::~Player()
 {
+    qDebug() << "Destructor from Player.cpp";
+
     delete Player::player;
 
     return;

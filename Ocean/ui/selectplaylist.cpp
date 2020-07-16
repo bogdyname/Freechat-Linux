@@ -47,6 +47,8 @@ SelectPlaylist::SelectPlaylist(QWidget *parent)
 
 SelectPlaylist::~SelectPlaylist()
 {
+    qDebug() << "Destructor from SelectPlaylist.cpp";
+
     delete ui;
     delete cancel;
     delete playlists;

@@ -55,6 +55,8 @@ AddMusicWidget::AddMusicWidget(QWidget *parent)
 
 AddMusicWidget::~AddMusicWidget()
 {
+    qDebug() << "Destructor from AddMusicWidget.cpp";
+
     delete AddMusicWidget::ui;
     delete AddMusicWidget::addedSongs;
     delete AddMusicWidget::allSongs;
