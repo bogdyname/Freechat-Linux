@@ -98,6 +98,8 @@ Playlist::Playlist()
 
 Playlist::~Playlist()
 {
+    qDebug() << "Destructor from Playlist.cpp";
+
     delete Playlist::cd;
     delete Playlist::currentPlaylist;
 
