@@ -23,9 +23,9 @@ public:
     ~Player();
 
 public slots:
-    void CallSetMod(const unsigned short int &mod);
+    void CallSetMod(const int &mod);
     void CallSetPlayList(QMediaPlaylist *playlist);
-    void CallSetVolume(const unsigned short int &volume);
+    void CallSetVolume(const int &volume);
 
 private slots:
     void ChangedPosition(qint64 position);
@@ -36,9 +36,9 @@ public:
     void SetPositionOfTrack(const qint64 position);
 
 private:
-    bool SetModOfPlayer(const unsigned short int &mod);
+    bool SetModOfPlayer(const int &mod);
     bool SetPlayList(QMediaPlaylist *playlist);
-    bool SetVolume(const unsigned short int &volume);
+    bool SetVolume(const int &volume);
 
 private:
     QMediaPlayer *player = nullptr;
