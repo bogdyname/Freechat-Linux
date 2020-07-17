@@ -46,6 +46,8 @@ Ocean::Ocean(QWidget *parent)
         Ocean::importManager = new ImportManager();
         Ocean::playlistmanager = new Playlist();
         Ocean::playermanager = new Player();
+        //system
+        sysmanager = new System();
     }
     catch(std::bad_alloc &exp)
     {
@@ -269,6 +271,14 @@ Ocean::Ocean(QWidget *parent)
     //Timer for check default playlist (inside Ocean::playLists zero iter "all")
     QObject::connect(Ocean::timerForCheckDefaultPlayList, &QTimer::timeout, this, &Ocean::WriteDefaultPlayList);
 
+    //---------------------------------------------SYSTEM INFO
+    qDebug() << "SYSTEM INFO";
+
+    qDebug() << "importManager hex: " << hex << importManager;
+    qDebug() << "playlistmanager hex: " << hex << playlistmanager;
+    qDebug() << "playermanager hex: " << hex << playermanager;
+    //---------------------------------------------SYSTEM INFO
+
     return;
 }
 
@@ -277,65 +287,86 @@ Ocean::~Ocean()
     qDebug() << "Destructor from Ocean.cpp";
 
     //Tools
-    Free(timerForCheckWidgets);
-    Free(timerForCheckDefaultPlayList);
-    Free(cd);
+    sysmanager->Free(timerForCheckWidgets);
+    sysmanager->Free(timerForCheckDefaultPlayList);
+    sysmanager->Free(cd);
+
+    //---------------------------------------------SYSTEM INFO
+    qDebug() << "SYSTEM INFO";
+
+    if(sysmanager->PointerIsEmpty(timerForCheckWidgets))
+        qDebug() << "timerForCheckWidgets empty!";
+
+    if(sysmanager->PointerIsEmpty(timerForCheckDefaultPlayList))
+        qDebug() << "timerForCheckDefaultPlayList empty!";
+
+    if(sysmanager->PointerIsEmpty(cd))
+        qDebug() << "cd empty!";
+    //---------------------------------------------SYSTEM INFO
 
     //Own classes
     //managers
-    Free(importManager);
-    Free(playlistmanager);
-    Free(playermanager);
+    sysmanager->Free(importManager);
+    sysmanager->Free(playlistmanager);
+    sysmanager->Free(playermanager);
 
-    //TTS
-    qDebug() << "playlistmanager pointer: " << hex << &playermanager;
-    qDebug() << "playlistmanager pointer: " << hex << &playermanager;
+    //---------------------------------------------SYSTEM INFO
+    qDebug() << "SYSTEM INFO";
+
+    if(sysmanager->PointerIsEmpty(importManager))
+        qDebug() << "importManager empty!";
+
+    if(sysmanager->PointerIsEmpty(playlistmanager))
+        qDebug() << "playlistmanager empty!";
+
+    if(sysmanager->PointerIsEmpty(playermanager))
+        qDebug() << "playermanager empty!";
+    //---------------------------------------------SYSTEM INFO
 
     //widgets
-    Free(getAddedTracksFromWidget);
-    Free(getStringFromUser);
-    Free(getStringWithSelectedPlaylist);
+    sysmanager->Free(getAddedTracksFromWidget);
+    sysmanager->Free(getStringFromUser);
+    sysmanager->Free(getStringWithSelectedPlaylist);
 
+    //---------------------------------------------SYSTEM INFO
+    qDebug() << "SYSTEM INFO";
 
+    if(sysmanager->PointerIsEmpty(getAddedTracksFromWidget))
+        qDebug() << "getAddedTracksFromWidget empty!";
 
+    if(sysmanager->PointerIsEmpty(getStringFromUser))
+        qDebug() << "getStringFromUser empty!";
 
-    //OUT HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    if(sysmanager->PointerIsEmpty(getStringWithSelectedPlaylist))
+        qDebug() << "getStringWithSelectedPlaylist empty!";
+    //---------------------------------------------SYSTEM INFO
+
     //UI
-    Free(ownImage);
-    Free(spacer);
-    Free(sortBy);
-    Free(imageOfPlayList);
-    Free(sliderOfTrack);
-    Free(sliderOfVolume);
-    Free(playLists);
-    Free(musicList);
-    Free(playTrack);
-    Free(pauseTrack);
-    Free(stopTrack);
-    Free(nextTrack);
-    Free(previousTrack);
-    Free(buttonForAddMusicWithDel);
-    Free(buttonForAddMusicOnlyCopy);
-    Free(ui);
+    sysmanager->Free(ownImage);
+    sysmanager->Free(spacer);
+    sysmanager->Free(sortBy);
+    sysmanager->Free(imageOfPlayList);
+    sysmanager->Free(sliderOfTrack);
+    sysmanager->Free(sliderOfVolume);
+    sysmanager->Free(playLists);
+    sysmanager->Free(musicList);
+    sysmanager->Free(playTrack);
+    sysmanager->Free(pauseTrack);
+    sysmanager->Free(stopTrack);
+    sysmanager->Free(nextTrack);
+    sysmanager->Free(previousTrack);
+    sysmanager->Free(buttonForAddMusicWithDel);
+    sysmanager->Free(buttonForAddMusicOnlyCopy);
+    sysmanager->Free(ui);
 
-    /*
-    delete ownImage;
-    delete spacer;
-    delete sortBy;
-    delete imageOfPlayList;
-    delete sliderOfTrack;
-    delete sliderOfVolume;
-    delete playLists;
-    delete musicList;
-    delete playTrack;
-    delete pauseTrack;
-    delete stopTrack;
-    delete nextTrack;
-    delete previousTrack;
-    delete buttonForAddMusicWithDel;
-    delete buttonForAddMusicOnlyCopy;
-    delete ui;
-    */
+    //system
+    delete sysmanager;
+    sysmanager = nullptr;
+
+    qDebug() << "SYSTEM INFO";
+
+    if(!sysmanager)
+        qDebug() << "sysmanager empty!";
 
     return;
 }
@@ -840,16 +871,6 @@ void Ocean::PassAddedTracksIntoBuffer(const QStringList &list)
 /*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
 /*||||||||||||||||||||||||||||||||||||||||||||||||||||||Tools||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
 /*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
-
-template <class T>
-void Ocean::Free(T &object)
-{
-    object.~T();
-    delete object;
-    object = NULL;
-
-    return;
-}
 
 void Ocean::IfgetStringFromUserClosed()
 {
