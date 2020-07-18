@@ -38,13 +38,15 @@ Player::Player()
 
 Player::~Player()
 {
+    qDebug() << "Destructor from Player.cpp";
+
     delete Player::player;
 
     return;
 }
 
 //Public slots
-void Player::CallSetMod(const unsigned short int &mod)
+void Player::CallSetMod(const int &mod)
 {
     if(Player::SetModOfPlayer(mod))
         qDebug() << "set mod: " << mod;
@@ -64,7 +66,7 @@ void Player::CallSetPlayList(QMediaPlaylist *playlist)
     return;
 }
 
-void Player::CallSetVolume(const unsigned short int &volume)
+void Player::CallSetVolume(const int &volume)
 {
     if(Player::SetVolume(volume))
         qDebug() << "set volume" << volume;
@@ -101,7 +103,7 @@ void Player::SetPositionOfTrack(const qint64 position)
     return;
 }
 
-bool Player::SetModOfPlayer(const unsigned short int &mod)
+bool Player::SetModOfPlayer(const int &mod)
 {
     switch(mod)
     {
@@ -144,7 +146,7 @@ bool Player::SetPlayList(QMediaPlaylist *playlist)
         return false;
 }
 
-bool Player::SetVolume(const unsigned short int &volume)
+bool Player::SetVolume(const int &volume)
 {
     if(volume > 0)
     {

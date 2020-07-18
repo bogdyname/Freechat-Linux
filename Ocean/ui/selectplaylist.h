@@ -28,7 +28,7 @@ signals:
 
 public:
     void PassAllPlaylistsIntoWidget(const QStringList &list);
-    QString GetNameOfSelectedPlaylist();
+    const QString GetNameOfSelectedPlaylist();
 
 private slots:
     void SelectNameOfPlayList(QListWidgetItem *item);

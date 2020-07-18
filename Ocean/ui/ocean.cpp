@@ -46,6 +46,8 @@ Ocean::Ocean(QWidget *parent)
         Ocean::importManager = new ImportManager();
         Ocean::playlistmanager = new Playlist();
         Ocean::playermanager = new Player();
+        //system
+        sysmanager = new System();
     }
     catch(std::bad_alloc &exp)
     {
@@ -195,7 +197,7 @@ Ocean::Ocean(QWidget *parent)
     3)Playlist manager
         3.1) next track
         3.2) previous track
-        3.3) set track by index
+        3.3) set playlist by track (set track by index)
     ---------------------Managers---------------------
 
     -----------------------UI-------------------------
@@ -240,7 +242,7 @@ Ocean::Ocean(QWidget *parent)
     //Playlist manager
     QObject::connect(Ocean::nextTrack, &QPushButton::clicked, Ocean::playlistmanager, &Playlist::SetNextTrack);
     QObject::connect(Ocean::previousTrack, &QPushButton::clicked, Ocean::playlistmanager, &Playlist::SetPreviousTrack);
-    QObject::connect(Ocean::musicList, &QListWidget::itemDoubleClicked, Ocean::playlistmanager, &Playlist::SetTrackByIndex);
+    QObject::connect(Ocean::musicList, &QListWidget::itemDoubleClicked, this, &Ocean::SetPlayListByTrack);
 
     //UI-----------------------------------------------
     //UI Lists
@@ -269,44 +271,102 @@ Ocean::Ocean(QWidget *parent)
     //Timer for check default playlist (inside Ocean::playLists zero iter "all")
     QObject::connect(Ocean::timerForCheckDefaultPlayList, &QTimer::timeout, this, &Ocean::WriteDefaultPlayList);
 
+    //---------------------------------------------SYSTEM INFO
+    qDebug() << "SYSTEM INFO";
+
+    qDebug() << "importManager hex: " << hex << importManager;
+    qDebug() << "playlistmanager hex: " << hex << playlistmanager;
+    qDebug() << "playermanager hex: " << hex << playermanager;
+    //---------------------------------------------SYSTEM INFO
+
     return;
 }
 
 Ocean::~Ocean()
 {
-    //UI
-    delete Ocean::ownImage;
-    delete Ocean::spacer;
-    delete Ocean::ui;
-    delete Ocean::imageOfPlayList;
-    delete Ocean::sortBy;
-    delete Ocean::sliderOfTrack;
-    delete Ocean::sliderOfVolume;
-    delete Ocean::playLists;
-    delete Ocean::musicList;
-    delete Ocean::playTrack;
-    delete Ocean::pauseTrack;
-    delete Ocean::stopTrack;
-    delete Ocean::nextTrack;
-    delete Ocean::previousTrack;
-    delete Ocean::buttonForAddMusicWithDel;
-    delete Ocean::buttonForAddMusicOnlyCopy;
+    qDebug() << "Destructor from Ocean.cpp";
 
     //Tools
-    delete Ocean::timerForCheckWidgets;
-    delete Ocean::timerForCheckDefaultPlayList;
-    delete Ocean::cd;
+    sysmanager->Free(timerForCheckWidgets);
+    sysmanager->Free(timerForCheckDefaultPlayList);
+    sysmanager->Free(cd);
+
+    //---------------------------------------------SYSTEM INFO
+    qDebug() << "SYSTEM INFO";
+
+    if(sysmanager->PointerIsEmpty(timerForCheckWidgets))
+        qDebug() << "timerForCheckWidgets empty!";
+
+    if(sysmanager->PointerIsEmpty(timerForCheckDefaultPlayList))
+        qDebug() << "timerForCheckDefaultPlayList empty!";
+
+    if(sysmanager->PointerIsEmpty(cd))
+        qDebug() << "cd empty!";
+    //---------------------------------------------SYSTEM INFO
 
     //Own classes
     //managers
-    delete Ocean::importManager;
-    delete Ocean::playlistmanager;
-    delete Ocean::playermanager;
+    sysmanager->Free(importManager);
+    sysmanager->Free(playlistmanager);
+    sysmanager->Free(playermanager);
+
+    //---------------------------------------------SYSTEM INFO
+    qDebug() << "SYSTEM INFO";
+
+    if(sysmanager->PointerIsEmpty(importManager))
+        qDebug() << "importManager empty!";
+
+    if(sysmanager->PointerIsEmpty(playlistmanager))
+        qDebug() << "playlistmanager empty!";
+
+    if(sysmanager->PointerIsEmpty(playermanager))
+        qDebug() << "playermanager empty!";
+    //---------------------------------------------SYSTEM INFO
 
     //widgets
-    delete Ocean::getAddedTracksFromWidget;
-    delete Ocean::getStringFromUser;
-    delete Ocean::getStringWithSelectedPlaylist;
+    sysmanager->Free(getAddedTracksFromWidget);
+    sysmanager->Free(getStringFromUser);
+    sysmanager->Free(getStringWithSelectedPlaylist);
+
+    //---------------------------------------------SYSTEM INFO
+    qDebug() << "SYSTEM INFO";
+
+    if(sysmanager->PointerIsEmpty(getAddedTracksFromWidget))
+        qDebug() << "getAddedTracksFromWidget empty!";
+
+    if(sysmanager->PointerIsEmpty(getStringFromUser))
+        qDebug() << "getStringFromUser empty!";
+
+    if(sysmanager->PointerIsEmpty(getStringWithSelectedPlaylist))
+        qDebug() << "getStringWithSelectedPlaylist empty!";
+    //---------------------------------------------SYSTEM INFO
+
+    //UI
+    sysmanager->Free(ownImage);
+    sysmanager->Free(spacer);
+    sysmanager->Free(sortBy);
+    sysmanager->Free(imageOfPlayList);
+    sysmanager->Free(sliderOfTrack);
+    sysmanager->Free(sliderOfVolume);
+    sysmanager->Free(playLists);
+    sysmanager->Free(musicList);
+    sysmanager->Free(playTrack);
+    sysmanager->Free(pauseTrack);
+    sysmanager->Free(stopTrack);
+    sysmanager->Free(nextTrack);
+    sysmanager->Free(previousTrack);
+    sysmanager->Free(buttonForAddMusicWithDel);
+    sysmanager->Free(buttonForAddMusicOnlyCopy);
+    sysmanager->Free(ui);
+
+    //system
+    delete sysmanager;
+    sysmanager = nullptr;
+
+    qDebug() << "SYSTEM INFO";
+
+    if(!sysmanager)
+        qDebug() << "sysmanager empty!";
 
     return;
 }
@@ -473,9 +533,6 @@ void Ocean::EraseItemFromMusicList()
                 emit this->Ocean::CallOutPassNamesOfSongsToMusicList(Ocean::playlistmanager->Playlist::GetSongsFromCurrentPlayList(playlistIter->text() + ".m3u8"));
             }
         }
-
-        // And remove it
-        Ocean::musicList->QListWidget::removeItemWidget(item);
     }
 
     return;
@@ -491,21 +548,24 @@ void Ocean::AddSongIntoPlayListByIndex()
     return;
 }
 
-//TTS
 void Ocean::ParseMusicList(const QString &name)
 {
-    QListWidgetItem *item;
+    //selected item of music list
+    for (unsigned short int iter = 0; iter < musicList->selectedItems().size(); ++iter)
+    {
+        QListWidgetItem *trackCurrent = musicList->item(musicList->currentRow());
 
-    // Get current item on selected row (music list)
-    for (unsigned short int iter = 0; iter < Ocean::musicList->QListWidget::selectedItems().QList::size(); ++iter)
-        item = Ocean::musicList->QListWidget::item(Ocean::musicList->QListWidget::currentRow());
+        //current item of playlist
+        for (unsigned short int iter = 0; iter < playLists->selectedItems().size(); ++iter)
+        {
+            QListWidgetItem *playlistCurrent = playLists->item(playLists->currentRow());
 
-    //REBUILD WITH AND TEST IT
-    //emit Ocean::playlistmanager->Playlist::CallOutAddSongIntoPlayList(item->QListWidgetItem::text(), //name of song
-                                                            //Ocean::getStringWithSelectedPlaylist->SelectPlaylist::GetNameOfSelectedPlaylist(), //playlist
-                                                            //name, //current playlist
-                                                            //Ocean::musicList->QListWidget::currentRow()); //index of song
-
+            emit playlistmanager->CallOutAddSongIntoPlayList(trackCurrent->text(), //name of song
+                                                                    name, //selected playlist
+                                                                    playlistCurrent->text(), //current playlist
+                                                                    musicList->currentRow()); //index of song
+        }
+    }
 
     return;
 }
@@ -625,6 +685,37 @@ void Ocean::SetPlayList(QListWidgetItem *item)
 
     //show songs in music list
     emit this->Ocean::CallOutPassNamesOfSongsToMusicList(Ocean::playlistmanager->Playlist::GetSongsFromCurrentPlayList(item->QListWidgetItem::text() + ".m3u8"));
+
+    return;
+}
+
+void Ocean::SetPlayListByTrack(QListWidgetItem *item)
+{
+    for(unsigned short int iterPlayList = 0; iterPlayList < Ocean::playLists->QListWidget::selectedItems().QList::size(); ++iterPlayList)
+    {
+        //playlist
+        QListWidgetItem *iter = Ocean::playLists->QListWidget::item(Ocean::playLists->QListWidget::currentRow());
+
+        //set name of playlist
+        emit Ocean::playlistmanager->Playlist::CallOutSetCurrentPlayListName(iter->QListWidgetItem::text());
+
+        //clear current playlist
+        Ocean::playlistmanager->Playlist::GetCurrentPlayList()->QMediaPlaylist::clear();
+
+        //load
+        if(Ocean::playlistmanager->Playlist::LoadPlayList(Ocean::playlistmanager->Playlist::GetCurrentPlayListName()))
+        {
+            Ocean::playermanager->QMediaPlayer::setPlaylist(Ocean::playlistmanager->Playlist::GetCurrentPlayList());
+            Ocean::playermanager->QMediaPlayer::play();
+
+            //set track by index and play it
+            const int index = item->QListWidgetItem::listWidget()->QListWidget::row(item);
+            Ocean::playlistmanager->Playlist::SetTrackByIndex(index);
+        }
+
+        //show songs in music list
+        emit this->Ocean::CallOutPassNamesOfSongsToMusicList(Ocean::playlistmanager->Playlist::GetSongsFromCurrentPlayList(iter->QListWidgetItem::text() + ".m3u8"));
+    }
 
     return;
 }

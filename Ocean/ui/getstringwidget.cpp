@@ -52,6 +52,8 @@ GetStringWidget::GetStringWidget(QWidget *parent)
 
 GetStringWidget::~GetStringWidget()
 {
+    qDebug() << "Destructor from GetStringWidget.cpp";
+
     delete GetStringWidget::lineEditForString;
     delete GetStringWidget::cancel;
     delete GetStringWidget::ui;

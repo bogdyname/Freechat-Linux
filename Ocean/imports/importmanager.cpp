@@ -49,6 +49,8 @@ ImportManager::ImportManager()
 
 ImportManager::~ImportManager()
 {
+    qDebug() << "Destructor from ImportManager.cpp";
+
     delete ImportManager::musicDir;
     delete ImportManager::mp3File;
     delete ImportManager::importerWindow;
