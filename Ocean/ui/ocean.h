@@ -272,7 +272,6 @@ private:
     QPixmap *ownImage = nullptr;
     QSlider *sliderOfVolume = nullptr;
     QLabel *imageOfPlayList = nullptr;
-    QComboBox *sortBy = nullptr;
 
     //lists of playlists and musiclists
     QListWidget *playLists = nullptr;
@@ -284,10 +283,6 @@ private:
     QPushButton *stopTrack = nullptr;
     QPushButton *nextTrack = nullptr;
     QPushButton *previousTrack = nullptr;
-
-    //add music buttons
-    QPushButton *buttonForAddMusicWithDel = nullptr;
-    QPushButton *buttonForAddMusicOnlyCopy = nullptr;
     //UI--------------------------------------------------------------
 
     //TOOLS-----------------------------------------------------------

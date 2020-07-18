@@ -14,7 +14,7 @@ Playlist::Playlist()
     try
     {
         Playlist::cd = new QDir();
-        Playlist::currentPlaylist = new QMediaPlaylist();
+        Playlist::currentPlaylist = new QMediaPlaylist(this);
     }
     catch(std::bad_alloc &exp)
     {
@@ -98,12 +98,9 @@ Playlist::Playlist()
 
 Playlist::~Playlist()
 {
-    qDebug() << "Destructor from Playlist.cpp";
-
     delete Playlist::cd;
-    delete Playlist::currentPlaylist;
 
-    return;
+    qDebug() << "Destructor from Playlist.cpp";
 }
 /*--------------------------------------------------------------------------------------------------------------------------------------------------*/
 /*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||MAIN|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/

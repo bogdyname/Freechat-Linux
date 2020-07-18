@@ -12,7 +12,7 @@ Player::Player()
 {
     try
     {
-        Player::player = new QMediaPlayer();
+        Player::player = new QMediaPlayer(this);
     }
     catch(std::bad_alloc &exp)
     {
@@ -39,10 +39,6 @@ Player::Player()
 Player::~Player()
 {
     qDebug() << "Destructor from Player.cpp";
-
-    delete Player::player;
-
-    return;
 }
 
 //Public slots
