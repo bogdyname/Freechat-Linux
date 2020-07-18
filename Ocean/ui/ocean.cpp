@@ -114,12 +114,12 @@ Ocean::Ocean(QWidget *parent)
 
 
     //TTS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    if(Ocean::ownImage->QPixmap::load("/root/29614_original.jpg", "jpg", Qt::AutoColor))
+    if(Ocean::ownImage->QPixmap::load("C:/Users/donva/Desktop/vampire_playlist.jpg", "jpg", Qt::AutoColor))
         qDebug() << "true";
     else
         qDebug() << "false";
 
-    //Ocean::ownImage->QPixmap::scaled(150, 150, Qt::IgnoreAspectRatio, Qt::FastTransformation);
+    Ocean::ownImage->QPixmap::scaled(150, 150, Qt::IgnoreAspectRatio, Qt::FastTransformation);
     const QPixmap *imageTTS = Ocean::ownImage;
     //TTS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -128,16 +128,17 @@ Ocean::Ocean(QWidget *parent)
 
     //Image of playlist
     Ocean::imageOfPlayList->QLabel::setPixmap(*imageTTS);
-    Ocean::imageOfPlayList->QWidget::setMinimumSize(200, 150);
-    Ocean::imageOfPlayList->QWidget::setMaximumSize(225, 200);
+   // Ocean::imageOfPlayList->QWidget::setMinimumSize(250, 250);
+    Ocean::imageOfPlayList->QWidget::setFixedSize(250, 250);
+   // Ocean::imageOfPlayList->QWidget::setMaximumSize(250, 250);
 
     //Sort box
     Ocean::sortBy->QComboBox::addItem("Default");
     Ocean::sortBy->QComboBox::addItem("Name");
     Ocean::sortBy->QComboBox::addItem("Date");
     Ocean::sortBy->QComboBox::addItem("Group");
-    Ocean::sortBy->QWidget::setMinimumSize(225, 17);
-    Ocean::sortBy->QWidget::setMaximumSize(225, 17);
+    Ocean::sortBy->QWidget::setMinimumSize(230, 25);
+    Ocean::sortBy->QWidget::setMaximumSize(230, 25);
 
     //Buttons for open file
     Ocean::buttonForAddMusicWithDel->QPushButton::setText("Add music with delete");
