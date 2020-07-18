@@ -15,7 +15,7 @@ int main(int argc, char *argv[])
 
     QApplication app(argc, argv);
 
-    QFile *file = new QFile(":/style.css");
+    QFile *file = new QFile(":/vampire_theme.css");
 
     if(file->open(QFile::ReadOnly))
         app.setStyleSheet(file->readAll());
