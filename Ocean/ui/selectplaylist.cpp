@@ -16,8 +16,8 @@ SelectPlaylist::SelectPlaylist(QWidget *parent)
     try
     {
         //Objects of UI
-        cancel = new QPushButton("cancel");
-        playlists = new QListWidget();
+        cancel = new QPushButton("cancel", this);
+        playlists = new QListWidget(this);
     }
     catch(std::bad_alloc &exp)
     {
@@ -47,11 +47,9 @@ SelectPlaylist::SelectPlaylist(QWidget *parent)
 
 SelectPlaylist::~SelectPlaylist()
 {
-    qDebug() << "Destructor from SelectPlaylist.cpp";
-
     delete ui;
-    delete cancel;
-    delete playlists;
+
+    qDebug() << "Destructor from SelectPlaylist.cpp";
 }
 
 void SelectPlaylist::PassAllPlaylistsIntoWidget(const QStringList &list)
