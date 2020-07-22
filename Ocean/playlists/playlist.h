@@ -164,6 +164,7 @@ public slots:
 public:
     const QString GetCurrentPlayListName(); //--------------------------------------------------------------------------1)
     QMediaPlaylist* GetCurrentPlayList(); //----------------------------------------------------------------------------2)
+    int GetCurrentIndex();
     bool LoadPlayList(const QString &name); //--------------------------------------------------------------------------3)
     QStringList GetSongsFromCurrentPlayList(const QString &nameOfPlayList); //------------------------------------------4)
     const QStringList GetAllTracks();//---------------------------------------------------------------------------------5)

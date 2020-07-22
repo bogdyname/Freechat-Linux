@@ -139,12 +139,13 @@ private slots:
     /*
         1) Delete item from QListWidget (Ocean::playLists)
         2) Create playlist via own widget (Ocean::getStringFromUser)
-        3) Rename playlist via own widget (Ocean::getStringFromUser)
+        3) Rename playlist via own widget and waiting user input (Ocean::getStringFromUser)
+        3) Rename playlist after user input (Ocean::getStringFromUser)
     */
     void EraseItemFromPlayList();
     void CreatePlaylist();
     void RenamePlaylist();
-    void Rename(const QListWidgetItem *item, QString buffer);
+    void Rename();
     // Context Menu of Playlists -------------------------------------------------- 2
 
     //||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
@@ -179,10 +180,12 @@ private slots:
     // Widget for get string from user -------------------------------------------- 1
     /*
         1) Close widget via 'cancel button' without string
-        2) Close widget via return pressed and pass string from user
+        2) Close widget via return pressed and pass string from user (Create new playlist)
+        3) Close widget via return pressed and pass string from user (Reaname playlist)
     */
     void ClosegetStringFromUserViaCancel();
-    void ClosegetStringFromUserViaOkay();
+    void ClosegetStringFromUserToCreatePlaylist();
+    void ClosegetStringFromUserToRenameViaCancel();
     // Widget for get string from user -------------------------------------------- 1
 
     //||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
@@ -220,17 +223,19 @@ private slots:
     /*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
 
     /*
-        1) Timer for Ocean::getStringFromUser
-        2) Timer for Ocean::getStringWithSelectedPlaylist
-        3) Timer for Ocean::getAddedTracksFromWidget
-        4) Get names of playlists from 'bin' dir
-        5) Create widget after widget for get string from user
-        6) Write name of default playlist 'all' into QListWidget
+        1) Timer for Ocean::getStringFromUserToCreateNewPlaylist
+        2) Timer for Ocean::getStringFromUserToRenamePlaylist
+        3) Timer for Ocean::getStringWithSelectedPlaylist
+        4) Timer for Ocean::getAddedTracksFromWidget
+        5) Get names of playlists from 'bin' dir
+        6) Create widget after widget for get string from user
+        7) Write name of default playlist 'all' into QListWidget
     */
 
     void IfgetStringFromUserClosed();//-----------------------------------------1
-    void IfgetStringWithSelectedPlaylistClosed();//-----------------------------2
-    void IfgetAddedTracksFromWidgetClosed();//----------------------------------3
+    void IfgetStringFromUserToRenameClosed();//---------------------------------2
+    void IfgetStringWithSelectedPlaylistClosed();//-----------------------------3
+    void IfgetAddedTracksFromWidgetClosed();//----------------------------------4
     QStringList GetNamesOfPlaylistsFromBinDir();//------------------------------5
     void CallWidgetAfterCreatePlaylistSlot();//---------------------------------6
     void WriteDefaultPlayList(); //---------------------------------------------7
@@ -305,7 +310,8 @@ private:
     // UI own widgets ----------------------------------------------- 1
     //ui widgets
     AddMusicWidget *getAddedTracksFromWidget = nullptr;
-    GetStringWidget *getStringFromUser = nullptr;
+    GetStringWidget *getStringFromUserToCreateNewPlaylist = nullptr;
+    GetStringWidget *getStringFromUserToRenamePlaylist = nullptr;
     SelectPlaylist *getStringWithSelectedPlaylist = nullptr;
     // UI own widgets ----------------------------------------------- 1
 
