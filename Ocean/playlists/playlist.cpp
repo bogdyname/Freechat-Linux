@@ -795,9 +795,9 @@ bool Playlist::RemoveAllTracks(const QString &name)
 /*---------------------------------------MOVE METHODS---------------------------------------*/
 bool Playlist::MoveSongInsidePlaylistByIndex(const int &currentIndex, const int &newIndex)
 {
-    Playlist::currentPlaylist->QMediaPlaylist::moveMedia(currentIndex, newIndex);
+    currentPlaylist->moveMedia(currentIndex, newIndex);
 
-    if(Playlist::currentPlaylist->QMediaPlaylist::save(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/" + currentPlaylistName + ".m3u8"), "m3u8"))
+    if(currentPlaylist->save(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/" + currentPlaylistName + ".m3u8"), "m3u8"))
         return true;
     else
         return false;
@@ -806,11 +806,11 @@ bool Playlist::MoveSongInsidePlaylistByIndex(const int &currentIndex, const int 
 bool Playlist::MoveSongInsidePlaylistByIndex(const int &currentIndex, const int &newIndex, const QString &name)
 {
     QMediaPlaylist *buffer = new QMediaPlaylist();
-    buffer->QMediaPlaylist::load(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/" + name + ".m3u8"), "m3u8");
+    buffer->load(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/" + name + ".m3u8"), "m3u8");
 
-    buffer->QMediaPlaylist::moveMedia(currentIndex, newIndex);
+    buffer->moveMedia(currentIndex, newIndex);
 
-    if(buffer->QMediaPlaylist::save(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/" + name + ".m3u8"), "m3u8"))
+    if(buffer->save(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/" + name + ".m3u8"), "m3u8"))
     {
         delete buffer;
         return true;

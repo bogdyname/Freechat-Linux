@@ -220,7 +220,8 @@ Ocean::Ocean(QWidget *parent)
     //Playlist manager
     QObject::connect(Ocean::nextTrack, &QPushButton::clicked, Ocean::playlistmanager, &Playlist::SetNextTrack);
     QObject::connect(Ocean::previousTrack, &QPushButton::clicked, Ocean::playlistmanager, &Playlist::SetPreviousTrack);
-    QObject::connect(Ocean::musicList, &QListWidget::itemDoubleClicked, this, &Ocean::SetPlayListByTrack);
+    QObject::connect(Ocean::musicList, &QListWidget::itemDoubleClicked, this, &Ocean::SetPlayListByTrack); //itemEntered
+    QObject::connect(Ocean::musicList, &QListWidget::itemPressed, this, &Ocean::MoveTrack);
 
     //UI-----------------------------------------------
     //UI Lists
@@ -260,6 +261,12 @@ Ocean::Ocean(QWidget *parent)
     qDebug() << "playlistmanager hex: " << hex << playlistmanager;
     qDebug() << "playermanager hex: " << hex << playermanager;
     //---------------------------------------------SYSTEM INFO
+
+    //DRAG AND DROP MODEL HERE!!!!!!!!!!!!!
+    musicList->setSelectionMode(QAbstractItemView::SingleSelection);
+    musicList->setDragEnabled(true);
+    musicList->setAcceptDrops(true);
+    musicList->setDropIndicatorShown(true);
 
     return;
 }
@@ -548,6 +555,24 @@ void Ocean::ParseMusicList(const QString &name)
         }
     }
 
+    return;
+}
+
+//TTS
+void Ocean::MoveTrack(QListWidgetItem *item)
+{
+    /*
+    for (unsigned short int iter = 0; iter < Ocean::playLists->QListWidget::selectedItems().QList::size(); ++iter)
+    {
+        QListWidgetItem *playlist = Ocean::playLists->QListWidget::item(Ocean::playLists->QListWidget::currentRow());
+
+        if(playlist->text() == playlistmanager->GetCurrentPlayListName())
+            playlistmanager->CallOutMoveSongInsideCurrentPlayList(musicList->currentRow(), )
+    }
+
+    item = musicList->takeItem(musicList->currentRow());
+    musicList->insertItem( , item);
+*/
     return;
 }
 /*--------------------------------------------------------------------------------------------------------------------------------------------------*/

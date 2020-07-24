@@ -27,6 +27,7 @@
 #include <QResizeEvent>
 #include <QMediaContent>
 #include <QMediaPlaylist>
+#include <QAbstractItemView>
 #include "ui_ocean.h"
 
 //widgets
@@ -127,6 +128,7 @@ private slots:
     void EraseItemFromMusicList();
     void AddSongIntoPlayListByIndex();
     void ParseMusicList(const QString &name);
+    void MoveTrack(QListWidgetItem *item);
     // Context Menu of Music list ------------------------------------------------- 1
 
     //||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
