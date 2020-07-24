@@ -129,6 +129,7 @@ private slots:
     void AddSongIntoPlayListByIndex();
     void ParseMusicList(const QString &name);
     void MoveTrack(QListWidgetItem *item);
+    void SetPreviousIndexOfItem(QListWidgetItem *item);
     // Context Menu of Music list ------------------------------------------------- 1
 
     //||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
@@ -283,6 +284,7 @@ private:
     //lists of playlists and musiclists
     QListWidget *playLists = nullptr;
     QListWidget *musicList = nullptr;
+    int pressedItem = -1;
 
     //player
     QPushButton *playTrack = nullptr;
