@@ -105,6 +105,17 @@ Ocean::Ocean(QWidget *parent)
     //Slider of track
     Ocean::sliderOfTrack->setMinimumWidth(225);
 
+    //Setting up ListWidgets
+    //DRAG AND DROP MODEL music list
+    musicList->setSelectionMode(QAbstractItemView::SingleSelection);
+    musicList->setDragEnabled(true);
+    musicList->setAcceptDrops(true);
+    musicList->setDropIndicatorShown(true);
+    //DRAG AND DROP MODEL music list
+    playLists->setSelectionMode(QAbstractItemView::SingleSelection);
+    playLists->setDragEnabled(true);
+    playLists->setAcceptDrops(true);
+    playLists->setDropIndicatorShown(true);
 
 
 
@@ -221,7 +232,8 @@ Ocean::Ocean(QWidget *parent)
     QObject::connect(Ocean::nextTrack, &QPushButton::clicked, Ocean::playlistmanager, &Playlist::SetNextTrack);
     QObject::connect(Ocean::previousTrack, &QPushButton::clicked, Ocean::playlistmanager, &Playlist::SetPreviousTrack);
     QObject::connect(Ocean::musicList, &QListWidget::itemDoubleClicked, this, &Ocean::SetPlayListByTrack); //itemEntered
-    QObject::connect(Ocean::musicList, &QListWidget::itemPressed, this, &Ocean::MoveTrack);
+    QObject::connect(Ocean::musicList, &QListWidget::itemPressed, this, &Ocean::SetPreviousIndexOfItem);
+    QObject::connect(Ocean::musicList, &QListWidget::itemChanged, this, &Ocean::MoveTrack);
 
     //UI-----------------------------------------------
     //UI Lists
@@ -261,12 +273,6 @@ Ocean::Ocean(QWidget *parent)
     qDebug() << "playlistmanager hex: " << hex << playlistmanager;
     qDebug() << "playermanager hex: " << hex << playermanager;
     //---------------------------------------------SYSTEM INFO
-
-    //DRAG AND DROP MODEL HERE!!!!!!!!!!!!!
-    musicList->setSelectionMode(QAbstractItemView::SingleSelection);
-    musicList->setDragEnabled(true);
-    musicList->setAcceptDrops(true);
-    musicList->setDropIndicatorShown(true);
 
     return;
 }
@@ -558,21 +564,33 @@ void Ocean::ParseMusicList(const QString &name)
     return;
 }
 
-//TTS
+//BUG HERE
+//INDEX MOVED + 1 AFTER DRAG AND DROP
 void Ocean::MoveTrack(QListWidgetItem *item)
 {
-    /*
-    for (unsigned short int iter = 0; iter < Ocean::playLists->QListWidget::selectedItems().QList::size(); ++iter)
+    for (unsigned short int iter = 0; iter < playLists->selectedItems().QList::size(); ++iter)
     {
-        QListWidgetItem *playlist = Ocean::playLists->QListWidget::item(Ocean::playLists->QListWidget::currentRow());
+        QListWidgetItem *playlist = playLists->item(playLists->currentRow());
 
         if(playlist->text() == playlistmanager->GetCurrentPlayListName())
-            playlistmanager->CallOutMoveSongInsideCurrentPlayList(musicList->currentRow(), )
+            playlistmanager->CallOutMoveSongInsideCurrentPlayList(pressedItem, item->listWidget()->row(item));
+        else
+            playlistmanager->CallOutMoveSongInsidePlayListByName(pressedItem, item->listWidget()->row(item), playlist->text());
+
+        qDebug() << "previous: " << pressedItem << "new index: " << item->listWidget()->row(item) << playlist->text();
     }
 
-    item = musicList->takeItem(musicList->currentRow());
-    musicList->insertItem( , item);
-*/
+    //remove previous index
+    item = musicList->takeItem(pressedItem);
+    delete item;
+
+    return;
+}
+
+void Ocean::SetPreviousIndexOfItem(QListWidgetItem *item)
+{
+    pressedItem = item->listWidget()->row(item);
+
     return;
 }
 /*--------------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -812,11 +830,11 @@ void Ocean::SetCurrentPlayList()
             }
 
             //set current track
-            Ocean::playlistmanager->Playlist::GetCurrentPlayList()->QMediaPlaylist::setCurrentIndex(newIndex);
+            playlistmanager->GetCurrentPlayList()->setCurrentIndex(newIndex);
             //play this track
-            Ocean::playermanager->QMediaPlayer::play();
+            playermanager->play();
             //set current position
-            Ocean::playermanager->Player::SetPositionOfTrack(Ocean::playermanager->Player::GetPositionOfTrack());
+            playermanager->SetPositionOfTrack(playermanager->GetPositionOfTrack());
         }
     }
 
