@@ -90,11 +90,12 @@ Ocean::Ocean(QWidget *parent)
     Ocean::ui->tool->QVBoxLayout::addWidget(Ocean::buttonForAddMusicOnlyCopy);
     Ocean::ui->tool->QVBoxLayout::addWidget(Ocean::sortBy);
 
-    //Main window
-    this->QWidget::setMinimumSize(250, 300);
+    //Main window  
+    this->QWidget::setMinimumSize(350, 350);
+    this->QWidget::resize(1200, 850);
 
     //Lists
-    Ocean::playLists->QWidget::setMaximumWidth(225);
+    Ocean::playLists->QWidget::setMaximumWidth(170);
     Ocean::musicList->QWidget::setMaximumWidth(1500);
     Ocean::playLists->QAbstractItemView::setSelectionMode(QAbstractItemView::SingleSelection);
     Ocean::musicList->QAbstractItemView::setSelectionMode(QAbstractItemView::SingleSelection);
@@ -104,8 +105,7 @@ Ocean::Ocean(QWidget *parent)
     Ocean::musicList->QWidget::setContextMenuPolicy(Qt::CustomContextMenu);
 
     //Slider of volume
-    Ocean::sliderOfVolume->QWidget::setMinimumSize(225, 17);
-    Ocean::sliderOfVolume->QWidget::setMaximumSize(225, 17);
+    Ocean::sliderOfVolume->QWidget::setFixedSize(225, 17);
 
     //Slider of track
     Ocean::sliderOfTrack->QWidget::setMinimumWidth(225);
@@ -114,12 +114,12 @@ Ocean::Ocean(QWidget *parent)
 
 
     //TTS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    if(Ocean::ownImage->QPixmap::load("C:/Users/donva/Desktop/vampire_playlist.jpg", "jpg", Qt::AutoColor))
+    if(Ocean::ownImage->QPixmap::load("://images/vampire_playlist.jpg", "jpg", Qt::AutoColor))
         qDebug() << "true";
     else
         qDebug() << "false";
 
-    Ocean::ownImage->QPixmap::scaled(150, 150, Qt::IgnoreAspectRatio, Qt::FastTransformation);
+   // Ocean::ownImage->QPixmap::scaled(150, 150, Qt::IgnoreAspectRatio, Qt::FastTransformation);
     const QPixmap *imageTTS = Ocean::ownImage;
     //TTS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -128,17 +128,14 @@ Ocean::Ocean(QWidget *parent)
 
     //Image of playlist
     Ocean::imageOfPlayList->QLabel::setPixmap(*imageTTS);
-   // Ocean::imageOfPlayList->QWidget::setMinimumSize(250, 250);
-    Ocean::imageOfPlayList->QWidget::setFixedSize(250, 250);
-   // Ocean::imageOfPlayList->QWidget::setMaximumSize(250, 250);
+   // Ocean::imageOfPlayList->QWidget::setFixedSize(300, 300);
 
     //Sort box
     Ocean::sortBy->QComboBox::addItem("Default");
     Ocean::sortBy->QComboBox::addItem("Name");
     Ocean::sortBy->QComboBox::addItem("Date");
     Ocean::sortBy->QComboBox::addItem("Group");
-    Ocean::sortBy->QWidget::setMinimumSize(230, 25);
-    Ocean::sortBy->QWidget::setMaximumSize(230, 25);
+    Ocean::sortBy->QWidget::setFixedSize(180, 35);
 
     //Buttons for open file
     Ocean::buttonForAddMusicWithDel->QPushButton::setText("Add music with delete");

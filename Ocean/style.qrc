@@ -3,5 +3,6 @@
         <file>style.css</file>
         <file>vampire_theme.css</file>
         <file>images/vampire_arrow.png</file>
+        <file>images/vampire_playlist.jpg</file>
     </qresource>
 </RCC>
