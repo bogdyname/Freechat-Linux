@@ -93,16 +93,21 @@ QComboBox:hover
 {
     border: 1.5px;
     border-color: #F4003D;
-    border-style: inset;
+    border-style: solid;
     border-radius: 5px;
 }
 
 QComboBox::drop-down
 {
-    border: 1px solid #F4003D;
+    border: 1.2px solid #F4003D;
     border-radius: 5px;
     height: 30px;
     width: 30px;
+}
+
+QComboBox::drop-down:hover
+{
+    border-color: #FC83A9;
 }
 
 QComboBox::down-arrow
@@ -140,24 +145,24 @@ QListView::item:hover
 QPushButton:hover
 {
     border: 1.5px;
-    border-color: #F4003D;
-    border-style: outset;
+    border-color: #FC83A9;
+    border-style: solid;
     border-radius: 2px;
 }
 
 QTextBrowser:hover
 {
     border: 1.2px;
-    border-color: #F4003D;
-    border-style: outset;
+    border-color: #FC83A9;
+    border-style: solid;
     border-radius: 1px;
 }
 
 QListWidget:hover
 {
     border: 1.5px;
-    border-color: #F4003D;
-    border-style: inset;
+    border-color: #FC83A9;
+    border-style: solid;
     border-radius: 5px;
 }
 
