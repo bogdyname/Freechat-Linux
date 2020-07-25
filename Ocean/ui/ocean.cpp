@@ -564,8 +564,21 @@ void Ocean::ParseMusicList(const QString &name)
     return;
 }
 
-//BUG HERE
-//INDEX MOVED + 1 AFTER DRAG AND DROP
+//BUG ON macOS and Windows
+/*
+    INDEX MOVED + 1 AFTER DRAG AND DROP
+*/
+
+//BUG ON WINDOWS
+/*
+    If drop item in the end of list widget
+    programm get (ASSERT: "to >= 0 && to < mediaCount()" in file playback\qmedianetworkplaylistprovider.cpp, line 215) via Qt 5.15.0
+*/
+
+//BUG ON Linux
+/*
+    NEED TO TEST IT!!!!!!!!
+*/
 void Ocean::MoveTrack(QListWidgetItem *item)
 {
     for (unsigned short int iter = 0; iter < playLists->selectedItems().QList::size(); ++iter)
