@@ -566,7 +566,14 @@ void Ocean::ParseMusicList(const QString &name)
 
 //BUG ON macOS and Windows
 /*
-    INDEX MOVED + 1 AFTER DRAG AND DROP
+    1) INDEX MOVED + 1 AFTER DRAG AND DROP
+    2) duble show of one track
+
+    DON'T USE THIS CODE IN THIS METHODS (SLOT void Ocean::MoveTrack(QListWidgetItem *item))
+    BUG REPORT
+    -- fix it via SIGNAL  emit this->Ocean::CallOutPassNamesOfSongsToMusicList(Ocean::playlistmanager->Playlist::GetSongsFromCurrentPlayList(item->QListWidgetItem::text() + ".m3u8"));
+    becaus file is using player
+    -- after update file, player crash
 */
 
 //BUG ON WINDOWS
