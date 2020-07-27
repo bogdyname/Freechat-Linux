@@ -93,10 +93,24 @@ Ocean::Ocean(QWidget *parent)
     Ocean::musicList->setMaximumWidth(1500);
     Ocean::playLists->setSelectionMode(QAbstractItemView::SingleSelection);
     Ocean::musicList->setSelectionMode(QAbstractItemView::SingleSelection);
-    Ocean::playLists->setSelectionBehavior(QAbstractItemView::SelectRows);
-    Ocean::musicList->setSelectionBehavior(QAbstractItemView::SelectRows);
+    Ocean::playLists->setSelectionBehavior(QAbstractItemView::SelectItems);
+    Ocean::musicList->setSelectionBehavior(QAbstractItemView::SelectItems);
+    playLists->setDragDropMode(QAbstractItemView::InternalMove);
+    musicList->setDragDropMode(QAbstractItemView::InternalMove);
+    playLists->setDragDropOverwriteMode(false);
+    musicList->setDragDropOverwriteMode(false);
     Ocean::playLists->setContextMenuPolicy(Qt::CustomContextMenu);
     Ocean::musicList->setContextMenuPolicy(Qt::CustomContextMenu);
+
+    //Setting up ListWidgets
+    //DRAG AND DROP MODEL music list
+    musicList->setDragEnabled(true);
+    musicList->setAcceptDrops(true);
+    musicList->setDropIndicatorShown(true);
+    //DRAG AND DROP MODEL music list
+    playLists->setDragEnabled(true);
+    playLists->setAcceptDrops(true);
+    playLists->setDropIndicatorShown(true);
 
     //Slider of volume
     Ocean::sliderOfVolume->setMinimumSize(225, 17);
@@ -104,19 +118,6 @@ Ocean::Ocean(QWidget *parent)
 
     //Slider of track
     Ocean::sliderOfTrack->setMinimumWidth(225);
-
-    //Setting up ListWidgets
-    //DRAG AND DROP MODEL music list
-    musicList->setSelectionMode(QAbstractItemView::SingleSelection);
-    musicList->setDragEnabled(true);
-    musicList->setAcceptDrops(true);
-    musicList->setDropIndicatorShown(true);
-    //DRAG AND DROP MODEL music list
-    playLists->setSelectionMode(QAbstractItemView::SingleSelection);
-    playLists->setDragEnabled(true);
-    playLists->setAcceptDrops(true);
-    playLists->setDropIndicatorShown(true);
-
 
 
     //TTS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -564,24 +565,6 @@ void Ocean::ParseMusicList(const QString &name)
     return;
 }
 
-//BUG ON macOS and Windows
-/*
-    1) INDEX MOVED + 1 AFTER DRAG AND DROP
-    2) duble show of one track
-
-    DON'T USE THIS CODE IN THIS METHODS (SLOT void Ocean::MoveTrack(QListWidgetItem *item))
-    BUG REPORT
-    -- fix it via SIGNAL  emit this->Ocean::CallOutPassNamesOfSongsToMusicList(Ocean::playlistmanager->Playlist::GetSongsFromCurrentPlayList(item->QListWidgetItem::text() + ".m3u8"));
-    becaus file is using player
-    -- after update file, player crash
-*/
-
-//BUG ON WINDOWS
-/*
-    If drop item in the end of list widget
-    programm get (ASSERT: "to >= 0 && to < mediaCount()" in file playback\qmedianetworkplaylistprovider.cpp, line 215) via Qt 5.15.0
-*/
-
 //BUG ON Linux
 /*
     NEED TO TEST IT!!!!!!!!
@@ -592,12 +575,15 @@ void Ocean::MoveTrack(QListWidgetItem *item)
     {
         QListWidgetItem *playlist = playLists->item(playLists->currentRow());
 
+        if(playlist->text() == "all")
+            return;
+
         if(playlist->text() == playlistmanager->GetCurrentPlayListName())
             playlistmanager->CallOutMoveSongInsideCurrentPlayList(pressedItem, item->listWidget()->row(item));
         else
             playlistmanager->CallOutMoveSongInsidePlayListByName(pressedItem, item->listWidget()->row(item), playlist->text());
 
-        qDebug() << "previous: " << pressedItem << "new index: " << item->listWidget()->row(item) << playlist->text();
+        qDebug() << "previous: " << pressedItem << endl << "new index: " << item->listWidget()->row(item) << endl << playlist->text();
     }
 
     //remove previous index
