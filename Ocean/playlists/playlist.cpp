@@ -428,7 +428,7 @@ QStringList Playlist::GetSongsFromCurrentPlayList(const QString &nameOfPlayList)
         return songs;
 
     //path to file
-    const QString path = QCoreApplication::applicationDirPath() + "/bin/" + nameOfPlayList;
+    const QString path = QCoreApplication::applicationDirPath() + "/bin/" + nameOfPlayList + ".m3u8";
 
     QFile file;
     file.QFile::setFileName(path);
