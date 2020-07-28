@@ -18,13 +18,24 @@ QListWidget
     display: inline-block;
 }
 
-QPushButton
+QLineEdit
 {
-    border: 1.5px;
+    color: #F4003D;
+    border: 1.2px;
     border-color: #F4003D;
     border-style: solid;
-    border-radius: 2px;
-    height: 15%;
+    border-radius: 1px;
+    height: 30%;
+}
+
+QPushButton
+{
+    color: #F4003D;
+    border: 1.2px;
+    border-color: #F4003D;
+    border-style: solid;
+    border-radius: 5px;
+    height: 30%;
 }
 
 QLabel
@@ -149,10 +160,10 @@ QListView::item:hover
 /*HOVER ITEMS -----------------------------------------------------------------*/
 QPushButton:hover
 {
-    border: 1.5px;
+    border: 1.2px;
     border-color: #FC83A9;
     border-style: solid;
-    border-radius: 2px;
+    border-radius: 5px;
 }
 
 QTextBrowser:hover
@@ -163,12 +174,12 @@ QTextBrowser:hover
     border-radius: 1px;
 }
 
-QListWidget:hover
+QLineEdit:hover
 {
-    border: 1.5px;
+    border: 1.2px;
     border-color: #FC83A9;
     border-style: solid;
-    border-radius: 5px;
+    border-radius: 1px;
 }
 
 /*SCROLLS BAR -----------------------------------------------------------------*/
@@ -321,4 +332,57 @@ QScrollBar::sub-line:horizontal:hover
    height: 0 px;
    subcontrol-position: top;
    subcontrol-origin: margin;
+}
+
+
+/*QMenu -----------------------------------------------------------------*/
+QMenu
+{
+    color: #F4003D;
+}
+
+QMenu::item:selected
+{
+    background-color: #690419;
+}
+
+
+/*GetStringWidget -----------------------------------------------------------------*/
+GetStringWidget
+{
+    color: #F4003D;
+}
+
+
+/*QListWidget -----------------------------------------------------------------*/
+QListWidget:hover
+{
+    border: 1.5px;
+    border-color: #FC83A9;
+    border-style: solid;
+    border-radius: 5px;
+}
+
+QListWidget::item:hover
+{
+    background-color: #690419;
+    border-radius: 5px;
+}
+
+QListWidget::item:selected:active
+{
+    background-color: #F4003D;
+    color: #690419;
+    font: bold;
+    border-radius: 5px;
+    border-color: #F4003D;
+}
+
+QListWidget::item:selected:!active
+{
+    background-color: #F4003D;
+    color: #690419;
+    font: bold;
+    border-radius: 5px;
+    border-color: #F4003D;
 }

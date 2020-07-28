@@ -470,6 +470,8 @@ void Ocean::ShowContextMenuOfMusicList(const QPoint &point)
     QPoint globalPoint = Ocean::playLists->QWidget::mapToGlobal(point);
 
     QMenu myMenu;
+    myMenu.QMenu::addAction("Add with delete", Ocean::importManager, &ImportManager::CallFileDialogWithDel);
+    myMenu.QMenu::addAction("Add with copy", Ocean::importManager, &ImportManager::CallFileDialogOnlyCopy);
     myMenu.QMenu::addAction("Add to...", this, SLOT(AddSongIntoPlayListByIndex()));
     myMenu.QMenu::addAction("Delete", this, SLOT(EraseItemFromMusicList()));
     myMenu.QMenu::addAction("Delete All", this, SLOT(EraseAllItemsFromMusicList()));
@@ -587,7 +589,8 @@ void Ocean::ShowContextMenuOfPlayList(const QPoint &point)
     myMenu.QMenu::addAction("Create", this, SLOT(CreatePlaylist()));
     myMenu.QMenu::addAction("Delete", this, SLOT(EraseItemFromPlayList()));
     myMenu.QMenu::addAction("Rename", this, SLOT(RenamePlaylist()));
-
+    //myMenu.QMenu::addAction("Save", ..., ...);
+    //myMenu.QMenu::addAction("Import", ..., ...);
     // Show context menu at handling position
     myMenu.QMenu::exec(globalPoint);
 
