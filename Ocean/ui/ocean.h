@@ -16,6 +16,7 @@
 #include <QSlider>
 #include <QLineEdit>
 #include <QComboBox>
+#include <QMimeData>
 #include <QListWidget>
 #include <QPushButton>
 #include <QMainWindow>
@@ -34,6 +35,9 @@
 #include "addmusicwidget.h"
 #include "getstringwidget.h"
 #include "selectplaylist.h"
+
+//custom widgets
+#include "customWidgets/customlistwidget.h"
 
 //managers
 #include "imports/importmanager.h"
@@ -130,6 +134,7 @@ private slots:
     void ParseMusicList(const QString &name);
     void MoveTrack(QListWidgetItem *item);
     void SetPreviousIndexOfItem(QListWidgetItem *item);
+    void UpdateCurrentIndexes();
     // Context Menu of Music list ------------------------------------------------- 1
 
     //||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
@@ -282,8 +287,10 @@ private:
     QLabel *imageOfPlayList = nullptr;
 
     //lists of playlists and musiclists
-    QListWidget *playLists = nullptr;
-    QListWidget *musicList = nullptr;
+    CustomListWidget *playLists = nullptr;
+    CustomListWidget *musicList = nullptr;
+    QList<QString> currentIndexesOfTracks = {};
+    QList<QString> previousIndexesOfTracks = {};
     int pressedItem = -1;
 
     //player

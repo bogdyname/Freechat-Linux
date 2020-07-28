@@ -22,8 +22,8 @@ Ocean::Ocean(QWidget *parent)
 
         Ocean::sliderOfTrack = new QSlider(Qt::Horizontal, this);
         Ocean::sliderOfVolume = new QSlider(Qt::Horizontal, this);
-        Ocean::playLists = new QListWidget(this);
-        Ocean::musicList = new QListWidget(this);
+        Ocean::playLists = new CustomListWidget(this);
+        Ocean::musicList = new CustomListWidget(this);
         Ocean::playTrack = new QPushButton(this);
         Ocean::pauseTrack = new QPushButton(this);
         Ocean::stopTrack = new QPushButton(this);
@@ -91,22 +91,6 @@ Ocean::Ocean(QWidget *parent)
     //Lists
     playLists->setMaximumWidth(225);
     musicList->setMaximumWidth(1500);
-    playLists->setSelectionMode(QAbstractItemView::SingleSelection);
-    musicList->setSelectionMode(QAbstractItemView::SingleSelection);
-    playLists->setSelectionBehavior(QAbstractItemView::SelectItems);
-    musicList->setSelectionBehavior(QAbstractItemView::SelectItems);
-    playLists->setDragDropMode(QAbstractItemView::InternalMove);
-    musicList->setDragDropMode(QAbstractItemView::InternalMove);
-    playLists->setContextMenuPolicy(Qt::CustomContextMenu);
-    musicList->setContextMenuPolicy(Qt::CustomContextMenu);
-
-    //Setting up ListWidgets
-    //DRAG AND DROP MODEL music list
-    musicList->setDragEnabled(true);
-    musicList->setAcceptDrops(true);
-    //DRAG AND DROP MODEL music list
-    playLists->setDragEnabled(true);
-    playLists->setAcceptDrops(true);
 
     //Slider of volume
     Ocean::sliderOfVolume->setMinimumSize(225, 17);
@@ -592,7 +576,27 @@ void Ocean::MoveTrack(QListWidgetItem *item)
 
 void Ocean::SetPreviousIndexOfItem(QListWidgetItem *item)
 {
+    //current indexes
+   for(int iter = 0; iter < musicList->count(); ++iter)
+   {
+       QListWidgetItem *track = musicList->item(iter);
+       currentIndexesOfTracks.push_back(track->text());
+   }
+
+   for(int iter = 0; iter < musicList->count(); ++iter)
+    qDebug() << "Indexes: " << currentIndexesOfTracks.at(iter);
+
     pressedItem = item->listWidget()->row(item);
+
+    musicList->update();
+
+    return;
+}
+
+void Ocean::UpdateCurrentIndexes()
+{
+   for(int iter = 0; iter < musicList->count(); ++iter)
+     qDebug() << "Indexes: " << currentIndexesOfTracks.at(iter);
 
     return;
 }

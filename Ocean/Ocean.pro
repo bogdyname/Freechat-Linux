@@ -12,6 +12,7 @@ CONFIG += c++17
 DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
+    customWidgets/customlistwidget.cpp \
     imports/importmanager.cpp \
     main.cpp \
     player/player.cpp \
@@ -23,6 +24,7 @@ SOURCES += \
     ui/selectplaylist.cpp
 
 HEADERS += \
+    customWidgets/customlistwidget.h \
     imports/importmanager.h \
     player/player.h \
     playlists/playlist.h \
