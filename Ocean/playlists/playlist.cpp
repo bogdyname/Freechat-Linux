@@ -14,7 +14,7 @@ Playlist::Playlist()
     try
     {
         Playlist::cd = new QDir();
-        Playlist::currentPlaylist = new QMediaPlaylist();
+        Playlist::currentPlaylist = new QMediaPlaylist(this);
     }
     catch(std::bad_alloc &exp)
     {
@@ -99,9 +99,8 @@ Playlist::Playlist()
 Playlist::~Playlist()
 {
     delete Playlist::cd;
-    delete Playlist::currentPlaylist;
 
-    return;
+    qDebug() << "Destructor from Playlist.cpp";
 }
 /*--------------------------------------------------------------------------------------------------------------------------------------------------*/
 /*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||MAIN|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
@@ -402,6 +401,11 @@ QMediaPlaylist* Playlist::GetCurrentPlayList()
     return Playlist::currentPlaylist;
 }
 
+int Playlist::GetCurrentIndex()
+{
+    return currentPlaylist->currentIndex();
+}
+
 bool Playlist::LoadPlayList(const QString &name)
 {
     if(Playlist::LookingForPlayList(name, Playlist::currentPlaylist))
@@ -610,7 +614,7 @@ bool Playlist::RenamePlayList(const QString &newName, QMediaPlaylist *currentPla
 
     Playlist::cd->QDir::setCurrent(QCoreApplication::applicationDirPath());
 
-    if(currentPlaylist->QMediaPlaylist::save(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/" + newName + ".m3u8"), "m3u8"))
+    if(currentPlaylist->save(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/" + newName + ".m3u8"), "m3u8"))
         return true;
     else
         return false;
@@ -623,10 +627,10 @@ bool Playlist::RenamePlayList(const QString &newName, const QString &currentName
 
     Playlist::cd->QDir::setCurrent(QCoreApplication::applicationDirPath());
 
-    QMediaPlaylist *bufferPlaylist = new QMediaPlaylist();
-    bufferPlaylist->QMediaPlaylist::load(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/" + currentName + "m3u8"), "m3u8");
+    QFile *bufferPlaylist = new QFile();
+    bufferPlaylist->setFileName(QCoreApplication::applicationDirPath() + "/bin/" + currentName + ".m3u8");
 
-    if(bufferPlaylist->QMediaPlaylist::save(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/" + newName + ".m3u8"), "m3u8"))
+    if(bufferPlaylist->rename(QCoreApplication::applicationDirPath() + "/bin/" + newName + ".m3u8"))
     {
         delete bufferPlaylist;
         return true;
@@ -791,9 +795,9 @@ bool Playlist::RemoveAllTracks(const QString &name)
 /*---------------------------------------MOVE METHODS---------------------------------------*/
 bool Playlist::MoveSongInsidePlaylistByIndex(const int &currentIndex, const int &newIndex)
 {
-    Playlist::currentPlaylist->QMediaPlaylist::moveMedia(currentIndex, newIndex);
+    currentPlaylist->moveMedia(currentIndex, newIndex);
 
-    if(Playlist::currentPlaylist->QMediaPlaylist::save(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/" + currentPlaylistName + ".m3u8"), "m3u8"))
+    if(currentPlaylist->save(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/" + currentPlaylistName + ".m3u8"), "m3u8"))
         return true;
     else
         return false;
@@ -802,11 +806,11 @@ bool Playlist::MoveSongInsidePlaylistByIndex(const int &currentIndex, const int 
 bool Playlist::MoveSongInsidePlaylistByIndex(const int &currentIndex, const int &newIndex, const QString &name)
 {
     QMediaPlaylist *buffer = new QMediaPlaylist();
-    buffer->QMediaPlaylist::load(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/" + name + ".m3u8"), "m3u8");
+    buffer->load(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/" + name + ".m3u8"), "m3u8");
 
-    buffer->QMediaPlaylist::moveMedia(currentIndex, newIndex);
+    buffer->moveMedia(currentIndex, newIndex);
 
-    if(buffer->QMediaPlaylist::save(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/" + name + ".m3u8"), "m3u8"))
+    if(buffer->save(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/" + name + ".m3u8"), "m3u8"))
     {
         delete buffer;
         return true;

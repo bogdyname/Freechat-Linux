@@ -16,8 +16,8 @@ GetStringWidget::GetStringWidget(QWidget *parent)
     try
     {
         //Objects of UI
-        GetStringWidget::lineEditForString = new QLineEdit();
-        GetStringWidget::cancel = new QPushButton("cancel");
+        GetStringWidget::lineEditForString = new QLineEdit(this);
+        GetStringWidget::cancel = new QPushButton("cancel", this);
     }
     catch(std::bad_alloc &exp)
     {
@@ -52,11 +52,9 @@ GetStringWidget::GetStringWidget(QWidget *parent)
 
 GetStringWidget::~GetStringWidget()
 {
-    delete GetStringWidget::lineEditForString;
-    delete GetStringWidget::cancel;
     delete GetStringWidget::ui;
 
-    return;
+    qDebug() << "Destructor from GetStringWidget.cpp";
 }
 
 QString GetStringWidget::GetNameOfNewPlayList()

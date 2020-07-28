@@ -12,7 +12,7 @@ Player::Player()
 {
     try
     {
-        Player::player = new QMediaPlayer();
+        Player::player = new QMediaPlayer(this);
     }
     catch(std::bad_alloc &exp)
     {
@@ -29,7 +29,7 @@ Player::Player()
         abort();
     }
 
-    QMediaObject::setNotifyInterval(500);
+    player->setNotifyInterval(500);
 
     QObject::connect(Player::player, &QMediaPlayer::positionChanged, this, &Player::ChangedPosition);
 
@@ -38,13 +38,11 @@ Player::Player()
 
 Player::~Player()
 {
-    delete Player::player;
-
-    return;
+    qDebug() << "Destructor from Player.cpp";
 }
 
 //Public slots
-void Player::CallSetMod(const unsigned short int &mod)
+void Player::CallSetMod(const int &mod)
 {
     if(Player::SetModOfPlayer(mod))
         qDebug() << "set mod: " << mod;
@@ -64,7 +62,7 @@ void Player::CallSetPlayList(QMediaPlaylist *playlist)
     return;
 }
 
-void Player::CallSetVolume(const unsigned short int &volume)
+void Player::CallSetVolume(const int &volume)
 {
     if(Player::SetVolume(volume))
         qDebug() << "set volume" << volume;
@@ -86,29 +84,29 @@ void Player::ChangedPosition(qint64 position)
 //Methods
 const QMediaPlayer* Player::GetPlayer()
 {
-    return Player::player;
+    return player;
 }
 
 qint64 Player::GetPositionOfTrack()
 {
-    return this->Player::currentPosition;
+    return currentPosition;
 }
 
 void Player::SetPositionOfTrack(const qint64 position)
 {
-    Player::player->QMediaPlayer::setPosition(position);
+    player->setPosition(position);
 
     return;
 }
 
-bool Player::SetModOfPlayer(const unsigned short int &mod)
+bool Player::SetModOfPlayer(const int &mod)
 {
     switch(mod)
     {
         //Loop player
         case 0:
         {
-            Player::player->QMediaPlayer::setPlaybackRate(QMediaPlaylist::Loop);
+            player->setPlaybackRate(QMediaPlaylist::Loop);
             return true;
         }
         break;
@@ -116,7 +114,7 @@ bool Player::SetModOfPlayer(const unsigned short int &mod)
         //Random player
         case 1:
         {
-            Player::player->QMediaPlayer::setPlaybackRate(QMediaPlaylist::Random);
+            player->setPlaybackRate(QMediaPlaylist::Random);
             return true;
         }
         break;
@@ -124,7 +122,7 @@ bool Player::SetModOfPlayer(const unsigned short int &mod)
         //Default sequential player (one by one)
         case 2:
         {
-            Player::player->QMediaPlayer::setPlaybackRate(QMediaPlaylist::Sequential);
+            player->setPlaybackRate(QMediaPlaylist::Sequential);
             return true;
         }
         break;
@@ -135,20 +133,20 @@ bool Player::SetModOfPlayer(const unsigned short int &mod)
 
 bool Player::SetPlayList(QMediaPlaylist *playlist)
 {
-    if(!playlist->QMediaPlaylist::isEmpty())
+    if(!playlist->isEmpty())
     {
-        Player::player->QMediaPlayer::setPlaylist(playlist);
+        player->setPlaylist(playlist);
         return true;
     }
     else
         return false;
 }
 
-bool Player::SetVolume(const unsigned short int &volume)
+bool Player::SetVolume(const int &volume)
 {
     if(volume > 0)
     {
-        Player::player->QMediaPlayer::setVolume(volume);
+        player->setVolume(volume);
         return true;
     }
     else

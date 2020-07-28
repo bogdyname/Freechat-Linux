@@ -16,10 +16,10 @@ AddMusicWidget::AddMusicWidget(QWidget *parent)
     try
     {
         //Objects of UI
-        AddMusicWidget::addedSongs = new QListWidget();
-        AddMusicWidget::allSongs = new QListWidget();
-        AddMusicWidget::okay = new QPushButton("okay");
-        AddMusicWidget::cancel = new QPushButton("cancel");
+        AddMusicWidget::addedSongs = new QListWidget(this);
+        AddMusicWidget::allSongs = new QListWidget(this);
+        AddMusicWidget::okay = new QPushButton("okay", this);
+        AddMusicWidget::cancel = new QPushButton("cancel", this);
     }
     catch(std::bad_alloc &exp)
     {
@@ -56,12 +56,8 @@ AddMusicWidget::AddMusicWidget(QWidget *parent)
 AddMusicWidget::~AddMusicWidget()
 {
     delete AddMusicWidget::ui;
-    delete AddMusicWidget::addedSongs;
-    delete AddMusicWidget::allSongs;
-    delete AddMusicWidget::okay;
-    delete AddMusicWidget::cancel;
 
-    return;
+    qDebug() << "Destructor from AddMusicWidget.cpp";
 }
 
 void AddMusicWidget::DoubleClickedAllSongsList(QListWidgetItem *item)

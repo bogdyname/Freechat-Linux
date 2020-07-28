@@ -15,9 +15,10 @@ int main(int argc, char *argv[])
 
     QApplication app(argc, argv);
 
-    QFile *file = new QFile(":/style.css");
-    file->QFile::open(QFile::ReadOnly);
-    app.QApplication::setStyleSheet(file->QFile::readAll());
+    QFile *file = new QFile(":/vampire_theme.css");
+
+    if(file->open(QFile::ReadOnly))
+        app.setStyleSheet(file->readAll());
 
     Ocean window;
 

@@ -1,5 +1,7 @@
 <RCC>
     <qresource prefix="/">
         <file>style.css</file>
+        <file>vampire_theme.css</file>
+        <file>images/vampire_arrow.png</file>
     </qresource>
 </RCC>

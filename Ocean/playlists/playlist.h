@@ -24,9 +24,10 @@
 class Playlist : public QMediaPlaylist
 {
     Q_OBJECT
+    Q_CLASSINFO("Version", "1.0")
 
     /*
-     * Format of playlists = .m3u
+     * Format of playlists = .m3u8
      * Dir 'bin' for saving and loading playlists
     */
 
@@ -154,15 +155,17 @@ public slots:
     /*
         1) get name of current playlist
         2) get current playlist
-        3) load playlist by name
-        4) get songs from current playlist by name of playlist
-        5) load all songs (default playlist)
+        3) get current index
+        4) load playlist by name
+        5) get songs from current playlist by name of playlist
+        6) load all songs (default playlist)
     */
 
     /*----------------------------------------Methods to get data about playlist----------------------------------------*/
 public:
     const QString GetCurrentPlayListName(); //--------------------------------------------------------------------------1)
     QMediaPlaylist* GetCurrentPlayList(); //----------------------------------------------------------------------------2)
+    int GetCurrentIndex();
     bool LoadPlayList(const QString &name); //--------------------------------------------------------------------------3)
     QStringList GetSongsFromCurrentPlayList(const QString &nameOfPlayList); //------------------------------------------4)
     const QStringList GetAllTracks();//---------------------------------------------------------------------------------5)
@@ -211,8 +214,8 @@ private:
     bool SavePlaylist(const QString &name, const QStringList &newListOfSongs, QMediaPlaylist *currentPlaylist);//----------------------------------------------------4) (DONE)
     bool SavePlaylist(const QString &name, const QStringList &newListOfSongs);//-------------------------------------------------------------------------------------5) (DONE)
     bool SavePlaylist(const QString &name);//------------------------------------------------------------------------------------------------------------------------6) (DONE)
-    bool RenamePlayList(const QString &newName, QMediaPlaylist *currentPlaylist);//----------------------------------------------------------------------------------7)
-    bool RenamePlayList(const QString &newName, const QString &currentName); //--------------------------------------------------------------------------------------8)
+    bool RenamePlayList(const QString &newName, QMediaPlaylist *currentPlaylist);//----------------------------------------------------------------------------------7) (DONE)
+    bool RenamePlayList(const QString &newName, const QString &currentName); //--------------------------------------------------------------------------------------8) (DONE)
     bool CheckSettingsDir();//---------------------------------------------------------------------------------------------------------------------------------------9) (DONE)
     bool AddSongIntoPlayListByName(const QString &song, const QString &nameOfPlayList, const QString &nameOfCurrentPlayList, const int &index); //------------------10) (DONE)
     bool RemoveTrackByIndex(const int &index); //-------------------------------------------------------------------------------------------------------------------11) (DONE)

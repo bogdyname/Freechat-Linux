@@ -12,7 +12,7 @@ ImportManager::ImportManager()
     try
     {
         ImportManager::musicDir = new QDir();
-        ImportManager::mp3File = new QFile();
+        ImportManager::mp3File = new QFile(this);
         ImportManager::importerWindow = new QFileDialog();
     }
     catch(std::bad_alloc &exp)
@@ -50,8 +50,9 @@ ImportManager::ImportManager()
 ImportManager::~ImportManager()
 {
     delete ImportManager::musicDir;
-    delete ImportManager::mp3File;
     delete ImportManager::importerWindow;
+
+    qDebug() << "Destructor from ImportManager.cpp";
 }
 
 void ImportManager::CallFileDialogWithDel()

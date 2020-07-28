@@ -1,8 +1,9 @@
 QT       += core gui
 QT       += network
 QT       += multimedia
+QT       += widgets
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+greaterThan(QT_MAJOR_VERSION, 5): QT += widgets
 
 CONFIG += c++11
 CONFIG += c++14
@@ -15,6 +16,7 @@ SOURCES += \
     main.cpp \
     player/player.cpp \
     playlists/playlist.cpp \
+    sysmanager/system.cpp \
     ui/addmusicwidget.cpp \
     ui/getstringwidget.cpp \
     ui/ocean.cpp \
@@ -24,6 +26,7 @@ HEADERS += \
     imports/importmanager.h \
     player/player.h \
     playlists/playlist.h \
+    sysmanager/system.h \
     ui/addmusicwidget.h \
     ui/getstringwidget.h \
     ui/ocean.h \
