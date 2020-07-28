@@ -1,36 +1,52 @@
+/*
+***Copyleft (C) 2020 Softwater, Inc
+***Contact: bogdyname@gmail.com
+***Contact: donvalentiy@yandex.ru
+*/
+
 #include "customlistwidget.h"
 
+//TTS CLASS
 CustomListWidget::CustomListWidget(QWidget *parent)
     : QListWidget(parent)
 {
-    this->setSelectionMode(QAbstractItemView::SingleSelection);
-    this->setSelectionBehavior(QAbstractItemView::SelectItems);
-    this->setDragDropMode(QAbstractItemView::DropOnly);
-    this->setContextMenuPolicy(Qt::CustomContextMenu);
-
     //Setting up ListWidgets
     //DRAG AND DROP MODEL
+    this->setSelectionMode(QAbstractItemView::SingleSelection);
+    this->setSelectionBehavior(QAbstractItemView::SelectItems);
+    this->setDragDropMode(QAbstractItemView::InternalMove);
+    this->setContextMenuPolicy(Qt::CustomContextMenu);
+    this->setDefaultDropAction(Qt::MoveAction);
+    this->setDropIndicatorShown(true);
     this->setDragEnabled(true);
     this->setAcceptDrops(true);
 
     return;
 }
 
-void CustomListWidget::dropEvent(QDropEvent *event)
+void CustomListWidget::dragEnterEvent(QDragEnterEvent *event)
 {
-    qDebug() << "DATA TEST: " << event->mimeData()->text();
+    if(event->mimeData()->hasFormat("text/uri-list"))
+        event->acceptProposedAction();
+}
 
-    /*
-    //current indexes
-   for(int iter = 0; iter < musicList->count(); ++iter)
-   {
-       QListWidgetItem *track = musicList->item(iter);
-       currentIndexesOfTracks.push_back(track->text());
-   }
+void CustomListWidget::dragLeaveEvent(QDragLeaveEvent *event)
+{
 
-   for(int iter = 0; iter < musicList->count(); ++iter)
-    qDebug() << "Indexes: " << currentIndexesOfTracks.at(iter);
-    */
+}
 
-    return;
+void CustomListWidget::dragMoveEvent(QDragMoveEvent *event)
+{
+    event->accept();
+}
+
+void CustomListWidget::dropEvent(QDropEvent* event)
+{
+    QList<QUrl> urlList = event->mimeData()->urls();
+    QStringList buffer = {};
+
+    foreach(QUrl url, urlList)
+        buffer.push_back(url.toString());
+
+    this->addItems(buffer);
 }
