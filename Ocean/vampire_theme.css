@@ -14,7 +14,7 @@ QListWidget
     color: #F4003D;
     border-style: solid;
     border-radius: 5px;
-    margin-left: 12px;
+    margin-top: 20px;
     display: inline-block;
 }
 
@@ -29,11 +29,14 @@ QPushButton
 
 QLabel
 {
-    margin-bottom: 115px;
-    margin-right: 12px;
+    margin-top: 20px;
 }
 
 /*SLIDER -----------------------------------------------------------------*/
+QSlider
+{
+    margin-top: 20px;
+}
 
 QSlider::groove:horizontal
 {
@@ -87,6 +90,8 @@ QComboBox
     border-color: #F4003D;
     border-style: solid;
     border-radius: 5px;
+    padding: 0px 10px 0px 10px;
+    font-size: 20px;
 }
 
 QComboBox:hover

@@ -286,8 +286,8 @@ private:
     QPushButton *previousTrack = nullptr;
 
     //add music buttons
-    QPushButton *buttonForAddMusicWithDel = nullptr;
-    QPushButton *buttonForAddMusicOnlyCopy = nullptr;
+ //   QPushButton *buttonForAddMusicWithDel = nullptr;
+ //   QPushButton *buttonForAddMusicOnlyCopy = nullptr;
     //UI--------------------------------------------------------------
 
     //TOOLS-----------------------------------------------------------

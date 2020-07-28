@@ -15,21 +15,28 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="1" column="1">
-     <layout class="QVBoxLayout" name="tool"/>
-    </item>
     <item row="0" column="0" colspan="2">
      <layout class="QVBoxLayout" name="player">
       <item>
-       <layout class="QHBoxLayout" name="buttonsOfPlayer"/>
+       <layout class="QVBoxLayout" name="setMode"/>
       </item>
       <item>
        <layout class="QHBoxLayout" name="sliderOfPlayer"/>
       </item>
      </layout>
     </item>
-    <item row="1" column="0">
+    <item row="1" column="0" rowspan="3">
      <layout class="QHBoxLayout" name="music"/>
+    </item>
+    <item row="1" column="1" rowspan="3">
+     <layout class="QVBoxLayout" name="tool">
+      <item>
+       <layout class="QVBoxLayout" name="edit"/>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="buttonsOfTracks"/>
+      </item>
+     </layout>
     </item>
    </layout>
   </widget>
