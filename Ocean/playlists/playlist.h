@@ -24,10 +24,10 @@
 class Playlist : public QMediaPlaylist
 {
     Q_OBJECT
-    Q_CLASSINFO("Version", "0.5")
+    Q_CLASSINFO("Version", "1.0")
 
     /*
-     * Format of playlists = .m3u
+     * Format of playlists = .m3u8
      * Dir 'bin' for saving and loading playlists
     */
 
@@ -155,9 +155,10 @@ public slots:
     /*
         1) get name of current playlist
         2) get current playlist
-        3) load playlist by name
-        4) get songs from current playlist by name of playlist
-        5) load all songs (default playlist)
+        3) get current index
+        4) load playlist by name
+        5) get songs from current playlist by name of playlist
+        6) load all songs (default playlist)
     */
 
     /*----------------------------------------Methods to get data about playlist----------------------------------------*/
