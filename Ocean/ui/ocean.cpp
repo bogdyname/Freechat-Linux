@@ -16,19 +16,20 @@ Ocean::Ocean(QWidget *parent)
     try
     {
         //Objects of UI
-        Ocean::spacer = new QSpacerItem(100, 250);
+        Ocean::spacer = new QSpacerItem(200, 0);
         Ocean::ownImage = new QPixmap();
-        Ocean::imageOfPlayList = new QLabel(this);
-
-        Ocean::sliderOfTrack = new QSlider(Qt::Horizontal, this);
-        Ocean::sliderOfVolume = new QSlider(Qt::Horizontal, this);
-        Ocean::playLists = new CustomListWidget(this);
-        Ocean::musicList = new CustomListWidget(this);
-        Ocean::playTrack = new QPushButton(this);
-        Ocean::pauseTrack = new QPushButton(this);
-        Ocean::stopTrack = new QPushButton(this);
-        Ocean::nextTrack = new QPushButton(this);
-        Ocean::previousTrack = new QPushButton(this);
+        Ocean::imageOfPlayList = new QLabel();
+        Ocean::nameOfTrack = new QLabel("'name of track'");
+        Ocean::sortBy = new QComboBox();
+        Ocean::sliderOfTrack = new QSlider(Qt::Horizontal);
+        Ocean::sliderOfVolume = new QSlider(Qt::Horizontal);
+        Ocean::playLists = new QListWidget();
+        Ocean::musicList = new QListWidget();
+        Ocean::playTrack = new QPushButton();
+        Ocean::pauseTrack = new QPushButton();
+        Ocean::stopTrack = new QPushButton();
+        Ocean::nextTrack = new QPushButton();
+        Ocean::previousTrack = new QPushButton();
 
         //Tools for widgets
         Ocean::timerForCheckWidgets = new QTimer();
@@ -66,12 +67,11 @@ Ocean::Ocean(QWidget *parent)
     /*--------------------------------------------------UI--------------------------------------------------*/
     //UpSide
     //Player
-    Ocean::ui->buttonsOfPlayer->QHBoxLayout::addWidget(Ocean::stopTrack);
-    Ocean::ui->buttonsOfPlayer->QHBoxLayout::addWidget(Ocean::previousTrack);
-    Ocean::ui->buttonsOfPlayer->QHBoxLayout::addWidget(Ocean::nextTrack);
-    Ocean::ui->buttonsOfPlayer->QHBoxLayout::addWidget(Ocean::pauseTrack);
-    Ocean::ui->buttonsOfPlayer->QHBoxLayout::addWidget(Ocean::playTrack);
-    Ocean::ui->sliderOfPlayer->QHBoxLayout::addWidget(Ocean::sliderOfTrack);
+    Ocean::ui->setMode->QVBoxLayout::addWidget(Ocean::sortBy);
+    Ocean::ui->playSlider->QVBoxLayout::addWidget(Ocean::nameOfTrack);
+    Ocean::nameOfTrack->QObject::setObjectName("nameOfTrack");
+    Ocean::ui->playSlider->QVBoxLayout::addWidget(Ocean::sliderOfTrack);
+    Ocean::ui->playSlider->QLayout::setAlignment(Ocean::nameOfTrack, Qt::AlignJustify);
 
     //Left side
     //Music
@@ -80,45 +80,58 @@ Ocean::Ocean(QWidget *parent)
 
     //Right side
     //Image of play list
-    Ocean::ui->tool->QVBoxLayout::addWidget(Ocean::imageOfPlayList);
-    Ocean::ui->tool->QVBoxLayout::addItem(Ocean::spacer);
+    Ocean::ui->image->QVBoxLayout::addWidget(Ocean::imageOfPlayList);
+    Ocean::ui->volumeSlider->QVBoxLayout::addWidget(Ocean::sliderOfVolume);
+    Ocean::ui->buttonsOfTracks->QHBoxLayout::addWidget(Ocean::previousTrack);
+    Ocean::ui->buttonsOfTracks->QHBoxLayout::addWidget(Ocean::nextTrack);
+    Ocean::ui->buttonsOfTracks->QHBoxLayout::addWidget(Ocean::pauseTrack);
+    Ocean::ui->buttonsOfTracks->QHBoxLayout::addWidget(Ocean::playTrack);
+    Ocean::ui->tool->QLayout::setAlignment(Qt::AlignTop);
     //slider for volume
-    Ocean::ui->tool->QVBoxLayout::addWidget(Ocean::sliderOfVolume);
 
-    //Main window
-    this->setMinimumSize(250, 300);
+    //Main window  
+    this->QWidget::setMinimumSize(350, 350);
+    this->QWidget::resize(1200, 850);
 
     //Lists
-    playLists->setMaximumWidth(225);
-    musicList->setMaximumWidth(1500);
+    Ocean::playLists->QWidget::setMaximumWidth(250);
+    Ocean::musicList->QWidget::setMaximumWidth(1500);
+    Ocean::playLists->QAbstractItemView::setSelectionMode(QAbstractItemView::SingleSelection);
+    Ocean::musicList->QAbstractItemView::setSelectionMode(QAbstractItemView::SingleSelection);
+    Ocean::playLists->QAbstractItemView::setSelectionBehavior(QAbstractItemView::SelectRows);
+    Ocean::musicList->QAbstractItemView::setSelectionBehavior(QAbstractItemView::SelectRows);
+    Ocean::playLists->QWidget::setContextMenuPolicy(Qt::CustomContextMenu);
+    Ocean::musicList->QWidget::setContextMenuPolicy(Qt::CustomContextMenu);
 
     //Slider of volume
-    Ocean::sliderOfVolume->setMinimumSize(225, 17);
-    Ocean::sliderOfVolume->setMaximumSize(225, 17);
-
+    Ocean::sliderOfVolume->QWidget::setFixedSize(272, 17);
     //Slider of track
-    Ocean::sliderOfTrack->setMinimumWidth(225);
+    Ocean::sliderOfTrack->QWidget::setMinimumWidth(225);
 
-
-    //TTS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    if(Ocean::ownImage->QPixmap::load("C:/Users/donva/Desktop/vampire_playlist.jpg", "jpg", Qt::AutoColor))
+    //Default image of playlists
+    if(Ocean::ownImage->QPixmap::load("://images/vampire_playlist.jpg", "jpg", Qt::AutoColor))
         qDebug() << "true";
     else
         qDebug() << "false";
 
-    Ocean::ownImage->QPixmap::scaled(150, 150, Qt::IgnoreAspectRatio, Qt::FastTransformation);
+   // Ocean::ownImage->QPixmap::scaled(150, 150, Qt::IgnoreAspectRatio, Qt::FastTransformation);
     const QPixmap *imageTTS = Ocean::ownImage;
     //TTS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-
-
-
     //Image of playlist
     Ocean::imageOfPlayList->QLabel::setPixmap(*imageTTS);
-   // Ocean::imageOfPlayList->QWidget::setMinimumSize(250, 250);
-    Ocean::imageOfPlayList->QWidget::setFixedSize(250, 250);
-   // Ocean::imageOfPlayList->QWidget::setMaximumSize(250, 250);
+    Ocean::imageOfPlayList->QLabel::setAlignment(Qt::AlignTop);
+    Ocean::imageOfPlayList->QObject::setObjectName("playlistImage");
 
+    //Sort box
+    Ocean::sortBy->QComboBox::addItem("music");
+   /* Ocean::sortBy->QComboBox::addItem("Name");
+    Ocean::sortBy->QComboBox::addItem("Date");
+    Ocean::sortBy->QComboBox::addItem("Group");*/
+    Ocean::sortBy->QWidget::setFixedSize(250, 35);
+
+    //name of track
+    Ocean::nameOfTrack->QWidget::setFixedHeight(35);
     //Buttons for player
     Ocean::stopTrack->setText("Stop");
     Ocean::previousTrack->setText("Previous");
@@ -205,6 +218,7 @@ Ocean::Ocean(QWidget *parent)
     QObject::connect(importManager, &ImportManager::CallOutToCheckSongsInsideDefaultPlayList, Ocean::playlistmanager, &Playlist::CheckDefaultPlayList);
     QObject::connect(importManager, &ImportManager::CallOutToCheckSongsInsideDefaultPlayList, this, &Ocean::SetCurrentPlayList);
     QObject::connect(musicList, &CustomListWidget::CallOutItemsDroped, this, &Ocean::AddFilesAfterDropEvent);
+
     //Player manager
     QObject::connect(playTrack, &QPushButton::clicked, Ocean::playermanager, &QMediaPlayer::play);
     QObject::connect(pauseTrack, &QPushButton::clicked, Ocean::playermanager, &QMediaPlayer::pause);
@@ -331,10 +345,21 @@ Ocean::~Ocean()
         qDebug() << "1) ownImage empty!";
 
     sysmanager->Free(spacer);
+    sysmanager->Free(sortBy);
+    sysmanager->Free(imageOfPlayList);
+    sysmanager->Free(sliderOfTrack);
+    sysmanager->Free(sliderOfVolume);
+    sysmanager->Free(playLists);
+    sysmanager->Free(musicList);
+    sysmanager->Free(playTrack);
+    sysmanager->Free(pauseTrack);
+    sysmanager->Free(stopTrack);
+    sysmanager->Free(nextTrack);
+    sysmanager->Free(previousTrack);
 
     if(sysmanager->PointerIsEmpty(spacer))
         qDebug() << "2) spacer empty!";
-
+  
     sysmanager->Free(ui);
 
     if(sysmanager->PointerIsEmpty(ui))
@@ -385,6 +410,7 @@ void Ocean::Hidder()
     Ocean::spacer->QSpacerItem::changeSize(0, 0);
     Ocean::playLists->QWidget::hide();
     Ocean::musicList->QWidget::hide();
+    Ocean::sortBy->QWidget::hide();
 
     return;
 }
@@ -394,6 +420,7 @@ void Ocean::Shower()
     Ocean::spacer->QSpacerItem::changeSize(100, 250);
     Ocean::playLists->QWidget::show();
     Ocean::musicList->QWidget::show();
+    Ocean::sortBy->QWidget::show();
 
     return;
 }
@@ -512,6 +539,8 @@ void Ocean::ShowContextMenuOfMusicList(const QPoint &point)
     QPoint globalPoint = Ocean::playLists->QWidget::mapToGlobal(point);
 
     QMenu myMenu;
+    myMenu.QMenu::addAction("Add with delete", Ocean::importManager, &ImportManager::CallFileDialogWithDel);
+    myMenu.QMenu::addAction("Add with copy", Ocean::importManager, &ImportManager::CallFileDialogOnlyCopy);
     myMenu.QMenu::addAction("Add to...", this, SLOT(AddSongIntoPlayListByIndex()));
     myMenu.QMenu::addAction("Delete", this, SLOT(EraseItemFromMusicList()));
     myMenu.QMenu::addAction("Delete All", this, SLOT(EraseAllItemsFromMusicList()));
@@ -687,7 +716,8 @@ void Ocean::ShowContextMenuOfPlayList(const QPoint &point)
     myMenu.QMenu::addAction("Create", this, SLOT(CreatePlaylist()));
     myMenu.QMenu::addAction("Delete", this, SLOT(EraseItemFromPlayList()));
     myMenu.QMenu::addAction("Rename", this, SLOT(RenamePlaylist()));
-
+    //myMenu.QMenu::addAction("Save", ..., ...);
+    //myMenu.QMenu::addAction("Import", ..., ...);
     // Show context menu at handling position
     myMenu.QMenu::exec(globalPoint);
 

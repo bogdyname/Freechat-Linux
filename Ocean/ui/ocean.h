@@ -283,6 +283,7 @@ private:
     //UI--------------------------------------------------------------
     //track status (maybe bit rank)
     QSlider *sliderOfTrack = nullptr;
+    QLabel *nameOfTrack = nullptr;
 
     //right side (working with app)
     QSpacerItem *spacer = nullptr;
