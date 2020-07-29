@@ -10,6 +10,7 @@
 #include <QDrag>
 #include <QDebug>
 #include <QObject>
+#include <QBuffer>
 #include <QMimeData>
 #include <QListWidget>
 #include <QDragMoveEvent>
@@ -22,7 +23,7 @@ public:
     CustomListWidget(QWidget *parent = nullptr);
 
 signals:
-    void itemDroped();
+    void CallOutItemsDroped(const QStringList &files);
 
 protected:
     virtual void dragEnterEvent(QDragEnterEvent *event);

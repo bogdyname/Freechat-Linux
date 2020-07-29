@@ -158,10 +158,9 @@ Ocean::Ocean(QWidget *parent)
 
     ---------------------Managers---------------------
     1)Import manager connect
-        1.1) Add new music and delete it via button
-        1.2) Add new music (only copy) via button
-        1.3) Check added track to pass it into all songs
-        1.4) Set current playlist after added new track
+        1.1) Check added track to pass it into all songs
+        1.2) Set current playlist after added new track
+        1.3) Add files via Drag and Drop into app after that (into current playlist or by name)
     2)Player manager
         2.1) play track
         2.2) pause track
@@ -205,6 +204,7 @@ Ocean::Ocean(QWidget *parent)
     //Import manager
     QObject::connect(importManager, &ImportManager::CallOutToCheckSongsInsideDefaultPlayList, Ocean::playlistmanager, &Playlist::CheckDefaultPlayList);
     QObject::connect(importManager, &ImportManager::CallOutToCheckSongsInsideDefaultPlayList, this, &Ocean::SetCurrentPlayList);
+    QObject::connect(musicList, &CustomListWidget::CallOutItemsDroped, this, &Ocean::AddFilesAfterDropEvent);
     //Player manager
     QObject::connect(playTrack, &QPushButton::clicked, Ocean::playermanager, &QMediaPlayer::play);
     QObject::connect(pauseTrack, &QPushButton::clicked, Ocean::playermanager, &QMediaPlayer::pause);
@@ -416,6 +416,76 @@ void Ocean::PassNamesOfSongsToMusicList(const QStringList &songs)
 
     Ocean::musicList->QListWidget::clear();
     Ocean::musicList->QListWidget::addItems(buffer);
+
+    return;
+}
+
+//Drag and Drop slot
+void Ocean::AddFilesAfterDropEvent(const QStringList &files)
+{
+    QString mp3 = ".mp3";
+    QString wav = ".wav";
+    QString mp4 = ".mp4";
+    QStringList filesBuffer = {}; //only music files
+    QStringList pathsOfFiles = {}; //finish list with paths of songs
+
+    //----------------------------------------Parse files path
+    //remove not music file
+    foreach(const QString &string, files)
+    {
+        QString::const_iterator iter = string.end() - 1;
+        QString buffer = "";
+
+        //get format
+        for(; iter != string.begin(); --iter)
+        {
+            if(*iter == ".")
+            {
+                buffer.push_front(".");
+                break;
+            }
+            else
+                buffer.push_front(*iter);
+        }
+
+        //check format of file
+        if((buffer == mp3) || (buffer == wav) || (buffer == mp4))
+            filesBuffer.push_front(string);
+    }
+
+    //remove pre file in begin of path
+    foreach(const QString &string, filesBuffer)
+    {
+        QString buffer = string;
+
+        //path of file with unicode
+        buffer.remove(0, 8);
+        pathsOfFiles.push_back(buffer);
+    }
+    //----------------------------------------Parse files path
+
+
+    //----------------------------------------Add track into app or playlist (current or by name)
+    //add tracks into app via copy
+    importManager->SaveFileViaDragAndDrop(pathsOfFiles);
+
+    //add tracks into current playlist (if it is not 'all' playlist)
+    for(unsigned short int iter = 0; iter < playLists->selectedItems().size(); ++iter)
+    {
+        QListWidgetItem *item = playLists->item(playLists->currentRow());
+
+        //return if item empty
+        if(item->text() == "" || item->text() == "all")
+            return;
+
+        if(item->text() == playlistmanager->GetCurrentPlayListName())
+            //add into current playlist
+            emit playlistmanager->CallOutAddSongsIntoCurrentPlaylistViaDragAndDrop(importManager->GetJustAddedSongs());
+        else
+            //add into playlist by name
+            emit playlistmanager->CallOutAddSongsIntoPlaylistByNameViaDragAndDrop(importManager->GetJustAddedSongs(), item->text());
+    }
+    //----------------------------------------Add track into app or playlist (current or by name)
 
     return;
 }

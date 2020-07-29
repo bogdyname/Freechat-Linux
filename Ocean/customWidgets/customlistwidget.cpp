@@ -28,6 +28,8 @@ void CustomListWidget::dragEnterEvent(QDragEnterEvent *event)
 {
     if(event->mimeData()->hasFormat("text/uri-list"))
         event->acceptProposedAction();
+
+    return;
 }
 
 void CustomListWidget::dragLeaveEvent(QDragLeaveEvent *event)
@@ -38,6 +40,8 @@ void CustomListWidget::dragLeaveEvent(QDragLeaveEvent *event)
 void CustomListWidget::dragMoveEvent(QDragMoveEvent *event)
 {
     event->accept();
+
+    return;
 }
 
 void CustomListWidget::dropEvent(QDropEvent* event)
@@ -48,5 +52,7 @@ void CustomListWidget::dropEvent(QDropEvent* event)
     foreach(QUrl url, urlList)
         buffer.push_back(url.toString());
 
-    this->addItems(buffer);
+    emit this->CallOutItemsDroped(buffer);
+
+    return;
 }

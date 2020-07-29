@@ -91,6 +91,9 @@ signals:
     /*
         1) Slot for hide widgets inside MainWindow
         2) Slot for show widgets inside MainWindow
+        3) get names of tracks for QListWidget (music list)
+        4) pass names of tracks for QListWidget (music list)
+        5) add tracks after dropEvent
     */
 
 private slots:
@@ -98,6 +101,7 @@ private slots:
     void Shower();
     void GetNamesOfSongsToMusicList(QListWidgetItem *item);
     void PassNamesOfSongsToMusicList(const QStringList &songs);
+    void AddFilesAfterDropEvent(const QStringList &files);
     /*-------------------------------------Slots for MainWindow----------------------------------*/
 
     /*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
