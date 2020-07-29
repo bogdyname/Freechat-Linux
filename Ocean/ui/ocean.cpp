@@ -20,11 +20,10 @@ Ocean::Ocean(QWidget *parent)
         Ocean::ownImage = new QPixmap();
         Ocean::imageOfPlayList = new QLabel();
         Ocean::nameOfTrack = new QLabel("'name of track'");
-        Ocean::sortBy = new QComboBox();
         Ocean::sliderOfTrack = new QSlider(Qt::Horizontal);
         Ocean::sliderOfVolume = new QSlider(Qt::Horizontal);
-        Ocean::playLists = new QListWidget();
-        Ocean::musicList = new QListWidget();
+        Ocean::playLists = new CustomListWidget(this);
+        Ocean::musicList = new CustomListWidget(this);
         Ocean::playTrack = new QPushButton();
         Ocean::pauseTrack = new QPushButton();
         Ocean::stopTrack = new QPushButton();
@@ -67,7 +66,6 @@ Ocean::Ocean(QWidget *parent)
     /*--------------------------------------------------UI--------------------------------------------------*/
     //UpSide
     //Player
-    Ocean::ui->setMode->QVBoxLayout::addWidget(Ocean::sortBy);
     Ocean::ui->playSlider->QVBoxLayout::addWidget(Ocean::nameOfTrack);
     Ocean::nameOfTrack->QObject::setObjectName("nameOfTrack");
     Ocean::ui->playSlider->QVBoxLayout::addWidget(Ocean::sliderOfTrack);
@@ -122,13 +120,6 @@ Ocean::Ocean(QWidget *parent)
     Ocean::imageOfPlayList->QLabel::setPixmap(*imageTTS);
     Ocean::imageOfPlayList->QLabel::setAlignment(Qt::AlignTop);
     Ocean::imageOfPlayList->QObject::setObjectName("playlistImage");
-
-    //Sort box
-    Ocean::sortBy->QComboBox::addItem("music");
-   /* Ocean::sortBy->QComboBox::addItem("Name");
-    Ocean::sortBy->QComboBox::addItem("Date");
-    Ocean::sortBy->QComboBox::addItem("Group");*/
-    Ocean::sortBy->QWidget::setFixedSize(250, 35);
 
     //name of track
     Ocean::nameOfTrack->QWidget::setFixedHeight(35);
@@ -345,7 +336,6 @@ Ocean::~Ocean()
         qDebug() << "1) ownImage empty!";
 
     sysmanager->Free(spacer);
-    sysmanager->Free(sortBy);
     sysmanager->Free(imageOfPlayList);
     sysmanager->Free(sliderOfTrack);
     sysmanager->Free(sliderOfVolume);
@@ -410,7 +400,6 @@ void Ocean::Hidder()
     Ocean::spacer->QSpacerItem::changeSize(0, 0);
     Ocean::playLists->QWidget::hide();
     Ocean::musicList->QWidget::hide();
-    Ocean::sortBy->QWidget::hide();
 
     return;
 }
@@ -420,7 +409,6 @@ void Ocean::Shower()
     Ocean::spacer->QSpacerItem::changeSize(100, 250);
     Ocean::playLists->QWidget::show();
     Ocean::musicList->QWidget::show();
-    Ocean::sortBy->QWidget::show();
 
     return;
 }
