@@ -37,7 +37,7 @@ GetStringWidget::GetStringWidget(QWidget *parent)
     GetStringWidget::getString = "";
 
     //Ui settings
-    GetStringWidget::ui->verticalLayout->QVBoxLayout::addWidget(GetStringWidget::lineEditForString);
+    GetStringWidget::ui->horizontalLayout->QHBoxLayout::addWidget(GetStringWidget::lineEditForString);
     GetStringWidget::ui->horizontalLayout->QHBoxLayout::addWidget(GetStringWidget::cancel);
 
     //SIGNALS/SLOTS
