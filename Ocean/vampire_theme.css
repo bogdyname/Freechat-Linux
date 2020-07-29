@@ -38,17 +38,24 @@ QPushButton
     height: 30%;
 }
 
-QLabel
+QLabel#playlistImage
 {
     margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+QLabel#nameOfTrack
+{
+    font-size: 20px;
+}
+
+QLabel#nameOfTrack:hover
+{
+    font-size: 20px;
+    color: #F4003D;
 }
 
 /*SLIDER -----------------------------------------------------------------*/
-QSlider
-{
-    margin-top: 20px;
-}
-
 QSlider::groove:horizontal
 {
     border: 1.5px solid #F4003D;

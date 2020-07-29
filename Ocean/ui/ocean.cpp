@@ -16,9 +16,10 @@ Ocean::Ocean(QWidget *parent)
     try
     {
         //Objects of UI
-        Ocean::spacer = new QSpacerItem(100, 250);
+        Ocean::spacer = new QSpacerItem(200, 0);
         Ocean::ownImage = new QPixmap();
         Ocean::imageOfPlayList = new QLabel();
+        Ocean::nameOfTrack = new QLabel("'name of track'");
         Ocean::sortBy = new QComboBox();
         Ocean::sliderOfTrack = new QSlider(Qt::Horizontal);
         Ocean::sliderOfVolume = new QSlider(Qt::Horizontal);
@@ -67,13 +68,11 @@ Ocean::Ocean(QWidget *parent)
     /*--------------------------------------------------UI--------------------------------------------------*/
     //UpSide
     //Player
-    /*Ocean::ui->buttonsOfPlayer->QHBoxLayout::addWidget(Ocean::stopTrack);
-    Ocean::ui->buttonsOfPlayer->QHBoxLayout::addWidget(Ocean::previousTrack);
-    Ocean::ui->buttonsOfPlayer->QHBoxLayout::addWidget(Ocean::nextTrack);
-    Ocean::ui->buttonsOfPlayer->QHBoxLayout::addWidget(Ocean::pauseTrack);
-    Ocean::ui->buttonsOfPlayer->QHBoxLayout::addWidget(Ocean::playTrack);*/
     Ocean::ui->setMode->QVBoxLayout::addWidget(Ocean::sortBy);
-    Ocean::ui->sliderOfPlayer->QHBoxLayout::addWidget(Ocean::sliderOfTrack);
+    Ocean::ui->playSlider->QVBoxLayout::addWidget(Ocean::nameOfTrack);
+    Ocean::nameOfTrack->QObject::setObjectName("nameOfTrack");
+    Ocean::ui->playSlider->QVBoxLayout::addWidget(Ocean::sliderOfTrack);
+    Ocean::ui->playSlider->QLayout::setAlignment(Ocean::nameOfTrack, Qt::AlignJustify);
 
     //Left side
     //Music
@@ -82,14 +81,13 @@ Ocean::Ocean(QWidget *parent)
 
     //Right side
     //Image of play list
-    Ocean::ui->edit->QVBoxLayout::addWidget(Ocean::imageOfPlayList);
-    Ocean::ui->edit->QVBoxLayout::addWidget(Ocean::sliderOfVolume);
-    Ocean::ui->buttonsOfTracks->QHBoxLayout::addWidget(Ocean::stopTrack);
+    Ocean::ui->image->QVBoxLayout::addWidget(Ocean::imageOfPlayList);
+    Ocean::ui->volumeSlider->QVBoxLayout::addWidget(Ocean::sliderOfVolume);
     Ocean::ui->buttonsOfTracks->QHBoxLayout::addWidget(Ocean::previousTrack);
     Ocean::ui->buttonsOfTracks->QHBoxLayout::addWidget(Ocean::nextTrack);
     Ocean::ui->buttonsOfTracks->QHBoxLayout::addWidget(Ocean::pauseTrack);
     Ocean::ui->buttonsOfTracks->QHBoxLayout::addWidget(Ocean::playTrack);
- //   Ocean::ui->tool->QVBoxLayout::addItem(Ocean::spacer);
+    Ocean::ui->tool->QLayout::setAlignment(Qt::AlignTop);
     //slider for volume
 
     //Tool buttons
@@ -125,13 +123,10 @@ Ocean::Ocean(QWidget *parent)
     const QPixmap *imageTTS = Ocean::ownImage;
     //TTS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-
-
-
     //Image of playlist
     Ocean::imageOfPlayList->QLabel::setPixmap(*imageTTS);
-    Ocean::imageOfPlayList->QLabel::setAlignment(Qt::AlignHCenter);
-   // Ocean::imageOfPlayList->QWidget::setFixedSize(300, 300);
+    Ocean::imageOfPlayList->QLabel::setAlignment(Qt::AlignTop);
+    Ocean::imageOfPlayList->QObject::setObjectName("playlistImage");
 
     //Sort box
     Ocean::sortBy->QComboBox::addItem("music");
@@ -139,6 +134,9 @@ Ocean::Ocean(QWidget *parent)
     Ocean::sortBy->QComboBox::addItem("Date");
     Ocean::sortBy->QComboBox::addItem("Group");*/
     Ocean::sortBy->QWidget::setFixedSize(250, 35);
+
+    //name of track
+    Ocean::nameOfTrack->QWidget::setFixedHeight(35);
 
     //Buttons for open file
  /*   Ocean::buttonForAddMusicWithDel->QPushButton::setText("Add music with delete");
