@@ -89,6 +89,8 @@ Playlist::Playlist()
     QObject::connect(this, &Playlist::CallOutRemoveAllTracksFromPlayListByName, this, &Playlist::RemoveAllTracksFromPlayListByName);
     //Add song
     QObject::connect(this, &Playlist::CallOutAddSongIntoPlayList, this, &Playlist::AddSongIntoPlayList);
+    QObject::connect(this, &Playlist::CallOutAddSongsIntoPlaylistByNameViaDragAndDrop, this, &Playlist::AddSongsIntoPlaylistByNameViaDragAndDrop);
+    QObject::connect(this, &Playlist::CallOutAddSongsIntoCurrentPlaylistViaDragAndDrop, this, &Playlist::AddSongsIntoCurrentPlaylistViaDragAndDrop);
     //Move song
     QObject::connect(this, &Playlist::CallOutMoveSongInsideCurrentPlayList, this, &Playlist::MoveSongInsideCurrentPlayList);
     QObject::connect(this, &Playlist::CallOutMoveSongInsidePlayListByName, this, &Playlist::MoveSongInsidePlayListByName);
@@ -283,6 +285,26 @@ void Playlist::AddSongIntoPlayList(const QString &song, const QString &nameOfPla
 
     return;
 }
+
+void Playlist::AddSongsIntoPlaylistByNameViaDragAndDrop(const QStringList &songs, const QString &nameOfPlayList)
+{
+    if(AddSongsIntoPlayListByName(songs, nameOfPlayList))
+        qDebug() << "song successed added into '" << nameOfPlayList << "' -" << songs;
+    else
+        qCritical() << "error: can't add sog into playlist '" << nameOfPlayList << "' -" << songs;
+
+    return;
+}
+
+void Playlist::AddSongsIntoCurrentPlaylistViaDragAndDrop(const QStringList &songs)
+{
+    if(AddSongsIntoCurrentPlayList(songs))
+        qDebug() << "song successed added into '" << currentPlaylistName << "' -" << songs;
+    else
+        qCritical() << "error: can't add sog into playlist '" << currentPlaylistName << "' -" << songs;
+
+    return;
+}
 /*------------------------------------------ADD METHODS--------------------------------------*/
 
 
@@ -428,7 +450,7 @@ QStringList Playlist::GetSongsFromCurrentPlayList(const QString &nameOfPlayList)
         return songs;
 
     //path to file
-    const QString path = QCoreApplication::applicationDirPath() + "/bin/" + nameOfPlayList;
+    const QString path = QCoreApplication::applicationDirPath() + "/bin/" + nameOfPlayList + ".m3u8";
 
     QFile file;
     file.QFile::setFileName(path);
@@ -688,6 +710,48 @@ bool Playlist::AddSongIntoPlayListByName(const QString &song, const QString &nam
         delete bufferPlaylist;
         return false;
     }
+}
+
+bool Playlist::AddSongsIntoPlayListByName(const QStringList &songs, const QString &nameOfPlayList)
+{
+    if((songs.isEmpty()) && (nameOfPlayList == ""))
+        return false;
+
+    cd->setCurrent(QCoreApplication::applicationDirPath()); // set default path
+    QMediaPlaylist *bufferPlaylist = new QMediaPlaylist();
+    bufferPlaylist->load(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/" + nameOfPlayList + ".m3u8"), "m3u8"); // load playlist
+
+    //add songs into playlist
+    foreach(const QString &iter, songs)
+        bufferPlaylist->addMedia(QMediaContent(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/music/" + iter)));
+
+    if(bufferPlaylist->save(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/" + nameOfPlayList + ".m3u8"), "m3u8"))
+    {
+        delete bufferPlaylist;
+        return true;
+    }
+    else
+    {
+        delete bufferPlaylist;
+        return false;
+    }
+}
+
+bool Playlist::AddSongsIntoCurrentPlayList(const QStringList &songs)
+{
+    if(songs.isEmpty())
+        return false;
+
+    cd->setCurrent(QCoreApplication::applicationDirPath()); // set default path
+
+    //add songs into current playlist
+    foreach(const QString &iter, songs)
+        currentPlaylist->addMedia(QMediaContent(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/music/" + iter)));
+
+    if(currentPlaylist->save(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/" + currentPlaylistName + ".m3u8"), "m3u8"))
+        return true;
+    else
+        return false;
 }
 /*------------------------------------------ADD METHODS--------------------------------------*/
 

@@ -16,6 +16,7 @@
 #include <QSlider>
 #include <QLineEdit>
 #include <QComboBox>
+#include <QMimeData>
 #include <QListWidget>
 #include <QPushButton>
 #include <QMainWindow>
@@ -34,6 +35,9 @@
 #include "addmusicwidget.h"
 #include "getstringwidget.h"
 #include "selectplaylist.h"
+
+//custom widgets
+#include "customWidgets/customlistwidget.h"
 
 //managers
 #include "imports/importmanager.h"
@@ -87,6 +91,9 @@ signals:
     /*
         1) Slot for hide widgets inside MainWindow
         2) Slot for show widgets inside MainWindow
+        3) get names of tracks for QListWidget (music list)
+        4) pass names of tracks for QListWidget (music list)
+        5) add tracks after dropEvent
     */
 
 private slots:
@@ -94,6 +101,7 @@ private slots:
     void Shower();
     void GetNamesOfSongsToMusicList(QListWidgetItem *item);
     void PassNamesOfSongsToMusicList(const QStringList &songs);
+    void AddFilesAfterDropEvent(const QStringList &files);
     /*-------------------------------------Slots for MainWindow----------------------------------*/
 
     /*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
@@ -130,6 +138,7 @@ private slots:
     void ParseMusicList(const QString &name);
     void MoveTrack(QListWidgetItem *item);
     void SetPreviousIndexOfItem(QListWidgetItem *item);
+    void UpdateCurrentIndexes();
     // Context Menu of Music list ------------------------------------------------- 1
 
     //||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
@@ -282,8 +291,10 @@ private:
     QLabel *imageOfPlayList = nullptr;
 
     //lists of playlists and musiclists
-    QListWidget *playLists = nullptr;
-    QListWidget *musicList = nullptr;
+    CustomListWidget *playLists = nullptr;
+    CustomListWidget *musicList = nullptr;
+    QList<QString> currentIndexesOfTracks = {};
+    QList<QString> previousIndexesOfTracks = {};
     int pressedItem = -1;
 
     //player
