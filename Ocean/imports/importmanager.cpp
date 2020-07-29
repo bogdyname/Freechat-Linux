@@ -88,7 +88,7 @@ void ImportManager::SaveFileViaDragAndDrop(const QStringList &paths)
     if(paths.isEmpty())
         return;
     else
-        SaveFilesIntoMusicFolderOnlyCopy(paths);
+        SaveFilesIntoMusicFolderOnlyCopyAfterDrop(paths);
 
     emit this->CallOutToCheckSongsInsideDefaultPlayList();
 
@@ -150,13 +150,9 @@ void ImportManager::SaveFilesIntoMusicFolderAndDeleteIt(const QStringList &paths
 
 void ImportManager::SaveFilesIntoMusicFolderOnlyCopy(const QStringList &paths)
 {
-    justAddedSongs.clear();
-
     for(const QString &iter : paths)
     {
         mp3File->setFileName(iter);
-
-        qDebug() << "Path of file: " << iter;
 
         if(mp3File->open(QFile::ReadOnly))
         {
@@ -165,11 +161,57 @@ void ImportManager::SaveFilesIntoMusicFolderOnlyCopy(const QStringList &paths)
             CheckDir();
             mp3File->copy(iter, musicDir->currentPath() + "/music/" + nameOfSong);
 
+            #ifndef Q_DEBUG
+            qDebug() << "Added new file: " << musicDir->currentPath() + "/music/" + nameOfSong;
+            #endif
+            qDebug() << endl;
+        }
+        else
+        {
+            #ifndef Q_DEBUG
+            qCritical() << "Error open or read file!";
+            #endif
+
+            return;
+        }
+
+        mp3File->close();
+    }
+
+    return;
+}
+
+void ImportManager::SaveFilesIntoMusicFolderOnlyCopyAfterDrop(const QStringList &paths)
+{
+    justAddedSongs.clear();
+
+    for(const QString &iter : paths)
+    {
+        //added '/' for UNIX (macOS/Linux)
+        QString buffer = "/" + iter;
+
+        QString::const_iterator iterator = buffer.begin() + 2;
+
+        //check windows paths
+        if(*iterator == ":")
+            buffer.remove("/");
+
+        qDebug() << "BUFFER: " << buffer;
+
+        mp3File->setFileName(mp3File->encodeName(buffer));
+
+        if(mp3File->open(QFile::ReadOnly))
+        {
+            const QString nameOfSong(GetNameOfSongFromCurrentPath(iter));
+
+            CheckDir();
+            mp3File->copy(musicDir->currentPath() + "/music/" + nameOfSong);
+
             //just added tracks to pass it into playlist
             justAddedSongs.push_back(musicDir->currentPath() + "/music/" + nameOfSong);
 
             #ifndef Q_DEBUG
-            qDebug() << "Added new file: " + nameOfSong;
+            qDebug() << "Added new file: " + musicDir->currentPath() + "/music/" + nameOfSong;
             #endif
         }
         else
