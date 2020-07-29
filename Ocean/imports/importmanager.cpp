@@ -164,7 +164,6 @@ void ImportManager::SaveFilesIntoMusicFolderOnlyCopy(const QStringList &paths)
             #ifndef Q_DEBUG
             qDebug() << "Added new file: " << musicDir->currentPath() + "/music/" + nameOfSong;
             #endif
-            qDebug() << endl;
         }
         else
         {
@@ -190,15 +189,12 @@ void ImportManager::SaveFilesIntoMusicFolderOnlyCopyAfterDrop(const QStringList 
         //added '/' for UNIX (macOS/Linux)
         QString buffer = "/" + iter;
 
+        //check Windows paths
         QString::const_iterator iterator = buffer.begin() + 2;
-
-        //check windows paths
         if(*iterator == ":")
-            buffer.remove("/");
+            buffer.remove(0, 1);
 
-        qDebug() << "BUFFER: " << buffer;
-
-        mp3File->setFileName(mp3File->encodeName(buffer));
+        mp3File->setFileName(buffer);
 
         if(mp3File->open(QFile::ReadOnly))
         {
