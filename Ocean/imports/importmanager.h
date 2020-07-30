@@ -49,6 +49,7 @@ public:
 private:
     void SaveFilesIntoMusicFolderAndDeleteIt(const QStringList &paths);
     void SaveFilesIntoMusicFolderOnlyCopy(const QStringList &paths);
+    void SaveFilesIntoMusicFolderOnlyCopyAfterDrop(const QStringList &paths);
 
     //check or create 'music' dir
     bool CheckDir();

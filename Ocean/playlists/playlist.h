@@ -64,6 +64,7 @@ public:
         7) move and sort playlist
            7.1) move track to &index by index from current playlist
            7.2) move track to &index by index from playlist by name
+        8) set name of current track
     */
 
     /*-------------------------------------------------------SIGNALS-------------------------------------------------------*/
@@ -92,6 +93,8 @@ signals:
     /*-------------------------------move song inside playlist------------------------------*/
     void CallOutMoveSongInsideCurrentPlayList(const int &currentIndex, const int &newIndex);
     void CallOutMoveSongInsidePlayListByName(const int &currentIndex, const int &newIndex, const QString &name);
+    /*-------------------------------set name of current track------------------------------*/
+    void CallOutSetNameOfCurrentTrack(const QString &name);
     /*-------------------------------------------------------SIGNALS-------------------------------------------------------*/
 
 
@@ -121,6 +124,8 @@ private slots:
     /*-------------------------------move song inside playlist------------------------------*/
     void MoveSongInsideCurrentPlayList(const int &currentIndex, const int &newIndex);
     void MoveSongInsidePlayListByName(const int &currentIndex, const int &newIndex, const QString &name);
+    /*-------------------------------set name of current track------------------------------*/
+    void SetNameOfCurrentTrack(int index);
     /*--------------------------------------------------------SLOTS--------------------------------------------------------*/
 
     /*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
@@ -248,13 +253,15 @@ private:
 
     /*--------------------------------------------------------PARSERS------------------------------------------------------*/
     /*
-        1) parser to get full path of songs
-        2) parser to remove full path and format of file (song or playlist [m3u, wav, mp3, m4a])
-        3) open file playlist (by name and index)
-        4) parse string to get format
+        1) parser to get name from file by index
+        2) parser to get full path of songs
+        3) parser to remove full path and format of file (song or playlist [m3u, wav, mp3, m4a])
+        4) open file playlist (by name and index)
+        5) parse string to get format
     */
 
 public: //using inside Ocean.cpp
+    QString ParserToGetNameOfSongByIndex(const int &index);
     QStringList ParseToGetFullPathOfTracks(const QStringList &list);
     QString ParseStringToRemoveFormatAndCurrentPath(const QString &string);
 private: //using inside Playlist.cpp

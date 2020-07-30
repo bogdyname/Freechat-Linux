@@ -71,29 +71,31 @@ Playlist::Playlist()
        7.2) move track to &index by index from playlist by name
     */
     //Save
-    QObject::connect(this, &Playlist::CallOutSaveCurrentPlayList, this, &Playlist::SaveCurrentPlayList);
-    QObject::connect(this, &Playlist::CallOutSaveSelectedPlayList, this, &Playlist::SaveSelectedPlayList);
-    QObject::connect(this, &Playlist::CallOutSaveNewPlayList, this, &Playlist::SaveNewPlayList);
+    connect(this, &Playlist::CallOutSaveCurrentPlayList, this, &Playlist::SaveCurrentPlayList);
+    connect(this, &Playlist::CallOutSaveSelectedPlayList, this, &Playlist::SaveSelectedPlayList);
+    connect(this, &Playlist::CallOutSaveNewPlayList, this, &Playlist::SaveNewPlayList);
     //Rename
-    QObject::connect(this, &Playlist::CallOutRenameCurrentPlayList, this, &Playlist::RenameCurrentPlayList);
-    QObject::connect(this, &Playlist::CallOutRenameSelectedPlayList, this, &Playlist::RenameSelectedPlayList);
+    connect(this, &Playlist::CallOutRenameCurrentPlayList, this, &Playlist::RenameCurrentPlayList);
+    connect(this, &Playlist::CallOutRenameSelectedPlayList, this, &Playlist::RenameSelectedPlayList);
     //Name
-    QObject::connect(this, &Playlist::CallOutSetCurrentPlayListName, this, &Playlist::SetCurrentPlayListName);
+    connect(this, &Playlist::CallOutSetCurrentPlayListName, this, &Playlist::SetCurrentPlayListName);
     //Create
-    QObject::connect(this, &Playlist::CallOutCreateNewPlayList, this, &Playlist::CreateNewPlayList);
+    connect(this, &Playlist::CallOutCreateNewPlayList, this, &Playlist::CreateNewPlayList);
     //Remove
-    QObject::connect(this, &Playlist::CallOutRemovePlayListByName, this, &Playlist::RemovePlayListByName);
-    QObject::connect(this, &Playlist::CallOutRemoveTrackFromCurrentPlayListByIndex, this, &Playlist::RemoveTrackFromCurrentPlayListByIndex);
-    QObject::connect(this, &Playlist::CallOutRemoveTrackFromPlayListByIndex, this, &Playlist::RemoveTrackFromPlayListByIndex);
-    QObject::connect(this, &Playlist::CallOutRemoveAllTracksFromCurrentPlayList, this, &Playlist::RemoveAllTracksFromCurrentPlayList);
-    QObject::connect(this, &Playlist::CallOutRemoveAllTracksFromPlayListByName, this, &Playlist::RemoveAllTracksFromPlayListByName);
+    connect(this, &Playlist::CallOutRemovePlayListByName, this, &Playlist::RemovePlayListByName);
+    connect(this, &Playlist::CallOutRemoveTrackFromCurrentPlayListByIndex, this, &Playlist::RemoveTrackFromCurrentPlayListByIndex);
+    connect(this, &Playlist::CallOutRemoveTrackFromPlayListByIndex, this, &Playlist::RemoveTrackFromPlayListByIndex);
+    connect(this, &Playlist::CallOutRemoveAllTracksFromCurrentPlayList, this, &Playlist::RemoveAllTracksFromCurrentPlayList);
+    connect(this, &Playlist::CallOutRemoveAllTracksFromPlayListByName, this, &Playlist::RemoveAllTracksFromPlayListByName);
     //Add song
-    QObject::connect(this, &Playlist::CallOutAddSongIntoPlayList, this, &Playlist::AddSongIntoPlayList);
-    QObject::connect(this, &Playlist::CallOutAddSongsIntoPlaylistByNameViaDragAndDrop, this, &Playlist::AddSongsIntoPlaylistByNameViaDragAndDrop);
-    QObject::connect(this, &Playlist::CallOutAddSongsIntoCurrentPlaylistViaDragAndDrop, this, &Playlist::AddSongsIntoCurrentPlaylistViaDragAndDrop);
+    connect(this, &Playlist::CallOutAddSongIntoPlayList, this, &Playlist::AddSongIntoPlayList);
+    connect(this, &Playlist::CallOutAddSongsIntoPlaylistByNameViaDragAndDrop, this, &Playlist::AddSongsIntoPlaylistByNameViaDragAndDrop);
+    connect(this, &Playlist::CallOutAddSongsIntoCurrentPlaylistViaDragAndDrop, this, &Playlist::AddSongsIntoCurrentPlaylistViaDragAndDrop);
     //Move song
-    QObject::connect(this, &Playlist::CallOutMoveSongInsideCurrentPlayList, this, &Playlist::MoveSongInsideCurrentPlayList);
-    QObject::connect(this, &Playlist::CallOutMoveSongInsidePlayListByName, this, &Playlist::MoveSongInsidePlayListByName);
+    connect(this, &Playlist::CallOutMoveSongInsideCurrentPlayList, this, &Playlist::MoveSongInsideCurrentPlayList);
+    connect(this, &Playlist::CallOutMoveSongInsidePlayListByName, this, &Playlist::MoveSongInsidePlayListByName);
+    //Set name of current track
+    connect(currentPlaylist, &QMediaPlaylist::currentIndexChanged, this, &Playlist::SetNameOfCurrentTrack);
 
     return;
 }
@@ -333,6 +335,15 @@ void Playlist::MoveSongInsidePlayListByName(const int &currentIndex, const int &
 }
 /*---------------------------------------MOVE METHODS---------------------------------------*/
 
+/*-----------------------------------------SET NAME-----------------------------------------*/
+void Playlist::SetNameOfCurrentTrack(int index)
+{
+    emit this->CallOutSetNameOfCurrentTrack(ParserToGetNameOfSongByIndex(index));
+
+    return;
+}
+/*-----------------------------------------SET NAME-----------------------------------------*/
+
 /*--------------------------------------------------------------------------------------------------------------------------------------------------*/
 /*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||SLOTS PRIVATE||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
 /*--------------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -357,7 +368,7 @@ void Playlist::SetPreviousTrack()
 
 void Playlist::SetTrackByIndex(const int &indexOfTrack)
 {
-    Playlist::currentPlaylist->QMediaPlaylist::setCurrentIndex(indexOfTrack);
+    currentPlaylist->setCurrentIndex(indexOfTrack);
 
     return;
 }
@@ -369,15 +380,15 @@ void Playlist::CheckDefaultPlayList()
     {
         //Create playlist with all songs
         //For get all songs into 'allSongs' variable
-        Playlist::cd->QDir::setCurrent(QCoreApplication::applicationDirPath() + "/music/");
-        Playlist::allSongs = Playlist::cd->QDir::entryList(QStringList() << "*.mp3" << "*.MP3" << "*.wav" << "*.WAV", QDir::Files);
+        cd->QDir::setCurrent(QCoreApplication::applicationDirPath() + "/music/");
+        allSongs = cd->QDir::entryList(QStringList() << "*.mp3" << "*.MP3" << "*.wav" << "*.WAV", QDir::Files);
 
         QMediaPlaylist *buffer = new QMediaPlaylist();
 
         for(const QString &iter : Playlist::allSongs)
-            buffer->QMediaPlaylist::addMedia(QMediaContent(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/music/" + iter)));//add song into playlist
+            buffer->addMedia(QMediaContent(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/music/" + iter)));//add song into playlist
 
-        if(buffer->QMediaPlaylist::save(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/all.m3u8"), "m3u8"))
+        if(buffer->save(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/all.m3u8"), "m3u8"))
             delete buffer;
 
         qDebug() << "Playlist 'all' created";
@@ -386,18 +397,18 @@ void Playlist::CheckDefaultPlayList()
     {
         //Reboot songs inside playlist with all songs
         //For get all songs into 'allSongs' variable
-        Playlist::cd->QDir::setCurrent(QCoreApplication::applicationDirPath() + "/music/");
-        Playlist::allSongs = Playlist::cd->QDir::entryList(QStringList() << "*.mp3" << "*.MP3" << "*.wav" << "*.WAV" << "*.m4a" << "*.M4A", QDir::Files);
+        cd->setCurrent(QCoreApplication::applicationDirPath() + "/music/");
+        allSongs = cd->entryList(QStringList() << "*.mp3" << "*.MP3" << "*.wav" << "*.WAV" << "*.m4a" << "*.M4A", QDir::Files);
 
         QMediaPlaylist *buffer = new QMediaPlaylist();
 
-        buffer->QMediaPlaylist::load(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/all.m3u8"), "m3u8");
-        buffer->QMediaPlaylist::clear();
+        buffer->load(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/all.m3u8"), "m3u8");
+        buffer->clear();
 
-        for(const QString &iter : Playlist::allSongs)
-            buffer->QMediaPlaylist::addMedia(QMediaContent(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/music/" + iter)));//add song into playlist
+        for(const QString &iter : allSongs)
+            buffer->addMedia(QMediaContent(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/music/" + iter)));//add song into playlist
 
-        if(buffer->QMediaPlaylist::save(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/all.m3u8"), "m3u8"))
+        if(buffer->save(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/all.m3u8"), "m3u8"))
             delete buffer;
 
         qDebug() << "Playlist 'all' already exists!";
@@ -415,12 +426,12 @@ void Playlist::CheckDefaultPlayList()
 /*--------------------------------------------------------------------------------------------------------------------------------------------------*/
 const QString Playlist::GetCurrentPlayListName()
 {
-    return Playlist::currentPlaylistName;
+    return currentPlaylistName;
 }
 
 QMediaPlaylist* Playlist::GetCurrentPlayList()
 {
-    return Playlist::currentPlaylist;
+    return currentPlaylist;
 }
 
 int Playlist::GetCurrentIndex()
@@ -430,7 +441,7 @@ int Playlist::GetCurrentIndex()
 
 bool Playlist::LoadPlayList(const QString &name)
 {
-    if(Playlist::LookingForPlayList(name, Playlist::currentPlaylist))
+    if(LookingForPlayList(name, currentPlaylist))
     {
         qDebug() << "loaded playlist";
         return true;
@@ -895,6 +906,28 @@ bool Playlist::MoveSongInsidePlaylistByIndex(const int &currentIndex, const int 
 /*--------------------------------------------------------------------------------------------------------------------------------------------------*/
 /*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||PARSERS||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
 /*--------------------------------------------------------------------------------------------------------------------------------------------------*/
+QString Playlist::ParserToGetNameOfSongByIndex(const int &index)
+{
+    QFile buffer(QCoreApplication::applicationDirPath() + "/bin/" + currentPlaylistName + ".m3u8");
+    QString name = "";
+
+    if(buffer.open(QIODevice::ReadOnly))
+    {
+        QTextStream playRead(&buffer);
+
+        // read specific line by index
+        for(int iterOfFile = 0; iterOfFile <= index; ++iterOfFile)
+            name = playRead.readLine().trimmed();
+
+        //get only name from current path
+        name = ParseStringToRemoveFormatAndCurrentPath(name);
+
+        buffer.close();
+    }
+
+    return name;
+}
+
 QStringList Playlist::ParseToGetFullPathOfTracks(const QStringList &list)
 {
     Playlist::cd->QDir::setCurrent(QCoreApplication::applicationDirPath() + "/music/");

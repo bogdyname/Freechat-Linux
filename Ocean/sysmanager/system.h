@@ -17,7 +17,7 @@ public:
 /*------------------------------------ACTION WITH AN OBJECT--------------------------------------*/
 public:
     template <typename Type>
-    void Free(Type &object);
+    static void Free(Type &object);
 /*------------------------------------ACTION WITH AN OBJECT--------------------------------------*/
 
 
@@ -25,7 +25,7 @@ public:
 /*----------------------------------------INFO OF OBJECT----------------------------------------*/
 public:
     template <typename Type>
-    bool PointerIsEmpty(const Type &object);
+    static bool PointerIsEmpty(const Type &object);
 /*----------------------------------------INFO OF OBJECT----------------------------------------*/
 };
 
