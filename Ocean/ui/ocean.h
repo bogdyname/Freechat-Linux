@@ -94,6 +94,7 @@ signals:
         3) get names of tracks for QListWidget (music list)
         4) pass names of tracks for QListWidget (music list)
         5) add tracks after dropEvent
+        6) set current index
     */
 
 private slots:
@@ -102,6 +103,7 @@ private slots:
     void GetNamesOfSongsToMusicList(QListWidgetItem *item);
     void PassNamesOfSongsToMusicList(const QStringList &songs);
     void AddFilesAfterDropEvent(const QStringList &files);
+    void SetNameOfCurrentTrackFromPlaylist(const QString &name);
     /*-------------------------------------Slots for MainWindow----------------------------------*/
 
     /*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
