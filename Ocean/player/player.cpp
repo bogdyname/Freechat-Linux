@@ -12,7 +12,7 @@ Player::Player()
 {
     try
     {
-        Player::player = new QMediaPlayer(this);
+        player = new QMediaPlayer(this);
     }
     catch(std::bad_alloc &exp)
     {
@@ -31,7 +31,7 @@ Player::Player()
 
     player->setNotifyInterval(500);
 
-    QObject::connect(Player::player, &QMediaPlayer::positionChanged, this, &Player::ChangedPosition);
+    connect(this, &QMediaPlayer::positionChanged, this, &Player::ChangedPosition);
 
     return;
 }
@@ -44,7 +44,7 @@ Player::~Player()
 //Public slots
 void Player::CallSetMod(const int &mod)
 {
-    if(Player::SetModOfPlayer(mod))
+    if(SetModOfPlayer(mod))
         qDebug() << "set mod: " << mod;
     else
         qDebug() << "error: set mod";
@@ -74,7 +74,7 @@ void Player::CallSetVolume(const int &volume)
 
 void Player::ChangedPosition(qint64 position)
 {
-    Player::currentPosition = position;
+    currentPosition = position;
 
     qDebug() << "current position: " << currentPosition;
 
