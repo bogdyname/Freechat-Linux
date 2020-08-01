@@ -416,9 +416,9 @@ void Ocean::Shower()
 
 void Ocean::GetNamesOfSongsToMusicList(QListWidgetItem *item)
 {
-    Ocean::musicList->QListWidget::clear();
+    musicList->clear();
 
-    emit this->Ocean::CallOutPassNamesOfSongsToMusicList(Ocean::playlistmanager->Playlist::GetSongsFromCurrentPlayList(item->QListWidgetItem::text()));
+    emit this->CallOutPassNamesOfSongsToMusicList(playlistmanager->GetSongsFromCurrentPlayList(item->text()));
 
     return;
 }
@@ -428,10 +428,10 @@ void Ocean::PassNamesOfSongsToMusicList(const QStringList &songs)
     QStringList buffer = songs;
 
     for(QString &iter : buffer)
-        iter = Ocean::playlistmanager->Playlist::ParseStringToRemoveFormatAndCurrentPath(iter);
+        iter = playlistmanager->ParseStringToRemoveFormatAndCurrentPath(iter);
 
-    Ocean::musicList->QListWidget::clear();
-    Ocean::musicList->QListWidget::addItems(buffer);
+    musicList->clear();
+    musicList->addItems(buffer);
 
     return;
 }
