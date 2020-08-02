@@ -95,6 +95,8 @@ signals:
     void CallOutMoveSongInsidePlayListByName(const int &currentIndex, const int &newIndex, const QString &name);
     /*-------------------------------set name of current track------------------------------*/
     void CallOutSetNameOfCurrentTrack(const QString &name);
+    /*---------------------------set image of current playback mode-------------------------*/
+    void CallOutSetImageOfCurrentPlaybackMode(const int &counter);
     /*-------------------------------------------------------SIGNALS-------------------------------------------------------*/
 
 
@@ -139,14 +141,16 @@ private slots:
     /*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
 
     /*
-        1) set next track in current playlist
-        2) set previuos track in current playlist
-        3) set track by index in current playlist
-        4) check default playlist (all songs from 'music' dir)
+        1) set mode of playback
+        2) set next track in current playlist
+        3) set previuos track in current playlist
+        4) set track by index in current playlist
+        5) check default playlist (all songs from 'music' dir)
     */
 
     /*--------------------------------------------------------SLOTS--------------------------------------------------------*/
 public slots:
+    void SetModOfPlayback();
     void SetNextTrack();
     void SetPreviousTrack();
     void SetTrackByIndex(const int &indexOfTrack);

@@ -22,8 +22,11 @@ public:
     Player();
     ~Player();
 
+signals:
+    void CallOutSetImagePuasePlayTrack(const int &counter);
+
 public slots:
-    void CallSetMod(const int &mod);
+    void SetPausePlayTrack();
     void CallSetPlayList(QMediaPlaylist *playlist);
     void CallSetVolume(const int &volume);
 
@@ -36,7 +39,6 @@ public:
     void SetPositionOfTrack(const qint64 position);
 
 private:
-    bool SetModOfPlayer(const int &mod);
     bool SetPlayList(QMediaPlaylist *playlist);
     bool SetVolume(const int &volume);
 

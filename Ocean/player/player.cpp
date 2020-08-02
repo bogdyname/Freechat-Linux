@@ -42,12 +42,32 @@ Player::~Player()
 }
 
 //Public slots
-void Player::CallSetMod(const int &mod)
+void Player::SetPausePlayTrack()
 {
-    if(SetModOfPlayer(mod))
-        qDebug() << "set mod: " << mod;
-    else
-        qDebug() << "error: set mod";
+    static int counter = 0;
+
+    counter == 1 ? --counter : ++counter ;
+
+    switch(counter)
+    {
+        //Play current track
+        case 0:
+        {
+            this->play();
+            emit this->CallOutSetImagePuasePlayTrack(0);
+            qDebug() << 0 ;
+        }
+        break;
+
+        //Pause current track
+        case 1:
+        {
+            this->pause();
+            emit this->CallOutSetImagePuasePlayTrack(1);
+            qDebug() << 1 ;
+        }
+        break;
+    }
 
     return;
 }
@@ -76,8 +96,6 @@ void Player::ChangedPosition(qint64 position)
 {
     currentPosition = position;
 
-    qDebug() << "current position: " << currentPosition;
-
     return;
 }
 
@@ -97,38 +115,6 @@ void Player::SetPositionOfTrack(const qint64 position)
     player->setPosition(position);
 
     return;
-}
-
-bool Player::SetModOfPlayer(const int &mod)
-{
-    switch(mod)
-    {
-        //Loop player
-        case 0:
-        {
-            player->setPlaybackRate(QMediaPlaylist::Loop);
-            return true;
-        }
-        break;
-
-        //Random player
-        case 1:
-        {
-            player->setPlaybackRate(QMediaPlaylist::Random);
-            return true;
-        }
-        break;
-
-        //Default sequential player (one by one)
-        case 2:
-        {
-            player->setPlaybackRate(QMediaPlaylist::Sequential);
-            return true;
-        }
-        break;
-        //False
-        default: return false;
-    }
 }
 
 bool Player::SetPlayList(QMediaPlaylist *playlist)
