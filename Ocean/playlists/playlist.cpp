@@ -342,7 +342,10 @@ void Playlist::MoveSongInsidePlayListByName(const int &currentIndex, const int &
 /*-----------------------------------------SET NAME-----------------------------------------*/
 void Playlist::SetNameOfCurrentTrack(int index)
 {
-    emit this->CallOutSetNameOfCurrentTrack(ParserToGetNameOfSongByIndex(index));
+    if(index == -1)
+        return;
+    else
+        emit this->CallOutSetNameOfCurrentTrack(ParserToGetNameOfSongByIndex(index));
 
     return;
 }
