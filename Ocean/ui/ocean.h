@@ -301,11 +301,11 @@ private:
     int pressedItem = -1;
 
     //player
-    QPushButton *playTrack = nullptr;
-    QPushButton *pauseTrack = nullptr;
+    QPushButton *pausePlayTrack = nullptr;
     QPushButton *stopTrack = nullptr;
     QPushButton *nextTrack = nullptr;
     QPushButton *previousTrack = nullptr;
+    QPushButton *playbackMode = nullptr;
     //UI--------------------------------------------------------------
 
     //TOOLS-----------------------------------------------------------

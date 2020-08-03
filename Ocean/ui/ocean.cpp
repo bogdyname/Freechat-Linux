@@ -16,24 +16,24 @@ Ocean::Ocean(QWidget *parent)
     try
     {
         //Objects of UI
-        Ocean::spacer = new QSpacerItem(200, 0);
-        Ocean::ownImage = new QPixmap();
-        Ocean::imageOfPlayList = new QLabel();
-        Ocean::nameOfTrack = new QLabel("'name of track'");
-        Ocean::sliderOfTrack = new QSlider(Qt::Horizontal);
-        Ocean::sliderOfVolume = new QSlider(Qt::Horizontal);
-        Ocean::playLists = new CustomListWidget(this);
-        Ocean::musicList = new CustomListWidget(this);
-        Ocean::playTrack = new QPushButton();
-        Ocean::pauseTrack = new QPushButton();
-        Ocean::stopTrack = new QPushButton();
-        Ocean::nextTrack = new QPushButton();
-        Ocean::previousTrack = new QPushButton();
+        spacer = new QSpacerItem(200, 0);
+        ownImage = new QPixmap();
+        imageOfPlayList = new QLabel(this);
+        nameOfTrack = new QLabel("'name of track'", this);
+        sliderOfTrack = new QSlider(Qt::Horizontal, this);
+        sliderOfVolume = new QSlider(Qt::Horizontal, this);
+        playLists = new CustomListWidget(this);
+        musicList = new CustomListWidget(this);
+        pausePlayTrack = new QPushButton(this);
+        stopTrack = new QPushButton(this);
+        nextTrack = new QPushButton(this);
+        previousTrack = new QPushButton(this);
+        playbackMode = new QPushButton(this);
 
         //Tools for widgets
-        Ocean::timerForCheckWidgets = new QTimer();
-        Ocean::timerForCheckDefaultPlayList = new QTimer();
-        Ocean::cd = new QDir();
+        timerForCheckWidgets = new QTimer();
+        timerForCheckDefaultPlayList = new QTimer();
+        cd = new QDir();
 
         //Object of own classes
         //widgets
@@ -66,45 +66,40 @@ Ocean::Ocean(QWidget *parent)
     /*--------------------------------------------------UI--------------------------------------------------*/
     //UpSide
     //Player
-    Ocean::ui->playSlider->QVBoxLayout::addWidget(Ocean::nameOfTrack);
+    ui->playSlider->addWidget(nameOfTrack);
     nameOfTrack->setText("");
-    Ocean::ui->playSlider->QVBoxLayout::addWidget(Ocean::sliderOfTrack);
-    Ocean::ui->playSlider->QLayout::setAlignment(Ocean::nameOfTrack, Qt::AlignJustify);
+    ui->playSlider->addWidget(sliderOfTrack);
+    ui->playSlider->setAlignment(nameOfTrack, Qt::AlignJustify);
 
     //Left side
     //Music
-    Ocean::ui->music->QHBoxLayout::addWidget(Ocean::playLists);
-    Ocean::ui->music->QHBoxLayout::addWidget(Ocean::musicList);
+    ui->music->addWidget(playLists);
+    ui->music->addWidget(musicList);
 
     //Right side
     //Image of play list
-    Ocean::ui->image->QVBoxLayout::addWidget(Ocean::imageOfPlayList);
-    Ocean::ui->volumeSlider->QVBoxLayout::addWidget(Ocean::sliderOfVolume);
-    Ocean::ui->buttonsOfTracks->QHBoxLayout::addWidget(Ocean::previousTrack);
-    Ocean::ui->buttonsOfTracks->QHBoxLayout::addWidget(Ocean::nextTrack);
-    Ocean::ui->buttonsOfTracks->QHBoxLayout::addWidget(Ocean::pauseTrack);
-    Ocean::ui->buttonsOfTracks->QHBoxLayout::addWidget(Ocean::playTrack);
-    Ocean::ui->tool->QLayout::setAlignment(Qt::AlignTop);
+    ui->image->addWidget(imageOfPlayList);
+    ui->volumeSlider->addWidget(sliderOfVolume);
+    ui->buttonsOfTracks->addWidget(stopTrack);
+    ui->buttonsOfTracks->addWidget(previousTrack);
+    ui->buttonsOfTracks->addWidget(nextTrack);
+    ui->buttonsOfTracks->addWidget(pausePlayTrack);
+    ui->buttonsOfTracks->addWidget(playbackMode);
+    ui->tool->setAlignment(Qt::AlignTop);
     //slider for volume
 
     //Main window  
-    this->QWidget::setMinimumSize(350, 350);
-    this->QWidget::resize(1200, 850);
+    this->setMinimumSize(350, 350);
+    this->resize(600, 450);
 
     //Lists
-    Ocean::playLists->QWidget::setMaximumWidth(250);
-    Ocean::musicList->QWidget::setMaximumWidth(1500);
-    Ocean::playLists->QAbstractItemView::setSelectionMode(QAbstractItemView::SingleSelection);
-    Ocean::musicList->QAbstractItemView::setSelectionMode(QAbstractItemView::SingleSelection);
-    Ocean::playLists->QAbstractItemView::setSelectionBehavior(QAbstractItemView::SelectRows);
-    Ocean::musicList->QAbstractItemView::setSelectionBehavior(QAbstractItemView::SelectRows);
-    Ocean::playLists->QWidget::setContextMenuPolicy(Qt::CustomContextMenu);
-    Ocean::musicList->QWidget::setContextMenuPolicy(Qt::CustomContextMenu);
+    playLists->setMaximumWidth(250);
+    musicList->setMaximumWidth(1500);
 
     //Slider of volume
-    Ocean::sliderOfVolume->QWidget::setFixedSize(272, 17);
+    sliderOfVolume->setFixedSize(272, 17);
     //Slider of track
-    Ocean::sliderOfTrack->QWidget::setMinimumWidth(225);
+    sliderOfTrack->setMinimumWidth(225);
 
     //Default image of playlists
     if(Ocean::ownImage->QPixmap::load("://images/vampire_playlist.jpg", "jpg", Qt::AutoColor))
@@ -127,8 +122,7 @@ Ocean::Ocean(QWidget *parent)
     stopTrack->setText("Stop");
     previousTrack->setText("Previous");
     nextTrack->setText("Next");
-    pauseTrack->setText("Pause");
-    playTrack->setText("Play");
+    pausePlayTrack->setText("Play");
     /*--------------------------------------------------UI--------------------------------------------------*/
 
     /*--------------------------------------------------MANAGERS--------------------------------------------------*/
@@ -172,7 +166,8 @@ Ocean::Ocean(QWidget *parent)
     3)Playlist manager
         3.1) next track
         3.2) previous track
-        3.3) set playlist by track (set track by index)
+        3.3) set playback mode of playlist
+        3.4) set playlist by track (set track by index)
     ---------------------Managers---------------------
 
     -----------------------UI-------------------------
@@ -206,17 +201,17 @@ Ocean::Ocean(QWidget *parent)
 
     //Managers-----------------------------------------
     //Import manager
-    connect(importManager, &ImportManager::CallOutToCheckSongsInsideDefaultPlayList, Ocean::playlistmanager, &Playlist::CheckDefaultPlayList);
+    connect(importManager, &ImportManager::CallOutToCheckSongsInsideDefaultPlayList, playlistmanager, &Playlist::CheckDefaultPlayList);
     connect(importManager, &ImportManager::CallOutToCheckSongsInsideDefaultPlayList, this, &Ocean::SetCurrentPlayList);
     connect(musicList, &CustomListWidget::CallOutItemsDroped, this, &Ocean::AddFilesAfterDropEvent);
 
     //Player manager
-    connect(playTrack, &QPushButton::clicked, Ocean::playermanager, &QMediaPlayer::play);
-    connect(pauseTrack, &QPushButton::clicked, Ocean::playermanager, &QMediaPlayer::pause);
-    connect(stopTrack, &QPushButton::clicked, Ocean::playermanager, &QMediaPlayer::stop);
+    connect(pausePlayTrack, &QPushButton::clicked, playermanager, &Player::SetPausePlayTrack);
+    connect(stopTrack, &QPushButton::clicked, playermanager, &QMediaPlayer::stop);
     //Playlist manager
-    connect(nextTrack, &QPushButton::clicked, Ocean::playlistmanager, &Playlist::SetNextTrack);
-    connect(previousTrack, &QPushButton::clicked, Ocean::playlistmanager, &Playlist::SetPreviousTrack);
+    connect(nextTrack, &QPushButton::clicked, playlistmanager, &Playlist::SetNextTrack);
+    connect(previousTrack, &QPushButton::clicked, playlistmanager, &Playlist::SetPreviousTrack);
+    connect(playbackMode, &QPushButton::clicked, playlistmanager, &Playlist::SetModOfPlayback);
     connect(musicList, &QListWidget::itemDoubleClicked, this, &Ocean::SetPlayListByTrack);
     connect(musicList, &QListWidget::itemPressed, this, &Ocean::SetPreviousIndexOfItem);
     connect(musicList, &QListWidget::itemChanged, this, &Ocean::MoveTrack);
@@ -342,8 +337,7 @@ Ocean::~Ocean()
     sysmanager->Free(sliderOfVolume);
     sysmanager->Free(playLists);
     sysmanager->Free(musicList);
-    sysmanager->Free(playTrack);
-    sysmanager->Free(pauseTrack);
+    sysmanager->Free(pausePlayTrack);
     sysmanager->Free(stopTrack);
     sysmanager->Free(nextTrack);
     sysmanager->Free(previousTrack);

@@ -47,6 +47,10 @@ Playlist::Playlist()
         qDebug() << "Folder 'bin' already exists!";
     }
 
+    //Setting up of media playlist object
+    //default playback mode
+    currentPlaylist->setPlaybackMode(QMediaPlaylist::Sequential);
+
     /*---------------------------------signals with slots---------------------------------*/
     /*
      * Save ---------------------------
@@ -352,6 +356,52 @@ void Playlist::SetNameOfCurrentTrack(int index)
 /*--------------------------------------------------------------------------------------------------------------------------------------------------*/
 /*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||SLOTS PUBLIC|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
 /*--------------------------------------------------------------------------------------------------------------------------------------------------*/
+void Playlist::SetModOfPlayback()
+{
+    static int counter = -1;
+
+    counter == 2 ? counter = -1 : ++counter ;
+
+    switch(counter)
+    {
+        //Loop all tracks
+        case 0:
+        {
+            currentPlaylist->setPlaybackMode(QMediaPlaylist::Loop);
+            emit this->CallOutSetImageOfCurrentPlaybackMode(0);
+            qDebug() << 0 ;
+        }
+        break;
+
+        //Current track in loop
+        case 1:
+        {
+            currentPlaylist->setPlaybackMode(QMediaPlaylist::CurrentItemInLoop);
+            emit this->CallOutSetImageOfCurrentPlaybackMode(1);
+            qDebug() << 1 ;
+        }
+        break;
+
+        //Random tracks
+        case 2:
+        {
+            currentPlaylist->setPlaybackMode(QMediaPlaylist::Random);
+            emit this->CallOutSetImageOfCurrentPlaybackMode(2);
+            qDebug() << 2 ;
+        }
+        break;
+
+        //Default sequential player (one by one)
+        default:
+        {
+            currentPlaylist->setPlaybackMode(QMediaPlaylist::Sequential);
+            emit this->CallOutSetImageOfCurrentPlaybackMode(-1);
+            qDebug() << -1 ;
+        }
+        break;
+    }
+}
+
 void Playlist::SetNextTrack()
 {
     Playlist::currentPlaylist->QMediaPlaylist::next();
