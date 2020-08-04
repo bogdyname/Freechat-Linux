@@ -28,6 +28,7 @@ public:
 signals:
     //signal to emit it after QFileDialog to reboot default playlist (Ocean.cpp)
     void CallOutToCheckSongsInsideDefaultPlayList();
+    void CallOutToCheckPlayLists(const QString &playlist);
 
     //Save added files
     /*

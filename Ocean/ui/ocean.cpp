@@ -37,10 +37,10 @@ Ocean::Ocean(QWidget *parent)
 
         //Object of own classes
         //widgets
-        getAddedTracksFromWidget = new AddMusicWidget();
-        getStringFromUserToCreateNewPlaylist = new GetStringWidget();
-        getStringFromUserToRenamePlaylist = new GetStringWidget();
-        getStringWithSelectedPlaylist = new SelectPlaylist();
+        getAddedTracksFromWidget = new AddMusicWidget(this);
+        getStringFromUserToCreateNewPlaylist = new GetStringWidget(this);
+        getStringFromUserToRenamePlaylist = new GetStringWidget(this);
+        getStringWithSelectedPlaylist = new SelectPlaylist(this);
         //managers
         importManager = new ImportManager();
         playlistmanager = new Playlist();
@@ -159,6 +159,7 @@ Ocean::Ocean(QWidget *parent)
         1.1) Check added track to pass it into all songs
         1.2) Set current playlist after added new track
         1.3) Add files via Drag and Drop into app after that (into current playlist or by name)
+        1.4) Add playlist files via Drag and Drop into app after that
     2)Player manager
         2.1) play track
         2.2) pause track
@@ -204,6 +205,7 @@ Ocean::Ocean(QWidget *parent)
     connect(importManager, &ImportManager::CallOutToCheckSongsInsideDefaultPlayList, playlistmanager, &Playlist::CheckDefaultPlayList);
     connect(importManager, &ImportManager::CallOutToCheckSongsInsideDefaultPlayList, this, &Ocean::SetCurrentPlayList);
     connect(musicList, &CustomListWidget::CallOutItemsDroped, this, &Ocean::AddFilesAfterDropEvent);
+    connect(playLists, &CustomListWidget::CallOutItemsDroped, this, &Ocean::AddPlaylistFilesAfterDropEvent);
 
     //Player manager
     connect(pausePlayTrack, &QPushButton::clicked, playermanager, &Player::SetPausePlayTrack);
@@ -219,34 +221,34 @@ Ocean::Ocean(QWidget *parent)
 
     //UI-----------------------------------------------
     //UI Lists
-    QObject::connect(Ocean::playLists, &QListWidget::itemClicked, this, &Ocean::GetNamesOfSongsToMusicList);
-    QObject::connect(Ocean::playLists, &QListWidget::itemDoubleClicked, this, &Ocean::SetPlayList);
-    QObject::connect(Ocean::playLists, &QListWidget::itemDoubleClicked, this, &Ocean::GetNamesOfSongsToMusicList);
-    QObject::connect(Ocean::playLists, &QWidget::customContextMenuRequested, this, &Ocean::ShowContextMenuOfPlayList);
-    QObject::connect(Ocean::musicList, &QWidget::customContextMenuRequested, this, &Ocean::ShowContextMenuOfMusicList);
-    QObject::connect(this, &Ocean::CallOutPassNamesOfSongsToMusicList, this, &Ocean::PassNamesOfSongsToMusicList);
-    QObject::connect(this, &Ocean::CallOutToCreateWindowThisWidgetToGetAddedTracks, this, &Ocean::CallWidgetAfterCreatePlaylistSlot);
+    connect(playLists, &QListWidget::itemClicked, this, &Ocean::GetNamesOfSongsToMusicList);
+    connect(playLists, &QListWidget::itemDoubleClicked, this, &Ocean::SetPlayList);
+    connect(playLists, &QListWidget::itemDoubleClicked, this, &Ocean::GetNamesOfSongsToMusicList);
+    connect(playLists, &QWidget::customContextMenuRequested, this, &Ocean::ShowContextMenuOfPlayList);
+    connect(musicList, &QWidget::customContextMenuRequested, this, &Ocean::ShowContextMenuOfMusicList);
+    connect(this, &Ocean::CallOutPassNamesOfSongsToMusicList, this, &Ocean::PassNamesOfSongsToMusicList);
+    connect(this, &Ocean::CallOutToCreateWindowThisWidgetToGetAddedTracks, this, &Ocean::CallWidgetAfterCreatePlaylistSlot);
     //Widget for get string from user (create new playlist)
-    QObject::connect(Ocean::getStringFromUserToCreateNewPlaylist, &GetStringWidget::BreakeWidget, this, &Ocean::ClosegetStringFromUserViaCancel);
-    QObject::connect(Ocean::getStringFromUserToCreateNewPlaylist, &GetStringWidget::SendName, this, &Ocean::ClosegetStringFromUserToCreatePlaylist);
+    connect(getStringFromUserToCreateNewPlaylist, &GetStringWidget::BreakeWidget, this, &Ocean::ClosegetStringFromUserViaCancel);
+    connect(getStringFromUserToCreateNewPlaylist, &GetStringWidget::SendName, this, &Ocean::ClosegetStringFromUserToCreatePlaylist);
     //Widget for get string from user (rename playlist)
-    QObject::connect(Ocean::getStringFromUserToRenamePlaylist, &GetStringWidget::BreakeWidget, this, &Ocean::ClosegetStringFromUserToRenameViaCancel);
-    QObject::connect(Ocean::getStringFromUserToRenamePlaylist, &GetStringWidget::SendName, this, &Ocean::Rename);
+    connect(getStringFromUserToRenamePlaylist, &GetStringWidget::BreakeWidget, this, &Ocean::ClosegetStringFromUserToRenameViaCancel);
+    connect(getStringFromUserToRenamePlaylist, &GetStringWidget::SendName, this, &Ocean::Rename);
     //Widget for get name of playlist from user
-    QObject::connect(Ocean::getStringWithSelectedPlaylist, &SelectPlaylist::CallOutToPassStringFromWidget, this, &Ocean::ParseMusicList);
-    QObject::connect(Ocean::getStringWithSelectedPlaylist, &SelectPlaylist::BreakeWidget, this, &Ocean::ClosegetStringWithSelectedPlaylistViaCancel);
+    connect(getStringWithSelectedPlaylist, &SelectPlaylist::CallOutToPassStringFromWidget, this, &Ocean::ParseMusicList);
+    connect(getStringWithSelectedPlaylist, &SelectPlaylist::BreakeWidget, this, &Ocean::ClosegetStringWithSelectedPlaylistViaCancel);
     //Widget for get string list with added tracks
-    QObject::connect(Ocean::getAddedTracksFromWidget, &AddMusicWidget::SendListWithSongs, this, &Ocean::PassAddedTracksIntoBuffer);
-    QObject::connect(Ocean::getAddedTracksFromWidget, &AddMusicWidget::BreakeWidget, this, &Ocean::ClosegetAddedTracksFromWidgetViaCancel);
+    connect(getAddedTracksFromWidget, &AddMusicWidget::SendListWithSongs, this, &Ocean::PassAddedTracksIntoBuffer);
+    connect(getAddedTracksFromWidget, &AddMusicWidget::BreakeWidget, this, &Ocean::ClosegetAddedTracksFromWidgetViaCancel);
 
     //Tools--------------------------------------------
     //Timer for check widgets in progress
-    QObject::connect(Ocean::timerForCheckWidgets, &QTimer::timeout, this, &Ocean::IfgetStringFromUserClosed);
-    QObject::connect(Ocean::timerForCheckWidgets, &QTimer::timeout, this, &Ocean::IfgetStringWithSelectedPlaylistClosed);
-    QObject::connect(Ocean::timerForCheckWidgets, &QTimer::timeout, this, &Ocean::IfgetAddedTracksFromWidgetClosed);
-    QObject::connect(Ocean::timerForCheckWidgets, &QTimer::timeout, this, &Ocean::IfgetStringFromUserToRenameClosed);
+    connect(timerForCheckWidgets, &QTimer::timeout, this, &Ocean::IfgetStringFromUserClosed);
+    connect(timerForCheckWidgets, &QTimer::timeout, this, &Ocean::IfgetStringWithSelectedPlaylistClosed);
+    connect(timerForCheckWidgets, &QTimer::timeout, this, &Ocean::IfgetAddedTracksFromWidgetClosed);
+    connect(timerForCheckWidgets, &QTimer::timeout, this, &Ocean::IfgetStringFromUserToRenameClosed);
     //Timer for check default playlist (inside Ocean::playLists zero iter "all")
-    QObject::connect(Ocean::timerForCheckDefaultPlayList, &QTimer::timeout, this, &Ocean::WriteDefaultPlayList);
+    connect(timerForCheckDefaultPlayList, &QTimer::timeout, this, &Ocean::WriteDefaultPlayList);
 
     //---------------------------------------------SYSTEM INFO
     qDebug() << "SYSTEM INFO";
@@ -372,13 +374,13 @@ void Ocean::resizeEvent(QResizeEvent *event)
 {
     QMainWindow::resizeEvent(event);
 
-    int short h = event->QResizeEvent::size().QSize::height();
-    int short w = event->QResizeEvent::size().QSize::width();
+    int short h = event->size().height();
+    int short w = event->size().width();
 
     if((h <= 200) || (w <= 400))
-        Ocean::Hidder();
+        this->Hidder();
     else
-        Ocean::Shower();
+        this->Shower();
 
     return;
 }
@@ -392,18 +394,18 @@ void Ocean::resizeEvent(QResizeEvent *event)
 /*--------------------------------------------------------------------------------------------------------------------------------------------------*/
 void Ocean::Hidder()
 {
-    Ocean::spacer->QSpacerItem::changeSize(0, 0);
-    Ocean::playLists->QWidget::hide();
-    Ocean::musicList->QWidget::hide();
+    spacer->changeSize(0, 0);
+    playLists->hide();
+    musicList->hide();
 
     return;
 }
 
 void Ocean::Shower()
 {
-    Ocean::spacer->QSpacerItem::changeSize(100, 250);
-    Ocean::playLists->QWidget::show();
-    Ocean::musicList->QWidget::show();
+    spacer->changeSize(100, 250);
+    playLists->show();
+    musicList->show();
 
     return;
 }
@@ -503,6 +505,24 @@ void Ocean::AddFilesAfterDropEvent(const QStringList &files)
 void Ocean::SetNameOfCurrentTrackFromPlaylist(const QString &name)
 {
     nameOfTrack->setText(name);
+
+    return;
+}
+
+//TTS
+void Ocean::AddPlaylistFilesAfterDropEvent(const QStringList &files)
+{
+    QString bufferOfFormat = "";
+
+    foreach(const QString &string, files)
+    {
+        bufferOfFormat = playlistmanager->ParseStringToGetFormat(string);
+
+        if(bufferOfFormat == ".m3u8")
+            return;
+        else
+            emit importManager->CallOutToCheckPlayLists(string);
+    }
 
     return;
 }
