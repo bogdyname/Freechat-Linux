@@ -268,7 +268,7 @@ public: //using inside Ocean.cpp
     QString ParserToGetNameOfSongByIndex(const int &index);
     QStringList ParseToGetFullPathOfTracks(const QStringList &list);
     QString ParseStringToRemoveFormatAndCurrentPath(const QString &string);
-private: //using inside Playlist.cpp
+        //using inside Playlist.cpp and Ocean.cpp
     QString ParserToGetFormatOfSong(const QString &nameOfPlayList, const int &index);
     QString ParseStringToGetFormat(const QString &string);
     /*--------------------------------------------------------PARSERS------------------------------------------------------*/
