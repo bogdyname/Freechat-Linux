@@ -10,7 +10,7 @@ SelectPlaylist::SelectPlaylist(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::SelectedPlaylist)
 {
-    SelectPlaylist::ui->setupUi(this);
+    ui->setupUi(this);
     this->setWindowFlags(Qt::FramelessWindowHint);
 
     try
@@ -41,8 +41,8 @@ SelectPlaylist::SelectPlaylist(QWidget *parent)
     ui->verticalLayout->addWidget(playlists);
 
     //SIGNAL/SLOTS
-    QObject::connect(playlists, &QListWidget::itemDoubleClicked, this, &SelectPlaylist::SelectNameOfPlayList);
-    QObject::connect(cancel, &QPushButton::clicked, this, &SelectPlaylist::ClickedCancel);
+    connect(playlists, &QListWidget::itemDoubleClicked, this, &SelectPlaylist::SelectNameOfPlayList);
+    connect(cancel, &QPushButton::clicked, this, &SelectPlaylist::ClickedCancel);
 }
 
 SelectPlaylist::~SelectPlaylist()
