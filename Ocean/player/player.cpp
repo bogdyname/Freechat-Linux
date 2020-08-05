@@ -74,7 +74,7 @@ void Player::SetPausePlayTrack()
 
 void Player::CallSetPlayList(QMediaPlaylist *playlist)
 {
-    if(Player::SetPlayList(playlist))
+    if(SetPlayList(playlist))
         qDebug() << "set playlist";
     else
         qDebug() << "error: set playlist";
@@ -84,7 +84,7 @@ void Player::CallSetPlayList(QMediaPlaylist *playlist)
 
 void Player::CallSetVolume(const int &volume)
 {
-    if(Player::SetVolume(volume))
+    if(SetVolume(volume))
         qDebug() << "set volume" << volume;
     else
         qDebug() << "error: set volume";
