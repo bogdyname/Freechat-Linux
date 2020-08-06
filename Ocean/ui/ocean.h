@@ -105,7 +105,6 @@ private slots:
     void PassNamesOfSongsToMusicList(const QStringList &songs);
     void AddFilesAfterDropEvent(const QStringList &files);
     void SetNameOfCurrentTrackFromPlaylist(const QString &name);
-    void AddPlaylistFilesAfterDropEvent(const QStringList &files);
     /*-------------------------------------Slots for MainWindow----------------------------------*/
 
     /*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/

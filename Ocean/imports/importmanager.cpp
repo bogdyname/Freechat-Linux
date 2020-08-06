@@ -11,9 +11,9 @@ ImportManager::ImportManager()
 {
     try
     {
-        ImportManager::musicDir = new QDir();
-        ImportManager::mp3File = new QFile(this);
-        ImportManager::importerWindow = new QFileDialog();
+        musicDir = new QDir();
+        mp3File = new QFile(this);
+        importerWindow = new QFileDialog();
     }
     catch(std::bad_alloc &exp)
     {
@@ -33,13 +33,13 @@ ImportManager::ImportManager()
     //SETTING UP QtObjects
 
     //Finder for looking for music
-    ImportManager::importerWindow->QFileDialog::setDirectory(QDir::rootPath());
+    importerWindow->setDirectory(QDir::rootPath());
 
     //current path of app
-    ImportManager::musicDir->QDir::setCurrent(QCoreApplication::applicationDirPath());
+    musicDir->setCurrent(QCoreApplication::applicationDirPath());
 
     //Check folder of music
-    if(ImportManager::musicDir->QDir::mkdir("music"))
+    if(musicDir->mkdir("music"))
         qDebug() << "Folder 'music' created";
     else
         qDebug() << "Folder 'music' already exists!";
@@ -118,15 +118,15 @@ void ImportManager::SaveFilesIntoMusicFolderAndDeleteIt(const QStringList &paths
 {
     for(const QString &iter : paths)
     {
-        ImportManager::mp3File->QFile::setFileName(iter);
+        mp3File->setFileName(iter);
 
-        if(ImportManager::mp3File->QFile::open(QFile::ReadOnly))
+        if(mp3File->open(QFile::ReadOnly))
         {
-            const QString nameOfSong = ImportManager::GetNameOfSongFromCurrentPath(iter);
+            const QString nameOfSong = GetNameOfSongFromCurrentPath(iter);
 
-            ImportManager::CheckDir();
-            ImportManager::mp3File->QFile::copy(iter, ImportManager::musicDir->QDir::currentPath() + "/music/" + nameOfSong);
-            ImportManager::mp3File->QFile::remove();
+            CheckDir();
+            mp3File->copy(iter, musicDir->currentPath() + "/music/" + nameOfSong);
+            mp3File->remove();
 
             #ifndef Q_DEBUG
             qDebug() << "File has been removed: " + iter;
@@ -142,7 +142,7 @@ void ImportManager::SaveFilesIntoMusicFolderAndDeleteIt(const QStringList &paths
             return;
         }
 
-        ImportManager::mp3File->QFile::close();
+        mp3File->close();
     }
 
     return;
@@ -228,11 +228,11 @@ void ImportManager::SaveFilesIntoMusicFolderOnlyCopyAfterDrop(const QStringList 
 bool ImportManager::CheckDir()
 {
     //current path of app
-    ImportManager::musicDir->QDir::setCurrent(QCoreApplication::applicationDirPath());
+    musicDir->setCurrent(QCoreApplication::applicationDirPath());
 
     if(QDir("music").QDir::exists() == false)
     {
-        ImportManager::musicDir->QDir::mkdir("music");
+        musicDir->mkdir("music");
 
         #ifndef Q_DEBUG
         qDebug() << "Folder 'music' created";
@@ -252,19 +252,19 @@ bool ImportManager::CheckDir()
 
 QString ImportManager::GetNameOfSongFromCurrentPath(const QString nameOfSong)
 {
-    QString::const_iterator iter = nameOfSong.QString::end();
+    QString::const_iterator iter = nameOfSong.end();
     QString buffer = "";
 
     if(*iter == NULL)
-        iter = nameOfSong.QString::end() - 1;
+        iter = nameOfSong.end() - 1;
 
-    for(; iter != nameOfSong.QString::begin(); --iter)
+    for(; iter != nameOfSong.begin(); --iter)
     {
             //unix like         //windows
         if((*iter == "/") || (*iter == "\\"))
             return buffer;
         else
-            buffer.QString::push_front(*iter);
+            buffer.push_front(*iter);
     }
 
     return buffer;
