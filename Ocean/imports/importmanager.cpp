@@ -7,11 +7,15 @@
 
 #include "importmanager.h"
 
+
+/*--------------------------------------------------------------------------------------------------------------------------------------------------*/
+/*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||MAIN|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
+/*--------------------------------------------------------------------------------------------------------------------------------------------------*/
 ImportManager::ImportManager()
 {
     try
     {
-        musicDir = new QDir();
+        cd = new QDir();
         mp3File = new QFile(this);
         importerWindow = new QFileDialog();
     }
@@ -30,16 +34,18 @@ ImportManager::ImportManager()
         abort();
     }
 
-    //SETTING UP QtObjects
+    //Singals with orivate Slots
+    connect(this, &ImportManager::CallOutToExportTracksOfPlayList, this, &ImportManager::ExportTracksOfPlayList);
 
+    //SETTING UP QtObjects
     //Finder for looking for music
     importerWindow->setDirectory(QDir::rootPath());
 
     //current path of app
-    musicDir->setCurrent(QCoreApplication::applicationDirPath());
+    cd->setCurrent(QCoreApplication::applicationDirPath());
 
     //Check folder of music
-    if(musicDir->mkdir("music"))
+    if(cd->mkdir("music"))
         qDebug() << "Folder 'music' created";
     else
         qDebug() << "Folder 'music' already exists!";
@@ -49,12 +55,20 @@ ImportManager::ImportManager()
 
 ImportManager::~ImportManager()
 {
-    delete musicDir;
+    delete cd;
     delete importerWindow;
 
     qDebug() << "Destructor from ImportManager.cpp";
 }
+/*--------------------------------------------------------------------------------------------------------------------------------------------------*/
+/*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||MAIN|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
+/*--------------------------------------------------------------------------------------------------------------------------------------------------*/
 
+
+
+/*--------------------------------------------------------------------------------------------------------------------------------------------------*/
+/*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||SLOTS PUBLIC|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
+/*--------------------------------------------------------------------------------------------------------------------------------------------------*/
 void ImportManager::CallFileDialogWithDel()
 {
     const QStringList pathOfFiles = importerWindow->getOpenFileNames(0, "Import Music", "", "*.mp3 *.wav *.m4a");
@@ -94,7 +108,79 @@ void ImportManager::SaveFileViaDragAndDrop(const QStringList &paths)
 
     return;
 }
+/*--------------------------------------------------------------------------------------------------------------------------------------------------*/
+/*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||SLOTS PUBLIC|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
+/*--------------------------------------------------------------------------------------------------------------------------------------------------*/
 
+
+
+/*--------------------------------------------------------------------------------------------------------------------------------------------------*/
+/*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||SLOTS PRIVATE||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
+/*--------------------------------------------------------------------------------------------------------------------------------------------------*/
+void ImportManager::ExportTracksOfPlayList(const QString &playlist)
+{
+    if(playlist == "")
+        return;
+
+    //get folder via QFileDialog to export files
+    const QString pathToExport = importerWindow->getExistingDirectory(0, "Export Music", "", QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
+
+    qDebug() << "SELECTED PATH: " << pathToExport;
+
+    //set path to export files
+    cd->setCurrent(pathToExport);
+    cd->mkdir("export music");
+    const QString pathOfExportDir = pathToExport + "/export music/";
+
+    //parse file
+    QFile *buffer = new QFile(QCoreApplication::applicationDirPath() + "/bin/" + playlist + ".m3u8");
+    QFile *bufferOfPath = new QFile();
+    QTextStream stream(buffer);
+    QString pathOfTrack = "";
+    QString nameOfSong = "";
+
+    if(buffer->open(QIODevice::ReadOnly))
+    {
+        // read specific line by index
+        while(!stream.atEnd())
+        {
+            qDebug() << "path: " << pathOfTrack;
+            qDebug() << "export dir: " << pathOfExportDir;
+            pathOfTrack = stream.readLine().trimmed(); //read line with path of track
+
+            //remove first 8 elements 'file:///'
+            ParseStringToRemoveFirstChars(pathOfTrack);
+            nameOfSong = GetNameOfSongFromCurrentPath(pathOfTrack);
+
+            qDebug() << "New path:" << pathOfExportDir + nameOfSong;
+
+            if(bufferOfPath->copy(pathOfTrack, pathOfExportDir + nameOfSong)) //copy into export dir
+                qDebug() << "TRUE";
+            else
+                qDebug() << "FALSE";
+        }
+
+        delete buffer;
+        delete bufferOfPath;
+    }
+    else
+    {
+        delete buffer;
+        delete bufferOfPath;
+    }
+
+    cd->setCurrent(QCoreApplication::applicationDirPath());
+
+    return;
+}
+/*--------------------------------------------------------------------------------------------------------------------------------------------------*/
+/*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||SLOTS PRIVATE||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
+/*--------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+
+/*--------------------------------------------------------------------------------------------------------------------------------------------------*/
+/*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||METHODS PUBLIC|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
+/*--------------------------------------------------------------------------------------------------------------------------------------------------*/
 const QStringList ImportManager::GetJustAddedSongs()
 {
     QStringList buffer = {};
@@ -112,7 +198,15 @@ const QStringList ImportManager::GetJustAddedSongs()
 
     return buffer;
 }
+/*--------------------------------------------------------------------------------------------------------------------------------------------------*/
+/*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||METHODS PUBLIC|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
+/*--------------------------------------------------------------------------------------------------------------------------------------------------*/
 
+
+
+/*--------------------------------------------------------------------------------------------------------------------------------------------------*/
+/*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||METHODS PRIVATE||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
+/*--------------------------------------------------------------------------------------------------------------------------------------------------*/
 //Methods for save files
 void ImportManager::SaveFilesIntoMusicFolderAndDeleteIt(const QStringList &paths)
 {
@@ -125,7 +219,7 @@ void ImportManager::SaveFilesIntoMusicFolderAndDeleteIt(const QStringList &paths
             const QString nameOfSong = GetNameOfSongFromCurrentPath(iter);
 
             CheckDir();
-            mp3File->copy(iter, musicDir->currentPath() + "/music/" + nameOfSong);
+            mp3File->copy(iter, cd->currentPath() + "/music/" + nameOfSong);
             mp3File->remove();
 
             #ifndef Q_DEBUG
@@ -159,10 +253,10 @@ void ImportManager::SaveFilesIntoMusicFolderOnlyCopy(const QStringList &paths)
             const QString nameOfSong(GetNameOfSongFromCurrentPath(iter));
 
             CheckDir();
-            mp3File->copy(iter, musicDir->currentPath() + "/music/" + nameOfSong);
+            mp3File->copy(iter, cd->currentPath() + "/music/" + nameOfSong);
 
             #ifndef Q_DEBUG
-            qDebug() << "Added new file: " << musicDir->currentPath() + "/music/" + nameOfSong;
+            qDebug() << "Added new file: " << cd->currentPath() + "/music/" + nameOfSong;
             #endif
         }
         else
@@ -201,13 +295,13 @@ void ImportManager::SaveFilesIntoMusicFolderOnlyCopyAfterDrop(const QStringList 
             const QString nameOfSong(GetNameOfSongFromCurrentPath(iter));
 
             CheckDir();
-            mp3File->copy(musicDir->currentPath() + "/music/" + nameOfSong);
+            mp3File->copy(cd->currentPath() + "/music/" + nameOfSong);
 
             //just added tracks to pass it into playlist
-            justAddedSongs.push_back(musicDir->currentPath() + "/music/" + nameOfSong);
+            justAddedSongs.push_back(cd->currentPath() + "/music/" + nameOfSong);
 
             #ifndef Q_DEBUG
-            qDebug() << "Added new file: " + musicDir->currentPath() + "/music/" + nameOfSong;
+            qDebug() << "Added new file: " + cd->currentPath() + "/music/" + nameOfSong;
             #endif
         }
         else
@@ -228,11 +322,11 @@ void ImportManager::SaveFilesIntoMusicFolderOnlyCopyAfterDrop(const QStringList 
 bool ImportManager::CheckDir()
 {
     //current path of app
-    musicDir->setCurrent(QCoreApplication::applicationDirPath());
+    cd->setCurrent(QCoreApplication::applicationDirPath());
 
     if(QDir("music").QDir::exists() == false)
     {
-        musicDir->mkdir("music");
+        cd->mkdir("music");
 
         #ifndef Q_DEBUG
         qDebug() << "Folder 'music' created";
@@ -269,3 +363,11 @@ QString ImportManager::GetNameOfSongFromCurrentPath(const QString nameOfSong)
 
     return buffer;
 }
+
+void ImportManager::ParseStringToRemoveFirstChars(QString &string)
+{
+    string.remove(0, 8);
+}
+/*--------------------------------------------------------------------------------------------------------------------------------------------------*/
+/*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||METHODS PRIVATE||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
+/*--------------------------------------------------------------------------------------------------------------------------------------------------*/

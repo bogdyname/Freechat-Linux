@@ -29,6 +29,7 @@ signals:
     //signal to emit it after QFileDialog to reboot default playlist (Ocean.cpp)
     void CallOutToCheckSongsInsideDefaultPlayList();
     void CallOutToCheckPlayLists(const QString &playlist);
+    void CallOutToExportTracksOfPlayList(const QString &playlist);
 
     //Save added files
     /*
@@ -41,6 +42,9 @@ public slots:
     void CallFileDialogWithDel();
     void CallFileDialogOnlyCopy();
     void SaveFileViaDragAndDrop(const QStringList &paths);
+
+private slots:
+    void ExportTracksOfPlayList(const QString &playlist);
 
     //Get name with format of just added songs
 public:
@@ -57,10 +61,11 @@ private:
 
     //parser to remove current path
     QString GetNameOfSongFromCurrentPath(const QString nameOfSong);
+    void ParseStringToRemoveFirstChars(QString &string);
 
     //Objects of Qt
 private:
-    QDir *musicDir = nullptr;
+    QDir *cd = nullptr;
     QFile *mp3File = nullptr;
     QFileDialog *importerWindow = nullptr;
     QStringList justAddedSongs = {};

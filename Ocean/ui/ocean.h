@@ -156,11 +156,13 @@ private slots:
         2) Create playlist via own widget (Ocean::getStringFromUser)
         3) Rename playlist via own widget and waiting user input (Ocean::getStringFromUser)
         3) Rename playlist after user input (Ocean::getStringFromUser)
+        4) Export track into folder via QMenu
     */
     void EraseItemFromPlayList();
     void CreatePlaylist();
     void RenamePlaylist();
     void Rename();
+    void ExportTrackOfPlayList();
     // Context Menu of Playlists -------------------------------------------------- 2
 
     //||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
