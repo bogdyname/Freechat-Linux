@@ -6,6 +6,9 @@
 
 #include "ui/ocean.h"
 
+using namespace Qt;
+using namespace std;
+
 Ocean::Ocean(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::Ocean)
@@ -34,6 +37,21 @@ Ocean::Ocean(QWidget *parent)
         timerForCheckWidgets = new QTimer();
         timerForCheckDefaultPlayList = new QTimer();
         cd = new QDir();
+
+        //Shortcuts for tracks
+        ctrlC = new QShortcut(this);
+        ctrlD = new QShortcut(this);
+        ctrlR = new QShortcut(this);
+        ctrlE = new QShortcut(this);
+        //Shortcuts for playlists
+        ctrlCP = new QShortcut(this);
+        ctrlDP = new QShortcut(this);
+        ctrlRP = new QShortcut(this);
+        ctrlEP = new QShortcut(this);
+        //Shortcuts for window of app
+        shiftF = new QShortcut(this);
+        shiftQ = new QShortcut(this);
+        shiftH = new QShortcut(this);
 
         //Object of own classes
         //widgets
@@ -68,7 +86,7 @@ Ocean::Ocean(QWidget *parent)
     //Player
     ui->playSlider->addWidget(nameOfTrack);
     ui->playSlider->addWidget(sliderOfTrack);
-    ui->playSlider->setAlignment(nameOfTrack, Qt::AlignJustify);
+    ui->playSlider->setAlignment(nameOfTrack, AlignJustify);
 
     //Left side
     //Music
@@ -84,7 +102,7 @@ Ocean::Ocean(QWidget *parent)
     ui->buttonsOfTracks->addWidget(nextTrack);
     ui->buttonsOfTracks->addWidget(pausePlayTrack);
     ui->buttonsOfTracks->addWidget(playbackMode);
-    ui->tool->setAlignment(Qt::AlignTop);
+    ui->tool->setAlignment(AlignTop);
     //slider for volume
 
     //Main window  
@@ -101,7 +119,7 @@ Ocean::Ocean(QWidget *parent)
     sliderOfTrack->setMinimumWidth(225);
 
     //Default image of playlists
-    if(ownImage->load("://images/vampire_playlist.jpg", "jpg", Qt::AutoColor))
+    if(ownImage->load("://images/vampire_playlist.jpg", "jpg", AutoColor))
         qDebug() << "true";
     else
         qDebug() << "false";
@@ -111,7 +129,7 @@ Ocean::Ocean(QWidget *parent)
 
     //Image of playlist
     imageOfPlayList->setPixmap(*imageTTS);
-    imageOfPlayList->setAlignment(Qt::AlignTop);
+    imageOfPlayList->setAlignment(AlignTop);
     imageOfPlayList->setObjectName("playlistImage");
 
     //name of track
@@ -148,6 +166,23 @@ Ocean::Ocean(QWidget *parent)
 
     /*--------------------------------------------------TOOLS--------------------------------------------------*/
 
+
+    /*-------------------------------------------------Shortcut------------------------------------------------*/
+    //Shortcuts for tracks
+    ctrlC->setKey(CTRL + Key_C);
+    ctrlD->setKey(CTRL + Key_D);
+    ctrlR->setKey(CTRL + Key_R);
+    ctrlE->setKey(CTRL + Key_E);
+    //Shortcuts for playlists
+    ctrlCP->setKey(CTRL + Key_C + Key_P);
+    ctrlDP->setKey(CTRL + Key_D + Key_P);
+    ctrlRP->setKey(CTRL + Key_R + Key_P);
+    ctrlEP->setKey(CTRL + Key_E + Key_P);
+    //Shortcuts for window of app
+    shiftF->setKey(SHIFT + Key_F);
+    shiftQ->setKey(SHIFT + Key_Q);
+    shiftH->setKey(SHIFT + Key_H);
+    /*-------------------------------------------------Shortcut------------------------------------------------*/
 
     /*
         *****!CONNECT SIGNALS WITH SLOTS!*****
@@ -197,6 +232,23 @@ Ocean::Ocean(QWidget *parent)
         8.4) check widget of added music into playlist | to close it if pressed keys Alt+F4
     9)Timer for check default playlist 'all'
     ----------------------Tools-----------------------
+
+    --------------------Shortcut----------------------
+    10)
+        10.1) Trigger copy track Ctrl + C
+        10.2) Trigger delete track Ctrl + D
+        10.3) Trigger rename track Ctrl + R
+        10.4) Trigger extract track Ctrl + E
+
+        10.5) Trigger create playlist Ctrl + C + P
+        10.6) Trigger delete playlist Ctrl + D + P
+        10.7) Trigger rename playlist Ctrl + R + P
+        10.8) Trigger extract playlist Ctrl + E + P
+
+        10.9) Trigger Full Window Shift + F
+        10.10) Trigger Quit Window Shift + Q
+        10.11) Trigger Hide Window Shift + H
+    --------------------Shortcut----------------------
     */
 
     //Managers-----------------------------------------
@@ -248,20 +300,27 @@ Ocean::Ocean(QWidget *parent)
     //Timer for check default playlist (inside Ocean::playLists zero iter "all")
     connect(timerForCheckDefaultPlayList, &QTimer::timeout, this, &Ocean::WriteDefaultPlayList);
 
-    //---------------------------------------------SYSTEM INFO
-    qDebug() << "SYSTEM INFO";
+    //Shortcuts-----------------------------------------
+    connect(ctrlC, &QShortcut::activated, this, &Ocean::CopyViaCtrlC);
+    connect(ctrlD, &QShortcut::activated, this, &Ocean::DeleteViaCtrlD);
+    connect(ctrlR, &QShortcut::activated, this, &Ocean::RenameViaCtrlR);
+    connect(ctrlE, &QShortcut::activated, this, &Ocean::ExtractViaCtrlE);
 
-    qDebug() << "importManager hex: " << hex << importManager;
-    qDebug() << "playlistmanager hex: " << hex << playlistmanager;
-    qDebug() << "playermanager hex: " << hex << playermanager;
-    //---------------------------------------------SYSTEM INFO
+    connect(ctrlCP, &QShortcut::activated, this, &Ocean::CreateViaCtrlCP);
+    connect(ctrlCP, &QShortcut::activated, this, &Ocean::DeleteViaCtrlDP);
+    connect(ctrlCP, &QShortcut::activated, this, &Ocean::RenameViaCtrlRP);
+    connect(ctrlCP, &QShortcut::activated, this, &Ocean::ExtractViaCtrlEP);
+
+    connect(shiftF, &QShortcut::activated, this, &Ocean::FullViaShiftF);
+    connect(shiftQ, &QShortcut::activated, this, &Ocean::QuitViaShiftQ);
+    connect(shiftH, &QShortcut::activated, this, &Ocean::HideViaShiftH);
 
     return;
 }
 
 Ocean::~Ocean()
 {
-    qDebug() << "Destructor from Ocean.cpp" << endl;
+    qDebug() << "Destructor from Ocean.cpp";
 
     //Tools
     sysmanager->Free(timerForCheckWidgets);
@@ -269,7 +328,7 @@ Ocean::~Ocean()
     sysmanager->Free(cd);
 
     //---------------------------------------------SYSTEM INFO
-    qDebug() << "SYSTEM INFO about tools" << endl;
+    qDebug() << "SYSTEM INFO about tools";
 
     if(sysmanager->PointerIsEmpty(timerForCheckWidgets))
         qDebug() << "1) timerForCheckWidgets empty!";
@@ -288,7 +347,7 @@ Ocean::~Ocean()
     sysmanager->Free(playermanager);
 
     //---------------------------------------------SYSTEM INFO
-    qDebug() << "SYSTEM INFO about managers" << endl;
+    qDebug() << "SYSTEM INFO about managers";
 
     if(sysmanager->PointerIsEmpty(importManager))
         qDebug() << "1) importManager empty!";
@@ -307,7 +366,7 @@ Ocean::~Ocean()
     sysmanager->Free(getStringFromUserToRenamePlaylist);
 
     //---------------------------------------------SYSTEM INFO
-    qDebug() << "SYSTEM INFO about own Widgets" << endl;
+    qDebug() << "SYSTEM INFO about own Widgets";
 
     if(sysmanager->PointerIsEmpty(getAddedTracksFromWidget))
         qDebug() << "1) getAddedTracksFromWidget empty!";
@@ -324,7 +383,7 @@ Ocean::~Ocean()
 
     //UI
 
-    qDebug() << "SYSTEM INFO about widgets of QT" << endl;
+    qDebug() << "SYSTEM INFO about widgets of QT";
 
     sysmanager->Free(ownImage);
 
@@ -354,7 +413,7 @@ Ocean::~Ocean()
     delete sysmanager;
     sysmanager = nullptr;
 
-    qDebug() << "SYSTEM INFO" << endl;
+    qDebug() << "SYSTEM INFO";
 
     if(!sysmanager)
         qDebug() << "sysmanager empty!";
@@ -511,6 +570,72 @@ void Ocean::SetNameOfCurrentTrackFromPlaylist(const QString &name)
 /*--------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 
+/*--------------------------------------------------------------------------------------------------------------------------------------------------*/
+/*||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||Slots for MainWindow||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
+/*--------------------------------------------------------------------------------------------------------------------------------------------------*/
+void Ocean::CopyViaCtrlC()
+{
+
+}
+
+void Ocean::DeleteViaCtrlD()
+{
+
+}
+
+void Ocean::RenameViaCtrlR()
+{
+
+}
+
+void Ocean::ExtractViaCtrlE()
+{
+
+}
+
+void Ocean::CreateViaCtrlCP()
+{
+
+}
+
+void Ocean::DeleteViaCtrlDP()
+{
+
+}
+
+void Ocean::RenameViaCtrlRP()
+{
+
+}
+
+void Ocean::ExtractViaCtrlEP()
+{
+
+}
+
+void Ocean::FullViaShiftF()
+{
+    if(this->isFullScreen())
+        this->showNormal();
+    else
+        this->showFullScreen();
+
+    return;
+}
+
+void Ocean::QuitViaShiftQ()
+{
+    QCoreApplication::quit();
+}
+
+void Ocean::HideViaShiftH()
+{
+    this->showMinimized();
+}
+/*--------------------------------------------------------------------------------------------------------------------------------------------------*/
+/*||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||Slots for MainWindow||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
+/*--------------------------------------------------------------------------------------------------------------------------------------------------*/
+
 /*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
 /*||||||||||||||||||||||||||||||||||||||||||||||||||this->QWidget||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
 /*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
@@ -653,7 +778,7 @@ void Ocean::MoveTrack(QListWidgetItem *item)
         else
             emit playlistmanager->CallOutMoveSongInsidePlayListByName(pressedItem, item->listWidget()->row(item), playlist->text());
 
-        qDebug() << "previous: " << pressedItem << endl << "new index: " << item->listWidget()->row(item) << endl << playlist->text();
+        qDebug() << "previous: " << pressedItem << "new index: " << item->listWidget()->row(item) << playlist->text();
     }
 
     //remove previous index

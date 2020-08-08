@@ -15,7 +15,7 @@ template <typename Type>
 void System::Free(Type &object)
 {
     delete object;
-    object = NULL;
+    object = nullptr;
 
     return;
 }
