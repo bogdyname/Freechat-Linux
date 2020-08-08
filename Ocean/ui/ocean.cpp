@@ -19,7 +19,7 @@ Ocean::Ocean(QWidget *parent)
         spacer = new QSpacerItem(200, 0);
         ownImage = new QPixmap();
         imageOfPlayList = new QLabel(this);
-        nameOfTrack = new QLabel("'name of track'", this);
+        nameOfTrack = new QLabel(this);
         sliderOfTrack = new QSlider(Qt::Horizontal, this);
         sliderOfVolume = new QSlider(Qt::Horizontal, this);
         playLists = new CustomListWidget(this);
@@ -37,10 +37,10 @@ Ocean::Ocean(QWidget *parent)
 
         //Object of own classes
         //widgets
-        getAddedTracksFromWidget = new AddMusicWidget(this);
-        getStringFromUserToCreateNewPlaylist = new GetStringWidget(this);
-        getStringFromUserToRenamePlaylist = new GetStringWidget(this);
-        getStringWithSelectedPlaylist = new SelectPlaylist(this);
+        getAddedTracksFromWidget = new AddMusicWidget();
+        getStringFromUserToCreateNewPlaylist = new GetStringWidget();
+        getStringFromUserToRenamePlaylist = new GetStringWidget();
+        getStringWithSelectedPlaylist = new SelectPlaylist();
         //managers
         importManager = new ImportManager();
         playlistmanager = new Playlist();
@@ -67,7 +67,6 @@ Ocean::Ocean(QWidget *parent)
     //UpSide
     //Player
     ui->playSlider->addWidget(nameOfTrack);
-    nameOfTrack->setText("");
     ui->playSlider->addWidget(sliderOfTrack);
     ui->playSlider->setAlignment(nameOfTrack, Qt::AlignJustify);
 
@@ -107,9 +106,8 @@ Ocean::Ocean(QWidget *parent)
     else
         qDebug() << "false";
 
-   // Ocean::ownImage->QPixmap::scaled(150, 150, Qt::IgnoreAspectRatio, Qt::FastTransformation);
     const QPixmap *imageTTS = ownImage;
-    //TTS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 
     //Image of playlist
     imageOfPlayList->setPixmap(*imageTTS);
@@ -195,7 +193,8 @@ Ocean::Ocean(QWidget *parent)
     8)Timer for check CreateListWidget
         8.1) check widget of create playlist | to close it if pressed keys Alt+F4
         8.2) check widget of select playlist | to close it if pressed keys Alt+F4
-        8.2) check widget of added music into playlist | to close it if pressed keys Alt+F4
+        8.3) check widget of added music into playlist | to close it if pressed keys Alt+F4
+        8.4) check widget of added music into playlist | to close it if pressed keys Alt+F4
     9)Timer for check default playlist 'all'
     ----------------------Tools-----------------------
     */
@@ -527,7 +526,7 @@ void Ocean::SetNameOfCurrentTrackFromPlaylist(const QString &name)
 /*--------------------------------------------------------------------------------------------------------------------------------------------------*/
 void Ocean::ShowContextMenuOfMusicList(const QPoint &point)
 {
-    QPoint globalPoint = Ocean::playLists->QWidget::mapToGlobal(point);
+    QPoint globalPoint = playLists->mapToGlobal(point);
 
     QMenu myMenu;
     myMenu.addAction("Add with delete", importManager, &ImportManager::CallFileDialogWithDel);
@@ -707,6 +706,7 @@ void Ocean::ShowContextMenuOfPlayList(const QPoint &point)
     myMenu.addAction("Create", this, SLOT(CreatePlaylist()));
     myMenu.addAction("Delete", this, SLOT(EraseItemFromPlayList()));
     myMenu.addAction("Rename", this, SLOT(RenamePlaylist()));
+    myMenu.addAction("Export", this, SLOT(ExportTrackOfPlayList()));
 
     myMenu.exec(globalPoint);
 
@@ -822,6 +822,19 @@ void Ocean::Rename()
                 emit getStringFromUserToRenamePlaylist->BreakeWidget();
             }
         }
+    }
+
+    return;
+}
+
+void Ocean::ExportTrackOfPlayList()
+{
+    for (unsigned short int iter = 0; iter < playLists->selectedItems().size(); ++iter)
+    {
+        QListWidgetItem *item = playLists->item(playLists->currentRow());
+
+        //export files from playlist via ImportManager
+        importManager->CallOutToExportTracksOfPlayList(item->text());
     }
 
     return;
