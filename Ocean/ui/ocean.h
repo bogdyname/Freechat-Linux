@@ -14,6 +14,7 @@
 #include <QPixmap>
 #include <QWidget>
 #include <QSlider>
+#include <QShortcut>
 #include <QLineEdit>
 #include <QComboBox>
 #include <QMimeData>
@@ -106,6 +107,45 @@ private slots:
     void AddFilesAfterDropEvent(const QStringList &files);
     void SetNameOfCurrentTrackFromPlaylist(const QString &name);
     /*-------------------------------------Slots for MainWindow----------------------------------*/
+
+    /*-------------------------------------------Shortcut----------------------------------------*/
+
+
+    /*
+     * Shortcuts for tracks
+        1) copy track Ctrl + C
+        2) delete track Ctrl + D
+        3) rename track Ctrl + R
+        4) extract track Ctrl + E
+
+     * Shortcuts for playlists
+        1) create playlist Ctrl + C + P
+        2) delete playlist Ctrl + D + P
+        3) rename playlist Ctrl + R + P
+        4) extract playlist Ctrl + E + P
+
+      * Shortcuts for window of app
+        1) Full Window Shift + F
+        2) Quit Window Shift + Q
+        3) Hide Window Shift + H
+    */
+
+private slots:
+    //Shortcuts for tracks
+    void CopyViaCtrlC();
+    void DeleteViaCtrlD();
+    void RenameViaCtrlR();
+    void ExtractViaCtrlE();
+    //Shortcuts for playlists
+    void CreateViaCtrlCP();
+    void DeleteViaCtrlDP();
+    void RenameViaCtrlRP();
+    void ExtractViaCtrlEP();
+    //Shortcuts for window of app
+    void FullViaShiftF();
+    void QuitViaShiftQ();
+    void HideViaShiftH();
+    /*-------------------------------------------Shortcut----------------------------------------*/
 
     /*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
     /*||||||||||||||||||||||||||||||||||||||||||||||||||this->QWidget||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
@@ -318,6 +358,41 @@ private:
     QStringList bufferOfAddedTracks = {};
     QDir *cd = nullptr;
     //TOOLS-----------------------------------------------------------
+
+    //Shortcuts-------------------------------------------------------
+    /*
+     * Shortcuts for tracks
+        1) copy track Ctrl + C
+        2) delete track Ctrl + D
+        3) rename track Ctrl + R
+        4) extract track Ctrl + E
+
+     * Shortcuts for playlists
+        1) create playlist Ctrl + C + P
+        2) delete playlist Ctrl + D + P
+        3) rename playlist Ctrl + R + P
+        4) extract playlist Ctrl + E + P
+
+      * Shortcuts for window of app
+        1) Full Window Shift + F
+        2) Quit Window Shift + Q
+        3) Hide Window Shift + H
+    */
+
+    QShortcut *ctrlC = nullptr;
+    QShortcut *ctrlD = nullptr;
+    QShortcut *ctrlR = nullptr;
+    QShortcut *ctrlE = nullptr;
+
+    QShortcut *ctrlCP = nullptr;
+    QShortcut *ctrlDP = nullptr;
+    QShortcut *ctrlRP = nullptr;
+    QShortcut *ctrlEP = nullptr;
+
+    QShortcut *shiftF = nullptr;
+    QShortcut *shiftQ = nullptr;
+    QShortcut *shiftH = nullptr;
+    //Shortcuts-------------------------------------------------------
 
 
     //Own Objects-----------------------------------------------------
