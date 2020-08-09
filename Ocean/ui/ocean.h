@@ -372,6 +372,9 @@ private:
         2) delete playlist Ctrl + D + P
         3) rename playlist Ctrl + R + P
         4) extract playlist Ctrl + E + P
+        5) previuse track A
+        6) play or pause S
+        7) next track D
 
       * Shortcuts for window of app
         1) Full Window Shift + F
@@ -388,6 +391,9 @@ private:
     QShortcut *ctrlDP = nullptr;
     QShortcut *ctrlRP = nullptr;
     QShortcut *ctrlEP = nullptr;
+    QShortcut *A = nullptr;
+    QShortcut *S = nullptr;
+    QShortcut *D = nullptr;
 
     QShortcut *shiftF = nullptr;
     QShortcut *shiftQ = nullptr;

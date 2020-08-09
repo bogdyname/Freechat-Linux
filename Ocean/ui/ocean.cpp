@@ -48,6 +48,9 @@ Ocean::Ocean(QWidget *parent)
         ctrlDP = new QShortcut(this);
         ctrlRP = new QShortcut(this);
         ctrlEP = new QShortcut(this);
+        A = new QShortcut(this);
+        S = new QShortcut(this);
+        D = new QShortcut(this);
         //Shortcuts for window of app
         shiftF = new QShortcut(this);
         shiftQ = new QShortcut(this);
@@ -182,6 +185,9 @@ Ocean::Ocean(QWidget *parent)
     shiftF->setKey(SHIFT + Key_F);
     shiftQ->setKey(SHIFT + Key_Q);
     shiftH->setKey(SHIFT + Key_H);
+    A->setKey(Key_A);
+    S->setKey(Key_S);
+    D->setKey(Key_D);
     /*-------------------------------------------------Shortcut------------------------------------------------*/
 
     /*
@@ -244,6 +250,9 @@ Ocean::Ocean(QWidget *parent)
         10.6) Trigger delete playlist Ctrl + D + P
         10.7) Trigger rename playlist Ctrl + R + P
         10.8) Trigger extract playlist Ctrl + E + P
+        10.9) Trigger previuse track A
+        10.10) Trigger play or pause S
+        10.11) Trigger next track D
 
         10.9) Trigger Full Window Shift + F
         10.10) Trigger Quit Window Shift + Q
@@ -307,9 +316,13 @@ Ocean::Ocean(QWidget *parent)
     connect(ctrlE, &QShortcut::activated, this, &Ocean::ExtractViaCtrlE);
 
     connect(ctrlCP, &QShortcut::activated, this, &Ocean::CreateViaCtrlCP);
-    connect(ctrlCP, &QShortcut::activated, this, &Ocean::DeleteViaCtrlDP);
-    connect(ctrlCP, &QShortcut::activated, this, &Ocean::RenameViaCtrlRP);
-    connect(ctrlCP, &QShortcut::activated, this, &Ocean::ExtractViaCtrlEP);
+    connect(ctrlDP, &QShortcut::activated, this, &Ocean::DeleteViaCtrlDP);
+    connect(ctrlRP, &QShortcut::activated, this, &Ocean::RenameViaCtrlRP);
+    connect(ctrlEP, &QShortcut::activated, this, &Ocean::ExtractViaCtrlEP);
+
+    connect(A, &QShortcut::activated, playlistmanager, &Playlist::SetPreviousTrack);
+    connect(S, &QShortcut::activated, playermanager, &Player::SetPausePlayTrack);
+    connect(D, &QShortcut::activated, playlistmanager, &Playlist::SetNextTrack);
 
     connect(shiftF, &QShortcut::activated, this, &Ocean::FullViaShiftF);
     connect(shiftQ, &QShortcut::activated, this, &Ocean::QuitViaShiftQ);
@@ -656,11 +669,9 @@ void Ocean::ShowContextMenuOfMusicList(const QPoint &point)
     QMenu myMenu;
     myMenu.addAction("Add with delete", importManager, &ImportManager::CallFileDialogWithDel);
     myMenu.addAction("Add with copy", importManager, &ImportManager::CallFileDialogOnlyCopy);
-    myMenu.addAction("Add to...", this, SLOT(AddSongIntoPlayListByIndex()));
-    myMenu.addAction("Delete", this, SLOT(EraseItemFromMusicList()));
-    myMenu.addAction("Delete All", this, SLOT(EraseAllItemsFromMusicList()));
-    myMenu.addAction("Add with delete", importManager, SLOT(CallFileDialogWithDel()));
-    myMenu.addAction("Add with copy", importManager, SLOT(CallFileDialogOnlyCopy()));
+    myMenu.addAction("Add to...", this, &Ocean::AddSongIntoPlayListByIndex);
+    myMenu.addAction("Delete", this, &Ocean::EraseItemFromMusicList);
+    myMenu.addAction("Delete All", this, &Ocean::EraseAllItemsFromMusicList);
 
     myMenu.exec(globalPoint);
 
@@ -828,10 +839,10 @@ void Ocean::ShowContextMenuOfPlayList(const QPoint &point)
 
     // Create menu and insert some actions
     QMenu myMenu;
-    myMenu.addAction("Create", this, SLOT(CreatePlaylist()));
-    myMenu.addAction("Delete", this, SLOT(EraseItemFromPlayList()));
-    myMenu.addAction("Rename", this, SLOT(RenamePlaylist()));
-    myMenu.addAction("Export", this, SLOT(ExportTrackOfPlayList()));
+    myMenu.addAction("Create", this, &Ocean::CreatePlaylist);
+    myMenu.addAction("Delete", this, &Ocean::EraseItemFromPlayList);
+    myMenu.addAction("Rename", this, &Ocean::RenamePlaylist);
+    myMenu.addAction("Export", this, &Ocean::ExportTrackOfPlayList);
 
     myMenu.exec(globalPoint);
 

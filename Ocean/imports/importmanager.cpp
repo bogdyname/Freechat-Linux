@@ -120,12 +120,10 @@ void ImportManager::SaveFileViaDragAndDrop(const QStringList &paths)
 void ImportManager::ExportTracksOfPlayList(const QString &playlist)
 {
     if(playlist == "")
-        return;
+        return; 
 
     //get folder via QFileDialog to export files
     const QString pathToExport = importerWindow->getExistingDirectory(0, "Export Music", "", QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
-
-    qDebug() << "SELECTED PATH: " << pathToExport;
 
     //set path to export files
     cd->setCurrent(pathToExport);
@@ -144,20 +142,26 @@ void ImportManager::ExportTracksOfPlayList(const QString &playlist)
         // read specific line by index
         while(!stream.atEnd())
         {
-            qDebug() << "path: " << pathOfTrack;
-            qDebug() << "export dir: " << pathOfExportDir;
             pathOfTrack = stream.readLine().trimmed(); //read line with path of track
+
+            //added path into buffer to copy it via QFile::copy()
+            QString buffer = pathOfTrack;
+
+            //path of file with unicode
+            buffer.remove(0, 8);
+            //added '/' for UNIX (macOS/Linux)
+            buffer.push_front("/");
+
+            //check Windows paths
+            QString::const_iterator iterator = buffer.begin() + 2;
+            if(*iterator == ":")
+                buffer.remove(0, 1);
 
             //remove first 8 elements 'file:///'
             ParseStringToRemoveFirstChars(pathOfTrack);
-            nameOfSong = GetNameOfSongFromCurrentPath(pathOfTrack);
+            nameOfSong = GetNameOfSongFromCurrentPath(buffer);
 
-            qDebug() << "New path:" << pathOfExportDir + nameOfSong;
-
-            if(bufferOfPath->copy(pathOfTrack, pathOfExportDir + nameOfSong)) //copy into export dir
-                qDebug() << "TRUE";
-            else
-                qDebug() << "FALSE";
+            bufferOfPath->copy(buffer, pathOfExportDir + nameOfSong); //copy into export dir
         }
 
         delete buffer;
