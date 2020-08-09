@@ -15,7 +15,6 @@ QListWidget
     border-style: solid;
     border-radius: 5px;
     margin-top: 20px;
-    display: inline-block;
 }
 
 QLineEdit
@@ -58,7 +57,7 @@ QLabel#nameOfTrack:hover
 /*SLIDER -----------------------------------------------------------------*/
 QSlider::groove:horizontal
 {
-    border: 1.5px solid #F4003D;
+    border: 1.2px solid #F4003D;
     background: #170004;
     height: 10px;
     border-radius: 4px;
@@ -68,7 +67,7 @@ QSlider::sub-page:horizontal
 {
     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #F03, stop: 1 #F03);
     background: qlineargradient(x1: 0, y1: 0.2, x2: 1, y2: 1, stop: 0 #F03, stop: 1 #000);
-    border: 1.5px solid #F4003D;
+    border: 1.2px solid #F4003D;
     height: 10px;
     border-radius: 5px;
 }
@@ -76,7 +75,7 @@ QSlider::sub-page:horizontal
 QSlider::add-page:horizontal
 {
     background: #170004;
-    border: 1.5px solid #F4003D;
+    border: 1.2px solid #F4003D;
     height: 10px;
     border-radius: 5px;
 }
@@ -136,8 +135,7 @@ QComboBox::drop-down:hover
 QComboBox::down-arrow
 {
     padding: 0px 0px 0px 0px;
-    image: url(:/images/vampire_arrow.png);/*TTS*/
-    /*background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,stop: 0 #EEEEEE, stop: 1 #FFFFFF);*/
+    image: url(:/images/vampire_arrow.png);
 }
 
 QListView::item:selected
@@ -269,9 +267,9 @@ QScrollBar::sub-line:vertical:hover
 QScrollBar:horizontal
 {
     border: 1px outset;
-    border-color: #F4003D;
+    border-color: #690419;
     border-radius: 2.5px;
-    background: black;
+    background-color: #690419;
     margin: 0px 0px 0px 0px;
 }
 

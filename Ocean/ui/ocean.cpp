@@ -37,10 +37,10 @@ Ocean::Ocean(QWidget *parent)
 
         //Object of own classes
         //widgets
-        getAddedTracksFromWidget = new AddMusicWidget(this);
-        getStringFromUserToCreateNewPlaylist = new GetStringWidget(this);
-        getStringFromUserToRenamePlaylist = new GetStringWidget(this);
-        getStringWithSelectedPlaylist = new SelectPlaylist(this);
+        getAddedTracksFromWidget = new AddMusicWidget();
+        getStringFromUserToCreateNewPlaylist = new GetStringWidget();
+        getStringFromUserToRenamePlaylist = new GetStringWidget();
+        getStringWithSelectedPlaylist = new SelectPlaylist();
         //managers
         importManager = new ImportManager();
         playlistmanager = new Playlist();
@@ -67,7 +67,7 @@ Ocean::Ocean(QWidget *parent)
     //UpSide
     //Player
     ui->playSlider->addWidget(nameOfTrack);
-    nameOfTrack->setText("");
+    nameOfTrack->setObjectName("nameOfTrack");
     ui->playSlider->addWidget(sliderOfTrack);
     ui->playSlider->setAlignment(nameOfTrack, Qt::AlignJustify);
 
@@ -79,6 +79,7 @@ Ocean::Ocean(QWidget *parent)
     //Right side
     //Image of play list
     ui->image->addWidget(imageOfPlayList);
+    imageOfPlayList->setObjectName("playlistImage");
     ui->volumeSlider->addWidget(sliderOfVolume);
     ui->buttonsOfTracks->addWidget(stopTrack);
     ui->buttonsOfTracks->addWidget(previousTrack);
@@ -90,7 +91,7 @@ Ocean::Ocean(QWidget *parent)
 
     //Main window  
     this->setMinimumSize(350, 350);
-    this->resize(600, 450);
+    this->resize(1200, 850);
 
     //Lists
     playLists->setMaximumWidth(250);
