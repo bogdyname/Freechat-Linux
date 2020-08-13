@@ -97,6 +97,12 @@ signals:
     void CallOutSetNameOfCurrentTrack(const QString &name);
     /*---------------------------set image of current playback mode-------------------------*/
     void CallOutSetImageOfCurrentPlaybackMode(const int &counter);
+    /*------------------------------------Rename name of track------------------------------*/
+    void CallOutRenameTrackByIndex(const int &index, const QString &playlist);
+    /*-----------------------------------------Export track---------------------------------*/
+    void CallOutExportTrackByIndex(const int &index, const QString &playlist);
+    /*------------------------------------------Copy track----------------------------------*/
+    void CallOutCopyTrackByIndex(const int &index, const QString &playlist);
     /*-------------------------------------------------------SIGNALS-------------------------------------------------------*/
 
 
@@ -128,6 +134,12 @@ private slots:
     void MoveSongInsidePlayListByName(const int &currentIndex, const int &newIndex, const QString &name);
     /*-------------------------------set name of current track------------------------------*/
     void SetNameOfCurrentTrack(int index);
+    /*------------------------------------Rename name of track------------------------------*/
+    void RenameTrackByIndex(const int &index, const QString &playlist);
+    /*-----------------------------------------Export track---------------------------------*/
+    void ExportTrackByIndex(const int &index, const QString &playlist);
+    /*------------------------------------------Copy track----------------------------------*/
+    void CopyTrackByIndex(const int &index, const QString &playlist);
     /*--------------------------------------------------------SLOTS--------------------------------------------------------*/
 
     /*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
@@ -223,6 +235,12 @@ public:
         --move
         17) move track inside playlist by index
         18) move track inside playlist by index and name
+        --rename track
+        19)rename track by index
+        --export track
+        20) export track by index
+        --copy track
+        21) copy track by index
     */
 private:
     bool CreatePlayList(const QString &name, const QStringList &list); //--------------------------------------------------------------------------------------------1) (DONE)
@@ -235,14 +253,17 @@ private:
     bool RenamePlayList(const QString &newName, const QString &currentName); //--------------------------------------------------------------------------------------8) (DONE)
     bool CheckSettingsDir();//---------------------------------------------------------------------------------------------------------------------------------------9) (DONE)
     bool AddSongIntoPlayListByName(const QString &song, const QString &nameOfPlayList, const QString &nameOfCurrentPlayList, const int &index); //------------------10) (DONE)
-    bool AddSongsIntoPlayListByName(const QStringList &songs, const QString &nameOfPlayList);
-    bool AddSongsIntoCurrentPlayList(const QStringList &songs);
-    bool RemoveTrackByIndex(const int &index); //-------------------------------------------------------------------------------------------------------------------11) (DONE)
-    bool RemoveTrackByIndex(const int &index, const QString &name); //----------------------------------------------------------------------------------------------12) (DONE)
-    bool RemoveAllTracks(); //--------------------------------------------------------------------------------------------------------------------------------------13) (DONE)
-    bool RemoveAllTracks(const QString &name); //-------------------------------------------------------------------------------------------------------------------14) (DONE)
-    bool MoveSongInsidePlaylistByIndex(const int &currentIndex, const int &newIndex); //----------------------------------------------------------------------------15)
-    bool MoveSongInsidePlaylistByIndex(const int &currentIndex, const int &newIndex, const QString &name); //-------------------------------------------------------16)
+    bool AddSongsIntoPlayListByName(const QStringList &songs, const QString &nameOfPlayList);//---------------------------------------------------------------------11) (DONE)
+    bool AddSongsIntoCurrentPlayList(const QStringList &songs);//---------------------------------------------------------------------------------------------------12) (DONE)
+    bool RemoveTrackByIndex(const int &index); //-------------------------------------------------------------------------------------------------------------------13) (DONE)
+    bool RemoveTrackByIndex(const int &index, const QString &name); //----------------------------------------------------------------------------------------------14) (DONE)
+    bool RemoveAllTracks(); //--------------------------------------------------------------------------------------------------------------------------------------15) (DONE)
+    bool RemoveAllTracks(const QString &name); //-------------------------------------------------------------------------------------------------------------------16) (DONE)
+    bool MoveSongInsidePlaylistByIndex(const int &currentIndex, const int &newIndex); //----------------------------------------------------------------------------17)
+    bool MoveSongInsidePlaylistByIndex(const int &currentIndex, const int &newIndex, const QString &name); //-------------------------------------------------------18)
+    bool RenameTrack(const int &index, const QString &playlist); //-------------------------------------------------------------------------------------------------19)
+    bool ExportTrack(const int &index, const QString &playlist); //-------------------------------------------------------------------------------------------------20)
+    bool CopyTrack(const int &index, const QString &playlist); //---------------------------------------------------------------------------------------------------21)
     /*----------------------------------------Methods to call it in Private SLOTS----------------------------------------*/
 
     /*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/

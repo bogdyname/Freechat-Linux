@@ -593,7 +593,9 @@ void Ocean::CopyViaCtrlC()
 
 void Ocean::DeleteViaCtrlD()
 {
+    this->EraseItemFromMusicList();
 
+    return;
 }
 
 void Ocean::RenameViaCtrlR()
@@ -608,22 +610,30 @@ void Ocean::ExtractViaCtrlE()
 
 void Ocean::CreateViaCtrlCP()
 {
+    this->CreatePlaylist();
 
+    return;
 }
 
 void Ocean::DeleteViaCtrlDP()
 {
+    this->EraseItemFromPlayList();
 
+    return;
 }
 
 void Ocean::RenameViaCtrlRP()
 {
+    this->RenamePlaylist();
 
+    return;
 }
 
 void Ocean::ExtractViaCtrlEP()
 {
+    this->ExportTrackOfPlayList();
 
+    return;
 }
 
 void Ocean::FullViaShiftF()
@@ -770,7 +780,7 @@ void Ocean::ParseMusicList(const QString &name)
     return;
 }
 
-//BUG ON Linux
+//BUG ON ALL OS
 /*
     NEED TO TEST IT!!!!!!!!
     item->listWidget()->row(item)
