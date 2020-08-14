@@ -98,9 +98,7 @@ signals:
     /*---------------------------set image of current playback mode-------------------------*/
     void CallOutSetImageOfCurrentPlaybackMode(const int &counter);
     /*------------------------------------Rename name of track------------------------------*/
-    void CallOutRenameTrackByIndex(const int &index, const QString &playlist);
-    /*-----------------------------------------Export track---------------------------------*/
-    void CallOutExportTrackByIndex(const int &index, const QString &playlist);
+    void CallOutRenameTrackByIndex(const int &index, const QString &playlist, const QString &newName);
     /*------------------------------------------Copy track----------------------------------*/
     void CallOutCopyTrackByIndex(const int &index, const QString &playlist);
     /*-------------------------------------------------------SIGNALS-------------------------------------------------------*/
@@ -135,9 +133,7 @@ private slots:
     /*-------------------------------set name of current track------------------------------*/
     void SetNameOfCurrentTrack(int index);
     /*------------------------------------Rename name of track------------------------------*/
-    void RenameTrackByIndex(const int &index, const QString &playlist);
-    /*-----------------------------------------Export track---------------------------------*/
-    void ExportTrackByIndex(const int &index, const QString &playlist);
+    void RenameTrackByIndex(const int &index, const QString &playlist, const QString &newName);
     /*------------------------------------------Copy track----------------------------------*/
     void CopyTrackByIndex(const int &index, const QString &playlist);
     /*--------------------------------------------------------SLOTS--------------------------------------------------------*/
@@ -236,11 +232,9 @@ public:
         17) move track inside playlist by index
         18) move track inside playlist by index and name
         --rename track
-        19)rename track by index
-        --export track
-        20) export track by index
+        19) rename track by indexex
         --copy track
-        21) copy track by index
+        20) copy track by index
     */
 private:
     bool CreatePlayList(const QString &name, const QStringList &list); //--------------------------------------------------------------------------------------------1) (DONE)
@@ -261,9 +255,8 @@ private:
     bool RemoveAllTracks(const QString &name); //-------------------------------------------------------------------------------------------------------------------16) (DONE)
     bool MoveSongInsidePlaylistByIndex(const int &currentIndex, const int &newIndex); //----------------------------------------------------------------------------17)
     bool MoveSongInsidePlaylistByIndex(const int &currentIndex, const int &newIndex, const QString &name); //-------------------------------------------------------18)
-    bool RenameTrack(const int &index, const QString &playlist); //-------------------------------------------------------------------------------------------------19)
-    bool ExportTrack(const int &index, const QString &playlist); //-------------------------------------------------------------------------------------------------20)
-    bool CopyTrack(const int &index, const QString &playlist); //---------------------------------------------------------------------------------------------------21)
+    bool RenameTrack(const int &index, const QString &playlist, const QString &newName); //-------------------------------------------------------------------------19)
+    bool CopyTrack(const int &index, const QString &playlist); //---------------------------------------------------------------------------------------------------20)
     /*----------------------------------------Methods to call it in Private SLOTS----------------------------------------*/
 
     /*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
@@ -283,6 +276,7 @@ private:
         3) parser to remove full path and format of file (song or playlist [m3u, wav, mp3, m4a])
         4) open file playlist (by name and index)
         5) parse string to get format
+        6) parse full path to rename track
     */
 
 public: //using inside Ocean.cpp
@@ -292,6 +286,7 @@ public: //using inside Ocean.cpp
         //using inside Playlist.cpp and Ocean.cpp
     QString ParserToGetFormatOfSong(const QString &nameOfPlayList, const int &index);
     QString ParseStringToGetFormat(const QString &string);
+    QString ParseToGetCurrentName(const QString &fullPath);
     /*--------------------------------------------------------PARSERS------------------------------------------------------*/
 
     /*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
