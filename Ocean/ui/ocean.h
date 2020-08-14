@@ -174,10 +174,16 @@ private slots:
         1) Delete all songs
         2) Delete one selected item
         3) Add song into playlist by name (pass data via SIGNAL of playlist manager)
+        4) rename track (hot key or QMenu)
+        5) rename tracl emit signal
+        6) check widget after close to rename track
     */
     void EraseAllItemsFromMusicList();
     void EraseItemFromMusicList();
     void AddSongIntoPlayListByIndex();
+    void RenameTrack();
+    void RenameTrackByNewName();
+    void ClosegetStringFromUserToRenameTrackViaCancel();
     void ParseMusicList(const QString &name);
     void MoveTrack(QListWidgetItem *item);
     void SetPreviousIndexOfItem(QListWidgetItem *item);
@@ -414,6 +420,7 @@ private:
     AddMusicWidget *getAddedTracksFromWidget = nullptr;
     GetStringWidget *getStringFromUserToCreateNewPlaylist = nullptr;
     GetStringWidget *getStringFromUserToRenamePlaylist = nullptr;
+    GetStringWidget *getStringFromUserToRenameTrack = nullptr;
     SelectPlaylist *getStringWithSelectedPlaylist = nullptr;
     // UI own widgets ----------------------------------------------- 1
 

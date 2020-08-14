@@ -75,10 +75,8 @@ Playlist::Playlist()
        7.2) move track to &index by index from playlist by name
      * Rename track -------------------
        8.1) rename track by index
-     * Export track -------------------
-       9.1) export track by index
      * Copy track ---------------------
-       10.1) copy track by index
+       9.1) copy track by index
     */
     //Save
     connect(this, &Playlist::CallOutSaveCurrentPlayList, this, &Playlist::SaveCurrentPlayList);
@@ -108,8 +106,6 @@ Playlist::Playlist()
     connect(currentPlaylist, &QMediaPlaylist::currentIndexChanged, this, &Playlist::SetNameOfCurrentTrack);
     //Rename track
     connect(this, &Playlist::CallOutRenameTrackByIndex, this, &Playlist::RenameTrackByIndex);
-    //Export track
-    connect(this, &Playlist::CallOutExportTrackByIndex, this, &Playlist::ExportTrackByIndex);
     //Copy track
     connect(this, &Playlist::CallOutCopyTrackByIndex, this, &Playlist::CopyTrackByIndex);
 
@@ -364,34 +360,16 @@ void Playlist::SetNameOfCurrentTrack(int index)
 /*-----------------------------------------SET NAME-----------------------------------------*/
 
 /*--------------------------------------RENAME NAME OF TRACK--------------------------------*/
-void Playlist::RenameTrackByIndex(const int &index, const QString &playlist)
+void Playlist::RenameTrackByIndex(const int &index, const QString &playlist, const QString &newName)
 {
     if(playlist == "")
         return;
 
-    if(RenameTrack(index, playlist))
-        qDebug() << "track have been renamed";
-    else
-        qCritical() << "error: can't rename track";
+    RenameTrack(index, playlist, newName);
 
     return;
 }
 /*--------------------------------------RENAME NAME OF TRACK--------------------------------*/
-
-/*-------------------------------------------EXPORT TRACK-----------------------------------*/
-void Playlist::ExportTrackByIndex(const int &index, const QString &playlist)
-{
-    if(playlist == "")
-        return;
-
-    if(ExportTrack(index, playlist))
-        qDebug() << "track have been exported";
-    else
-        qCritical() << "error: can't export track";
-
-    return;
-}
-/*-------------------------------------------EXPORT TRACK-----------------------------------*/
 
 /*-------------------------------------------COPY TRACK-------------------------------------*/
 void Playlist::CopyTrackByIndex(const int &index, const QString &playlist)
@@ -1004,23 +982,96 @@ bool Playlist::MoveSongInsidePlaylistByIndex(const int &currentIndex, const int 
 /*---------------------------------------MOVE METHODS---------------------------------------*/
 
 /*--------------------------------------RENAME NAME OF TRACK--------------------------------*/
-bool Playlist::RenameTrack(const int &index, const QString &playlist)
+bool Playlist::RenameTrack(const int &index, const QString &playlist, const QString &newName)
 {
+    if(playlist == "" || newName == "")
+        return false;
 
+    QFile *fileOfPlaylist = new QFile(QCoreApplication::applicationDirPath() + "/bin/" + playlist + ".m3u8");
+
+    if(fileOfPlaylist->open(QIODevice::ReadWrite))
+    {
+        QFile *fileOfTrack = new QFile();
+        QString bufferOfName = "";
+
+        QTextStream stream(fileOfPlaylist);
+
+        // read specific line by index
+        for(int iterOfFile = 0; iterOfFile <= index; ++iterOfFile)
+            bufferOfName = stream.readLine().trimmed();
+
+        //path of file with unicode
+        bufferOfName.remove(0, 8);
+        //added '/' for UNIX (macOS/Linux)
+        bufferOfName.push_front("/");
+
+        //check Windows paths
+        QString::const_iterator iterator = bufferOfName.begin() + 2;
+        if(*iterator == ":")
+            bufferOfName.remove(0, 1);
+
+        //rename track
+        bufferOfName = ParseToGetCurrentName(bufferOfName);
+
+        //file with current name
+        fileOfTrack->setFileName(QCoreApplication::applicationDirPath() + "/music/" + bufferOfName);
+
+        QString newNameOfTrack = QCoreApplication::applicationDirPath() + "/music/" + newName + ParseStringToGetFormat(bufferOfName);
+
+        //rename file
+        fileOfTrack->rename(QCoreApplication::applicationDirPath() + "/music/" + bufferOfName, //current path
+                            newNameOfTrack); //new path (like new name)
+
+        //check Windows paths to add it to current OS
+        QString::const_iterator iterOfPath = newNameOfTrack.begin() + 1;
+        if(*iterOfPath == ":")
+            newNameOfTrack.push_front("file:///");
+        else
+            newNameOfTrack.push_front("file://");
+
+        //BUG HERE
+        //NEED TO READ FROM BEGINNING
+
+        //refactore playlist file
+        QStringList streamData;
+        while(!stream.atEnd())
+        {
+            QString line = stream.readLine().trimmed();
+
+            if(!line.contains(bufferOfName))
+            {
+                qDebug() << "LINE: " << line;
+                streamData.append(line + "\n");
+            }
+        }
+
+        //write new name into file
+        stream << newNameOfTrack;
+
+        //clear playlist
+        fileOfPlaylist->resize(0);
+        //write buffer
+        for(const QString &iter : streamData)
+            stream << iter;
+
+        fileOfPlaylist->close();
+
+        delete fileOfPlaylist;
+        delete fileOfTrack;
+
+        return true;
+    }
+
+    delete fileOfPlaylist;
+
+    return false;
 }
 /*--------------------------------------RENAME NAME OF TRACK--------------------------------*/
-
-/*-------------------------------------------EXPORT TRACK-----------------------------------*/
-bool Playlist::ExportTrack(const int &index, const QString &playlist)
-{
-
-}
-/*-------------------------------------------EXPORT TRACK-----------------------------------*/
 
 /*-------------------------------------------COPY TRACK-------------------------------------*/
 bool Playlist::CopyTrack(const int &index, const QString &playlist)
 {
-
+    return true;
 }
 /*-------------------------------------------COPY TRACK-------------------------------------*/
 
@@ -1153,6 +1204,27 @@ QString Playlist::ParseStringToGetFormat(const QString &string)
     }
 
     return buffer;
+}
+
+QString Playlist::ParseToGetCurrentName(const QString &fullPath)
+{
+    QString nameWithFormat = "";
+    QString bufferOfFullPath = fullPath;
+    QString::iterator iterator = bufferOfFullPath.end();
+
+    if(*iterator == NULL)
+        iterator = bufferOfFullPath.end() - 1;
+
+    for(; iterator != bufferOfFullPath.begin(); --iterator)
+    {
+            //unix like         //windows
+        if((*iterator == "/") || (*iterator == "\\"))
+            return nameWithFormat;
+        else
+            nameWithFormat.push_front(*iterator);
+    }
+
+    return nameWithFormat;
 }
 /*--------------------------------------------------------------------------------------------------------------------------------------------------*/
 /*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||PARSERS||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
