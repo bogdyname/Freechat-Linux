@@ -73,6 +73,12 @@ Playlist::Playlist()
      * Move ---------------------------
        7.1) move track to &index by index from current playlist
        7.2) move track to &index by index from playlist by name
+     * Rename track -------------------
+       8.1) rename track by index
+     * Export track -------------------
+       9.1) export track by index
+     * Copy track ---------------------
+       10.1) copy track by index
     */
     //Save
     connect(this, &Playlist::CallOutSaveCurrentPlayList, this, &Playlist::SaveCurrentPlayList);
@@ -100,6 +106,12 @@ Playlist::Playlist()
     connect(this, &Playlist::CallOutMoveSongInsidePlayListByName, this, &Playlist::MoveSongInsidePlayListByName);
     //Set name of current track
     connect(currentPlaylist, &QMediaPlaylist::currentIndexChanged, this, &Playlist::SetNameOfCurrentTrack);
+    //Rename track
+    connect(this, &Playlist::CallOutRenameTrackByIndex, this, &Playlist::RenameTrackByIndex);
+    //Export track
+    connect(this, &Playlist::CallOutExportTrackByIndex, this, &Playlist::ExportTrackByIndex);
+    //Copy track
+    connect(this, &Playlist::CallOutCopyTrackByIndex, this, &Playlist::CopyTrackByIndex);
 
     return;
 }
@@ -350,6 +362,51 @@ void Playlist::SetNameOfCurrentTrack(int index)
     return;
 }
 /*-----------------------------------------SET NAME-----------------------------------------*/
+
+/*--------------------------------------RENAME NAME OF TRACK--------------------------------*/
+void Playlist::RenameTrackByIndex(const int &index, const QString &playlist)
+{
+    if(playlist == "")
+        return;
+
+    if(RenameTrack(index, playlist))
+        qDebug() << "track have been renamed";
+    else
+        qCritical() << "error: can't rename track";
+
+    return;
+}
+/*--------------------------------------RENAME NAME OF TRACK--------------------------------*/
+
+/*-------------------------------------------EXPORT TRACK-----------------------------------*/
+void Playlist::ExportTrackByIndex(const int &index, const QString &playlist)
+{
+    if(playlist == "")
+        return;
+
+    if(ExportTrack(index, playlist))
+        qDebug() << "track have been exported";
+    else
+        qCritical() << "error: can't export track";
+
+    return;
+}
+/*-------------------------------------------EXPORT TRACK-----------------------------------*/
+
+/*-------------------------------------------COPY TRACK-------------------------------------*/
+void Playlist::CopyTrackByIndex(const int &index, const QString &playlist)
+{
+    if(playlist == "")
+        return;
+
+    if(CopyTrack(index, playlist))
+        qDebug() << "track have been copyed";
+    else
+        qCritical() << "error: can't copy track";
+
+    return;
+}
+/*-------------------------------------------COPY TRACK-------------------------------------*/
 
 /*--------------------------------------------------------------------------------------------------------------------------------------------------*/
 /*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||SLOTS PRIVATE||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
@@ -652,12 +709,7 @@ bool Playlist::SavePlaylist(const QString &name, const QStringList &newListOfSon
     QMediaPlaylist *bufferPlaylist = new QMediaPlaylist();
 
     for(const QString &iter : newListOfSongs)
-    {
         bufferPlaylist->addMedia(QMediaContent(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/music/" + iter)));
-
-        qDebug() << iter;
-        qDebug() << bufferPlaylist->mediaCount();
-    }
 
     if(bufferPlaylist->save(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/" + name + ".m3u8"), "m3u8"))
     {
@@ -950,6 +1002,27 @@ bool Playlist::MoveSongInsidePlaylistByIndex(const int &currentIndex, const int 
     }
 }
 /*---------------------------------------MOVE METHODS---------------------------------------*/
+
+/*--------------------------------------RENAME NAME OF TRACK--------------------------------*/
+bool Playlist::RenameTrack(const int &index, const QString &playlist)
+{
+
+}
+/*--------------------------------------RENAME NAME OF TRACK--------------------------------*/
+
+/*-------------------------------------------EXPORT TRACK-----------------------------------*/
+bool Playlist::ExportTrack(const int &index, const QString &playlist)
+{
+
+}
+/*-------------------------------------------EXPORT TRACK-----------------------------------*/
+
+/*-------------------------------------------COPY TRACK-------------------------------------*/
+bool Playlist::CopyTrack(const int &index, const QString &playlist)
+{
+
+}
+/*-------------------------------------------COPY TRACK-------------------------------------*/
 
 /*--------------------------------------------------------------------------------------------------------------------------------------------------*/
 /*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||METHODS PRIVATE||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
