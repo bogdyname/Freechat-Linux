@@ -996,9 +996,11 @@ bool Playlist::RenameTrack(const int &index, const QString &playlist, const QStr
 
         QTextStream stream(fileOfPlaylist);
 
+        //-----------------------------------------------------------------------------------------------Read data of path and rename it
+
         // read specific line by index
         for(int iterOfFile = 0; iterOfFile <= index; ++iterOfFile)
-            bufferOfName = stream.readLine().trimmed();
+            bufferOfName = stream.readLine(0);
 
         //path of file with unicode
         bufferOfName.remove(0, 8);
@@ -1029,30 +1031,36 @@ bool Playlist::RenameTrack(const int &index, const QString &playlist, const QStr
         else
             newNameOfTrack.push_front("file://");
 
-        //BUG HERE
-        //NEED TO READ FROM BEGINNING
+        //-----------------------------------------------------------------------------------------------Read data of path and rename it
+
+
+        //-----------------------------------------------------------------------------------------------Write data into file after rename
 
         //refactore playlist file
         QStringList streamData;
+        QString line = "";
+
+        //reset stream to start read from beginning
+        stream.seek(0);
+
         while(!stream.atEnd())
         {
-            QString line = stream.readLine().trimmed();
+            line = stream.readLine(0).trimmed();
 
-            if(!line.contains(bufferOfName))
-            {
-                qDebug() << "LINE: " << line;
+            if(!(line == "file:///" + QCoreApplication::applicationDirPath() + "/music/" + bufferOfName))
                 streamData.append(line + "\n");
-            }
         }
 
         //write new name into file
-        stream << newNameOfTrack;
+        streamData.append(newNameOfTrack + "\n");
 
         //clear playlist
         fileOfPlaylist->resize(0);
         //write buffer
         for(const QString &iter : streamData)
             stream << iter;
+
+        //-----------------------------------------------------------------------------------------------Write data into file after rename
 
         fileOfPlaylist->close();
 
