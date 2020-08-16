@@ -182,16 +182,18 @@ public slots:
         4) load playlist by name
         5) get songs from current playlist by name of playlist
         6) load all songs (default playlist)
+        7) get all playlists
     */
 
     /*----------------------------------------Methods to get data about playlist----------------------------------------*/
 public:
     const QString GetCurrentPlayListName(); //--------------------------------------------------------------------------1)
     QMediaPlaylist* GetCurrentPlayList(); //----------------------------------------------------------------------------2)
-    int GetCurrentIndex();
-    bool LoadPlayList(const QString &name); //--------------------------------------------------------------------------3)
-    QStringList GetSongsFromCurrentPlayList(const QString &nameOfPlayList); //------------------------------------------4)
-    const QStringList GetAllTracks();//---------------------------------------------------------------------------------5)
+    int GetCurrentIndex(); //-------------------------------------------------------------------------------------------3)
+    bool LoadPlayList(const QString &name); //--------------------------------------------------------------------------4)
+    QStringList GetSongsFromCurrentPlayList(const QString &nameOfPlayList); //------------------------------------------5)
+    const QStringList GetAllTracks(); //--------------------------------------------------------------------------------6)
+    const QStringList GetAllPlaylists(); //-----------------------------------------------------------------------------7)
     /*-----------------------------------------Methods to get data about playlist----------------------------------------*/
 
     /*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
