@@ -580,6 +580,15 @@ const QStringList Playlist::GetAllTracks()
 {
     return allSongs;
 }
+
+const QStringList Playlist::GetAllPlaylists()
+{
+    cd->setCurrent(QCoreApplication::applicationDirPath() + "/bin/");
+    QStringList playlists = cd->entryList(QStringList() << "*.m3u8" << "*.M3U8", QDir::Files);
+    cd->setCurrent(QCoreApplication::applicationDirPath());
+
+    return playlists;
+}
 /*--------------------------------------------------------------------------------------------------------------------------------------------------*/
 /*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||METHODS PUBLIC|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
 /*--------------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -982,23 +991,36 @@ bool Playlist::MoveSongInsidePlaylistByIndex(const int &currentIndex, const int 
 /*---------------------------------------MOVE METHODS---------------------------------------*/
 
 /*--------------------------------------RENAME NAME OF TRACK--------------------------------*/
+
+/*
+    Rework this method
+    Check all lines!
+    Working only after reboot app and only in 'all' playlist
+    in other playlists shows random chars
+*/
 bool Playlist::RenameTrack(const int &index, const QString &playlist, const QString &newName)
 {
-    if(playlist == "" || newName == "")
+    if(newName == "")
         return false;
 
-    QFile *fileOfPlaylist = new QFile(QCoreApplication::applicationDirPath() + "/bin/" + playlist + ".m3u8");
+    //-----------------------------------------------------------------------------------------------Rename in current playlist
 
-    if(fileOfPlaylist->open(QIODevice::ReadWrite))
+    QFile *fileOfCurrentPlaylist = new QFile(QCoreApplication::applicationDirPath() + "/bin/" + playlist + ".m3u8");
+    QTextStream streamOfCurrentPlaylist(fileOfCurrentPlaylist);
+    QString bufferOfName = "";
+    QString newNameOfTrack = "";
+
+    bool OS = false; //false == Windows || true == Unix
+
+    if(fileOfCurrentPlaylist->open(QIODevice::ReadWrite))
     {
-        QFile *fileOfTrack = new QFile();
-        QString bufferOfName = "";
-
-        QTextStream stream(fileOfPlaylist);
-
         // read specific line by index
         for(int iterOfFile = 0; iterOfFile <= index; ++iterOfFile)
-            bufferOfName = stream.readLine().trimmed();
+            bufferOfName = streamOfCurrentPlaylist.readLine(0);
+
+        QFile *fileOfTrack = new QFile();
+
+        //-----------------------------------------------------------------------------------------------Read data of path and rename it
 
         //path of file with unicode
         bufferOfName.remove(0, 8);
@@ -1009,6 +1031,8 @@ bool Playlist::RenameTrack(const int &index, const QString &playlist, const QStr
         QString::const_iterator iterator = bufferOfName.begin() + 2;
         if(*iterator == ":")
             bufferOfName.remove(0, 1);
+        else
+            OS = true;// Set Unix OS (macOS/Linux)
 
         //rename track
         bufferOfName = ParseToGetCurrentName(bufferOfName);
@@ -1029,42 +1053,77 @@ bool Playlist::RenameTrack(const int &index, const QString &playlist, const QStr
         else
             newNameOfTrack.push_front("file://");
 
-        //BUG HERE
-        //NEED TO READ FROM BEGINNING
-
-        //refactore playlist file
-        QStringList streamData;
-        while(!stream.atEnd())
-        {
-            QString line = stream.readLine().trimmed();
-
-            if(!line.contains(bufferOfName))
-            {
-                qDebug() << "LINE: " << line;
-                streamData.append(line + "\n");
-            }
-        }
-
-        //write new name into file
-        stream << newNameOfTrack;
-
-        //clear playlist
-        fileOfPlaylist->resize(0);
-        //write buffer
-        for(const QString &iter : streamData)
-            stream << iter;
-
-        fileOfPlaylist->close();
-
-        delete fileOfPlaylist;
         delete fileOfTrack;
 
-        return true;
+        //-----------------------------------------------------------------------------------------------Read data of path and rename it
+
+        qDebug() << "bufferOfName: " << bufferOfName;
+        qDebug() << "newNameOfTrack: " << newNameOfTrack;
     }
 
-    delete fileOfPlaylist;
+    //-----------------------------------------------------------------------------------------------Rename in current playlist
 
-    return false;
+
+    //-----------------------------------------------------------------------------------------------Rename in other playlist
+
+    const QStringList listOfAllPlayLists = this->GetAllPlaylists();
+
+    //iter all playlist to rename in all playlist
+    for(const QString &currentPlaylist : listOfAllPlayLists)
+    {
+        QFile fileOfPlaylist(QCoreApplication::applicationDirPath() + "/bin/" + currentPlaylist);
+
+        qDebug() << "currentPlaylist: " << QCoreApplication::applicationDirPath() + "/bin/" + currentPlaylist;
+
+        if(fileOfPlaylist.open(QIODevice::ReadWrite))
+        {
+            QTextStream stream(&fileOfPlaylist);
+
+            //-----------------------------------------------------------------------------------------------Write data into file after rename
+
+            //refactore playlist file
+            QStringList streamData;
+            QString line = "";
+            QString pathBUffer = "";
+
+            if(!OS)
+                //Windows
+                pathBUffer = "file:///" + QCoreApplication::applicationDirPath() + "/music/" + bufferOfName;
+            else
+                //Unix
+                pathBUffer = "file://" + QCoreApplication::applicationDirPath() + "/music/" + bufferOfName;
+
+            //reset stream to start read from beginning
+            stream.seek(0);
+
+            while(!stream.atEnd())
+            {
+                line = stream.readLine(0).trimmed();
+
+                if(!(line == pathBUffer))
+                    streamData.append(line + "\n");
+            }
+
+            //write new name into file
+            streamData.append(newNameOfTrack + "\n");
+
+            //clear playlist
+            fileOfPlaylist.resize(0);
+            //write buffer
+            for(const QString &iter : streamData)
+                stream << iter;
+
+            //-----------------------------------------------------------------------------------------------Write data into file after rename
+
+            qDebug() << "BUFFER: " << "file://" + QCoreApplication::applicationDirPath() + "/music/" + bufferOfName;
+
+            fileOfPlaylist.close();
+        }
+    }
+
+    //-----------------------------------------------------------------------------------------------Rename in other playlist
+
+    return true;
 }
 /*--------------------------------------RENAME NAME OF TRACK--------------------------------*/
 

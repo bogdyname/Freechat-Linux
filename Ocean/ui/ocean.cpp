@@ -201,9 +201,9 @@ Ocean::Ocean(QWidget *parent)
         1.3) Add files via Drag and Drop into app after that (into current playlist or by name)
         1.4) Add playlist files via Drag and Drop into app after that
     2)Player manager
-        2.1) play track
-        2.2) pause track
-        2.3) stop track
+        2.1) play track/pause track
+        2.2) stop track
+        2.3) error checker
     3)Playlist manager
         3.1) next track
         3.2) previous track
@@ -273,6 +273,7 @@ Ocean::Ocean(QWidget *parent)
     //Player manager
     connect(pausePlayTrack, &QPushButton::clicked, playermanager, &Player::SetPausePlayTrack);
     connect(stopTrack, &QPushButton::clicked, playermanager, &QMediaPlayer::stop);
+    connect(playermanager, static_cast<void(QMediaPlayer::*)(QMediaPlayer::Error )>(&QMediaPlayer::error), this, &Ocean::MediaError);
     //Playlist manager
     connect(nextTrack, &QPushButton::clicked, playlistmanager, &Playlist::SetNextTrack);
     connect(previousTrack, &QPushButton::clicked, playlistmanager, &Playlist::SetPreviousTrack);
@@ -586,6 +587,18 @@ void Ocean::SetNameOfCurrentTrackFromPlaylist(const QString &name)
 
     return;
 }
+
+void Ocean::MediaError(QMediaPlayer::Error)
+{
+    /*
+        It is necessary to remove a track from the playlist (if it is not playable)
+        -- emit to signal
+        --- into playlistmanager to delete from playlist
+        --- into importmanager to delete from app
+    */
+
+    return;
+}
 /*--------------------------------------------------------------------------------------------------------------------------------------------------*/
 /*||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||Slots for MainWindow||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
 /*--------------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -771,11 +784,11 @@ void Ocean::AddSongIntoPlayListByIndex()
 
 void Ocean::RenameTrack()
 {
-    for(unsigned short int iter = 0; iter < musicList->selectedItems().size(); ++iter)
+    for(unsigned short int iter = 0; iter < playLists->selectedItems().size(); ++iter)
     {
-        QListWidgetItem *item = musicList->item(musicList->currentRow());
+        QListWidgetItem *item = playLists->item(playLists->currentRow());
 
-        if(item->text() == "")
+        if(item->text() != "all")
             return;
     }
 
@@ -795,18 +808,14 @@ void Ocean::RenameTrackByNewName()
         {
             QListWidgetItem *track = musicList->item(musicList->currentRow());
 
-            qDebug() << "PLAYLIST: " << item->text();
-            qDebug() << "TRACK: " << track->text();
-            qDebug() << "NEW NAME: " << getStringFromUserToRenameTrack->GetNameOfNewPlayList();
-
             emit playlistmanager->CallOutRenameTrackByIndex(track->listWidget()->currentRow(),
                                                             item->text(),
                                                             getStringFromUserToRenameTrack->GetNameOfNewPlayList());
 
-            //rename inside UI
-            track->setText(getStringFromUserToRenameTrack->GetNameOfNewPlayList());
             //close widget
             emit getStringFromUserToRenameTrack->BreakeWidget();
+            //rename inside UI
+            this->GetNamesOfSongsToMusicList(item);
         }
     }
 

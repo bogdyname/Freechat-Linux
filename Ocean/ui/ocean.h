@@ -97,6 +97,7 @@ signals:
         5) add tracks after dropEvent
         6) set current index
         7) add playlist file after dropEvent
+        8) media error checker
     */
 
 private slots:
@@ -106,6 +107,7 @@ private slots:
     void PassNamesOfSongsToMusicList(const QStringList &songs);
     void AddFilesAfterDropEvent(const QStringList &files);
     void SetNameOfCurrentTrackFromPlaylist(const QString &name);
+    void MediaError(QMediaPlayer::Error);
     /*-------------------------------------Slots for MainWindow----------------------------------*/
 
     /*-------------------------------------------Shortcut----------------------------------------*/
