@@ -6,7 +6,6 @@
 
 #include "customlistwidget.h"
 
-//TTS CLASS
 CustomListWidget::CustomListWidget(QWidget *parent)
     : QListWidget(parent)
 {
