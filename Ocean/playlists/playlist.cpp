@@ -991,13 +991,6 @@ bool Playlist::MoveSongInsidePlaylistByIndex(const int &currentIndex, const int 
 /*---------------------------------------MOVE METHODS---------------------------------------*/
 
 /*--------------------------------------RENAME NAME OF TRACK--------------------------------*/
-
-/*
-    Rework this method
-    Check all lines!
-    Working only after reboot app and only in 'all' playlist
-    in other playlists shows random chars
-*/
 bool Playlist::RenameTrack(const int &index, const QString &playlist, const QString &newName)
 {
     if(newName == "")
@@ -1040,7 +1033,7 @@ bool Playlist::RenameTrack(const int &index, const QString &playlist, const QStr
         //file with current name
         fileOfTrack->setFileName(QCoreApplication::applicationDirPath() + "/music/" + bufferOfName);
 
-        QString newNameOfTrack = QCoreApplication::applicationDirPath() + "/music/" + newName + ParseStringToGetFormat(bufferOfName);
+        newNameOfTrack = QCoreApplication::applicationDirPath() + "/music/" + newName + ParseStringToGetFormat(bufferOfName);
 
         //rename file
         fileOfTrack->rename(QCoreApplication::applicationDirPath() + "/music/" + bufferOfName, //current path
@@ -1056,9 +1049,6 @@ bool Playlist::RenameTrack(const int &index, const QString &playlist, const QStr
         delete fileOfTrack;
 
         //-----------------------------------------------------------------------------------------------Read data of path and rename it
-
-        qDebug() << "bufferOfName: " << bufferOfName;
-        qDebug() << "newNameOfTrack: " << newNameOfTrack;
     }
 
     //-----------------------------------------------------------------------------------------------Rename in current playlist
@@ -1073,8 +1063,6 @@ bool Playlist::RenameTrack(const int &index, const QString &playlist, const QStr
     {
         QFile fileOfPlaylist(QCoreApplication::applicationDirPath() + "/bin/" + currentPlaylist);
 
-        qDebug() << "currentPlaylist: " << QCoreApplication::applicationDirPath() + "/bin/" + currentPlaylist;
-
         if(fileOfPlaylist.open(QIODevice::ReadWrite))
         {
             QTextStream stream(&fileOfPlaylist);
@@ -1084,14 +1072,14 @@ bool Playlist::RenameTrack(const int &index, const QString &playlist, const QStr
             //refactore playlist file
             QStringList streamData;
             QString line = "";
-            QString pathBUffer = "";
+            QString pathBuffer = "";
 
             if(!OS)
                 //Windows
-                pathBUffer = "file:///" + QCoreApplication::applicationDirPath() + "/music/" + bufferOfName;
+                pathBuffer = "file:///" + QCoreApplication::applicationDirPath() + "/music/" + bufferOfName;
             else
                 //Unix
-                pathBUffer = "file://" + QCoreApplication::applicationDirPath() + "/music/" + bufferOfName;
+                pathBuffer = "file://" + QCoreApplication::applicationDirPath() + "/music/" + bufferOfName;
 
             //reset stream to start read from beginning
             stream.seek(0);
@@ -1100,22 +1088,19 @@ bool Playlist::RenameTrack(const int &index, const QString &playlist, const QStr
             {
                 line = stream.readLine(0).trimmed();
 
-                if(!(line == pathBUffer))
-                    streamData.append(line + "\n");
+                if(!(line == pathBuffer))
+                    streamData.push_back(line + "\n");
             }
 
             //write new name into file
-            streamData.append(newNameOfTrack + "\n");
+            streamData.push_back(newNameOfTrack + "\n");
 
             //clear playlist
             fileOfPlaylist.resize(0);
             //write buffer
             for(const QString &iter : streamData)
                 stream << iter;
-
             //-----------------------------------------------------------------------------------------------Write data into file after rename
-
-            qDebug() << "BUFFER: " << "file://" + QCoreApplication::applicationDirPath() + "/music/" + bufferOfName;
 
             fileOfPlaylist.close();
         }
