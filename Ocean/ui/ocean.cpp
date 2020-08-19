@@ -178,10 +178,10 @@ Ocean::Ocean(QWidget *parent)
     ctrlR->setKey(CTRL + Key_R);
     ctrlE->setKey(CTRL + Key_E);
     //Shortcuts for playlists
-    ctrlCP->setKey(CTRL + Key_C + Key_P);
-    ctrlDP->setKey(CTRL + Key_D + Key_P);
-    ctrlRP->setKey(CTRL + Key_R + Key_P);
-    ctrlEP->setKey(CTRL + Key_E + Key_P);
+    ctrlCP->setKey(CTRL + Key_P + Key_C);
+    ctrlDP->setKey(CTRL + Key_P + Key_D);
+    ctrlRP->setKey(CTRL + Key_P + Key_R);
+    ctrlEP->setKey(CTRL + Key_P + Key_E);
     //Shortcuts for window of app
     shiftF->setKey(SHIFT + Key_F);
     shiftQ->setKey(SHIFT + Key_Q);
@@ -250,10 +250,10 @@ Ocean::Ocean(QWidget *parent)
         11.3) Trigger rename track Ctrl + R
         11.4) Trigger extract track Ctrl + E
 
-        11.5) Trigger create playlist Ctrl + C + P
-        11.6) Trigger delete playlist Ctrl + D + P
-        11.7) Trigger rename playlist Ctrl + R + P
-        11.8) Trigger extract playlist Ctrl + E + P
+        11.5) Trigger create playlist Ctrl + P + C
+        11.6) Trigger delete playlist Ctrl + P + D
+        11.7) Trigger rename playlist Ctrl + P + R
+        11.8) Trigger extract playlist Ctrl + P + E
         11.9) Trigger previuse track A
         11.10) Trigger play or pause S
         11.11) Trigger next track D
@@ -784,14 +784,6 @@ void Ocean::AddSongIntoPlayListByIndex()
 
 void Ocean::RenameTrack()
 {
-    for(unsigned short int iter = 0; iter < playLists->selectedItems().size(); ++iter)
-    {
-        QListWidgetItem *item = playLists->item(playLists->currentRow());
-
-        if(item->text() != "all")
-            return;
-    }
-
     getStringFromUserToRenameTrack->show();
     this->setDisabled(true);
 
@@ -802,21 +794,16 @@ void Ocean::RenameTrackByNewName()
 {
     for(unsigned short int iter = 0; iter < playLists->selectedItems().size(); ++iter)
     {
-        QListWidgetItem *item = playLists->item(playLists->currentRow());
+        QListWidgetItem *playlist = playLists->item(playLists->currentRow());
 
-        for(unsigned short int iter = 0; iter < musicList->selectedItems().size(); ++iter)
-        {
-            QListWidgetItem *track = musicList->item(musicList->currentRow());
+        emit playlistmanager->CallOutRenameTrackByIndex(musicList->currentRow(),
+                                                        playlist->text(),
+                                                        getStringFromUserToRenameTrack->GetNameOfNewPlayList());
 
-            emit playlistmanager->CallOutRenameTrackByIndex(track->listWidget()->currentRow(),
-                                                            item->text(),
-                                                            getStringFromUserToRenameTrack->GetNameOfNewPlayList());
-
-            //close widget
-            emit getStringFromUserToRenameTrack->BreakeWidget();
-            //rename inside UI
-            this->GetNamesOfSongsToMusicList(item);
-        }
+        //close widget
+        emit getStringFromUserToRenameTrack->BreakeWidget();
+        //rename inside UI
+        this->GetNamesOfSongsToMusicList(playlist);
     }
 
     return;
