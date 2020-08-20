@@ -39,10 +39,8 @@ Ocean::Ocean(QWidget *parent)
         cd = new QDir();
 
         //Shortcuts for tracks
-        ctrlC = new QShortcut(this);
         ctrlD = new QShortcut(this);
         ctrlR = new QShortcut(this);
-        ctrlE = new QShortcut(this);
         //Shortcuts for playlists
         ctrlCP = new QShortcut(this);
         ctrlDP = new QShortcut(this);
@@ -173,10 +171,8 @@ Ocean::Ocean(QWidget *parent)
 
     /*-------------------------------------------------Shortcut------------------------------------------------*/
     //Shortcuts for tracks
-    ctrlC->setKey(CTRL + Key_C);
     ctrlD->setKey(CTRL + Key_D);
     ctrlR->setKey(CTRL + Key_R);
-    ctrlE->setKey(CTRL + Key_E);
     //Shortcuts for playlists
     ctrlCP->setKey(CTRL + Key_P + Key_C);
     ctrlDP->setKey(CTRL + Key_P + Key_D);
@@ -245,22 +241,20 @@ Ocean::Ocean(QWidget *parent)
 
     --------------------Shortcut----------------------
     11)
-        11.1) Trigger copy track Ctrl + C
-        11.2) Trigger delete track Ctrl + D
-        11.3) Trigger rename track Ctrl + R
-        11.4) Trigger extract track Ctrl + E
+        11.1) Trigger delete track Ctrl + D
+        11.2) Trigger rename track Ctrl + R
 
-        11.5) Trigger create playlist Ctrl + P + C
-        11.6) Trigger delete playlist Ctrl + P + D
-        11.7) Trigger rename playlist Ctrl + P + R
-        11.8) Trigger extract playlist Ctrl + P + E
-        11.9) Trigger previuse track A
-        11.10) Trigger play or pause S
-        11.11) Trigger next track D
+        11.3) Trigger create playlist Ctrl + P + C
+        11.4) Trigger delete playlist Ctrl + P + D
+        11.5) Trigger rename playlist Ctrl + P + R
+        11.6) Trigger extract playlist Ctrl + P + E
+        11.7) Trigger previuse track A
+        11.8) Trigger play or pause S
+        11.9) Trigger next track D
 
-        11.9) Trigger Full Window Shift + F
-        11.10) Trigger Quit Window Shift + Q
-        11.11) Trigger Hide Window Shift + H
+        11.10) Trigger Full Window Shift + F
+        11.11) Trigger Quit Window Shift + Q
+        11.12) Trigger Hide Window Shift + H
     --------------------Shortcut----------------------
     */
 
@@ -318,15 +312,13 @@ Ocean::Ocean(QWidget *parent)
     connect(timerForCheckDefaultPlayList, &QTimer::timeout, this, &Ocean::WriteDefaultPlayList);
 
     //Shortcuts-----------------------------------------
-    connect(ctrlC, &QShortcut::activated, this, &Ocean::CopyViaCtrlC);
-    connect(ctrlD, &QShortcut::activated, this, &Ocean::DeleteViaCtrlD);
-    connect(ctrlR, &QShortcut::activated, this, &Ocean::RenameViaCtrlR);
-    connect(ctrlE, &QShortcut::activated, this, &Ocean::ExtractViaCtrlE);
+    connect(ctrlD, &QShortcut::activated, this, &Ocean::EraseItemFromMusicList);
+    connect(ctrlR, &QShortcut::activated, this, &Ocean::RenameTrack);
 
-    connect(ctrlCP, &QShortcut::activated, this, &Ocean::CreateViaCtrlCP);
-    connect(ctrlDP, &QShortcut::activated, this, &Ocean::DeleteViaCtrlDP);
-    connect(ctrlRP, &QShortcut::activated, this, &Ocean::RenameViaCtrlRP);
-    connect(ctrlEP, &QShortcut::activated, this, &Ocean::ExtractViaCtrlEP);
+    connect(ctrlCP, &QShortcut::activated, this, &Ocean::CreatePlaylist);
+    connect(ctrlDP, &QShortcut::activated, this, &Ocean::EraseItemFromPlayList);
+    connect(ctrlRP, &QShortcut::activated, this, &Ocean::RenamePlaylist);
+    connect(ctrlEP, &QShortcut::activated, this, &Ocean::ExportTrackOfPlayList);
 
     connect(A, &QShortcut::activated, playlistmanager, &Playlist::SetPreviousTrack);
     connect(S, &QShortcut::activated, playermanager, &Player::SetPausePlayTrack);
@@ -607,58 +599,6 @@ void Ocean::MediaError(QMediaPlayer::Error)
 /*--------------------------------------------------------------------------------------------------------------------------------------------------*/
 /*||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||Slots for MainWindow||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
 /*--------------------------------------------------------------------------------------------------------------------------------------------------*/
-void Ocean::CopyViaCtrlC()
-{
-
-}
-
-void Ocean::DeleteViaCtrlD()
-{
-    this->EraseItemFromMusicList();
-
-    return;
-}
-
-void Ocean::RenameViaCtrlR()
-{
-    this->RenameTrack();
-
-    return;
-}
-
-void Ocean::ExtractViaCtrlE()
-{
-
-}
-
-void Ocean::CreateViaCtrlCP()
-{
-    this->CreatePlaylist();
-
-    return;
-}
-
-void Ocean::DeleteViaCtrlDP()
-{
-    this->EraseItemFromPlayList();
-
-    return;
-}
-
-void Ocean::RenameViaCtrlRP()
-{
-    this->RenamePlaylist();
-
-    return;
-}
-
-void Ocean::ExtractViaCtrlEP()
-{
-    this->ExportTrackOfPlayList();
-
-    return;
-}
-
 void Ocean::FullViaShiftF()
 {
     if(this->isFullScreen())
@@ -700,10 +640,10 @@ void Ocean::ShowContextMenuOfMusicList(const QPoint &point)
     QPoint globalPoint = playLists->mapToGlobal(point);
 
     QMenu myMenu;
-    myMenu.addAction("Add with delete", importManager, &ImportManager::CallFileDialogWithDel);
-    myMenu.addAction("Add with copy", importManager, &ImportManager::CallFileDialogOnlyCopy);
     myMenu.addAction("Add to...", this, &Ocean::AddSongIntoPlayListByIndex);
     myMenu.addAction("Rename", this, &Ocean::RenameTrack);
+    myMenu.addAction("Add with copy", importManager, &ImportManager::CallFileDialogOnlyCopy);
+    myMenu.addAction("Add with delete", importManager, &ImportManager::CallFileDialogWithDel);
     myMenu.addAction("Delete", this, &Ocean::EraseItemFromMusicList);
     myMenu.addAction("Delete All", this, &Ocean::EraseAllItemsFromMusicList);
 
@@ -909,9 +849,9 @@ void Ocean::ShowContextMenuOfPlayList(const QPoint &point)
     // Create menu and insert some actions
     QMenu myMenu;
     myMenu.addAction("Create", this, &Ocean::CreatePlaylist);
-    myMenu.addAction("Delete", this, &Ocean::EraseItemFromPlayList);
     myMenu.addAction("Rename", this, &Ocean::RenamePlaylist);
     myMenu.addAction("Export", this, &Ocean::ExportTrackOfPlayList);
+    myMenu.addAction("Delete", this, &Ocean::EraseItemFromPlayList);
 
     myMenu.exec(globalPoint);
 
