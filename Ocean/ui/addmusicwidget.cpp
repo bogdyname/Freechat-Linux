@@ -100,6 +100,8 @@ void AddMusicWidget::ClickedOkay()
 
 QStringList AddMusicWidget::GetAddedSongsFromListWidget()
 {
+    listWithAddedSongs.clear();
+
     for(unsigned short int iter = 0; iter < addedSongs->count(); ++iter)
     {
         QListWidgetItem* item = addedSongs->item(iter);
