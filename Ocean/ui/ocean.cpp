@@ -567,6 +567,9 @@ void Ocean::AddFilesAfterDropEvent(const QStringList &files)
         else
             //add into playlist by name
             emit playlistmanager->CallOutAddSongsIntoPlaylistByNameViaDragAndDrop(importManager->GetJustAddedSongs(), item->text());
+
+        //show new songs
+        this->GetNamesOfSongsToMusicList(item);
     }
     //----------------------------------------Add track into app or playlist (current or by name)
 
@@ -584,7 +587,7 @@ void Ocean::MediaError(QMediaPlayer::Error)
 {
     /*
         It is necessary to remove a track from the playlist (if it is not playable)
-        -- emit to signal
+        -- emit two signal
         --- into playlistmanager to delete from playlist
         --- into importmanager to delete from app
     */

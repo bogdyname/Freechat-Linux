@@ -9,6 +9,8 @@
 #include <QThread>
 #include <QFile>
 
+//check alloc memory in system
+
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
