@@ -75,8 +75,6 @@ Playlist::Playlist()
        7.2) move track to &index by index from playlist by name
      * Rename track -------------------
        8.1) rename track by index
-     * Copy track ---------------------
-       9.1) copy track by index
     */
     //Save
     connect(this, &Playlist::CallOutSaveCurrentPlayList, this, &Playlist::SaveCurrentPlayList);
@@ -106,8 +104,6 @@ Playlist::Playlist()
     connect(currentPlaylist, &QMediaPlaylist::currentIndexChanged, this, &Playlist::SetNameOfCurrentTrack);
     //Rename track
     connect(this, &Playlist::CallOutRenameTrackByIndex, this, &Playlist::RenameTrackByIndex);
-    //Copy track
-    connect(this, &Playlist::CallOutCopyTrackByIndex, this, &Playlist::CopyTrackByIndex);
 
     return;
 }
@@ -370,22 +366,6 @@ void Playlist::RenameTrackByIndex(const int &index, const QString &playlist, con
     return;
 }
 /*--------------------------------------RENAME NAME OF TRACK--------------------------------*/
-
-/*-------------------------------------------COPY TRACK-------------------------------------*/
-void Playlist::CopyTrackByIndex(const int &index, const QString &playlist)
-{
-    if(playlist == "")
-        return;
-
-    if(CopyTrack(index, playlist))
-        qDebug() << "track have been copyed";
-    else
-        qCritical() << "error: can't copy track";
-
-    return;
-}
-/*-------------------------------------------COPY TRACK-------------------------------------*/
-
 /*--------------------------------------------------------------------------------------------------------------------------------------------------*/
 /*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||SLOTS PRIVATE||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
 /*--------------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -1111,14 +1091,6 @@ bool Playlist::RenameTrack(const int &index, const QString &playlist, const QStr
     return true;
 }
 /*--------------------------------------RENAME NAME OF TRACK--------------------------------*/
-
-/*-------------------------------------------COPY TRACK-------------------------------------*/
-bool Playlist::CopyTrack(const int &index, const QString &playlist)
-{
-    return true;
-}
-/*-------------------------------------------COPY TRACK-------------------------------------*/
-
 /*--------------------------------------------------------------------------------------------------------------------------------------------------*/
 /*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||METHODS PRIVATE||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
 /*--------------------------------------------------------------------------------------------------------------------------------------------------*/
