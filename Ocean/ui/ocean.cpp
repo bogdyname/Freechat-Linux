@@ -267,7 +267,6 @@ Ocean::Ocean(QWidget *parent)
     //Player manager
     connect(pausePlayTrack, &QPushButton::clicked, playermanager, &Player::SetPausePlayTrack);
     connect(stopTrack, &QPushButton::clicked, playermanager, &QMediaPlayer::stop);
-    connect(playermanager, static_cast<void(QMediaPlayer::*)(QMediaPlayer::Error )>(&QMediaPlayer::error), this, &Ocean::MediaError);
     //Playlist manager
     connect(nextTrack, &QPushButton::clicked, playlistmanager, &Playlist::SetNextTrack);
     connect(previousTrack, &QPushButton::clicked, playlistmanager, &Playlist::SetPreviousTrack);
@@ -579,18 +578,6 @@ void Ocean::AddFilesAfterDropEvent(const QStringList &files)
 void Ocean::SetNameOfCurrentTrackFromPlaylist(const QString &name)
 {
     nameOfTrack->setText(name);
-
-    return;
-}
-
-void Ocean::MediaError(QMediaPlayer::Error)
-{
-    /*
-        It is necessary to remove a track from the playlist (if it is not playable)
-        -- emit two signal
-        --- into playlistmanager to delete from playlist
-        --- into importmanager to delete from app
-    */
 
     return;
 }

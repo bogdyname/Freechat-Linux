@@ -107,7 +107,6 @@ private slots:
     void PassNamesOfSongsToMusicList(const QStringList &songs);
     void AddFilesAfterDropEvent(const QStringList &files);
     void SetNameOfCurrentTrackFromPlaylist(const QString &name);
-    void MediaError(QMediaPlayer::Error);
     /*-------------------------------------Slots for MainWindow----------------------------------*/
 
     /*-------------------------------------------Shortcut----------------------------------------*/

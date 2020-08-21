@@ -24,6 +24,13 @@ public:
 
 signals:
     void CallOutSetImagePuasePlayTrack(const int &counter);
+    //Error signals
+    void CallOutNoError();
+    void CallOutResourceError();
+    void CallOutFormatError();
+    void CallOutNetworkError();
+    void CallOutAccessDeniedError();
+    void CallOutServiceMissingError();
 
 public slots:
     void SetPausePlayTrack();
@@ -32,6 +39,7 @@ public slots:
 
 private slots:
     void ChangedPosition(qint64 position);
+    void MediaError(QMediaPlayer::Error);
 
 public:
     const QMediaPlayer* GetPlayer();
