@@ -8,7 +8,8 @@
 
 #include "player.h"
 
-Player::Player()
+Player::Player(QObject *parent)
+    : QMediaPlayer(parent)
 {
     try
     {

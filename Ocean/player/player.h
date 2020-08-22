@@ -19,7 +19,7 @@ class Player : public QMediaPlayer
     Q_OBJECT
 
 public:
-    Player();
+    Player(QObject *parent = nullptr);
     ~Player();
 
 signals:

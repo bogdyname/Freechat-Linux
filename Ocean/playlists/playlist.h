@@ -32,7 +32,7 @@ class Playlist : public QMediaPlaylist
     */
 
 public:
-    Playlist();
+    Playlist(QObject *parent = nullptr);
     ~Playlist();
 
 /****************************************************************************************************************************************/

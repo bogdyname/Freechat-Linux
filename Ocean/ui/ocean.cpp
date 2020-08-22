@@ -34,8 +34,8 @@ Ocean::Ocean(QWidget *parent)
         playbackMode = new QPushButton(this);
 
         //Tools for widgets
-        timerForCheckWidgets = new QTimer();
-        timerForCheckDefaultPlayList = new QTimer();
+        timerForCheckWidgets = new QTimer(this);
+        timerForCheckDefaultPlayList = new QTimer(this);
         cd = new QDir();
 
         //Shortcuts for tracks
@@ -58,9 +58,9 @@ Ocean::Ocean(QWidget *parent)
         getStringFromUserToRenameTrack = new GetStringWidget();
         getStringWithSelectedPlaylist = new SelectPlaylist();
         //managers
-        importManager = new ImportManager();
-        playlistmanager = new Playlist();
-        playermanager = new Player();
+        importManager = new ImportManager(this);
+        playlistmanager = new Playlist(this);
+        playermanager = new Player(this);
         //system
         sysmanager = new System();
     }
@@ -318,8 +318,6 @@ Ocean::~Ocean()
     qDebug() << "Destructor from Ocean.cpp";
 
     //Tools
-    sysmanager->Free(timerForCheckWidgets);
-    sysmanager->Free(timerForCheckDefaultPlayList);
     sysmanager->Free(cd);
 
     //---------------------------------------------SYSTEM INFO
@@ -334,12 +332,6 @@ Ocean::~Ocean()
     if(sysmanager->PointerIsEmpty(cd))
         qDebug() << "3) cd empty!";
     //---------------------------------------------SYSTEM INFO
-
-    //Own classes
-    //managers
-    sysmanager->Free(importManager);
-    sysmanager->Free(playlistmanager);
-    sysmanager->Free(playermanager);
 
     //---------------------------------------------SYSTEM INFO
     qDebug() << "SYSTEM INFO about managers";
@@ -387,15 +379,6 @@ Ocean::~Ocean()
         qDebug() << "1) ownImage empty!";
 
     sysmanager->Free(spacer);
-    sysmanager->Free(imageOfPlayList);
-    sysmanager->Free(sliderOfTrack);
-    sysmanager->Free(sliderOfVolume);
-    sysmanager->Free(playLists);
-    sysmanager->Free(musicList);
-    sysmanager->Free(pausePlayTrack);
-    sysmanager->Free(stopTrack);
-    sysmanager->Free(nextTrack);
-    sysmanager->Free(previousTrack);
 
     if(sysmanager->PointerIsEmpty(spacer))
         qDebug() << "2) spacer empty!";
