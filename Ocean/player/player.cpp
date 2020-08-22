@@ -32,6 +32,7 @@ Player::Player()
     player->setNotifyInterval(500);
 
     connect(this, &QMediaPlayer::positionChanged, this, &Player::ChangedPosition);
+    connect(this, static_cast<void(QMediaPlayer::*)(QMediaPlayer::Error )>(&QMediaPlayer::error), this, &Player::MediaError);
 
     return;
 }
@@ -95,6 +96,20 @@ void Player::CallSetVolume(const int &volume)
 void Player::ChangedPosition(qint64 position)
 {
     currentPosition = position;
+
+    return;
+}
+
+void Player::MediaError(QMediaPlayer::Error)
+{
+    //check it out
+
+    emit this->CallOutNoError();
+    emit this->CallOutResourceError();
+    emit this->CallOutFormatError();
+    emit this->CallOutNetworkError();
+    emit this->CallOutAccessDeniedError();
+    emit this->CallOutServiceMissingError();
 
     return;
 }
