@@ -10,14 +10,15 @@ SelectPlaylist::SelectPlaylist(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::SelectedPlaylist)
 {
-    SelectPlaylist::ui->setupUi(this);
+    ui->setupUi(this);
     this->setWindowFlags(Qt::FramelessWindowHint);
+    this->hide();
 
     try
     {
         //Objects of UI
-        SelectPlaylist::cancel = new QPushButton("cancel");
-        SelectPlaylist::playlists = new QListWidget();
+        cancel = new QPushButton("cancel", this);
+        playlists = new QListWidget(this);
     }
     catch(std::bad_alloc &exp)
     {
@@ -34,47 +35,50 @@ SelectPlaylist::SelectPlaylist(QWidget *parent)
         abort();
     }
 
-    SelectPlaylist::selectedName  = "";
+    selectedName  = "";
 
     //setting up UI
-    SelectPlaylist::ui->verticalLayout->QVBoxLayout::addWidget(SelectPlaylist::cancel);
-    SelectPlaylist::ui->verticalLayout->QVBoxLayout::addWidget(SelectPlaylist::playlists);
+    ui->verticalLayout->addWidget(cancel);
+    ui->verticalLayout->addWidget(playlists);
 
     //SIGNAL/SLOTS
-    QObject::connect(SelectPlaylist::playlists, &QListWidget::itemDoubleClicked, this, &SelectPlaylist::SelectNameOfPlayList);
-    QObject::connect(SelectPlaylist::cancel, &QPushButton::clicked, this, &SelectPlaylist::ClickedCancel);
+    connect(playlists, &QListWidget::itemDoubleClicked, this, &SelectPlaylist::SelectNameOfPlayList);
+    connect(cancel, &QPushButton::clicked, this, &SelectPlaylist::ClickedCancel);
 }
 
 SelectPlaylist::~SelectPlaylist()
 {
-    delete SelectPlaylist::ui;
-    delete SelectPlaylist::cancel;
-    delete SelectPlaylist::playlists;
+    delete ui;
+
+    qDebug() << "Destructor from SelectPlaylist.cpp";
 }
 
 void SelectPlaylist::PassAllPlaylistsIntoWidget(const QStringList &list)
 {
-    SelectPlaylist::playlists->QListWidget::addItems(list);
+    playlists->clear();
+    playlists->addItems(list);
 
     return;
 }
 
-QString SelectPlaylist::GetNameOfSelectedPlaylist()
+const QString SelectPlaylist::GetNameOfSelectedPlaylist()
 {
-    return SelectPlaylist::selectedName;
+    return selectedName;
 }
 
 void SelectPlaylist::SelectNameOfPlayList(QListWidgetItem *item)
 {
-    SelectPlaylist::selectedName = item->QListWidgetItem::text();
-    emit this->CallOutToPassStringFromWidget(SelectPlaylist::selectedName);
+    selectedName.clear();
+    selectedName = item->text();
+    emit this->CallOutToPassStringFromWidget(selectedName);
+    this->hide();
 
     return;
 }
 
 void SelectPlaylist::ClickedCancel()
 {
-    emit this->SelectPlaylist::BreakeWidget();
+    emit this->BreakeWidget();
 
     return;
 }

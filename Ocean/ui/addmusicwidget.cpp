@@ -10,16 +10,17 @@ AddMusicWidget::AddMusicWidget(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::AddMusicWidget)
 {
-    AddMusicWidget::ui->setupUi(this);
+    ui->setupUi(this);
     this->setWindowFlags(Qt::FramelessWindowHint);
+    this->hide();
 
     try
     {
         //Objects of UI
-        AddMusicWidget::addedSongs = new QListWidget();
-        AddMusicWidget::allSongs = new QListWidget();
-        AddMusicWidget::okay = new QPushButton("okay");
-        AddMusicWidget::cancel = new QPushButton("cancel");
+        addedSongs = new QListWidget(this);
+        allSongs = new QListWidget(this);
+        okay = new QPushButton("okay", this);
+        cancel = new QPushButton("cancel", this);
     }
     catch(std::bad_alloc &exp)
     {
@@ -37,45 +38,41 @@ AddMusicWidget::AddMusicWidget(QWidget *parent)
     }
 
     //Ui settings
-    AddMusicWidget::ui->verticalLayout->QVBoxLayout::addWidget(AddMusicWidget::cancel);
-    AddMusicWidget::ui->horizontalLayout->QHBoxLayout::addWidget(AddMusicWidget::addedSongs);
-    AddMusicWidget::ui->horizontalLayout->QHBoxLayout::addWidget(AddMusicWidget::allSongs);
-    AddMusicWidget::ui->verticalLayout_2->QVBoxLayout::addWidget(AddMusicWidget::okay);
+    ui->verticalLayout->addWidget(cancel);
+    ui->horizontalLayout->addWidget(addedSongs);
+    ui->horizontalLayout->addWidget(allSongs);
+    ui->verticalLayout_2->addWidget(okay);
 
     //SIGNALS/SLOTS
     //Button
-    QObject::connect(AddMusicWidget::cancel, &QPushButton::clicked, this, &AddMusicWidget::ClickedCancel);
-    QObject::connect(AddMusicWidget::okay, &QPushButton::clicked, this, &AddMusicWidget::ClickedOkay);
+    connect(cancel, &QPushButton::clicked, this, &AddMusicWidget::ClickedCancel);
+    connect(okay, &QPushButton::clicked, this, &AddMusicWidget::ClickedOkay);
     //Lists
-    QObject::connect(AddMusicWidget::addedSongs, &QListWidget::itemDoubleClicked, this, &AddMusicWidget::DoubleClickedAddedSongsList);
-    QObject::connect(AddMusicWidget::allSongs, &QListWidget::itemDoubleClicked, this, &AddMusicWidget::DoubleClickedAllSongsList);
+    connect(addedSongs, &QListWidget::itemDoubleClicked, this, &AddMusicWidget::DoubleClickedAddedSongsList);
+    connect(allSongs, &QListWidget::itemDoubleClicked, this, &AddMusicWidget::DoubleClickedAllSongsList);
 
     return;
 }
 
 AddMusicWidget::~AddMusicWidget()
 {
-    delete AddMusicWidget::ui;
-    delete AddMusicWidget::addedSongs;
-    delete AddMusicWidget::allSongs;
-    delete AddMusicWidget::okay;
-    delete AddMusicWidget::cancel;
+    delete ui;
 
-    return;
+    qDebug() << "Destructor from AddMusicWidget.cpp";
 }
 
 void AddMusicWidget::DoubleClickedAllSongsList(QListWidgetItem *item)
 {
-    AddMusicWidget::addedSongs->QListWidget::addItem(item->QListWidgetItem::text());
+    addedSongs->addItem(item->text());
 
     return;
 }
 
 void AddMusicWidget::DoubleClickedAddedSongsList(QListWidgetItem *item)
 {
-    for (unsigned short int iter = 0; iter < AddMusicWidget::addedSongs->QListWidget::selectedItems().QList::size(); ++iter)
+    for (unsigned short int iter = 0; iter < addedSongs->selectedItems().size(); ++iter)
     {
-        item = AddMusicWidget::addedSongs->QListWidget::takeItem(AddMusicWidget::addedSongs->QListWidget::currentRow());
+        item = addedSongs->takeItem(addedSongs->currentRow());
 
         delete item;
     }
@@ -85,37 +82,39 @@ void AddMusicWidget::DoubleClickedAddedSongsList(QListWidgetItem *item)
 
 void AddMusicWidget::ClickedCancel()
 {
-    AddMusicWidget::allSongs->QListWidget::clear();
-    AddMusicWidget::addedSongs->QListWidget::clear();
-    emit this->AddMusicWidget::BreakeWidget();
+    allSongs->clear();
+    addedSongs->clear();
+    emit this->BreakeWidget();
 
     return;
 }
 
 void AddMusicWidget::ClickedOkay()
 {
-    emit this->AddMusicWidget::SendListWithSongs(AddMusicWidget::GetAddedSongsFromListWidget());
+    emit this->SendListWithSongs(GetAddedSongsFromListWidget());
 
-    AddMusicWidget::allSongs->QListWidget::clear();
-    AddMusicWidget::addedSongs->QListWidget::clear();
+    allSongs->clear();
+    addedSongs->clear();
 
     return;
 }
 
 QStringList AddMusicWidget::GetAddedSongsFromListWidget()
 {
-    for(unsigned short int iter = 0; iter < AddMusicWidget::addedSongs->QListWidget::count(); ++iter)
+    listWithAddedSongs.clear();
+
+    for(unsigned short int iter = 0; iter < addedSongs->count(); ++iter)
     {
-        QListWidgetItem* item = AddMusicWidget::addedSongs->item(iter);
-        AddMusicWidget::listWithAddedSongs.QStringList::push_back(item->text());
+        QListWidgetItem* item = addedSongs->item(iter);
+        listWithAddedSongs.push_back(item->text());
     }
 
-    return AddMusicWidget::listWithAddedSongs;
+    return listWithAddedSongs;
 }
 
 void AddMusicWidget::GetAllSongsfFromMainWindow(const QStringList &list)
 {
-    AddMusicWidget::allSongs->QListWidget::addItems(list);
+    allSongs->addItems(list);
 
     return;
 }

@@ -10,14 +10,15 @@ GetStringWidget::GetStringWidget(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::GetString)
 {
-    GetStringWidget::ui->setupUi(this);
+    ui->setupUi(this);
     this->setWindowFlags(Qt::FramelessWindowHint);
+    this->hide();
 
     try
     {
         //Objects of UI
-        GetStringWidget::lineEditForString = new QLineEdit();
-        GetStringWidget::cancel = new QPushButton("cancel");
+        lineEditForString = new QLineEdit(this);
+        cancel = new QPushButton("cancel", this);
     }
     catch(std::bad_alloc &exp)
     {
@@ -34,51 +35,49 @@ GetStringWidget::GetStringWidget(QWidget *parent)
         abort();
     }
 
-    GetStringWidget::getString = "";
+    getString = "";
 
     //Ui settings
-    GetStringWidget::ui->verticalLayout->QVBoxLayout::addWidget(GetStringWidget::lineEditForString);
-    GetStringWidget::ui->horizontalLayout->QHBoxLayout::addWidget(GetStringWidget::cancel);
+    ui->horizontalLayout->addWidget(lineEditForString);
+    ui->horizontalLayout->addWidget(cancel);
 
     //SIGNALS/SLOTS
     //QLineEdit
-    QObject::connect(GetStringWidget::lineEditForString, &QLineEdit::returnPressed, this, &GetStringWidget::ReturnPressedForLineEdit);
-    QObject::connect(GetStringWidget::lineEditForString, &QLineEdit::returnPressed, GetStringWidget::lineEditForString, &QLineEdit::clear);
+    connect(lineEditForString, &QLineEdit::returnPressed, this, &GetStringWidget::ReturnPressedForLineEdit);
+    connect(lineEditForString, &QLineEdit::returnPressed, lineEditForString, &QLineEdit::clear);
     //Button
-    QObject::connect(GetStringWidget::cancel, &QPushButton::clicked, this, &GetStringWidget::ClickedCancel);
+    connect(cancel, &QPushButton::clicked, this, &GetStringWidget::ClickedCancel);
 
     return;
 }
 
 GetStringWidget::~GetStringWidget()
 {
-    delete GetStringWidget::lineEditForString;
-    delete GetStringWidget::cancel;
-    delete GetStringWidget::ui;
+    delete ui;
 
-    return;
+    qDebug() << "Destructor from GetStringWidget.cpp";
 }
 
 QString GetStringWidget::GetNameOfNewPlayList()
 {
-    return GetStringWidget::getString;
+    return getString;
 }
 
 void GetStringWidget::ReturnPressedForLineEdit()
 {
-    if(GetStringWidget::lineEditForString->QLineEdit::text() == "")
+    if(lineEditForString->text() == "")
         return;
 
-    GetStringWidget::getString.QString::clear();
-    GetStringWidget::getString += GetStringWidget::lineEditForString->QLineEdit::text();
-    emit this->GetStringWidget::SendName();
+    getString.clear();
+    getString += lineEditForString->text();
+    emit this->SendName();
 
     return;
 }
 
 void GetStringWidget::ClickedCancel()
 {
-    emit this->GetStringWidget::BreakeWidget();
+    emit this->BreakeWidget();
 
     return;
 }

@@ -24,14 +24,15 @@
 class Playlist : public QMediaPlaylist
 {
     Q_OBJECT
+    Q_CLASSINFO("Version", "1.0")
 
     /*
-     * Format of playlists = .m3u
+     * Format of playlists = .m3u8
      * Dir 'bin' for saving and loading playlists
     */
 
 public:
-    Playlist();
+    Playlist(QObject *parent = nullptr);
     ~Playlist();
 
 /****************************************************************************************************************************************/
@@ -58,10 +59,12 @@ public:
            5.5) remove all tracks from playlist by name
         6) add songs
            6.1) add song into playlist from other playlist by index
-           6.2) add song into platlist from all songs (default playlist)
+           6.2) add songs into playlist by name via Dragand Drop
+           6.3) add songs into current playlist via Drag and Drop
         7) move and sort playlist
            7.1) move track to &index by index from current playlist
            7.2) move track to &index by index from playlist by name
+        8) set name of current track
     */
 
     /*-------------------------------------------------------SIGNALS-------------------------------------------------------*/
@@ -84,11 +87,22 @@ signals:
     void CallOutRemoveAllTracksFromCurrentPlayList();
     void CallOutRemoveAllTracksFromPlayListByName(const QString &name);
     /*--------------------------------add song into playlist--------------------------------*/
-    void CallOutAddSongIntoPlayList(const QString &song, const QString &nameOfPlayList, const QString &nameOfCurrentPlayList, const unsigned short int &index);
-    void CallOutAddSongIntoPlayListFromDefaultPlayList(const QString &song, const QString &nameOfPlayList, const unsigned short int &index);
+    void CallOutAddSongIntoPlayList(const QString &song, const QString &nameOfPlayList, const QString &nameOfCurrentPlayList, const int &index);
+    void CallOutAddSongsIntoPlaylistByNameViaDragAndDrop(const QStringList &songs, const QString &nameOfPlayList);
+    void CallOutAddSongsIntoCurrentPlaylistViaDragAndDrop(const QStringList &songs);
     /*-------------------------------move song inside playlist------------------------------*/
-    void CallOutMoveSongInsideCurrentPlayList(const unsigned short int &currentIndex, const unsigned short int &newIndex);
-    void CallOutMoveSongInsidePlayListByName(const unsigned short int &currentIndex, const unsigned short int &newIndex, const QString &name);
+    void CallOutMoveSongInsideCurrentPlayList(const int &currentIndex, const int &newIndex);
+    void CallOutMoveSongInsidePlayListByName(const int &currentIndex, const int &newIndex, const QString &name);
+    /*-------------------------------set name of current track------------------------------*/
+    void CallOutSetNameOfCurrentTrack(const QString &name);
+    /*---------------------------set image of current playback mode-------------------------*/
+    void CallOutSetImageOfCurrentPlaybackMode(const int &counter);
+    /*------------------------------------Rename name of track------------------------------*/
+    void CallOutRenameTrackByIndex(const int &index, const QString &playlist, const QString &newName);
+    /*---------------------------------------Clear all songs--------------------------------*/
+    void CallOutClearAllSongs();
+    /*---------------------------------------Clear one song---------------------------------*/
+    void CallOutClearOneSong(const int &index);
     /*-------------------------------------------------------SIGNALS-------------------------------------------------------*/
 
 
@@ -112,11 +126,20 @@ private slots:
     void RemoveAllTracksFromCurrentPlayList();
     void RemoveAllTracksFromPlayListByName(const QString &name);
     /*--------------------------------add song into playlist--------------------------------*/
-    void AddSongIntoPlayList(const QString &song, const QString &nameOfPlayList, const QString &nameOfCurrentPlayList, const unsigned short int &index);
-    void AddSongIntoPlayListFromDefaultPlayList(const QString &song, const QString &nameOfPlayList, const unsigned short int &index);
+    void AddSongIntoPlayList(const QString &song, const QString &nameOfPlayList, const QString &nameOfCurrentPlayList, const int &index);
+    void AddSongsIntoPlaylistByNameViaDragAndDrop(const QStringList &songs, const QString &nameOfPlayList);
+    void AddSongsIntoCurrentPlaylistViaDragAndDrop(const QStringList &songs);
     /*-------------------------------move song inside playlist------------------------------*/
-    void MoveSongInsideCurrentPlayList(const unsigned short int &currentIndex, const unsigned short int &newIndex);
-    void MoveSongInsidePlayListByName(const unsigned short int &currentIndex, const unsigned short int &newIndex, const QString &name);
+    void MoveSongInsideCurrentPlayList(const int &currentIndex, const int &newIndex);
+    void MoveSongInsidePlayListByName(const int &currentIndex, const int &newIndex, const QString &name);
+    /*-------------------------------set name of current track------------------------------*/
+    void SetNameOfCurrentTrack(int index);
+    /*------------------------------------Rename name of track------------------------------*/
+    void RenameTrackByIndex(const int &index, const QString &playlist, const QString &newName);
+    /*---------------------------------------Clear all songs--------------------------------*/
+    void ClearAllSongs();
+    /*---------------------------------------Clear one song---------------------------------*/
+    void ClearOneSong(const int &index);
     /*--------------------------------------------------------SLOTS--------------------------------------------------------*/
 
     /*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
@@ -130,17 +153,19 @@ private slots:
     /*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
 
     /*
-        1) set next track in current playlist
-        2) set previuos track in current playlist
-        3) set track by index in current playlist
-        4) check default playlist (all songs from 'music' dir)
+        1) set mode of playback
+        2) set next track in current playlist
+        3) set previuos track in current playlist
+        4) set track by index in current playlist
+        5) check default playlist (all songs from 'music' dir)
     */
 
     /*--------------------------------------------------------SLOTS--------------------------------------------------------*/
 public slots:
+    void SetModOfPlayback();
     void SetNextTrack();
     void SetPreviousTrack();
-    void SetTrackByIndex(QListWidgetItem *indexOfTrack);
+    void SetTrackByIndex(const int &indexOfTrack);
     void CheckDefaultPlayList();
     /*--------------------------------------------------------SLOTS--------------------------------------------------------*/
 
@@ -157,18 +182,22 @@ public slots:
     /*
         1) get name of current playlist
         2) get current playlist
-        3) load playlist by name
-        4) get songs from current playlist by name of playlist
-        5) load all songs (default playlist)
+        3) get current index
+        4) load playlist by name
+        5) get songs from current playlist by name of playlist
+        6) load all songs (default playlist)
+        7) get all playlists
     */
 
     /*----------------------------------------Methods to get data about playlist----------------------------------------*/
 public:
     const QString GetCurrentPlayListName(); //--------------------------------------------------------------------------1)
     QMediaPlaylist* GetCurrentPlayList(); //----------------------------------------------------------------------------2)
-    bool LoadPlayList(const QString &name); //--------------------------------------------------------------------------3)
-    QStringList GetSongsFromCurrentPlayList(const QString &nameOfPlayList); //------------------------------------------4)
-    const QStringList GetAllTracks();//---------------------------------------------------------------------------------5)
+    int GetCurrentIndex(); //-------------------------------------------------------------------------------------------3)
+    bool LoadPlayList(const QString &name); //--------------------------------------------------------------------------4)
+    QStringList GetSongsFromCurrentPlayList(const QString &nameOfPlayList); //------------------------------------------5)
+    const QStringList GetAllTracks(); //--------------------------------------------------------------------------------6)
+    const QStringList GetAllPlaylists(); //-----------------------------------------------------------------------------7)
     /*-----------------------------------------Methods to get data about playlist----------------------------------------*/
 
     /*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
@@ -183,38 +212,54 @@ public:
 
     /*----------------------------------------Methods to call it in Private SLOTS----------------------------------------*/
     /*
+        --create
         1) create playlist by name of new playlist (get it via ui_getstring.h in ocean.cpp) and QFileDialog (pass paths of files in QStringList)
+        --delete
         2) delete playlist by name
+        --load
         3) load playlist by name
-        5) save CURRENT playlist by name and songs inside changed playlist
-        6) save playlist by name and songs inside changed playlist
-        7) save playlist by name (only name)
-        8) rename CURRENT playlist with new name
-        9) rename playlist with new name via current name
-        10) check if 'bin' dir is exists (else create it!)
-        11) add song into playlist by name
-        12) remove track by index
-        13) remove track by index and name
-        14) move track inside playlist by index
-        15) move track inside playlist by index and name
+        --save
+        4) save CURRENT playlist by name and songs inside changed playlist
+        5) save playlist by name and songs inside changed playlist
+        6) save playlist by name (only name)
+        --rename
+        7) rename CURRENT playlist with new name
+        8) rename playlist with new name via current name
+        --settings
+        9) check if 'bin' dir is exists (else create it!)
+        --add track into playlist
+        10) add song into playlist by name
+        11) add songs into playlist by name via drag and drop
+        12) add songs into current playlist via drag and drop
+        --remove
+        13/14) remove track by index
+        15/16) remove track by index and name
+        --move
+        17) move track inside playlist by index
+        18) move track inside playlist by index and name
+        --rename track
+        19) rename track by indexex
     */
 private:
     bool CreatePlayList(const QString &name, const QStringList &list); //--------------------------------------------------------------------------------------------1) (DONE)
-    bool RemovePlayList(const QString &name);//----------------------------------------------------------------------------------------------------------------------2)
+    bool RemovePlayList(const QString &name);//----------------------------------------------------------------------------------------------------------------------2) (DONE)
     bool LookingForPlayList(const QString &name, QMediaPlaylist *medialist);//---------------------------------------------------------------------------------------3) (DONE)
-    bool SavePlaylist(const QString &name, const QStringList &newListOfSongs, QMediaPlaylist *currentPlaylist);//----------------------------------------------------5) (DONE)
-    bool SavePlaylist(const QString &name, const QStringList &newListOfSongs);//-------------------------------------------------------------------------------------6) (DONE)
-    bool SavePlaylist(const QString &name);//------------------------------------------------------------------------------------------------------------------------7) (DONE)
-    bool RenamePlayList(const QString &newName, QMediaPlaylist *currentPlaylist);//----------------------------------------------------------------------------------8)
-    bool RenamePlayList(const QString &newName, const QString &currentName); //--------------------------------------------------------------------------------------9)
-    bool CheckSettingsDir();//--------------------------------------------------------------------------------------------------------------------------------------10) (DONE)
-    bool AddSongIntoPlayListByName(const QString &song, const QString &nameOfPlayList, const QString &nameOfCurrentPlayList, const unsigned short int &index); //---11)
-    bool RemoveTrackByIndex(const int &index); //----------------------------------------------------------------------------------------------------12)
-    bool RemoveTrackByIndex(const int &index, const QString &name); //-------------------------------------------------------------------------------13)
-    bool RemoveAllTracks();
-    bool RemoveAllTracks(const QString &name);
-    bool MoveSongInsidePlaylistByIndex(const unsigned short int &currentIndex, const unsigned short int &newIndex); //----------------------------------------------14)
-    bool MoveSongInsidePlaylistByIndex(const unsigned short int &currentIndex, const unsigned short int &newIndex, const QString &name); //-------------------------15)
+    bool SavePlaylist(const QString &name, const QStringList &newListOfSongs, QMediaPlaylist *currentPlaylist);//----------------------------------------------------4) (DONE)
+    bool SavePlaylist(const QString &name, const QStringList &newListOfSongs);//-------------------------------------------------------------------------------------5) (DONE)
+    bool SavePlaylist(const QString &name);//------------------------------------------------------------------------------------------------------------------------6) (DONE)
+    bool RenamePlayList(const QString &newName, QMediaPlaylist *currentPlaylist);//----------------------------------------------------------------------------------7) (DONE)
+    bool RenamePlayList(const QString &newName, const QString &currentName); //--------------------------------------------------------------------------------------8) (DONE)
+    bool CheckSettingsDir();//---------------------------------------------------------------------------------------------------------------------------------------9) (DONE)
+    bool AddSongIntoPlayListByName(const QString &song, const QString &nameOfPlayList, const QString &nameOfCurrentPlayList, const int &index); //------------------10) (DONE)
+    bool AddSongsIntoPlayListByName(const QStringList &songs, const QString &nameOfPlayList);//---------------------------------------------------------------------11) (DONE)
+    bool AddSongsIntoCurrentPlayList(const QStringList &songs);//---------------------------------------------------------------------------------------------------12) (DONE)
+    bool RemoveTrackByIndex(const int &index); //-------------------------------------------------------------------------------------------------------------------13) (DONE)
+    bool RemoveTrackByIndex(const int &index, const QString &name); //----------------------------------------------------------------------------------------------14) (DONE)
+    bool RemoveAllTracks(); //--------------------------------------------------------------------------------------------------------------------------------------15) (DONE)
+    bool RemoveAllTracks(const QString &name); //-------------------------------------------------------------------------------------------------------------------16) (DONE)
+    bool MoveSongInsidePlaylistByIndex(const int &currentIndex, const int &newIndex); //----------------------------------------------------------------------------17)
+    bool MoveSongInsidePlaylistByIndex(const int &currentIndex, const int &newIndex, const QString &name); //-------------------------------------------------------18)
+    bool RenameTrack(const int &index, const QString &playlist, const QString &newName); //-------------------------------------------------------------------------19)
     /*----------------------------------------Methods to call it in Private SLOTS----------------------------------------*/
 
     /*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
@@ -229,18 +274,22 @@ private:
 
     /*--------------------------------------------------------PARSERS------------------------------------------------------*/
     /*
-        1) parser to get full path of songs
-        2) parser to remove full path and format of file (song or playlist [m3u, wav, mp3, m4a])
-        3) open file playlist (by name and index)
-        4) parse string to get format
+        1) parser to get name from file by index
+        2) parser to get full path of songs
+        3) parser to remove full path and format of file (song or playlist [m3u, wav, mp3, m4a])
+        4) open file playlist (by name and index)
+        5) parse string to get format
+        6) parse full path to rename track
     */
 
 public: //using inside Ocean.cpp
+    QString ParserToGetNameOfSongByIndex(const int &index);
     QStringList ParseToGetFullPathOfTracks(const QStringList &list);
     QString ParseStringToRemoveFormatAndCurrentPath(const QString &string);
-private: //using inside Playlist.cpp
-    QString ParserToGetFormatOfSong(const QString &nameOfPlayList, const unsigned short int &index);
+        //using inside Playlist.cpp and Ocean.cpp
+    QString ParserToGetFormatOfSong(const QString &nameOfPlayList, const int &index);
     QString ParseStringToGetFormat(const QString &string);
+    QString ParseToGetCurrentName(const QString &fullPath);
     /*--------------------------------------------------------PARSERS------------------------------------------------------*/
 
     /*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
@@ -254,7 +303,7 @@ private: //using inside Playlist.cpp
     /*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
 
 private:
-    QDir *cd = nullptr; //---------------------------- works with dir and paths of system
+    QDir *cd = nullptr; //------------------------------------- works with dir and paths of system
     QStringList allSongs; //----------------------------------- list with paths of all songs
     QString currentPlaylistName; //---------------------------- name of playlist
     QMediaPlaylist *currentPlaylist = nullptr; //-------------- current playlist

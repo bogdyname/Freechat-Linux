@@ -8,55 +8,71 @@
 
 #include "player.h"
 
-Player::Player()
+Player::Player(QObject *parent)
+    : QMediaPlayer(parent)
 {
     try
     {
-        Player::player = new QMediaPlayer();
+        player = new QMediaPlayer(this);
     }
     catch(std::bad_alloc &exp)
     {
-        #ifndef Q_DEBUG
         qCritical() << "Exception caught: " << exp.std::bad_alloc::what();
-        #endif
         abort();
     }
     catch(...)
     {
-        #ifndef Q_DEBUG
         qCritical() << "Some exception caught";
-        #endif
         abort();
     }
 
-    QMediaObject::setNotifyInterval(500);
+    player->setNotifyInterval(500);
 
-    QObject::connect(Player::player, &QMediaPlayer::positionChanged, this, &Player::ChangedPosition);
+    connect(this, &QMediaPlayer::positionChanged, this, &Player::ChangedPosition);
+    connect(this, static_cast<void(QMediaPlayer::*)(QMediaPlayer::Error )>(&QMediaPlayer::error), this, &Player::MediaError);
 
     return;
 }
 
 Player::~Player()
 {
-    delete Player::player;
-
-    return;
+    qDebug() << "Destructor from Player.cpp";
 }
 
 //Public slots
-void Player::CallSetMod(const unsigned short int &mod)
+void Player::SetPausePlayTrack()
 {
-    if(Player::SetModOfPlayer(mod))
-        qDebug() << "set mod: " << mod;
-    else
-        qDebug() << "error: set mod";
+    static int counter = 0;
+
+    counter == 1 ? --counter : ++counter ;
+
+    switch(counter)
+    {
+        //Play current track
+        case 0:
+        {
+            this->play();
+            emit this->CallOutSetImagePuasePlayTrack(0);
+            qDebug() << 0 ;
+        }
+        break;
+
+        //Pause current track
+        case 1:
+        {
+            this->pause();
+            emit this->CallOutSetImagePuasePlayTrack(1);
+            qDebug() << 1 ;
+        }
+        break;
+    }
 
     return;
 }
 
 void Player::CallSetPlayList(QMediaPlaylist *playlist)
 {
-    if(Player::SetPlayList(playlist))
+    if(SetPlayList(playlist))
         qDebug() << "set playlist";
     else
         qDebug() << "error: set playlist";
@@ -64,9 +80,9 @@ void Player::CallSetPlayList(QMediaPlaylist *playlist)
     return;
 }
 
-void Player::CallSetVolume(const unsigned short int &volume)
+void Player::CallSetVolume(const int &volume)
 {
-    if(Player::SetVolume(volume))
+    if(SetVolume(volume))
         qDebug() << "set volume" << volume;
     else
         qDebug() << "error: set volume";
@@ -76,9 +92,21 @@ void Player::CallSetVolume(const unsigned short int &volume)
 
 void Player::ChangedPosition(qint64 position)
 {
-    Player::currentPosition = position;
+    currentPosition = position;
 
-    qDebug() << "current position: " << currentPosition;
+    return;
+}
+
+void Player::MediaError(QMediaPlayer::Error)
+{
+    //check it out
+
+    emit this->CallOutNoError();
+    emit this->CallOutResourceError();
+    emit this->CallOutFormatError();
+    emit this->CallOutNetworkError();
+    emit this->CallOutAccessDeniedError();
+    emit this->CallOutServiceMissingError();
 
     return;
 }
@@ -86,69 +114,37 @@ void Player::ChangedPosition(qint64 position)
 //Methods
 const QMediaPlayer* Player::GetPlayer()
 {
-    return Player::player;
+    return player;
 }
 
 qint64 Player::GetPositionOfTrack()
 {
-    return this->Player::currentPosition;
+    return currentPosition;
 }
 
 void Player::SetPositionOfTrack(const qint64 position)
 {
-    Player::player->QMediaPlayer::setPosition(position);
+    player->setPosition(position);
 
     return;
 }
 
-bool Player::SetModOfPlayer(const unsigned short int &mod)
-{
-    switch(mod)
-    {
-        //Loop player
-        case 0:
-        {
-            Player::player->QMediaPlayer::setPlaybackRate(QMediaPlaylist::Loop);
-            return true;
-        }
-        break;
-
-        //Random player
-        case 1:
-        {
-            Player::player->QMediaPlayer::setPlaybackRate(QMediaPlaylist::Random);
-            return true;
-        }
-        break;
-
-        //Default sequential player (one by one)
-        case 2:
-        {
-            Player::player->QMediaPlayer::setPlaybackRate(QMediaPlaylist::Sequential);
-            return true;
-        }
-        break;
-        //False
-        default: return false;
-    }
-}
-
 bool Player::SetPlayList(QMediaPlaylist *playlist)
 {
-    if(!playlist->QMediaPlaylist::isEmpty())
+    if(!playlist->isEmpty())
     {
-        Player::player->QMediaPlayer::setPlaylist(playlist);
+        player->setPlaylist(playlist);
         return true;
     }
     else
         return false;
 }
 
-bool Player::SetVolume(const unsigned short int &volume)
+bool Player::SetVolume(const int &volume)
 {
     if(volume > 0)
     {
-        Player::player->QMediaPlayer::setVolume(volume);
+        player->setVolume(volume);
         return true;
     }
     else

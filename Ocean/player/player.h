@@ -19,16 +19,27 @@ class Player : public QMediaPlayer
     Q_OBJECT
 
 public:
-    Player();
+    Player(QObject *parent = nullptr);
     ~Player();
 
+signals:
+    void CallOutSetImagePuasePlayTrack(const int &counter);
+    //Error signals
+    void CallOutNoError();
+    void CallOutResourceError();
+    void CallOutFormatError();
+    void CallOutNetworkError();
+    void CallOutAccessDeniedError();
+    void CallOutServiceMissingError();
+
 public slots:
-    void CallSetMod(const unsigned short int &mod);
+    void SetPausePlayTrack();
     void CallSetPlayList(QMediaPlaylist *playlist);
-    void CallSetVolume(const unsigned short int &volume);
+    void CallSetVolume(const int &volume);
 
 private slots:
     void ChangedPosition(qint64 position);
+    void MediaError(QMediaPlayer::Error);
 
 public:
     const QMediaPlayer* GetPlayer();
@@ -36,9 +47,8 @@ public:
     void SetPositionOfTrack(const qint64 position);
 
 private:
-    bool SetModOfPlayer(const unsigned short int &mod);
     bool SetPlayList(QMediaPlaylist *playlist);
-    bool SetVolume(const unsigned short int &volume);
+    bool SetVolume(const int &volume);
 
 private:
     QMediaPlayer *player = nullptr;

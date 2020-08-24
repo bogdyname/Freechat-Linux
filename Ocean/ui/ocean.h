@@ -14,8 +14,10 @@
 #include <QPixmap>
 #include <QWidget>
 #include <QSlider>
+#include <QShortcut>
 #include <QLineEdit>
 #include <QComboBox>
+#include <QMimeData>
 #include <QListWidget>
 #include <QPushButton>
 #include <QMainWindow>
@@ -27,6 +29,7 @@
 #include <QResizeEvent>
 #include <QMediaContent>
 #include <QMediaPlaylist>
+#include <QAbstractItemView>
 #include "ui_ocean.h"
 
 //widgets
@@ -34,10 +37,17 @@
 #include "getstringwidget.h"
 #include "selectplaylist.h"
 
+//custom widgets
+#include "customWidgets/customlistwidget.h"
+
 //managers
 #include "imports/importmanager.h"
 #include "playlists/playlist.h"
 #include "player/player.h"
+
+//system
+#include "sysmanager/system.h"
+#include "sysmanager/system.cpp"
 
 class Ocean : public QMainWindow, private Ui::Ocean
 {
@@ -82,6 +92,12 @@ signals:
     /*
         1) Slot for hide widgets inside MainWindow
         2) Slot for show widgets inside MainWindow
+        3) get names of tracks for QListWidget (music list)
+        4) pass names of tracks for QListWidget (music list)
+        5) add tracks after dropEvent
+        6) set current index
+        7) add playlist file after dropEvent
+        8) media error checker
     */
 
 private slots:
@@ -89,7 +105,26 @@ private slots:
     void Shower();
     void GetNamesOfSongsToMusicList(QListWidgetItem *item);
     void PassNamesOfSongsToMusicList(const QStringList &songs);
+    void AddFilesAfterDropEvent(const QStringList &files);
+    void SetNameOfCurrentTrackFromPlaylist(const QString &name);
     /*-------------------------------------Slots for MainWindow----------------------------------*/
+
+    /*-------------------------------------------Shortcut----------------------------------------*/
+
+
+    /*
+      * Shortcuts for window of app
+        1) Full Window Shift + F
+        2) Quit Window Shift + Q
+        3) Hide Window Shift + H
+    */
+
+private slots:
+    //Shortcuts for window of app
+    void FullViaShiftF();
+    void QuitViaShiftQ();
+    void HideViaShiftH();
+    /*-------------------------------------------Shortcut----------------------------------------*/
 
     /*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
     /*||||||||||||||||||||||||||||||||||||||||||||||||||this->QWidget||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
@@ -118,11 +153,25 @@ private slots:
         1) Delete all songs
         2) Delete one selected item
         3) Add song into playlist by name (pass data via SIGNAL of playlist manager)
+        4) rename track (hot key or QMenu)
+        5) rename track emit signal
+        6) check widget after close to rename track
     */
+    //delete all
     void EraseAllItemsFromMusicList();
+    //delete
     void EraseItemFromMusicList();
+    //add into playlist
     void AddSongIntoPlayListByIndex();
+    //rename
+    void RenameTrack();
+    void RenameTrackByNewName();
+    void ClosegetStringFromUserToRenameTrackViaCancel();
+    //move track
     void ParseMusicList(const QString &name);
+    void MoveTrack(QListWidgetItem *item);
+    void SetPreviousIndexOfItem(QListWidgetItem *item);
+    void UpdateCurrentIndexes();
     // Context Menu of Music list ------------------------------------------------- 1
 
     //||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
@@ -135,12 +184,15 @@ private slots:
     /*
         1) Delete item from QListWidget (Ocean::playLists)
         2) Create playlist via own widget (Ocean::getStringFromUser)
-        3) Rename playlist via own widget (Ocean::getStringFromUser)
+        3) Rename playlist via own widget and waiting user input (Ocean::getStringFromUser)
+        3) Rename playlist after user input (Ocean::getStringFromUser)
+        4) Export track into folder via QMenu
     */
     void EraseItemFromPlayList();
     void CreatePlaylist();
     void RenamePlaylist();
-    void Rename(const QListWidgetItem *item, QString buffer);
+    void Rename();
+    void ExportTrackOfPlayList();
     // Context Menu of Playlists -------------------------------------------------- 2
 
     //||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
@@ -148,6 +200,7 @@ private slots:
     // Set Playlist --------------------------------------------------------------- 3
     // Set Playlist
     void SetPlayList(QListWidgetItem *item);
+    void SetPlayListByTrack(QListWidgetItem *item);
     void SetCurrentPlayList();
     // Set Playlist --------------------------------------------------------------- 3
 
@@ -174,10 +227,12 @@ private slots:
     // Widget for get string from user -------------------------------------------- 1
     /*
         1) Close widget via 'cancel button' without string
-        2) Close widget via return pressed and pass string from user
+        2) Close widget via return pressed and pass string from user (Create new playlist)
+        3) Close widget via return pressed and pass string from user (Reaname playlist)
     */
     void ClosegetStringFromUserViaCancel();
-    void ClosegetStringFromUserViaOkay();
+    void ClosegetStringFromUserToCreatePlaylist();
+    void ClosegetStringFromUserToRenameViaCancel();
     // Widget for get string from user -------------------------------------------- 1
 
     //||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
@@ -215,17 +270,19 @@ private slots:
     /*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
 
     /*
-        1) Timer for Ocean::getStringFromUser
-        2) Timer for Ocean::getStringWithSelectedPlaylist
-        3) Timer for Ocean::getAddedTracksFromWidget
-        4) Get names of playlists from 'bin' dir
-        5) Create widget after widget for get string from user
-        6) Write name of default playlist 'all' into QListWidget
+        1) Timer for Ocean::getStringFromUserToCreateNewPlaylist
+        2) Timer for Ocean::getStringFromUserToRenamePlaylist
+        3) Timer for Ocean::getStringWithSelectedPlaylist
+        4) Timer for Ocean::getAddedTracksFromWidget
+        5) Get names of playlists from 'bin' dir
+        6) Create widget after widget for get string from user
+        7) Write name of default playlist 'all' into QListWidget
     */
 
     void IfgetStringFromUserClosed();//-----------------------------------------1
-    void IfgetStringWithSelectedPlaylistClosed();//-----------------------------2
-    void IfgetAddedTracksFromWidgetClosed();//----------------------------------3
+    void IfgetStringFromUserToRenameClosed();//---------------------------------2
+    void IfgetStringWithSelectedPlaylistClosed();//-----------------------------3
+    void IfgetAddedTracksFromWidgetClosed();//----------------------------------4
     QStringList GetNamesOfPlaylistsFromBinDir();//------------------------------5
     void CallWidgetAfterCreatePlaylistSlot();//---------------------------------6
     void WriteDefaultPlayList(); //---------------------------------------------7
@@ -261,28 +318,27 @@ private:
     //UI--------------------------------------------------------------
     //track status (maybe bit rank)
     QSlider *sliderOfTrack = nullptr;
+    QLabel *nameOfTrack = nullptr;
 
     //right side (working with app)
     QSpacerItem *spacer = nullptr;
     QPixmap *ownImage = nullptr;
     QSlider *sliderOfVolume = nullptr;
     QLabel *imageOfPlayList = nullptr;
-    QComboBox *sortBy = nullptr;
 
     //lists of playlists and musiclists
-    QListWidget *playLists = nullptr;
-    QListWidget *musicList = nullptr;
+    CustomListWidget *playLists = nullptr;
+    CustomListWidget *musicList = nullptr;
+    QList<QString> currentIndexesOfTracks = {};
+    QList<QString> previousIndexesOfTracks = {};
+    int pressedItem = -1;
 
     //player
-    QPushButton *playTrack = nullptr;
-    QPushButton *pauseTrack = nullptr;
+    QPushButton *pausePlayTrack = nullptr;
     QPushButton *stopTrack = nullptr;
     QPushButton *nextTrack = nullptr;
     QPushButton *previousTrack = nullptr;
-
-    //add music buttons
-    QPushButton *buttonForAddMusicWithDel = nullptr;
-    QPushButton *buttonForAddMusicOnlyCopy = nullptr;
+    QPushButton *playbackMode = nullptr;
     //UI--------------------------------------------------------------
 
     //TOOLS-----------------------------------------------------------
@@ -293,18 +349,50 @@ private:
     QDir *cd = nullptr;
     //TOOLS-----------------------------------------------------------
 
+    //Shortcuts-------------------------------------------------------
+    /*
+     * Shortcuts for tracks
+        1) delete track Ctrl + D
+        2) rename track Ctrl + R
+
+     * Shortcuts for playlists
+        1) previuse track A
+        2) play or pause S
+        3) next track D
+
+      * Shortcuts for window of app
+        1) Full Window Shift + F
+        2) Quit Window Shift + Q
+        3) Hide Window Shift + H
+    */
+
+    QShortcut *ctrlD = nullptr;
+    QShortcut *ctrlR = nullptr;
+
+    QShortcut *A = nullptr;
+    QShortcut *S = nullptr;
+    QShortcut *D = nullptr;
+
+    QShortcut *shiftF = nullptr;
+    QShortcut *shiftQ = nullptr;
+    QShortcut *shiftH = nullptr;
+    //Shortcuts-------------------------------------------------------
+
 
     //Own Objects-----------------------------------------------------
 
     /*
         1) UI own widgets
         2) Managers
+        3) System
     */
 private:
     // UI own widgets ----------------------------------------------- 1
     //ui widgets
     AddMusicWidget *getAddedTracksFromWidget = nullptr;
-    GetStringWidget *getStringFromUser = nullptr;
+    GetStringWidget *getStringFromUserToCreateNewPlaylist = nullptr;
+    GetStringWidget *getStringFromUserToRenamePlaylist = nullptr;
+    GetStringWidget *getStringFromUserToRenameTrack = nullptr;
     SelectPlaylist *getStringWithSelectedPlaylist = nullptr;
     // UI own widgets ----------------------------------------------- 1
 
@@ -313,6 +401,10 @@ private:
     Playlist *playlistmanager = nullptr;
     Player *playermanager = nullptr;
     // Managers ----------------------------------------------------- 2
+
+    // System ------------------------------------------------------- 3
+    System *sysmanager = nullptr;
+    // System ------------------------------------------------------- 3
     //Own Objects-----------------------------------------------------
 
 

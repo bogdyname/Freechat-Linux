@@ -6,22 +6,24 @@
 
 #include "ui/ocean.h"
 #include <QApplication>
-#include <QTextCodec>
+#include <QThread>
 #include <QFile>
+
+//check alloc memory in system
 
 int main(int argc, char *argv[])
 {
-    QTextCodec::setCodecForLocale(QTextCodec::codecForName("utf-8"));
-
     QApplication app(argc, argv);
 
-    QFile *file = new QFile(":/style.css");
-    file->QFile::open(QFile::ReadOnly);
-    app.QApplication::setStyleSheet(file->QFile::readAll());
+    //Default style of app
+    QFile *file = new QFile(":/vampire_theme.css");
 
+    if(file->open(QFile::ReadOnly))
+        app.setStyleSheet(file->readAll());
+
+    //MainWindow (all UI)
     Ocean window;
-
-    window.QWidget::show();
+    window.show();
 
     return app.QApplication::exec();
 }
