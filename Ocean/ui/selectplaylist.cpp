@@ -12,6 +12,7 @@ SelectPlaylist::SelectPlaylist(QWidget *parent)
 {
     ui->setupUi(this);
     this->setWindowFlags(Qt::FramelessWindowHint);
+    this->hide();
 
     try
     {

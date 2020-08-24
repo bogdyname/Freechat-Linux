@@ -621,11 +621,15 @@ void Ocean::EraseAllItemsFromMusicList()
             playermanager->stop();
             emit playlistmanager->CallOutRemoveAllTracksFromCurrentPlayList();
             emit this->CallOutPassNamesOfSongsToMusicList(playlistmanager->GetSongsFromCurrentPlayList(item->text()));
+            //remove from buffer 'allSongs'
+            emit playlistmanager->CallOutClearAllSongs();
         }
         else
         {
             emit playlistmanager->CallOutRemoveAllTracksFromPlayListByName(item->text());
             emit this->CallOutPassNamesOfSongsToMusicList(playlistmanager->GetSongsFromCurrentPlayList(item->text()));
+            //remove from buffer 'allSongs'
+            emit playlistmanager->CallOutClearAllSongs();
         }
 
         item = nullptr;
@@ -655,12 +659,16 @@ void Ocean::EraseItemFromMusicList()
                 //remove from current playlist
                 emit playlistmanager->CallOutRemoveTrackFromCurrentPlayListByIndex(musicList->currentRow());
                 emit this->CallOutPassNamesOfSongsToMusicList(playlistmanager->GetSongsFromCurrentPlayList(playlistmanager->GetCurrentPlayListName()));
+                //remove from buffer 'allSongs'
+                emit playlistmanager->CallOutClearOneSong(musicList->currentRow());
             }
             else
             {
                 //remove from other playlist
                 emit playlistmanager->CallOutRemoveTrackFromPlayListByIndex(musicList->currentRow(), playlistIter->text());
                 emit this->CallOutPassNamesOfSongsToMusicList(playlistmanager->GetSongsFromCurrentPlayList(playlistIter->text()));
+                //remove from buffer 'allSongs'
+                emit playlistmanager->CallOutClearOneSong(musicList->currentRow());
             }
         }
     }
@@ -715,6 +723,10 @@ void Ocean::ClosegetStringFromUserToRenameTrackViaCancel()
 
 void Ocean::ParseMusicList(const QString &name)
 {
+    //check default playlist
+    if(name == "all")
+        return;
+
     //selected item of music list
     for (unsigned short int iter = 0; iter < musicList->selectedItems().size(); ++iter)
     {
