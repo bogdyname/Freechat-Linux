@@ -24,5 +24,5 @@ Client::Client()
 
 Client::~Client()
 {
-
+    qDebug() << "Destructor from client.cpp";
 }

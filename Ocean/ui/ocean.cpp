@@ -34,18 +34,14 @@ Ocean::Ocean(QWidget *parent)
         playbackMode = new QPushButton(this);
 
         //Tools for widgets
-        timerForCheckWidgets = new QTimer();
-        timerForCheckDefaultPlayList = new QTimer();
+        timerForCheckWidgets = new QTimer(this);
+        timerForCheckDefaultPlayList = new QTimer(this);
         cd = new QDir();
 
         //Shortcuts for tracks
         ctrlD = new QShortcut(this);
         ctrlR = new QShortcut(this);
         //Shortcuts for playlists
-        ctrlCP = new QShortcut(this);
-        ctrlDP = new QShortcut(this);
-        ctrlRP = new QShortcut(this);
-        ctrlEP = new QShortcut(this);
         A = new QShortcut(this);
         S = new QShortcut(this);
         D = new QShortcut(this);
@@ -62,9 +58,9 @@ Ocean::Ocean(QWidget *parent)
         getStringFromUserToRenameTrack = new GetStringWidget();
         getStringWithSelectedPlaylist = new SelectPlaylist();
         //managers
-        importManager = new ImportManager();
-        playlistmanager = new Playlist();
-        playermanager = new Player();
+        importManager = new ImportManager(this);
+        playlistmanager = new Playlist(this);
+        playermanager = new Player(this);
         //system
         sysmanager = new System();
     }
@@ -174,17 +170,13 @@ Ocean::Ocean(QWidget *parent)
     ctrlD->setKey(CTRL + Key_D);
     ctrlR->setKey(CTRL + Key_R);
     //Shortcuts for playlists
-    ctrlCP->setKey(CTRL + Key_P + Key_C);
-    ctrlDP->setKey(CTRL + Key_P + Key_D);
-    ctrlRP->setKey(CTRL + Key_P + Key_R);
-    ctrlEP->setKey(CTRL + Key_P + Key_E);
+    A->setKey(Key_A);
+    S->setKey(Key_S);
+    D->setKey(Key_D);
     //Shortcuts for window of app
     shiftF->setKey(SHIFT + Key_F);
     shiftQ->setKey(SHIFT + Key_Q);
     shiftH->setKey(SHIFT + Key_H);
-    A->setKey(Key_A);
-    S->setKey(Key_S);
-    D->setKey(Key_D);
     /*-------------------------------------------------Shortcut------------------------------------------------*/
 
     /*
@@ -244,17 +236,13 @@ Ocean::Ocean(QWidget *parent)
         11.1) Trigger delete track Ctrl + D
         11.2) Trigger rename track Ctrl + R
 
-        11.3) Trigger create playlist Ctrl + P + C
-        11.4) Trigger delete playlist Ctrl + P + D
-        11.5) Trigger rename playlist Ctrl + P + R
-        11.6) Trigger extract playlist Ctrl + P + E
-        11.7) Trigger previuse track A
-        11.8) Trigger play or pause S
-        11.9) Trigger next track D
+        11.3) Trigger previuse track A
+        11.4) Trigger play or pause S
+        11.5) Trigger next track D
 
-        11.10) Trigger Full Window Shift + F
-        11.11) Trigger Quit Window Shift + Q
-        11.12) Trigger Hide Window Shift + H
+        11.6) Trigger Full Window Shift + F
+        11.7) Trigger Quit Window Shift + Q
+        11.8) Trigger Hide Window Shift + H
     --------------------Shortcut----------------------
     */
 
@@ -314,11 +302,6 @@ Ocean::Ocean(QWidget *parent)
     connect(ctrlD, &QShortcut::activated, this, &Ocean::EraseItemFromMusicList);
     connect(ctrlR, &QShortcut::activated, this, &Ocean::RenameTrack);
 
-    connect(ctrlCP, &QShortcut::activated, this, &Ocean::CreatePlaylist);
-    connect(ctrlDP, &QShortcut::activated, this, &Ocean::EraseItemFromPlayList);
-    connect(ctrlRP, &QShortcut::activated, this, &Ocean::RenamePlaylist);
-    connect(ctrlEP, &QShortcut::activated, this, &Ocean::ExportTrackOfPlayList);
-
     connect(A, &QShortcut::activated, playlistmanager, &Playlist::SetPreviousTrack);
     connect(S, &QShortcut::activated, playermanager, &Player::SetPausePlayTrack);
     connect(D, &QShortcut::activated, playlistmanager, &Playlist::SetNextTrack);
@@ -335,8 +318,6 @@ Ocean::~Ocean()
     qDebug() << "Destructor from Ocean.cpp";
 
     //Tools
-    sysmanager->Free(timerForCheckWidgets);
-    sysmanager->Free(timerForCheckDefaultPlayList);
     sysmanager->Free(cd);
 
     //---------------------------------------------SYSTEM INFO
@@ -351,12 +332,6 @@ Ocean::~Ocean()
     if(sysmanager->PointerIsEmpty(cd))
         qDebug() << "3) cd empty!";
     //---------------------------------------------SYSTEM INFO
-
-    //Own classes
-    //managers
-    sysmanager->Free(importManager);
-    sysmanager->Free(playlistmanager);
-    sysmanager->Free(playermanager);
 
     //---------------------------------------------SYSTEM INFO
     qDebug() << "SYSTEM INFO about managers";
@@ -404,15 +379,6 @@ Ocean::~Ocean()
         qDebug() << "1) ownImage empty!";
 
     sysmanager->Free(spacer);
-    sysmanager->Free(imageOfPlayList);
-    sysmanager->Free(sliderOfTrack);
-    sysmanager->Free(sliderOfVolume);
-    sysmanager->Free(playLists);
-    sysmanager->Free(musicList);
-    sysmanager->Free(pausePlayTrack);
-    sysmanager->Free(stopTrack);
-    sysmanager->Free(nextTrack);
-    sysmanager->Free(previousTrack);
 
     if(sysmanager->PointerIsEmpty(spacer))
         qDebug() << "2) spacer empty!";
@@ -655,11 +621,15 @@ void Ocean::EraseAllItemsFromMusicList()
             playermanager->stop();
             emit playlistmanager->CallOutRemoveAllTracksFromCurrentPlayList();
             emit this->CallOutPassNamesOfSongsToMusicList(playlistmanager->GetSongsFromCurrentPlayList(item->text()));
+            //remove from buffer 'allSongs'
+            emit playlistmanager->CallOutClearAllSongs();
         }
         else
         {
             emit playlistmanager->CallOutRemoveAllTracksFromPlayListByName(item->text());
             emit this->CallOutPassNamesOfSongsToMusicList(playlistmanager->GetSongsFromCurrentPlayList(item->text()));
+            //remove from buffer 'allSongs'
+            emit playlistmanager->CallOutClearAllSongs();
         }
 
         item = nullptr;
@@ -689,12 +659,16 @@ void Ocean::EraseItemFromMusicList()
                 //remove from current playlist
                 emit playlistmanager->CallOutRemoveTrackFromCurrentPlayListByIndex(musicList->currentRow());
                 emit this->CallOutPassNamesOfSongsToMusicList(playlistmanager->GetSongsFromCurrentPlayList(playlistmanager->GetCurrentPlayListName()));
+                //remove from buffer 'allSongs'
+                emit playlistmanager->CallOutClearOneSong(musicList->currentRow());
             }
             else
             {
                 //remove from other playlist
                 emit playlistmanager->CallOutRemoveTrackFromPlayListByIndex(musicList->currentRow(), playlistIter->text());
                 emit this->CallOutPassNamesOfSongsToMusicList(playlistmanager->GetSongsFromCurrentPlayList(playlistIter->text()));
+                //remove from buffer 'allSongs'
+                emit playlistmanager->CallOutClearOneSong(musicList->currentRow());
             }
         }
     }
@@ -749,6 +723,10 @@ void Ocean::ClosegetStringFromUserToRenameTrackViaCancel()
 
 void Ocean::ParseMusicList(const QString &name)
 {
+    //check default playlist
+    if(name == "all")
+        return;
+
     //selected item of music list
     for (unsigned short int iter = 0; iter < musicList->selectedItems().size(); ++iter)
     {

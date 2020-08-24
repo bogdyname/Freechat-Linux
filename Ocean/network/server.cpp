@@ -7,7 +7,8 @@
 
 #include "server.h"
 
-Server::Server()
+Server::Server(QObject *parent)
+    : QTcpServer(parent)
 {
     try
     {
@@ -41,5 +42,5 @@ Server::Server()
 
 Server::~Server()
 {
-
+    qDebug() << "Destructor from server.cpp";
 }

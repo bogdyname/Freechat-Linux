@@ -9,7 +9,8 @@
 /*--------------------------------------------------------------------------------------------------------------------------------------------------*/
 /*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||MAIN|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
 /*--------------------------------------------------------------------------------------------------------------------------------------------------*/
-Playlist::Playlist()
+Playlist::Playlist(QObject *parent)
+    : QMediaPlaylist(parent)
 {
     try
     {
@@ -18,16 +19,12 @@ Playlist::Playlist()
     }
     catch(std::bad_alloc &exp)
     {
-        #ifndef Q_DEBUG
         qCritical() << "Exception caught: " << exp.std::bad_alloc::what();
-        #endif
         abort();
     }
     catch(...)
     {
-        #ifndef Q_DEBUG
         qCritical() << "Some exception caught";
-        #endif
         abort();
     }
 
@@ -104,6 +101,10 @@ Playlist::Playlist()
     connect(currentPlaylist, &QMediaPlaylist::currentIndexChanged, this, &Playlist::SetNameOfCurrentTrack);
     //Rename track
     connect(this, &Playlist::CallOutRenameTrackByIndex, this, &Playlist::RenameTrackByIndex);
+    //Clear all songs
+    connect(this, &Playlist::CallOutClearAllSongs, this, &Playlist::ClearAllSongs);
+    //Clear one song
+    connect(this, &Playlist::CallOutClearOneSong, this, &Playlist::ClearOneSong);
 
     return;
 }
@@ -366,6 +367,25 @@ void Playlist::RenameTrackByIndex(const int &index, const QString &playlist, con
     return;
 }
 /*--------------------------------------RENAME NAME OF TRACK--------------------------------*/
+
+/*-------------------------------------------CLEAR SONGS------------------------------------*/
+void Playlist::ClearAllSongs()
+{
+    //clear all buffer
+    allSongs.clear();
+
+    return;
+}
+
+void Playlist::ClearOneSong(const int &index)
+{
+    //clear track at index buffer
+    allSongs.removeAt(index);
+
+    return;
+}
+/*-------------------------------------------CLEAR SONGS------------------------------------*/
+
 /*--------------------------------------------------------------------------------------------------------------------------------------------------*/
 /*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||SLOTS PRIVATE||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
 /*--------------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -842,7 +862,7 @@ bool Playlist::AddSongsIntoCurrentPlayList(const QStringList &songs)
 /*--------------------------------------REMOVE METHODS--------------------------------------*/
 bool Playlist::RemoveTrackByIndex(const int &index)
 {
-    QFile *buffer = new QFile(QCoreApplication::applicationDirPath() + "/bin/all.m3u8");
+    QFile *buffer = new QFile(QCoreApplication::applicationDirPath() + "/bin/" + currentPlaylistName + ".m3u8");
     QTextStream stream(buffer);
     QString fullpathOfTrack = "";
 
@@ -862,6 +882,16 @@ bool Playlist::RemoveTrackByIndex(const int &index)
 
     if(currentPlaylist->removeMedia(index))
     {
+        //path of file with unicode
+        fullpathOfTrack.remove(0, 8);
+        //added '/' for UNIX (macOS/Linux)
+        fullpathOfTrack.push_front("/");
+
+        //check Windows paths
+        QString::const_iterator iterator = fullpathOfTrack.begin() + 2;
+        if(*iterator == ":")
+            fullpathOfTrack.remove(0, 1);
+
         //remove track from app by index
         cd->remove(fullpathOfTrack);
 

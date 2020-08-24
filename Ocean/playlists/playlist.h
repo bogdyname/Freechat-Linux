@@ -32,7 +32,7 @@ class Playlist : public QMediaPlaylist
     */
 
 public:
-    Playlist();
+    Playlist(QObject *parent = nullptr);
     ~Playlist();
 
 /****************************************************************************************************************************************/
@@ -99,6 +99,10 @@ signals:
     void CallOutSetImageOfCurrentPlaybackMode(const int &counter);
     /*------------------------------------Rename name of track------------------------------*/
     void CallOutRenameTrackByIndex(const int &index, const QString &playlist, const QString &newName);
+    /*---------------------------------------Clear all songs--------------------------------*/
+    void CallOutClearAllSongs();
+    /*---------------------------------------Clear one song---------------------------------*/
+    void CallOutClearOneSong(const int &index);
     /*-------------------------------------------------------SIGNALS-------------------------------------------------------*/
 
 
@@ -132,6 +136,10 @@ private slots:
     void SetNameOfCurrentTrack(int index);
     /*------------------------------------Rename name of track------------------------------*/
     void RenameTrackByIndex(const int &index, const QString &playlist, const QString &newName);
+    /*---------------------------------------Clear all songs--------------------------------*/
+    void ClearAllSongs();
+    /*---------------------------------------Clear one song---------------------------------*/
+    void ClearOneSong(const int &index);
     /*--------------------------------------------------------SLOTS--------------------------------------------------------*/
 
     /*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
