@@ -22,17 +22,13 @@ SelectPlaylist::SelectPlaylist(QWidget *parent)
     }
     catch(std::bad_alloc &exp)
     {
-        #ifndef Q_DEBUG
         qCritical() << "Exception caught: " << exp.std::bad_alloc::what();
-        #endif
-        abort();
+        exit(1);
     }
     catch(...)
     {
-        #ifndef Q_DEBUG
         qCritical() << "Some exception caught";
-        #endif
-        abort();
+        exit(1);
     }
 
     selectedName  = "";

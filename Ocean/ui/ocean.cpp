@@ -66,17 +66,13 @@ Ocean::Ocean(QWidget *parent)
     }
     catch(std::bad_alloc &exp)
     {
-        #ifndef Q_DEBUG
         qCritical() << "Exception caught: " << exp.std::bad_alloc::what();
-        #endif
-        abort();
+        exit(1);
     }
     catch(...)
     {
-        #ifndef Q_DEBUG
         qCritical() << "Some exception caught";
-        #endif
-        abort();
+        exit(1);
     }
 
     /*--------------------------------------------------UI--------------------------------------------------*/
@@ -332,20 +328,6 @@ Ocean::~Ocean()
     if(sysmanager->PointerIsEmpty(cd))
         qDebug() << "3) cd empty!";
     //---------------------------------------------SYSTEM INFO
-
-    //---------------------------------------------SYSTEM INFO
-    qDebug() << "SYSTEM INFO about managers";
-
-    if(sysmanager->PointerIsEmpty(importManager))
-        qDebug() << "1) importManager empty!";
-
-    if(sysmanager->PointerIsEmpty(playlistmanager))
-        qDebug() << "2) playlistmanager empty!";
-
-    if(sysmanager->PointerIsEmpty(playermanager))
-        qDebug() << "3) playermanager empty!";
-    //---------------------------------------------SYSTEM INFO
-
     //widgets
     sysmanager->Free(getAddedTracksFromWidget);
     sysmanager->Free(getStringFromUserToCreateNewPlaylist);
