@@ -18,18 +18,28 @@ Player::Player(QObject *parent)
     catch(std::bad_alloc &exp)
     {
         qCritical() << "Exception caught: " << exp.std::bad_alloc::what();
-        abort();
+        exit(1);
     }
     catch(...)
     {
         qCritical() << "Some exception caught";
-        abort();
+        exit(1);
     }
 
     player->setNotifyInterval(500);
 
+    //player data
     connect(this, &QMediaPlayer::positionChanged, this, &Player::ChangedPosition);
+
+    //catch error
     connect(this, static_cast<void(QMediaPlayer::*)(QMediaPlayer::Error )>(&QMediaPlayer::error), this, &Player::MediaError);
+    //signals of error
+    connect(this, &Player::CallOutNoError, this, &Player::NoError);
+    connect(this, &Player::CallOutResourceError, this, &Player::ResourceError);
+    connect(this, &Player::CallOutFormatError, this, &Player::FormatError);
+    connect(this, &Player::CallOutNetworkError, this, &Player::NetworkError);
+    connect(this, &Player::CallOutAccessDeniedError, this, &Player::AccessDeniedError);
+    connect(this, &Player::CallOutServiceMissingError, this, &Player::ServiceMissingError);
 
     return;
 }
@@ -37,6 +47,43 @@ Player::Player(QObject *parent)
 Player::~Player()
 {
     qDebug() << "Destructor from Player.cpp";
+}
+
+//Private slots
+void Player::NoError(QMediaPlayer::Error errorStatus)
+{
+
+    return;
+}
+
+void Player::ResourceError(QMediaPlayer::Error errorStatus)
+{
+
+    return;
+}
+
+void Player::FormatError(QMediaPlayer::Error errorStatus)
+{
+
+    return;
+}
+
+void Player::NetworkError(QMediaPlayer::Error errorStatus)
+{
+
+    return;
+}
+
+void Player::AccessDeniedError(QMediaPlayer::Error errorStatus)
+{
+
+    return;
+}
+
+void Player::ServiceMissingError(QMediaPlayer::Error errorStatus)
+{
+
+    return;
 }
 
 //Public slots
@@ -97,16 +144,19 @@ void Player::ChangedPosition(qint64 position)
     return;
 }
 
-void Player::MediaError(QMediaPlayer::Error)
+void Player::MediaError(QMediaPlayer::Error error)
 {
-    //check it out
-
-    emit this->CallOutNoError();
-    emit this->CallOutResourceError();
-    emit this->CallOutFormatError();
-    emit this->CallOutNetworkError();
-    emit this->CallOutAccessDeniedError();
-    emit this->CallOutServiceMissingError();
+    //error catch
+    switch(error)
+    {
+        case QMediaPlayer::NoError: emit this->CallOutNoError(error); break;
+        case QMediaPlayer::ResourceError: emit this->CallOutResourceError(error); break;
+        case QMediaPlayer::FormatError: emit this->CallOutFormatError(error); break;
+        case QMediaPlayer::NetworkError: emit this->CallOutNetworkError(error); break;
+        case QMediaPlayer::AccessDeniedError: emit this->CallOutAccessDeniedError(error); break;
+        case QMediaPlayer::ServiceMissingError: emit this->CallOutServiceMissingError(error); break;
+        default: break;
+    }
 
     return;
 }

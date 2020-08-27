@@ -9,12 +9,12 @@ Client::Client()
     catch(std::bad_alloc &exp)
     {
         qCritical() << "Exception caught: " << exp.std::bad_alloc::what();
-        abort();
+        exit(1);
     }
     catch(...)
     {
         qCritical() << "Some exception caught";
-        abort();
+        exit(1);
     }
 
     qDebug() << "A new socket created.";
