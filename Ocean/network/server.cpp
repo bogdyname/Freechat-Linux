@@ -43,4 +43,6 @@ Server::Server(QObject *parent)
 Server::~Server()
 {
     qDebug() << "Destructor from server.cpp";
+
+    return;
 }

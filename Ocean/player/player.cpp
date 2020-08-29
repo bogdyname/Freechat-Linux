@@ -100,7 +100,6 @@ void Player::SetPausePlayTrack()
         {
             this->play();
             emit this->CallOutSetImagePuasePlayTrack(0);
-            qDebug() << 0 ;
         }
         break;
 
@@ -109,7 +108,6 @@ void Player::SetPausePlayTrack()
         {
             this->pause();
             emit this->CallOutSetImagePuasePlayTrack(1);
-            qDebug() << 1 ;
         }
         break;
     }
