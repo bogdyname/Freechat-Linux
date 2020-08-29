@@ -172,10 +172,17 @@ void Playlist::RenameCurrentPlayList(const QString &newName, QMediaPlaylist *cur
     if(newName == "")
         return;
 
-    if(RenamePlayList(newName, currentPlaylist))
+    try
+    {
+        this->RenamePlayList(newName, currentPlaylist);
         qDebug() << "playlist successed renamed with new name: " << newName;
-    else
+    }
+    catch(...)
+    {
         qCritical() << "error: can't rename playlist " << newName;
+    }
+
+    return;
 }
 
 void Playlist::RenameSelectedPlayList(const QString &newName, const QString &currentName)
@@ -183,14 +190,17 @@ void Playlist::RenameSelectedPlayList(const QString &newName, const QString &cur
     if((newName == "") && (currentName == ""))
         return;
 
-    if(RenamePlayList(newName, currentName))
+    try
     {
+        this->RenamePlayList(newName, currentName);
         qDebug() << "Playlist current name: " << currentName;
         qDebug() << "Playlist new name: " << newName;
         qDebug() << "playlist successed renamed";
     }
-    else
+    catch(...)
+    {
         qCritical() << "error: can't rename playlist";
+    }
 
     return;
 }
@@ -214,10 +224,15 @@ void Playlist::CreateNewPlayList(const QString &name, const QStringList &tracks)
     if(name == "")
         return;
 
-    if(CreatePlayList(name, tracks))
+    try
+    {
+        this->CreatePlayList(name, tracks);
         qDebug() << "play list successed created! " + name;
-    else
+    }
+    catch(...)
+    {
         qCritical() << "error create play list! " + name;
+    }
 
     return;
 }
@@ -230,10 +245,15 @@ void Playlist::RemovePlayListByName(const QString &name)
     if(name == "")
         return;
 
-    if(RemovePlayList(name))
+    try
+    {
+        this->RemovePlayList(name);
         qDebug() << "playlist successed removed: " << name;
-    else
+    }
+    catch(...)
+    {
         qCritical() << "error: can't remove playlist " << name;
+    }
 
     return;
 }
@@ -243,10 +263,15 @@ void Playlist::RemovePlayListByName(const QString &name)
 /*--------------------------------------REMOVE METHODS--------------------------------------*/
 void Playlist::RemoveTrackFromCurrentPlayListByIndex(const int &indexOfTrack)
 {
-    if(RemoveTrackByIndex(indexOfTrack))
+    try
+    {
+        this->RemoveTrackByIndex(indexOfTrack);
         qDebug() << "track removed by index from current playlist: " << indexOfTrack;
-    else
+    }
+    catch(...)
+    {
         qCritical() << "Error: can't remove track by index: " << indexOfTrack;
+    }
 
     return;
 }
