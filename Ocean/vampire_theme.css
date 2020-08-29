@@ -9,7 +9,7 @@ QWidget
 
 QListWidget
 {
-    border: 1.5px;
+    border: 1px;
     border-color: #F4003D;
     color: #F4003D;
     border-style: solid;
