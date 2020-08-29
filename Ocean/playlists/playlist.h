@@ -24,7 +24,7 @@
 class Playlist : public QMediaPlaylist
 {
     Q_OBJECT
-    Q_CLASSINFO("Version", "1.0")
+    Q_CLASSINFO("Version", "0.8")
 
     /*
      * Format of playlists = .m3u8

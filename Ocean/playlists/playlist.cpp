@@ -175,7 +175,11 @@ void Playlist::RenameCurrentPlayList(const QString &newName, QMediaPlaylist *cur
     try
     {
         this->RenamePlayList(newName, currentPlaylist);
-        qDebug() << "playlist successed renamed with new name: " << newName;
+        qDebug() << "current playlist successed renamed with new name: " << newName;
+    }
+    catch(const QString &error)
+    {
+        qDebug() << error;
     }
     catch(...)
     {
@@ -196,6 +200,10 @@ void Playlist::RenameSelectedPlayList(const QString &newName, const QString &cur
         qDebug() << "Playlist current name: " << currentName;
         qDebug() << "Playlist new name: " << newName;
         qDebug() << "playlist successed renamed";
+    }
+    catch(const QString &error)
+    {
+        qDebug() << error;
     }
     catch(...)
     {
@@ -760,20 +768,38 @@ bool Playlist::SavePlaylist(const QString &name)
 bool Playlist::RenamePlayList(const QString &newName, QMediaPlaylist *currentPlaylist)
 {
     if(newName == "")
+    {
+        //exception
+        const QString error("new name of playlist is empty");
+        throw error;
+
         return false;
+    }
 
     cd->setCurrent(QCoreApplication::applicationDirPath());
 
     if(currentPlaylist->save(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/" + newName + ".m3u8"), "m3u8"))
         return true;
     else
+    {
+        //exception
+        const QString error("can't save playlist");
+        throw error;
+
         return false;
+    }
 }
 
 bool Playlist::RenamePlayList(const QString &newName, const QString &currentName)
 {
-    if((newName == "") && (currentName == ""))
+    if((newName == "") || (currentName == ""))
+    {
+        //exception
+        const QString error("new name or current name of playlist is empty");
+        throw error;
+
         return false;
+    }
 
     cd->setCurrent(QCoreApplication::applicationDirPath());
 
@@ -787,6 +813,10 @@ bool Playlist::RenamePlayList(const QString &newName, const QString &currentName
     }
     else
     {
+        //exception
+        const QString error("can't save playlist");
+        throw error;
+
         delete bufferPlaylist;
         return false;
     }
