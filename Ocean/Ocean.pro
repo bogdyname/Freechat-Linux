@@ -13,6 +13,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     customWidgets/customlistwidget.cpp \
+    customWidgets/slider.cpp \
     imports/importmanager.cpp \
     main.cpp \
     network/client.cpp \
@@ -28,6 +29,7 @@ SOURCES += \
 
 HEADERS += \
     customWidgets/customlistwidget.h \
+    customWidgets/slider.h \
     imports/importmanager.h \
     network/client.h \
     network/networkmanager.h \

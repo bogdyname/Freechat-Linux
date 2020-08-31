@@ -13,7 +13,6 @@
 #include <QLabel>
 #include <QPixmap>
 #include <QWidget>
-#include <QSlider>
 #include <QShortcut>
 #include <QLineEdit>
 #include <QComboBox>
@@ -39,6 +38,7 @@
 
 //custom widgets
 #include "customWidgets/customlistwidget.h"
+#include "customWidgets/slider.h"
 
 //managers
 #include "imports/importmanager.h"

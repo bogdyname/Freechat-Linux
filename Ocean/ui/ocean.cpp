@@ -23,8 +23,8 @@ Ocean::Ocean(QWidget *parent)
         ownImage = new QPixmap();
         imageOfPlayList = new QLabel(this);
         nameOfTrack = new QLabel(this);
-        sliderOfTrack = new QSlider(Qt::Horizontal, this);
-        sliderOfVolume = new QSlider(Qt::Horizontal, this);
+        sliderOfTrack = new Slider(this);
+        sliderOfVolume = new Slider(this);
         playLists = new CustomListWidget(this);
         musicList = new CustomListWidget(this);
         pausePlayTrack = new QPushButton(this);
@@ -79,6 +79,7 @@ Ocean::Ocean(QWidget *parent)
     //UpSide
     //Player
     ui->playSlider->addWidget(nameOfTrack);
+    nameOfTrack->setObjectName("nameOfTrack");
     ui->playSlider->addWidget(sliderOfTrack);
     ui->playSlider->setAlignment(nameOfTrack, AlignJustify);
 
@@ -101,14 +102,14 @@ Ocean::Ocean(QWidget *parent)
 
     //Main window  
     this->setMinimumSize(350, 350);
-    this->resize(600, 450);
+    this->resize(1200, 850);
 
     //Lists
     playLists->setMaximumWidth(250);
     musicList->setMaximumWidth(1500);
 
     //Slider of volume
-    sliderOfVolume->setFixedSize(272, 17);
+    sliderOfVolume->setFixedSize(250, 17);
     //Slider of track
     sliderOfTrack->setMinimumWidth(225);
 
@@ -122,6 +123,8 @@ Ocean::Ocean(QWidget *parent)
 
 
     //Image of playlist
+    imageOfPlayList->setScaledContents(true);
+    imageOfPlayList->setFixedSize(250, 270);
     imageOfPlayList->setPixmap(*imageTTS);
     imageOfPlayList->setAlignment(AlignTop);
     imageOfPlayList->setObjectName("playlistImage");
