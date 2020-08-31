@@ -601,6 +601,22 @@ void Ocean::EraseAllItemsFromMusicList()
     {
         QListWidgetItem *item = playLists->item(playLists->currentRow());
 
+        //return if item empty
+        if(item->text() == "")
+            return;
+
+        //for 'all' playlist
+        if(item->text() == "all")
+        {
+            emit playlistmanager->CallOutRemoveAllTracksFromPlayListByName(item->text());
+            emit this->CallOutPassNamesOfSongsToMusicList(playlistmanager->GetSongsFromCurrentPlayList(item->text()));
+            //remove from buffer 'allSongs'
+            emit playlistmanager->CallOutClearAllSongs();
+
+            return;
+        }
+
+        //for other playlist
         if(item->text() == playlistmanager->GetCurrentPlayListName())
         {
             playermanager->stop();
@@ -616,8 +632,6 @@ void Ocean::EraseAllItemsFromMusicList()
             //remove from buffer 'allSongs'
             emit playlistmanager->CallOutClearAllSongs();
         }
-
-        item = nullptr;
     }
 
     return;
@@ -639,6 +653,19 @@ void Ocean::EraseItemFromMusicList()
         {
             QListWidgetItem *playlistIter = playLists->item(playLists->currentRow());
 
+            //for 'all' playlist
+            if(item->text() == "all")
+            {
+                //remove from other playlist
+                emit playlistmanager->CallOutRemoveTrackFromPlayListByIndex(musicList->currentRow(), playlistIter->text());
+                emit this->CallOutPassNamesOfSongsToMusicList(playlistmanager->GetSongsFromCurrentPlayList(playlistIter->text()));
+                //remove from buffer 'allSongs'
+                emit playlistmanager->CallOutClearOneSong(musicList->currentRow());
+
+                return;
+            }
+
+            //for other playlist
             if(playlistIter->text() == playlistmanager->GetCurrentPlayListName())
             {
                 //remove from current playlist
