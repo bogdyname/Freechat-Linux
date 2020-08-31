@@ -289,10 +289,30 @@ void Playlist::RemoveTrackFromPlayListByIndex(const int &indexOfTrack, const QSt
     if(name == "")
         return;
 
-    if(RemoveTrackByIndex(indexOfTrack, name))
-        qDebug() << "track removed by index from " << name <<  "playlist: " << indexOfTrack;
+    if(name != "all")
+    {
+        try
+        {
+            this->RemoveTrackByIndex(indexOfTrack, name);
+            qDebug() << "track removed by index from " << name <<  "playlist: " << indexOfTrack;
+        }
+        catch(...)
+        {
+            qCritical() << "Error: can't remove track by index: " << indexOfTrack << "from " << name;
+        }
+    }
     else
-        qCritical() << "Error: can't remove track by index: " << indexOfTrack << "from " << name;
+    {
+        try
+        {
+            this->RemoveTrackByIndexFromApp(indexOfTrack);
+            qDebug() << "track removed from app";
+        }
+        catch(...)
+        {
+
+        }
+    }
 
     return;
 }
@@ -309,10 +329,33 @@ void Playlist::RemoveAllTracksFromCurrentPlayList()
 
 void Playlist::RemoveAllTracksFromPlayListByName(const QString &name)
 {
-    if(RemoveAllTracks(name))
-        qDebug() << "all tracks removed from " << name;
+    if(name == "")
+        return;
+
+    if(name != "all")
+    {
+        try
+        {
+            this->RemoveAllTracks(name);
+            qDebug() << "all tracks removed from " << name;
+        }
+        catch(...)
+        {
+            qCritical() << "Error: can't remove tracks from " << name;
+        }
+    }
     else
-        qCritical() << "Error: can't remove tracks from " << name;
+    {
+        try
+        {
+            this->RemoveAllTracksFromApp();
+            qDebug() << "all tracks removed from app!";
+        }
+        catch(...)
+        {
+
+        }
+    }
 
     return;
 }
@@ -937,6 +980,40 @@ bool Playlist::RemoveTrackByIndex(const int &index)
 
     if(currentPlaylist->removeMedia(index))
     {
+        if(currentPlaylist->save(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/" + currentPlaylistName + ".m3u8"), "m3u8"))
+            return true;
+        else
+            return false;
+    }
+    else
+        return false;
+}
+
+bool Playlist::RemoveTrackByIndexFromApp(const int &index)
+{
+    QFile *buffer = new QFile(QCoreApplication::applicationDirPath() + "/bin/all.m3u8");
+    QMediaPlaylist *bufferAll = new QMediaPlaylist();
+    bufferAll->load(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/all.m3u8"), "m3u8");
+
+    QTextStream stream(buffer);
+    QString fullpathOfTrack = "";
+
+    if(buffer->open(QIODevice::ReadOnly))
+    {
+        // read specific line by index
+        for(int iterOfFile = 0; iterOfFile <= index; ++iterOfFile)
+            fullpathOfTrack = stream.readLine().trimmed();
+
+        delete buffer;
+    }
+    else
+    {
+        delete buffer;
+        return false;
+    }
+
+    if(bufferAll->removeMedia(index))
+    {
         //path of file with unicode
         fullpathOfTrack.remove(0, 8);
         //added '/' for UNIX (macOS/Linux)
@@ -948,15 +1025,18 @@ bool Playlist::RemoveTrackByIndex(const int &index)
             fullpathOfTrack.remove(0, 1);
 
         //remove track from app by index
-        cd->remove(fullpathOfTrack);
+        QFile removeTrack(fullpathOfTrack);
+        removeTrack.remove();
 
-        if(currentPlaylist->save(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/" + Playlist::currentPlaylistName + ".m3u8"), "m3u8"))
+        if(bufferAll->save(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/all.m3u8"), "m3u8"))
             return true;
         else
             return false;
     }
     else
         return false;
+
+    return 1;
 }
 
 bool Playlist::RemoveTrackByIndex(const int &index, const QString &name)
@@ -988,12 +1068,6 @@ bool Playlist::RemoveAllTracks()
 {
     if(currentPlaylist->clear())
     {
-        //delete all tracks from app
-        for(const QString &iter : Playlist::allSongs)
-            cd->remove(QCoreApplication::applicationDirPath() + "/music/" + iter);
-
-        cd->setCurrent(QCoreApplication::applicationDirPath()); // set default path
-
         if(currentPlaylist->save(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/" + currentPlaylistName + ".m3u8"), "m3u8"))
             return true;
         else
@@ -1001,6 +1075,29 @@ bool Playlist::RemoveAllTracks()
     }
     else
         return false;
+}
+
+bool Playlist::RemoveAllTracksFromApp()
+{
+    QMediaPlaylist *buffer = new QMediaPlaylist();
+    buffer->load(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/all.m3u8"), "m3u8");
+
+    buffer->clear();
+
+    //delete all tracks from app
+    for(const QString &iter : allSongs)
+        cd->remove(QCoreApplication::applicationDirPath() + "/music/" + iter);
+
+    if(buffer->save(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/all.m3u8"), "m3u8"))
+    {
+        delete buffer;
+        return true;
+    }
+    else
+    {
+        delete buffer;
+        return false;
+    }
 }
 
 bool Playlist::RemoveAllTracks(const QString &name)
