@@ -9,7 +9,8 @@
 /*--------------------------------------------------------------------------------------------------------------------------------------------------*/
 /*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||MAIN|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
 /*--------------------------------------------------------------------------------------------------------------------------------------------------*/
-Playlist::Playlist()
+Playlist::Playlist(QObject *parent)
+    : QMediaPlaylist(parent)
 {
     try
     {
@@ -18,17 +19,13 @@ Playlist::Playlist()
     }
     catch(std::bad_alloc &exp)
     {
-        #ifndef Q_DEBUG
         qCritical() << "Exception caught: " << exp.std::bad_alloc::what();
-        #endif
-        abort();
+        exit(1);
     }
     catch(...)
     {
-        #ifndef Q_DEBUG
         qCritical() << "Some exception caught";
-        #endif
-        abort();
+        exit(1);
     }
 
     this->CheckDefaultPlayList();
@@ -75,8 +72,6 @@ Playlist::Playlist()
        7.2) move track to &index by index from playlist by name
      * Rename track -------------------
        8.1) rename track by index
-     * Copy track ---------------------
-       9.1) copy track by index
     */
     //Save
     connect(this, &Playlist::CallOutSaveCurrentPlayList, this, &Playlist::SaveCurrentPlayList);
@@ -106,8 +101,10 @@ Playlist::Playlist()
     connect(currentPlaylist, &QMediaPlaylist::currentIndexChanged, this, &Playlist::SetNameOfCurrentTrack);
     //Rename track
     connect(this, &Playlist::CallOutRenameTrackByIndex, this, &Playlist::RenameTrackByIndex);
-    //Copy track
-    connect(this, &Playlist::CallOutCopyTrackByIndex, this, &Playlist::CopyTrackByIndex);
+    //Clear all songs
+    connect(this, &Playlist::CallOutClearAllSongs, this, &Playlist::ClearAllSongs);
+    //Clear one song
+    connect(this, &Playlist::CallOutClearOneSong, this, &Playlist::ClearOneSong);
 
     return;
 }
@@ -175,10 +172,21 @@ void Playlist::RenameCurrentPlayList(const QString &newName, QMediaPlaylist *cur
     if(newName == "")
         return;
 
-    if(RenamePlayList(newName, currentPlaylist))
-        qDebug() << "playlist successed renamed with new name: " << newName;
-    else
+    try
+    {
+        this->RenamePlayList(newName, currentPlaylist);
+        qDebug() << "current playlist successed renamed with new name: " << newName;
+    }
+    catch(const QString &error)
+    {
+        qDebug() << error;
+    }
+    catch(...)
+    {
         qCritical() << "error: can't rename playlist " << newName;
+    }
+
+    return;
 }
 
 void Playlist::RenameSelectedPlayList(const QString &newName, const QString &currentName)
@@ -186,14 +194,21 @@ void Playlist::RenameSelectedPlayList(const QString &newName, const QString &cur
     if((newName == "") && (currentName == ""))
         return;
 
-    if(RenamePlayList(newName, currentName))
+    try
     {
+        this->RenamePlayList(newName, currentName);
         qDebug() << "Playlist current name: " << currentName;
         qDebug() << "Playlist new name: " << newName;
         qDebug() << "playlist successed renamed";
     }
-    else
+    catch(const QString &error)
+    {
+        qDebug() << error;
+    }
+    catch(...)
+    {
         qCritical() << "error: can't rename playlist";
+    }
 
     return;
 }
@@ -217,10 +232,15 @@ void Playlist::CreateNewPlayList(const QString &name, const QStringList &tracks)
     if(name == "")
         return;
 
-    if(CreatePlayList(name, tracks))
+    try
+    {
+        this->CreatePlayList(name, tracks);
         qDebug() << "play list successed created! " + name;
-    else
+    }
+    catch(...)
+    {
         qCritical() << "error create play list! " + name;
+    }
 
     return;
 }
@@ -233,10 +253,15 @@ void Playlist::RemovePlayListByName(const QString &name)
     if(name == "")
         return;
 
-    if(RemovePlayList(name))
+    try
+    {
+        this->RemovePlayList(name);
         qDebug() << "playlist successed removed: " << name;
-    else
+    }
+    catch(...)
+    {
         qCritical() << "error: can't remove playlist " << name;
+    }
 
     return;
 }
@@ -246,10 +271,15 @@ void Playlist::RemovePlayListByName(const QString &name)
 /*--------------------------------------REMOVE METHODS--------------------------------------*/
 void Playlist::RemoveTrackFromCurrentPlayListByIndex(const int &indexOfTrack)
 {
-    if(RemoveTrackByIndex(indexOfTrack))
+    try
+    {
+        this->RemoveTrackByIndex(indexOfTrack);
         qDebug() << "track removed by index from current playlist: " << indexOfTrack;
-    else
+    }
+    catch(...)
+    {
         qCritical() << "Error: can't remove track by index: " << indexOfTrack;
+    }
 
     return;
 }
@@ -371,20 +401,23 @@ void Playlist::RenameTrackByIndex(const int &index, const QString &playlist, con
 }
 /*--------------------------------------RENAME NAME OF TRACK--------------------------------*/
 
-/*-------------------------------------------COPY TRACK-------------------------------------*/
-void Playlist::CopyTrackByIndex(const int &index, const QString &playlist)
+/*-------------------------------------------CLEAR SONGS------------------------------------*/
+void Playlist::ClearAllSongs()
 {
-    if(playlist == "")
-        return;
-
-    if(CopyTrack(index, playlist))
-        qDebug() << "track have been copyed";
-    else
-        qCritical() << "error: can't copy track";
+    //clear all buffer
+    allSongs.clear();
 
     return;
 }
-/*-------------------------------------------COPY TRACK-------------------------------------*/
+
+void Playlist::ClearOneSong(const int &index)
+{
+    //clear track at index buffer
+    allSongs.removeAt(index);
+
+    return;
+}
+/*-------------------------------------------CLEAR SONGS------------------------------------*/
 
 /*--------------------------------------------------------------------------------------------------------------------------------------------------*/
 /*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||SLOTS PRIVATE||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
@@ -735,20 +768,38 @@ bool Playlist::SavePlaylist(const QString &name)
 bool Playlist::RenamePlayList(const QString &newName, QMediaPlaylist *currentPlaylist)
 {
     if(newName == "")
+    {
+        //exception
+        const QString error("new name of playlist is empty");
+        throw error;
+
         return false;
+    }
 
     cd->setCurrent(QCoreApplication::applicationDirPath());
 
     if(currentPlaylist->save(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/" + newName + ".m3u8"), "m3u8"))
         return true;
     else
+    {
+        //exception
+        const QString error("can't save playlist");
+        throw error;
+
         return false;
+    }
 }
 
 bool Playlist::RenamePlayList(const QString &newName, const QString &currentName)
 {
-    if((newName == "") && (currentName == ""))
+    if((newName == "") || (currentName == ""))
+    {
+        //exception
+        const QString error("new name or current name of playlist is empty");
+        throw error;
+
         return false;
+    }
 
     cd->setCurrent(QCoreApplication::applicationDirPath());
 
@@ -762,6 +813,10 @@ bool Playlist::RenamePlayList(const QString &newName, const QString &currentName
     }
     else
     {
+        //exception
+        const QString error("can't save playlist");
+        throw error;
+
         delete bufferPlaylist;
         return false;
     }
@@ -862,7 +917,7 @@ bool Playlist::AddSongsIntoCurrentPlayList(const QStringList &songs)
 /*--------------------------------------REMOVE METHODS--------------------------------------*/
 bool Playlist::RemoveTrackByIndex(const int &index)
 {
-    QFile *buffer = new QFile(QCoreApplication::applicationDirPath() + "/bin/all.m3u8");
+    QFile *buffer = new QFile(QCoreApplication::applicationDirPath() + "/bin/" + currentPlaylistName + ".m3u8");
     QTextStream stream(buffer);
     QString fullpathOfTrack = "";
 
@@ -882,6 +937,16 @@ bool Playlist::RemoveTrackByIndex(const int &index)
 
     if(currentPlaylist->removeMedia(index))
     {
+        //path of file with unicode
+        fullpathOfTrack.remove(0, 8);
+        //added '/' for UNIX (macOS/Linux)
+        fullpathOfTrack.push_front("/");
+
+        //check Windows paths
+        QString::const_iterator iterator = fullpathOfTrack.begin() + 2;
+        if(*iterator == ":")
+            fullpathOfTrack.remove(0, 1);
+
         //remove track from app by index
         cd->remove(fullpathOfTrack);
 
@@ -991,13 +1056,6 @@ bool Playlist::MoveSongInsidePlaylistByIndex(const int &currentIndex, const int 
 /*---------------------------------------MOVE METHODS---------------------------------------*/
 
 /*--------------------------------------RENAME NAME OF TRACK--------------------------------*/
-
-/*
-    Rework this method
-    Check all lines!
-    Working only after reboot app and only in 'all' playlist
-    in other playlists shows random chars
-*/
 bool Playlist::RenameTrack(const int &index, const QString &playlist, const QString &newName)
 {
     if(newName == "")
@@ -1040,7 +1098,7 @@ bool Playlist::RenameTrack(const int &index, const QString &playlist, const QStr
         //file with current name
         fileOfTrack->setFileName(QCoreApplication::applicationDirPath() + "/music/" + bufferOfName);
 
-        QString newNameOfTrack = QCoreApplication::applicationDirPath() + "/music/" + newName + ParseStringToGetFormat(bufferOfName);
+        newNameOfTrack = QCoreApplication::applicationDirPath() + "/music/" + newName + ParseStringToGetFormat(bufferOfName);
 
         //rename file
         fileOfTrack->rename(QCoreApplication::applicationDirPath() + "/music/" + bufferOfName, //current path
@@ -1056,9 +1114,6 @@ bool Playlist::RenameTrack(const int &index, const QString &playlist, const QStr
         delete fileOfTrack;
 
         //-----------------------------------------------------------------------------------------------Read data of path and rename it
-
-        qDebug() << "bufferOfName: " << bufferOfName;
-        qDebug() << "newNameOfTrack: " << newNameOfTrack;
     }
 
     //-----------------------------------------------------------------------------------------------Rename in current playlist
@@ -1073,8 +1128,6 @@ bool Playlist::RenameTrack(const int &index, const QString &playlist, const QStr
     {
         QFile fileOfPlaylist(QCoreApplication::applicationDirPath() + "/bin/" + currentPlaylist);
 
-        qDebug() << "currentPlaylist: " << QCoreApplication::applicationDirPath() + "/bin/" + currentPlaylist;
-
         if(fileOfPlaylist.open(QIODevice::ReadWrite))
         {
             QTextStream stream(&fileOfPlaylist);
@@ -1084,14 +1137,14 @@ bool Playlist::RenameTrack(const int &index, const QString &playlist, const QStr
             //refactore playlist file
             QStringList streamData;
             QString line = "";
-            QString pathBUffer = "";
+            QString pathBuffer = "";
 
             if(!OS)
                 //Windows
-                pathBUffer = "file:///" + QCoreApplication::applicationDirPath() + "/music/" + bufferOfName;
+                pathBuffer = "file:///" + QCoreApplication::applicationDirPath() + "/music/" + bufferOfName;
             else
                 //Unix
-                pathBUffer = "file://" + QCoreApplication::applicationDirPath() + "/music/" + bufferOfName;
+                pathBuffer = "file://" + QCoreApplication::applicationDirPath() + "/music/" + bufferOfName;
 
             //reset stream to start read from beginning
             stream.seek(0);
@@ -1100,22 +1153,19 @@ bool Playlist::RenameTrack(const int &index, const QString &playlist, const QStr
             {
                 line = stream.readLine(0).trimmed();
 
-                if(!(line == pathBUffer))
-                    streamData.append(line + "\n");
+                if(!(line == pathBuffer))
+                    streamData.push_back(line + "\n");
             }
 
             //write new name into file
-            streamData.append(newNameOfTrack + "\n");
+            streamData.push_back(newNameOfTrack + "\n");
 
             //clear playlist
             fileOfPlaylist.resize(0);
             //write buffer
             for(const QString &iter : streamData)
                 stream << iter;
-
             //-----------------------------------------------------------------------------------------------Write data into file after rename
-
-            qDebug() << "BUFFER: " << "file://" + QCoreApplication::applicationDirPath() + "/music/" + bufferOfName;
 
             fileOfPlaylist.close();
         }
@@ -1126,14 +1176,6 @@ bool Playlist::RenameTrack(const int &index, const QString &playlist, const QStr
     return true;
 }
 /*--------------------------------------RENAME NAME OF TRACK--------------------------------*/
-
-/*-------------------------------------------COPY TRACK-------------------------------------*/
-bool Playlist::CopyTrack(const int &index, const QString &playlist)
-{
-    return true;
-}
-/*-------------------------------------------COPY TRACK-------------------------------------*/
-
 /*--------------------------------------------------------------------------------------------------------------------------------------------------*/
 /*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||METHODS PRIVATE||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
 /*--------------------------------------------------------------------------------------------------------------------------------------------------*/

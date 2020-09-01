@@ -14,7 +14,7 @@ NetworkManager::NetworkManager()
 
 NetworkManager::~NetworkManager()
 {
-
+    qDebug() << "Destructor from networkmanager.cpp";
 }
 
 void NetworkManager::CallSynchronizationApp()

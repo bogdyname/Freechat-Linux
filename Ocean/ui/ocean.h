@@ -107,25 +107,12 @@ private slots:
     void PassNamesOfSongsToMusicList(const QStringList &songs);
     void AddFilesAfterDropEvent(const QStringList &files);
     void SetNameOfCurrentTrackFromPlaylist(const QString &name);
-    void MediaError(QMediaPlayer::Error);
     /*-------------------------------------Slots for MainWindow----------------------------------*/
 
     /*-------------------------------------------Shortcut----------------------------------------*/
 
 
     /*
-     * Shortcuts for tracks
-        1) copy track Ctrl + C
-        2) delete track Ctrl + D
-        3) rename track Ctrl + R
-        4) extract track Ctrl + E
-
-     * Shortcuts for playlists
-        1) create playlist Ctrl + C + P
-        2) delete playlist Ctrl + D + P
-        3) rename playlist Ctrl + R + P
-        4) extract playlist Ctrl + E + P
-
       * Shortcuts for window of app
         1) Full Window Shift + F
         2) Quit Window Shift + Q
@@ -133,16 +120,6 @@ private slots:
     */
 
 private slots:
-    //Shortcuts for tracks
-    void CopyViaCtrlC();
-    void DeleteViaCtrlD();
-    void RenameViaCtrlR();
-    void ExtractViaCtrlE();
-    //Shortcuts for playlists
-    void CreateViaCtrlCP();
-    void DeleteViaCtrlDP();
-    void RenameViaCtrlRP();
-    void ExtractViaCtrlEP();
     //Shortcuts for window of app
     void FullViaShiftF();
     void QuitViaShiftQ();
@@ -177,15 +154,20 @@ private slots:
         2) Delete one selected item
         3) Add song into playlist by name (pass data via SIGNAL of playlist manager)
         4) rename track (hot key or QMenu)
-        5) rename tracl emit signal
+        5) rename track emit signal
         6) check widget after close to rename track
     */
+    //delete all
     void EraseAllItemsFromMusicList();
+    //delete
     void EraseItemFromMusicList();
+    //add into playlist
     void AddSongIntoPlayListByIndex();
+    //rename
     void RenameTrack();
     void RenameTrackByNewName();
     void ClosegetStringFromUserToRenameTrackViaCancel();
+    //move track
     void ParseMusicList(const QString &name);
     void MoveTrack(QListWidgetItem *item);
     void SetPreviousIndexOfItem(QListWidgetItem *item);
@@ -370,19 +352,13 @@ private:
     //Shortcuts-------------------------------------------------------
     /*
      * Shortcuts for tracks
-        1) copy track Ctrl + C
-        2) delete track Ctrl + D
-        3) rename track Ctrl + R
-        4) extract track Ctrl + E
+        1) delete track Ctrl + D
+        2) rename track Ctrl + R
 
      * Shortcuts for playlists
-        1) create playlist Ctrl + C + P
-        2) delete playlist Ctrl + D + P
-        3) rename playlist Ctrl + R + P
-        4) extract playlist Ctrl + E + P
-        5) previuse track A
-        6) play or pause S
-        7) next track D
+        1) previuse track A
+        2) play or pause S
+        3) next track D
 
       * Shortcuts for window of app
         1) Full Window Shift + F
@@ -390,15 +366,9 @@ private:
         3) Hide Window Shift + H
     */
 
-    QShortcut *ctrlC = nullptr;
     QShortcut *ctrlD = nullptr;
     QShortcut *ctrlR = nullptr;
-    QShortcut *ctrlE = nullptr;
 
-    QShortcut *ctrlCP = nullptr;
-    QShortcut *ctrlDP = nullptr;
-    QShortcut *ctrlRP = nullptr;
-    QShortcut *ctrlEP = nullptr;
     QShortcut *A = nullptr;
     QShortcut *S = nullptr;
     QShortcut *D = nullptr;

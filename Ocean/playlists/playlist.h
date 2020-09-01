@@ -24,7 +24,7 @@
 class Playlist : public QMediaPlaylist
 {
     Q_OBJECT
-    Q_CLASSINFO("Version", "1.0")
+    Q_CLASSINFO("Version", "0.8")
 
     /*
      * Format of playlists = .m3u8
@@ -32,7 +32,7 @@ class Playlist : public QMediaPlaylist
     */
 
 public:
-    Playlist();
+    Playlist(QObject *parent = nullptr);
     ~Playlist();
 
 /****************************************************************************************************************************************/
@@ -99,8 +99,10 @@ signals:
     void CallOutSetImageOfCurrentPlaybackMode(const int &counter);
     /*------------------------------------Rename name of track------------------------------*/
     void CallOutRenameTrackByIndex(const int &index, const QString &playlist, const QString &newName);
-    /*------------------------------------------Copy track----------------------------------*/
-    void CallOutCopyTrackByIndex(const int &index, const QString &playlist);
+    /*---------------------------------------Clear all songs--------------------------------*/
+    void CallOutClearAllSongs();
+    /*---------------------------------------Clear one song---------------------------------*/
+    void CallOutClearOneSong(const int &index);
     /*-------------------------------------------------------SIGNALS-------------------------------------------------------*/
 
 
@@ -134,8 +136,10 @@ private slots:
     void SetNameOfCurrentTrack(int index);
     /*------------------------------------Rename name of track------------------------------*/
     void RenameTrackByIndex(const int &index, const QString &playlist, const QString &newName);
-    /*------------------------------------------Copy track----------------------------------*/
-    void CopyTrackByIndex(const int &index, const QString &playlist);
+    /*---------------------------------------Clear all songs--------------------------------*/
+    void ClearAllSongs();
+    /*---------------------------------------Clear one song---------------------------------*/
+    void ClearOneSong(const int &index);
     /*--------------------------------------------------------SLOTS--------------------------------------------------------*/
 
     /*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
@@ -235,8 +239,6 @@ public:
         18) move track inside playlist by index and name
         --rename track
         19) rename track by indexex
-        --copy track
-        20) copy track by index
     */
 private:
     bool CreatePlayList(const QString &name, const QStringList &list); //--------------------------------------------------------------------------------------------1) (DONE)
@@ -258,7 +260,6 @@ private:
     bool MoveSongInsidePlaylistByIndex(const int &currentIndex, const int &newIndex); //----------------------------------------------------------------------------17)
     bool MoveSongInsidePlaylistByIndex(const int &currentIndex, const int &newIndex, const QString &name); //-------------------------------------------------------18)
     bool RenameTrack(const int &index, const QString &playlist, const QString &newName); //-------------------------------------------------------------------------19)
-    bool CopyTrack(const int &index, const QString &playlist); //---------------------------------------------------------------------------------------------------20)
     /*----------------------------------------Methods to call it in Private SLOTS----------------------------------------*/
 
     /*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/

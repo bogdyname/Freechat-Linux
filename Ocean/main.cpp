@@ -4,10 +4,15 @@
 ***Contact: donvalentiy@yandex.ru
 */
 
-#include "ui/ocean.h"
 #include <QApplication>
 #include <QThread>
 #include <QFile>
+
+//own classes
+#include "network/networkmanager.h"
+#include "ui/ocean.h"
+
+//check alloc memory in system
 
 int main(int argc, char *argv[])
 {

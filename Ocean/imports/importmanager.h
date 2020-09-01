@@ -22,7 +22,7 @@ class ImportManager : public QFile
     Q_OBJECT
 
 public:
-    ImportManager();
+    ImportManager(QObject *parent = nullptr);
     ~ImportManager();
 
 signals:

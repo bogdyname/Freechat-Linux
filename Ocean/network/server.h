@@ -10,16 +10,33 @@
 
 #include <QTcpServer>
 #include <QTcpSocket>
+#include <QByteArray>
+#include <QDataStream>
 
 class Server : public QTcpServer
 {
     Q_OBJECT
+    Q_CLASSINFO("Version", "0.5")
 
 public:
-    Server();
+    explicit Server(QObject *parent = nullptr);
     ~Server();
 
+    /*
+        1) Read client data
+        2) Send response to client about receiving
+    */
+
+    /*--------------------------------------------------------SLOTS--------------------------------------------------------*/
+private slots:
+    void Receiver();
+    void Sender();
+    /*--------------------------------------------------------SLOTS--------------------------------------------------------*/
+
+
+
 private:
+    qint64 nextBlockSize;
     QTcpServer *server = nullptr;
     QTcpSocket *socket = nullptr;
 };
