@@ -254,6 +254,8 @@ Ocean::Ocean(QWidget *parent)
     //Player manager
     connect(pausePlayTrack, &QPushButton::clicked, playermanager, &Player::SetPausePlayTrack);
     connect(stopTrack, &QPushButton::clicked, playermanager, &QMediaPlayer::stop);
+    connect(sliderOfVolume, &QSlider::valueChanged, playermanager,&QMediaPlayer::setVolume);
+
     //Playlist manager
     connect(nextTrack, &QPushButton::clicked, playlistmanager, &Playlist::SetNextTrack);
     connect(previousTrack, &QPushButton::clicked, playlistmanager, &Playlist::SetPreviousTrack);
