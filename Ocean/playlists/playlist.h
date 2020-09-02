@@ -242,6 +242,7 @@ public:
         19) move track inside playlist by index
         20) move track inside playlist by index and name
         --rename track
+        19) rename track by indexex
         21) rename track by indexex
     */
 private:
