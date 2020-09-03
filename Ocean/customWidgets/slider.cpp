@@ -6,11 +6,11 @@
 
 #include "slider.h"
 
-Slider::Slider(QWidget *parent, QString objectName)
+Slider::Slider(QWidget *parent, int position)
     : QSlider(parent)
 {
     this->setOrientation(Qt::Horizontal);
-    this->setObjectName(objectName);
+    this->QAbstractSlider::setSliderPosition(position);
 
     return;
 }

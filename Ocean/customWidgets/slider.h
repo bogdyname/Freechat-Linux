@@ -19,7 +19,7 @@ class Slider : public QSlider
     Q_OBJECT
 
 public:
-    Slider(QWidget *parent = nullptr, QString objectName = " ");
+    Slider(QWidget *parent = nullptr, int position = 0);
 };
 
 #endif // SLIDER_H

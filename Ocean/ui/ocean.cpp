@@ -19,12 +19,13 @@ Ocean::Ocean(QWidget *parent)
     try
     {
         //Objects of UI
+        mode = new QComboBox(this);
         spacer = new QSpacerItem(200, 0);
         ownImage = new QPixmap();
         imageOfPlayList = new QLabel(this);
         nameOfTrack = new QLabel(this);
         sliderOfTrack = new Slider(this);
-        sliderOfVolume = new Slider(this);
+        sliderOfVolume = new Slider(this, 100);
         playLists = new CustomListWidget(this);
         musicList = new CustomListWidget(this);
         pausePlayTrack = new QPushButton(this);
@@ -78,6 +79,7 @@ Ocean::Ocean(QWidget *parent)
     /*--------------------------------------------------UI--------------------------------------------------*/
     //UpSide
     //Player
+    ui->playSlider->addWidget(mode);
     ui->playSlider->addWidget(nameOfTrack);
     nameOfTrack->setObjectName("nameOfTrack");
     ui->playSlider->addWidget(sliderOfTrack);
@@ -136,6 +138,10 @@ Ocean::Ocean(QWidget *parent)
     previousTrack->setText("Previous");
     nextTrack->setText("Next");
     pausePlayTrack->setText("Play");
+
+    //combobox
+    mode->addItem("MUSIC");
+    mode->setFixedSize(250, 30);
     /*--------------------------------------------------UI--------------------------------------------------*/
 
     /*--------------------------------------------------MANAGERS--------------------------------------------------*/
@@ -255,6 +261,7 @@ Ocean::Ocean(QWidget *parent)
     connect(pausePlayTrack, &QPushButton::clicked, playermanager, &Player::SetPausePlayTrack);
     connect(stopTrack, &QPushButton::clicked, playermanager, &QMediaPlayer::stop);
     connect(sliderOfVolume, &QSlider::valueChanged, playermanager,&QMediaPlayer::setVolume);
+    connect(sliderOfTrack, &QSlider::valueChanged, playermanager,&QMediaPlayer::setPosition);
 
     //Playlist manager
     connect(nextTrack, &QPushButton::clicked, playlistmanager, &Playlist::SetNextTrack);
