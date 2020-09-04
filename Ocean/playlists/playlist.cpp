@@ -237,6 +237,10 @@ void Playlist::CreateNewPlayList(const QString &name, const QStringList &tracks)
         this->CreatePlayList(name, tracks);
         qDebug() << "play list successed created! " + name;
     }
+    catch(const QString &error)
+    {
+        qDebug() << error;
+    }
     catch(...)
     {
         qCritical() << "error create play list! " + name;
@@ -258,6 +262,10 @@ void Playlist::RemovePlayListByName(const QString &name)
         this->RemovePlayList(name);
         qDebug() << "playlist successed removed: " << name;
     }
+    catch(const QString &error)
+    {
+        qDebug() << error;
+    }
     catch(...)
     {
         qCritical() << "error: can't remove playlist " << name;
@@ -275,6 +283,10 @@ void Playlist::RemoveTrackFromCurrentPlayListByIndex(const int &indexOfTrack)
     {
         this->RemoveTrackByIndex(indexOfTrack);
         qDebug() << "track removed by index from current playlist: " << indexOfTrack;
+    }
+    catch(const QString &error)
+    {
+        qDebug() << error;
     }
     catch(...)
     {
@@ -296,6 +308,10 @@ void Playlist::RemoveTrackFromPlayListByIndex(const int &indexOfTrack, const QSt
             this->RemoveTrackByIndex(indexOfTrack, name);
             qDebug() << "track removed by index from " << name <<  "playlist: " << indexOfTrack;
         }
+        catch(const QString &error)
+        {
+            qDebug() << error;
+        }
         catch(...)
         {
             qCritical() << "Error: can't remove track by index: " << indexOfTrack << "from " << name;
@@ -308,9 +324,13 @@ void Playlist::RemoveTrackFromPlayListByIndex(const int &indexOfTrack, const QSt
             this->RemoveTrackByIndexFromApp(indexOfTrack);
             qDebug() << "track removed from app";
         }
+        catch(const QString &error)
+        {
+            qDebug() << error;
+        }
         catch(...)
         {
-
+            qCritical() << "Error: can't remove track from app";
         }
     }
 
@@ -319,10 +339,15 @@ void Playlist::RemoveTrackFromPlayListByIndex(const int &indexOfTrack, const QSt
 
 void Playlist::RemoveAllTracksFromCurrentPlayList()
 {
-    if(RemoveAllTracks())
-        qDebug() << "all tracks removed";
-    else
-        qCritical() << "Error: can't remove tracks";
+    try
+    {
+        this->RemoveAllTracks();
+        qDebug() << "all tracks removed from current playlist";
+    }
+    catch(...)
+    {
+        qCritical() << "Error: can't remove tracks from current playlist";
+    }
 
     return;
 }
@@ -630,12 +655,14 @@ QStringList Playlist::GetSongsFromCurrentPlayList(const QString &nameOfPlayList)
     QFile file;
     file.setFileName(path);
 
-    qDebug() << path;
-
     if(file.exists())
     {
         if(!file.open(QFile::ReadOnly))
-            qCritical() << "error: can't open playlist";
+        {
+            //exception
+            const QString error("error: can't open playlist");
+            throw error;
+        }
         else
         {
             QTextStream stream(&file);
@@ -647,7 +674,11 @@ QStringList Playlist::GetSongsFromCurrentPlayList(const QString &nameOfPlayList)
         }
     }
     else
-        qCritical() << "error: file not exists";
+    {
+        //exception
+        const QString error("error: file not exists");
+        throw error;
+    }
 
     return songs;
 }
@@ -678,7 +709,13 @@ const QStringList Playlist::GetAllPlaylists()
 bool Playlist::CreatePlayList(const QString &name, const QStringList &list)
 {
     if((name == "") || (list.isEmpty()))
+    {
+        //exception
+        const QString error("error: name is empty");
+        throw error;
+
         return false;
+    }
 
     CheckSettingsDir();
     cd->setCurrent(QCoreApplication::applicationDirPath());
@@ -696,6 +733,11 @@ bool Playlist::CreatePlayList(const QString &name, const QStringList &list)
     else
     {
         delete bufferPlaylist;
+
+        //exception
+        const QString error("error: can't create playlist");
+        throw error;
+
         return false;
     }
 }
@@ -706,7 +748,13 @@ bool Playlist::CreatePlayList(const QString &name, const QStringList &list)
 bool Playlist::RemovePlayList(const QString &name)
 {
     if(name == "")
+    {
+        //exception
+        const QString error("error: name is empty");
+        throw error;
+
         return false;
+    }
 
     CheckSettingsDir();
 
@@ -715,7 +763,13 @@ bool Playlist::RemovePlayList(const QString &name)
     if(buffer.remove())
         return true;
     else
+    {
+        //exception
+        const QString error("error: can't remove playlist");
+        throw error;
+
         return false;
+    }
 }
 /*----------------------------------------DELETE METHODS--------------------------------------*/
 
@@ -724,7 +778,13 @@ bool Playlist::RemovePlayList(const QString &name)
 bool Playlist::LookingForPlayList(const QString &name, QMediaPlaylist *medialist)
 {
     if(name == "")
+    {
+        //exception
+        const QString error("error: name is empty");
+        throw error;
+
         return false;
+    }
 
     CheckSettingsDir();
 
@@ -734,7 +794,13 @@ bool Playlist::LookingForPlayList(const QString &name, QMediaPlaylist *medialist
     if(!medialist->isEmpty())
         return true;
     else
+    {
+        //exception
+        const QString error("error: can't find playlist");
+        throw error;
+
         return false;
+    }
 }
 /*----------------------------------------LOAD METHODS---------------------------------------*/
 
@@ -743,7 +809,13 @@ bool Playlist::LookingForPlayList(const QString &name, QMediaPlaylist *medialist
 bool Playlist::SavePlaylist(const QString &name, const QStringList &newListOfSongs, QMediaPlaylist *currentPlaylist)
 {
     if(name == "" && newListOfSongs.isEmpty())
+    {
+        //exception
+        const QString error("error: name is empty");
+        throw error;
+
         return false;
+    }
 
     cd->setCurrent(QCoreApplication::applicationDirPath());
     currentPlaylist->clear();
@@ -759,13 +831,25 @@ bool Playlist::SavePlaylist(const QString &name, const QStringList &newListOfSon
     if(currentPlaylist->save(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/" + name + ".m3u8"), "m3u8"))
         return true;
     else
+    {
+        //exception
+        const QString error("error: can't save playlist");
+        throw error;
+
         return false;
+    }
 }
 
 bool Playlist::SavePlaylist(const QString &name, const QStringList &newListOfSongs)
 {
     if(name == "" && newListOfSongs.isEmpty())
+    {
+        //exception
+        const QString error("error: name is empty");
+        throw error;
+
         return false;
+    }
 
     cd->setCurrent(QCoreApplication::applicationDirPath());
 
@@ -782,6 +866,11 @@ bool Playlist::SavePlaylist(const QString &name, const QStringList &newListOfSon
     else
     {
         delete bufferPlaylist;
+
+        //exception
+        const QString error("error: can't save playlist");
+        throw error;
+
         return false;
     }
 }
@@ -789,7 +878,13 @@ bool Playlist::SavePlaylist(const QString &name, const QStringList &newListOfSon
 bool Playlist::SavePlaylist(const QString &name)
 {
     if(name == "")
+    {
+        //exception
+        const QString error("error: name is empty");
+        throw error;
+
         return false;
+    }
 
     QMediaPlaylist *bufferPlaylist = new QMediaPlaylist();
 
@@ -801,6 +896,11 @@ bool Playlist::SavePlaylist(const QString &name)
     else
     {
         delete bufferPlaylist;
+
+        //exception
+        const QString error("error: can't save playlist");
+        throw error;
+
         return false;
     }
 }
@@ -856,11 +956,12 @@ bool Playlist::RenamePlayList(const QString &newName, const QString &currentName
     }
     else
     {
+        delete bufferPlaylist;
+
         //exception
-        const QString error("can't save playlist");
+        const QString error("can't rename playlist");
         throw error;
 
-        delete bufferPlaylist;
         return false;
     }
 }
@@ -874,16 +975,14 @@ bool Playlist::CheckSettingsDir()
     {
         cd->mkdir("bin");
 
-        qDebug() << "Folder 'bin' created";
+        //exception
+        const QString error("error: folder 'bin' created");
+        throw error;
 
         return false;
     }
     else
-    {
-        qCritical() << "Folder 'bin' already exists!";
-
         return true;
-    }
 }
 /*----------------------------------------SETTINGS METHODS------------------------------------*/
 
@@ -892,7 +991,13 @@ bool Playlist::CheckSettingsDir()
 bool Playlist::AddSongIntoPlayListByName(const QString &song, const QString &nameOfPlayList, const QString &nameOfCurrentPlayList, const int &index)
 {
     if((song == "") && (nameOfPlayList == ""))
+    {
+        //exception
+        const QString error("new name or current name of playlist is empty");
+        throw error;
+
         return false;
+    }
 
     cd->setCurrent(QCoreApplication::applicationDirPath()); // set default path
     const QString formatOfSong = ParserToGetFormatOfSong(nameOfCurrentPlayList, index); // get format by index inside selected playlist
@@ -909,6 +1014,11 @@ bool Playlist::AddSongIntoPlayListByName(const QString &song, const QString &nam
     else
     {
         delete bufferPlaylist;
+
+        //exception
+        const QString error("error: can't add song into playlist by name");
+        throw error;
+
         return false;
     }
 }
@@ -916,7 +1026,13 @@ bool Playlist::AddSongIntoPlayListByName(const QString &song, const QString &nam
 bool Playlist::AddSongsIntoPlayListByName(const QStringList &songs, const QString &nameOfPlayList)
 {
     if((songs.isEmpty()) && (nameOfPlayList == ""))
+    {
+        //exception
+        const QString error("new name or current name of playlist is empty");
+        throw error;
+
         return false;
+    }
 
     cd->setCurrent(QCoreApplication::applicationDirPath()); // set default path
     QMediaPlaylist *bufferPlaylist = new QMediaPlaylist();
@@ -941,7 +1057,13 @@ bool Playlist::AddSongsIntoPlayListByName(const QStringList &songs, const QStrin
 bool Playlist::AddSongsIntoCurrentPlayList(const QStringList &songs)
 {
     if(songs.isEmpty())
+    {
+        //exception
+        const QString error("new name or current name of playlist is empty");
+        throw error;
+
         return false;
+    }
 
     cd->setCurrent(QCoreApplication::applicationDirPath()); // set default path
 
@@ -1071,10 +1193,22 @@ bool Playlist::RemoveAllTracks()
         if(currentPlaylist->save(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/" + currentPlaylistName + ".m3u8"), "m3u8"))
             return true;
         else
+        {
+            //exception
+            const QString error("can't remove all tracks");
+            throw error;
+
             return false;
+        }
     }
     else
+    {
+        //exception
+        const QString error("can't remove all tracks");
+        throw error;
+
         return false;
+    }
 }
 
 bool Playlist::RemoveAllTracksFromApp()
@@ -1316,9 +1450,6 @@ QStringList Playlist::ParseToGetFullPathOfTracks(const QStringList &list)
         QString::const_iterator iter = iterForAllSongs.end() - 5; //start after dot
         QString buffer = "";
 
-        qDebug() << "buffer: " << buffer;
-        qDebug() << "list: " << iterForAllSongs;
-
         for(; iter != iterForAllSongs.begin() - 1; --iter)
         {
                 //unix like      //windows
@@ -1331,11 +1462,7 @@ QStringList Playlist::ParseToGetFullPathOfTracks(const QStringList &list)
 
         for(const QString &iterForList : list)
             if(iterForList == buffer)
-            {
-                qDebug() << "buffer: " << buffer;
-                qDebug() << "list: " << iterForList;
                 bufferlist.push_back(QCoreApplication::applicationDirPath() + "/music/" + iterForAllSongs);
-            }
     }
 
     return bufferlist;
