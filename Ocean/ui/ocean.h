@@ -320,13 +320,13 @@ private:
     QComboBox *mode = nullptr;
 
     //track status (maybe bit rank)
-    QSlider *sliderOfTrack = nullptr;
+    Slider *sliderOfTrack = nullptr;
     QLabel *nameOfTrack = nullptr;
 
     //right side (working with app)
     QSpacerItem *spacer = nullptr;
     QPixmap *ownImage = nullptr;
-    QSlider *sliderOfVolume = nullptr;
+    Slider *sliderOfVolume = nullptr;
     QLabel *imageOfPlayList = nullptr;
 
     //lists of playlists and musiclists
