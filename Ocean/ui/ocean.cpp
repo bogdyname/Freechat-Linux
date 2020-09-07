@@ -33,6 +33,7 @@ Ocean::Ocean(QWidget *parent)
         nextTrack = new QPushButton(this);
         previousTrack = new QPushButton(this);
         playbackMode = new QPushButton(this);
+        errorMessageBox = new QMessageBox(this);
 
         //Tools for widgets
         timerForCheckWidgets = new QTimer(this);
@@ -148,6 +149,15 @@ Ocean::Ocean(QWidget *parent)
     mode->addItem("MUSIC");
     mode->setFixedSize(250, 30);
 
+    stopTrack->setText("Stop");
+    previousTrack->setText("Previous");
+    nextTrack->setText("Next");
+    pausePlayTrack->setText("Play");
+
+    //Error message box
+    errorMessageBox->setWindowTitle("Error");
+    errorMessageBox->setWindowModality(ApplicationModal); //block all UI windows
+    errorMessageBox->setIcon(QMessageBox::Critical); //error icon
     /*--------------------------------------------------UI--------------------------------------------------*/
 
     /*--------------------------------------------------MANAGERS--------------------------------------------------*/
@@ -231,6 +241,9 @@ Ocean::Ocean(QWidget *parent)
     8) Widget for get tracks to add it into new playlist
         8.1) get added tracks
         8.2) breake widget via cancel button
+    9) Message box with error by playlist
+        9.1) Show message box
+        9.2) Close message box
     -----------------------UI-------------------------
 
     ----------------------Tools-----------------------
@@ -302,6 +315,9 @@ Ocean::Ocean(QWidget *parent)
     //Widget for get string list with added tracks
     connect(getAddedTracksFromWidget, &AddMusicWidget::SendListWithSongs, this, &Ocean::PassAddedTracksIntoBuffer);
     connect(getAddedTracksFromWidget, &AddMusicWidget::BreakeWidget, this, &Ocean::ClosegetAddedTracksFromWidgetViaCancel);
+    //Error message box by playlist
+    connect(playlistmanager, &Playlist::CallOutErrorMessage, this, &Ocean::ErrorsByPlaylist);
+    connect(errorMessageBox, &QMessageBox::buttonClicked, errorMessageBox, &QMessageBox::exec);
 
     //Tools--------------------------------------------
     //Timer for check widgets in progress
@@ -550,6 +566,27 @@ void Ocean::AddFilesAfterDropEvent(const QStringList &files)
 void Ocean::SetNameOfCurrentTrackFromPlaylist(const QString &name)
 {
     nameOfTrack->setText(name);
+
+    return;
+}
+
+void Ocean::ErrorsByPlaylist(const int &error)
+{
+    //select error
+    switch(error)
+    {
+        case 0: errorMessageBox->setText(errorsByPlayList.at(error)); break;
+        case 1: errorMessageBox->setText(errorsByPlayList.at(error)); break;
+        case 2: errorMessageBox->setText(errorsByPlayList.at(error)); break;
+        case 3: errorMessageBox->setText(errorsByPlayList.at(error)); break;
+        case 4: errorMessageBox->setText(errorsByPlayList.at(error)); break;
+        case 5: errorMessageBox->setText(errorsByPlayList.at(error)); break;
+        case 6: errorMessageBox->setText(errorsByPlayList.at(error)); break;
+        default: errorMessageBox->setText("Unknown error."); break;
+    }
+
+    //show error for user
+    errorMessageBox->open();
 
     return;
 }
