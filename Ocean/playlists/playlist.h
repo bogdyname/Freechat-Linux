@@ -31,6 +31,17 @@ class Playlist : public QMediaPlaylist
      * Dir 'bin' for saving and loading playlists
     */
 
+    enum Errors
+    {
+        ErrorSavePlaylist   = 0,
+        ErrorRenamePlaylist = 1,
+        ErrorCreatePlaylist = 2,
+        ErrorDeletePlaylist = 3,
+        ErrorRenameTrack    = 4,
+        ErrorDeleteTrack    = 5,
+        ErrorAddTrack       = 6
+    };
+
 public:
     Playlist(QObject *parent = nullptr);
     ~Playlist();
@@ -103,6 +114,8 @@ signals:
     void CallOutClearAllSongs();
     /*---------------------------------------Clear one song---------------------------------*/
     void CallOutClearOneSong(const int &index);
+    /*---------------------------------------Error Message----------------------------------*/
+    void CallOutErrorMessage(const int &error);
     /*-------------------------------------------------------SIGNALS-------------------------------------------------------*/
 
 
