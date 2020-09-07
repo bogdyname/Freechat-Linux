@@ -103,8 +103,8 @@ Ocean::Ocean(QWidget *parent)
     //slider for volume
 
     //Main window  
-    this->setMinimumSize(350, 350);
-    this->resize(1200, 850);
+    this->setMinimumSize(350, 420);
+    this->resize(1000, 750);
 
     //Lists
     playLists->setMaximumWidth(250);
@@ -113,7 +113,7 @@ Ocean::Ocean(QWidget *parent)
     //Slider of volume
     sliderOfVolume->setFixedSize(250, 17);
     //Slider of track
-    sliderOfTrack->setMinimumWidth(225);
+    sliderOfTrack->setMinimumWidth(250);
 
     //Default image of playlists
     if(ownImage->load("://images/vampire_playlist.jpg", "jpg", AutoColor))
@@ -134,14 +134,20 @@ Ocean::Ocean(QWidget *parent)
     //name of track
     nameOfTrack->setFixedHeight(35);
     //Buttons for player
-    stopTrack->setText("Stop");
-    previousTrack->setText("Previous");
-    nextTrack->setText("Next");
-    pausePlayTrack->setText("Play");
+    QIcon *icon;
+    icon = new QIcon("://images/vampire_play.png");
+    pausePlayTrack->setIcon(*icon);
+    icon = new QIcon("://images/vampire_next.png");
+    nextTrack->setIcon(*icon);
+    icon = new QIcon("://images/vampire_previous.png");
+    previousTrack->setIcon(*icon);
+    icon = new QIcon("://images/vampire_cross.png");
+    playbackMode->setIcon(*icon);
 
     //combobox
     mode->addItem("MUSIC");
     mode->setFixedSize(250, 30);
+
     /*--------------------------------------------------UI--------------------------------------------------*/
 
     /*--------------------------------------------------MANAGERS--------------------------------------------------*/
@@ -427,6 +433,9 @@ void Ocean::Hidder()
     spacer->changeSize(0, 0);
     playLists->hide();
     musicList->hide();
+    mode->hide();
+    nameOfTrack->hide();
+    sliderOfVolume->setFixedSize(330, 17);
 
     return;
 }
@@ -436,6 +445,9 @@ void Ocean::Shower()
     spacer->changeSize(100, 250);
     playLists->show();
     musicList->show();
+    mode->show();
+    nameOfTrack->show();
+    sliderOfVolume->setFixedSize(250, 17);
 
     return;
 }

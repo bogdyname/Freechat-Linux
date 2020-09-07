@@ -30,7 +30,7 @@ QLineEdit
 QPushButton
 {
     color: #F4003D;
-    border: 1.2px;
+    border: 0px;
     border-color: #F4003D;
     border-style: solid;
     border-radius: 5px;
