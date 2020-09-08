@@ -318,6 +318,9 @@ private:
 
 private:
     //UI--------------------------------------------------------------
+    //working mode
+    QComboBox *mode = nullptr;
+
     //track status (maybe bit rank)
     Slider *sliderOfTrack = nullptr;
     QLabel *nameOfTrack = nullptr;
