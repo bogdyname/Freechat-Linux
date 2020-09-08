@@ -17,6 +17,7 @@
 #include <QLineEdit>
 #include <QComboBox>
 #include <QMimeData>
+#include <QMessageBox>
 #include <QListWidget>
 #include <QPushButton>
 #include <QMainWindow>
@@ -108,6 +109,7 @@ private slots:
     void PassNamesOfSongsToMusicList(const QStringList &songs);
     void AddFilesAfterDropEvent(const QStringList &files);
     void SetNameOfCurrentTrackFromPlaylist(const QString &name);
+    void ErrorsByPlaylist(const int &error);
     /*-------------------------------------Slots for MainWindow----------------------------------*/
 
     /*-------------------------------------------Shortcut----------------------------------------*/
@@ -343,6 +345,21 @@ private:
     QPushButton *nextTrack = nullptr;
     QPushButton *previousTrack = nullptr;
     QPushButton *playbackMode = nullptr;
+
+    //Error message box
+    QMessageBox *errorMessageBox = nullptr;
+
+    //Errors messages
+    const QStringList errorsByPlayList =
+    {
+        "Can't save playlist",         //0
+        "Can't rename playlist",       //1
+        "Can't create playlist",       //2
+        "Can't delete playlist",       //3
+        "Can't rename track",          //4
+        "Can't delete track",          //5
+        "Can't add song into playlist" //6
+    };
     //UI--------------------------------------------------------------
 
     //TOOLS-----------------------------------------------------------
