@@ -31,9 +31,6 @@ QPushButton
 {
     color: #F4003D;
     border: 0px;
-    border-color: #F4003D;
-    border-style: solid;
-    border-radius: 5px;
     height: 30%;
 }
 
@@ -165,14 +162,6 @@ QListView::item:hover
 
 
 /*HOVER ITEMS -----------------------------------------------------------------*/
-QPushButton:hover
-{
-    border: 1.2px;
-    border-color: #FC83A9;
-    border-style: solid;
-    border-radius: 5px;
-}
-
 QTextBrowser:hover
 {
     border: 1.2px;

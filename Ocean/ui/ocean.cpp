@@ -28,11 +28,11 @@ Ocean::Ocean(QWidget *parent)
         sliderOfVolume = new Slider(this, 100);
         playLists = new CustomListWidget(this);
         musicList = new CustomListWidget(this);
-        pausePlayTrack = new QPushButton(this);
-        stopTrack = new QPushButton(this);
-        nextTrack = new QPushButton(this);
-        previousTrack = new QPushButton(this);
-        playbackMode = new QPushButton(this);
+        pausePlayTrack = new Button(this, "://images/play.png");
+        stopTrack = new Button(this, "://images/stop.png");
+        nextTrack = new Button(this, "://images/next.png");
+        previousTrack = new Button(this, "://images/previous.png");
+        playbackMode = new Button(this, "://images/cross.png");
 
         //Tools for widgets
         timerForCheckWidgets = new QTimer(this);
@@ -94,16 +94,16 @@ Ocean::Ocean(QWidget *parent)
     //Image of play list
     ui->image->addWidget(imageOfPlayList);
     ui->volumeSlider->addWidget(sliderOfVolume);
-    ui->buttonsOfTracks->addWidget(stopTrack);
     ui->buttonsOfTracks->addWidget(previousTrack);
-    ui->buttonsOfTracks->addWidget(nextTrack);
+    ui->buttonsOfTracks->addWidget(stopTrack);
     ui->buttonsOfTracks->addWidget(pausePlayTrack);
     ui->buttonsOfTracks->addWidget(playbackMode);
+    ui->buttonsOfTracks->addWidget(nextTrack);
     ui->tool->setAlignment(AlignTop);
     //slider for volume
 
     //Main window  
-    this->setMinimumSize(350, 420);
+    this->setMinimumSize(270, 420);
     this->resize(1000, 750);
 
     //Lists
@@ -133,16 +133,6 @@ Ocean::Ocean(QWidget *parent)
 
     //name of track
     nameOfTrack->setFixedHeight(35);
-    //Buttons for player
-    QIcon *icon;
-    icon = new QIcon("://images/vampire_play.png");
-    pausePlayTrack->setIcon(*icon);
-    icon = new QIcon("://images/vampire_next.png");
-    nextTrack->setIcon(*icon);
-    icon = new QIcon("://images/vampire_previous.png");
-    previousTrack->setIcon(*icon);
-    icon = new QIcon("://images/vampire_cross.png");
-    playbackMode->setIcon(*icon);
 
     //combobox
     mode->addItem("MUSIC");
@@ -435,7 +425,7 @@ void Ocean::Hidder()
     musicList->hide();
     mode->hide();
     nameOfTrack->hide();
-    sliderOfVolume->setFixedSize(330, 17);
+ //   sliderOfVolume->setFixedSize(20, 17);
 
     return;
 }
@@ -447,7 +437,7 @@ void Ocean::Shower()
     musicList->show();
     mode->show();
     nameOfTrack->show();
-    sliderOfVolume->setFixedSize(250, 17);
+//    sliderOfVolume->setFixedSize(250, 17);
 
     return;
 }
