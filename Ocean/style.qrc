@@ -2,12 +2,14 @@
     <qresource prefix="/">
         <file>style.css</file>
         <file>vampire_theme.css</file>
-        <file>images/vampire_arrow.png</file>
+        <file>images/down_arrow.png</file>
         <file>images/vampire_playlist.jpg</file>
-        <file>images/vampire_play.png</file>
-        <file>images/vampire_cross.png</file>
-        <file>images/vampire_next.png</file>
-        <file>images/vampire_stop_button.png</file>
-        <file>images/vampire_previous.png</file>
+        <file>images/play.png</file>
+        <file>images/next.png</file>
+        <file>images/cross.png</file>
+        <file>images/previous.png</file>
+        <file>images/pause.png</file>
+        <file>images/stop.png</file>
+        <file>images/straight.png</file>
     </qresource>
 </RCC>

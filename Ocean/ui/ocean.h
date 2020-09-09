@@ -40,6 +40,7 @@
 //custom widgets
 #include "customWidgets/customlistwidget.h"
 #include "customWidgets/slider.h"
+#include "customWidgets/button.h"
 
 //managers
 #include "imports/importmanager.h"
