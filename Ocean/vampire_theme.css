@@ -134,7 +134,7 @@ QComboBox::drop-down:hover
 QComboBox::down-arrow
 {
     padding: 0px 0px 0px 0px;
-    image: url(:/images/vampire_arrow.png);
+    image: url(:/images/down_arrow.png);
 }
 
 QListView::item:selected

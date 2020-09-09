@@ -11,5 +11,13 @@
         <file>images/pause.png</file>
         <file>images/stop.png</file>
         <file>images/straight.png</file>
+        <file>images/cross_pressed.png</file>
+        <file>images/next_pressed.png</file>
+        <file>images/play_pressed.png</file>
+        <file>images/stop_pressed.png</file>
+        <file>images/down_arrow_pressed.png</file>
+        <file>images/pause_pressed.png</file>
+        <file>images/previous_pressed.png</file>
+        <file>images/straight_pressed.png</file>
     </qresource>
 </RCC>

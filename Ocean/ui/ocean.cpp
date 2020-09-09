@@ -33,11 +33,6 @@ Ocean::Ocean(QWidget *parent)
         nextTrack = new Button(this, "://images/next.png");
         previousTrack = new Button(this, "://images/previous.png");
         playbackMode = new Button(this, "://images/cross.png");
-        pausePlayTrack = new QPushButton(this);
-        stopTrack = new QPushButton(this);
-        nextTrack = new QPushButton(this);
-        previousTrack = new QPushButton(this);
-        playbackMode = new QPushButton(this);
         errorMessageBox = new QMessageBox(this);
 
         //Tools for widgets
@@ -143,11 +138,6 @@ Ocean::Ocean(QWidget *parent)
     //combobox
     mode->addItem("MUSIC");
     mode->setFixedSize(250, 30);
-
-    stopTrack->setText("Stop");
-    previousTrack->setText("Previous");
-    nextTrack->setText("Next");
-    pausePlayTrack->setText("Play");
 
     //Error message box
     errorMessageBox->setWindowTitle("Error");
