@@ -18,7 +18,11 @@ class Button : public QPushButton
     Q_OBJECT
 
 public:
-    Button(QWidget *parent = nullptr, QString iconName = " ");
+    Button(QWidget *parent = nullptr, QString objName = " ");
+
+public slots:
+    void buttonPressed();
+    void buttonReleased();
 };
 
 #endif // BUTTON_H

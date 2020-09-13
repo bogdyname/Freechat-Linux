@@ -28,11 +28,11 @@ Ocean::Ocean(QWidget *parent)
         sliderOfVolume = new Slider(this, 100);
         playLists = new CustomListWidget(this);
         musicList = new CustomListWidget(this);
-        pausePlayTrack = new Button(this, "://images/play.png");
-        stopTrack = new Button(this, "://images/stop.png");
-        nextTrack = new Button(this, "://images/next.png");
-        previousTrack = new Button(this, "://images/previous.png");
-        playbackMode = new Button(this, "://images/cross.png");
+        pausePlayTrack = new Button(this, "play");
+        stopTrack = new Button(this, "stop");
+        nextTrack = new Button(this, "next");
+        previousTrack = new Button(this, "previous");
+        playbackMode = new Button(this, "cross");
         errorMessageBox = new QMessageBox(this);
 
         //Tools for widgets
