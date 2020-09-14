@@ -340,11 +340,11 @@ private:
     int pressedItem = -1;
 
     //player
-    QPushButton *pausePlayTrack = nullptr;
-    QPushButton *stopTrack = nullptr;
-    QPushButton *nextTrack = nullptr;
-    QPushButton *previousTrack = nullptr;
-    QPushButton *playbackMode = nullptr;
+    Button *pausePlayTrack = nullptr;
+    Button *stopTrack = nullptr;
+    Button *nextTrack = nullptr;
+    Button *previousTrack = nullptr;
+    Button *playbackMode = nullptr;
 
     //Error message box
     QMessageBox *errorMessageBox = nullptr;
