@@ -139,6 +139,7 @@ Ocean::Ocean(QWidget *parent)
 
     //combobox
     mode->addItem("MUSIC");
+    mode->addItem("MUSICcc");
     mode->setFixedSize(250, 30);
 
     //Error message box
