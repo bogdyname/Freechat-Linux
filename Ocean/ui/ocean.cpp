@@ -28,7 +28,7 @@ Ocean::Ocean(QWidget *parent)
         sliderOfVolume = new Slider(this, 100);
         playLists = new CustomListWidget(this);
         musicList = new CustomListWidget(this);
-        pausePlayTrack = new Button(this, "play");
+        pausePlayTrack = new Button(this, "pause");
         stopTrack = new Button(this, "stop");
         nextTrack = new Button(this, "next");
         previousTrack = new Button(this, "previous");
@@ -116,6 +116,8 @@ Ocean::Ocean(QWidget *parent)
     //Slider of track
     sliderOfTrack->setMinimumWidth(250);
 
+    //buttons
+    pausePlayTrack->SetIconForSwitch("play");
     //Default image of playlists
     if(ownImage->load("://images/vampire_playlist.jpg", "jpg", AutoColor))
         qDebug() << "true";
@@ -263,6 +265,7 @@ Ocean::Ocean(QWidget *parent)
 
     //Player manager
     connect(pausePlayTrack, &QPushButton::clicked, playermanager, &Player::SetPausePlayTrack);
+    connect(playermanager, &Player::CallOutSetImagePuasePlayTrack, pausePlayTrack, &Button::changeIcon);
     connect(stopTrack, &QPushButton::clicked, playermanager, &QMediaPlayer::stop);
     connect(sliderOfVolume, &QSlider::valueChanged, playermanager,&QMediaPlayer::setVolume);
     connect(sliderOfTrack, &QSlider::valueChanged, playermanager,&QMediaPlayer::setPosition);
