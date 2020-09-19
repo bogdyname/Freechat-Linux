@@ -29,7 +29,7 @@ Playlist::Playlist(QObject *parent)
     }
 
     //setting up variables
-    counter = -1;
+    counterOfPlayback = -1;
 
     this->CheckDefaultPlayList();
 
@@ -384,9 +384,9 @@ void Playlist::ClearOneSong(const int &index)
 /*--------------------------------------------------------------------------------------------------------------------------------------------------*/
 void Playlist::SetModOfPlayback()
 {
-    counter == 2 ? counter = -1 : ++counter ;
+    counterOfPlayback == 2 ? counterOfPlayback = -1 : ++counterOfPlayback ;
 
-    switch(counter)
+    switch(counterOfPlayback)
     {
         //Loop all tracks
         case 0:
