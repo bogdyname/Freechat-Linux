@@ -28,6 +28,9 @@ Playlist::Playlist(QObject *parent)
         exit(1);
     }
 
+    //setting up variables
+    counter = -1;
+
     this->CheckDefaultPlayList();
 
     //For bin folder
@@ -381,8 +384,6 @@ void Playlist::ClearOneSong(const int &index)
 /*--------------------------------------------------------------------------------------------------------------------------------------------------*/
 void Playlist::SetModOfPlayback()
 {
-    static int counter = -1;
-
     counter == 2 ? counter = -1 : ++counter ;
 
     switch(counter)
@@ -423,6 +424,8 @@ void Playlist::SetModOfPlayback()
         }
         break;
     }
+
+    return;
 }
 
 void Playlist::SetNextTrack()

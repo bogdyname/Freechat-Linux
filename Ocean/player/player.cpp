@@ -26,6 +26,9 @@ Player::Player(QObject *parent)
         exit(1);
     }
 
+    //setting up variables
+    counterOfPausePlay = 0;
+
     player->setNotifyInterval(500);
 
     //player data
@@ -89,11 +92,9 @@ void Player::ServiceMissingError(QMediaPlayer::Error errorStatus)
 //Public slots
 void Player::SetPausePlayTrack()
 {
-    static int counter = 0;
+    counterOfPausePlay == 1 ? --counterOfPausePlay : ++counterOfPausePlay ;
 
-    counter == 1 ? --counter : ++counter ;
-
-    switch(counter)
+    switch(counterOfPausePlay)
     {
         //Play current track
         case 0:
