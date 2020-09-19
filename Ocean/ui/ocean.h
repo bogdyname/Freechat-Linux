@@ -15,7 +15,6 @@
 #include <QWidget>
 #include <QShortcut>
 #include <QLineEdit>
-#include <QComboBox>
 #include <QMimeData>
 #include <QMessageBox>
 #include <QListWidget>
@@ -319,9 +318,6 @@ private:
 
 private:
     //UI--------------------------------------------------------------
-    //working mode
-    QComboBox *mode = nullptr;
-
     //track status (maybe bit rank)
     Slider *sliderOfTrack = nullptr;
     QLabel *nameOfTrack = nullptr;
