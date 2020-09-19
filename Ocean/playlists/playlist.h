@@ -323,6 +323,7 @@ public: //using inside Ocean.cpp
     /*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
 
 private:
+    int counter;
     QDir *cd = nullptr; //------------------------------------- works with dir and paths of system
     QStringList allSongs; //----------------------------------- list with paths of all songs
     QString currentPlaylistName; //---------------------------- name of playlist

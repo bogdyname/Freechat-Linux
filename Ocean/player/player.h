@@ -60,6 +60,7 @@ private:
     bool SetVolume(const int &volume);
 
 private:
+    int counterOfPausePlay;
     QMediaPlayer *player = nullptr;
     qint64 currentPosition;
 };
