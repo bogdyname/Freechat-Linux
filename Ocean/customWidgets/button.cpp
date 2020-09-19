@@ -97,13 +97,13 @@ void Button::buttonPressed()
 void Button::buttonReleased()
 {
     QIcon *icon = new QIcon("://images/" + this->objectName() + ".png");
-//    this->setIcon(*icon);
+    this->setIcon(*icon);
 
     delete icon;
     return;
 }
 
-void Button::changeIcon(const int &counter)
+void Button::changeIcon(int &counter)
 {
     QIcon *icon;
 

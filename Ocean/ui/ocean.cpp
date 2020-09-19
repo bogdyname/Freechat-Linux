@@ -19,7 +19,6 @@ Ocean::Ocean(QWidget *parent)
     try
     {
         //Objects of UI
-        mode = new QComboBox(this);
         spacer = new QSpacerItem(200, 0);
         ownImage = new QPixmap();
         imageOfPlayList = new QLabel(this);
@@ -80,7 +79,6 @@ Ocean::Ocean(QWidget *parent)
     /*--------------------------------------------------UI--------------------------------------------------*/
     //UpSide
     //Player
-    ui->playSlider->addWidget(mode);
     ui->playSlider->addWidget(nameOfTrack);
     nameOfTrack->setObjectName("nameOfTrack");
     ui->playSlider->addWidget(sliderOfTrack);
@@ -136,10 +134,6 @@ Ocean::Ocean(QWidget *parent)
 
     //name of track
     nameOfTrack->setFixedHeight(35);
-
-    //combobox
-    mode->addItem("MUSIC");
-    mode->setFixedSize(250, 30);
 
     //Error message box
     errorMessageBox->setWindowTitle("Error");
@@ -437,7 +431,6 @@ void Ocean::Hidder()
     spacer->changeSize(0, 0);
     playLists->hide();
     musicList->hide();
-    mode->hide();
     nameOfTrack->hide();
  //   sliderOfVolume->setFixedSize(20, 17);
 
@@ -449,7 +442,6 @@ void Ocean::Shower()
     spacer->changeSize(100, 250);
     playLists->show();
     musicList->show();
-    mode->show();
     nameOfTrack->show();
 //    sliderOfVolume->setFixedSize(250, 17);
 

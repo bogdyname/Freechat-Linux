@@ -137,27 +137,38 @@ QComboBox::down-arrow
     image: url(:/images/down_arrow.png);
 }
 
+QComboBox::down-arrow:pressed
+{
+    padding: 0px 0px 0px 0px;
+    image: url(:/images/down_arrow_pressed.png);
+}
+
+QListView::item:alternate
+{
+    background: #F4003D;
+}
+
 QListView::item:selected
 {
-      border: 1px solid #6a6ea9;
+      border: 1px solid #F4003D;
 }
 
 QListView::item:selected:!active
 {
       background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                  stop: 0 #ABAFE5, stop: 1 #8588B2);
+                                  stop: 0 #170004, stop: 1 #170004);
 }
 
 QListView::item:selected:active
 {
       background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                  stop: 0 #6a6ea9, stop: 1 #888dd9);
+                                  stop: 0 #F4003D, stop: 1 #F4003D);
 }
 
 QListView::item:hover
 {
       background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                  stop: 0 #FAFBFE, stop: 1 #DCDEF1);
+                                  stop: 0 #F4003D, stop: 1 #F4003D);
 }
 
 
