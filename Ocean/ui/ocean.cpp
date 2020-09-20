@@ -331,60 +331,16 @@ Ocean::~Ocean()
 
     //Tools
     sysmanager->Free(cd);
-
-    //---------------------------------------------SYSTEM INFO
-    qDebug() << "SYSTEM INFO about tools";
-
-    if(sysmanager->PointerIsEmpty(timerForCheckWidgets))
-        qDebug() << "1) timerForCheckWidgets empty!";
-
-    if(sysmanager->PointerIsEmpty(timerForCheckDefaultPlayList))
-        qDebug() << "2) timerForCheckDefaultPlayList empty!";
-
-    if(sysmanager->PointerIsEmpty(cd))
-        qDebug() << "3) cd empty!";
-    //---------------------------------------------SYSTEM INFO
     //widgets
     sysmanager->Free(getAddedTracksFromWidget);
     sysmanager->Free(getStringFromUserToCreateNewPlaylist);
     sysmanager->Free(getStringWithSelectedPlaylist);
     sysmanager->Free(getStringFromUserToRenamePlaylist);
     sysmanager->Free(getStringFromUserToRenameTrack);
-
-    //---------------------------------------------SYSTEM INFO
-    qDebug() << "SYSTEM INFO about own Widgets";
-
-    if(sysmanager->PointerIsEmpty(getAddedTracksFromWidget))
-        qDebug() << "1) getAddedTracksFromWidget empty!";
-
-    if(sysmanager->PointerIsEmpty(getStringFromUserToCreateNewPlaylist))
-        qDebug() << "2) getStringFromUserToCreateNewPlaylist empty!";
-
-    if(sysmanager->PointerIsEmpty(getStringWithSelectedPlaylist))
-        qDebug() << "3) getStringWithSelectedPlaylist empty!";
-
-    if(sysmanager->PointerIsEmpty(getStringFromUserToRenamePlaylist))
-        qDebug() << "3) getStringFromUserToRenamePlaylist empty!";
-    //---------------------------------------------SYSTEM INFO
-
     //UI
-
-    qDebug() << "SYSTEM INFO about widgets of QT";
-
     sysmanager->Free(ownImage);
-
-    if(sysmanager->PointerIsEmpty(ownImage))
-        qDebug() << "1) ownImage empty!";
-
     sysmanager->Free(spacer);
-
-    if(sysmanager->PointerIsEmpty(spacer))
-        qDebug() << "2) spacer empty!";
-  
     sysmanager->Free(ui);
-
-    if(sysmanager->PointerIsEmpty(ui))
-        qDebug() << "3) ui empty!";
 
     //system
     delete sysmanager;
