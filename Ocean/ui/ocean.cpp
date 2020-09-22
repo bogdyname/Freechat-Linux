@@ -388,7 +388,6 @@ void Ocean::Hidder()
     playLists->hide();
     musicList->hide();
     nameOfTrack->hide();
- //   sliderOfVolume->setFixedSize(20, 17);
 
     return;
 }
@@ -399,7 +398,6 @@ void Ocean::Shower()
     playLists->show();
     musicList->show();
     nameOfTrack->show();
-//    sliderOfVolume->setFixedSize(250, 17);
 
     return;
 }
