@@ -7,9 +7,11 @@
 
 #include "networkmanager.h"
 
-NetworkManager::NetworkManager()
+NetworkManager::NetworkManager(QObject *parent)
+    : QObject(parent)
 {
 
+    return;
 }
 
 NetworkManager::~NetworkManager()

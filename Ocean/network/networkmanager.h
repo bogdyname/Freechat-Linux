@@ -14,12 +14,15 @@
 #include <QtNetwork>
 #include <QObject>
 
+#include "client.h"
+#include "server.h"
+
 class NetworkManager : public QObject
 {
     Q_OBJECT
 
 public:
-    NetworkManager();
+    explicit NetworkManager(QObject *parent = nullptr);
     ~NetworkManager();
 
 signals:
@@ -33,6 +36,9 @@ public slots:
 private:
     bool CheckStatusOfNetwork();
 
+private:
+    Server server;
+    Client client;
 };
 
 #endif

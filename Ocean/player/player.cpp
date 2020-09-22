@@ -26,7 +26,7 @@ Player::Player(QObject *parent)
         exit(1);
     }
 
-    //setting up variables
+    //setting up variable to switch status of track (play or pause)
     counterOfPausePlay = 0;
 
     player->setNotifyInterval(500);

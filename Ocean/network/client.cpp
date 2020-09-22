@@ -1,6 +1,7 @@
 #include "client.h"
 
-Client::Client()
+Client::Client(QTcpSocket *parent)
+    :   QTcpSocket(parent)
 {
     try
     {

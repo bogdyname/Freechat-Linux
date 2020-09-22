@@ -8,7 +8,7 @@ class Client : public QTcpSocket
     Q_OBJECT
 
 public:
-    Client();
+    explicit Client(QTcpSocket *parent = nullptr);
     ~Client();
 
 private:

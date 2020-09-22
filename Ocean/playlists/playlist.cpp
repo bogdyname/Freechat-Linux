@@ -28,7 +28,7 @@ Playlist::Playlist(QObject *parent)
         exit(1);
     }
 
-    //setting up variables
+    //setting up variable to switch status of playback (Sequential (-1), Loop(0), CurrentItemInLoop(1), Random(2))
     counterOfPlayback = -1;
 
     this->CheckDefaultPlayList();
