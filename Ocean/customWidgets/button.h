@@ -28,7 +28,7 @@ public:
 public slots:
     void buttonPressed();
     void buttonReleased();
-    void changeIcon(int &counter);
+    void changeIcon(const int &counter);
 
 };
 
