@@ -690,8 +690,20 @@ void Ocean::AddSongIntoPlayListByIndex()
     return;
 }
 
+/*
+    BUG HERE
+    If to rename track without selecting track
+    programm will be renaming 0 (ZERO) element
+
+    Need to make if() case to check current element
+    (check mod of widget)
+    Example code here
+*/
 void Ocean::RenameTrack()
 {
+    //if(musicList->currentRow() == 0)
+        //return;
+
     getStringFromUserToRenameTrack->show();
     this->setDisabled(true);
 
