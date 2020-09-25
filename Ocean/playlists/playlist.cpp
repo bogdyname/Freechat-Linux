@@ -28,7 +28,8 @@ Playlist::Playlist(QObject *parent)
         exit(1);
     }
 
-    //setting up variable to switch status of playback (Sequential (-1), Loop(0), CurrentItemInLoop(1), Random(2))
+    //setting up variable to switch status of playback
+    //(Sequential (-1), Loop(0), CurrentItemInLoop(1), Random(2))
     counterOfPlayback = -1;
 
     this->CheckDefaultPlayList();
@@ -70,6 +71,9 @@ Playlist::Playlist(QObject *parent)
        7.2) move track to &index by index from playlist by name
      * Rename track -------------------
        8.1) rename track by index
+     * Remove tracks ------------------
+       9.1) remove all tracks
+       9.2) remove one track
     */
     //Save
     connect(this, &Playlist::CallOutSaveCurrentPlayList, this, &Playlist::SaveCurrentPlayList);
@@ -393,7 +397,6 @@ void Playlist::SetModOfPlayback()
         {
             currentPlaylist->setPlaybackMode(QMediaPlaylist::Loop);
             emit this->CallOutSetImageOfCurrentPlaybackMode(0);
-            qDebug() << 0 ;
         }
         break;
 
@@ -402,7 +405,6 @@ void Playlist::SetModOfPlayback()
         {
             currentPlaylist->setPlaybackMode(QMediaPlaylist::CurrentItemInLoop);
             emit this->CallOutSetImageOfCurrentPlaybackMode(1);
-            qDebug() << 1 ;
         }
         break;
 
@@ -411,7 +413,6 @@ void Playlist::SetModOfPlayback()
         {
             currentPlaylist->setPlaybackMode(QMediaPlaylist::Random);
             emit this->CallOutSetImageOfCurrentPlaybackMode(2);
-            qDebug() << 2 ;
         }
         break;
 
@@ -420,7 +421,6 @@ void Playlist::SetModOfPlayback()
         {
             currentPlaylist->setPlaybackMode(QMediaPlaylist::Sequential);
             emit this->CallOutSetImageOfCurrentPlaybackMode(-1);
-            qDebug() << -1 ;
         }
         break;
     }
