@@ -474,24 +474,21 @@ void Ocean::AddFilesAfterDropEvent(const QStringList &files)
     importManager->SaveFileViaDragAndDrop(pathsOfFiles);
 
     //add tracks into current playlist (if it is not 'all' playlist)
-    for(unsigned short int iter = 0; iter < playLists->selectedItems().size(); ++iter)
-    {
-        QListWidgetItem *item = playLists->item(playLists->currentRow());
+    QListWidgetItem *item = playLists->item(playLists->currentRow());
 
-        //return if item empty
-        if(item->text() == "" || item->text() == "all")
-            return;
+    //return if item empty
+    if(item->text() == "" || item->text() == "all")
+        return;
 
-        if(item->text() == playlistmanager->GetCurrentPlayListName())
-            //add into current playlist
-            emit playlistmanager->CallOutAddSongsIntoCurrentPlaylistViaDragAndDrop(importManager->GetJustAddedSongs());
-        else
-            //add into playlist by name
-            emit playlistmanager->CallOutAddSongsIntoPlaylistByNameViaDragAndDrop(importManager->GetJustAddedSongs(), item->text());
+    if(item->text() == playlistmanager->GetCurrentPlayListName())
+        //add into current playlist
+        emit playlistmanager->CallOutAddSongsIntoCurrentPlaylistViaDragAndDrop(importManager->GetJustAddedSongs());
+    else
+        //add into playlist by name
+        emit playlistmanager->CallOutAddSongsIntoPlaylistByNameViaDragAndDrop(importManager->GetJustAddedSongs(), item->text());
 
-        //show new songs
-        this->GetNamesOfSongsToMusicList(item);
-    }
+    //show new songs
+    this->GetNamesOfSongsToMusicList(item);
     //----------------------------------------Add track into app or playlist (current or by name)
 
     return;
@@ -570,7 +567,10 @@ void Ocean::HideViaShiftH()
 /*--------------------------------------------------------------------------------------------------------------------------------------------------*/
 void Ocean::ShowContextMenuOfMusicList(const QPoint &point)
 {
-    QPoint globalPoint = playLists->mapToGlobal(point);
+    if(musicList->currentItem() == nullptr)
+        return;
+
+    QPoint globalPoint = musicList->mapToGlobal(point);
 
     QMenu myMenu;
     myMenu.addAction("Add to...", this, &Ocean::AddSongIntoPlayListByIndex);
@@ -589,41 +589,38 @@ void Ocean::EraseAllItemsFromMusicList()
 {
     musicList->clear();
 
-    for(unsigned short int iter = 0; iter < playLists->selectedItems().size(); ++iter)
+    QListWidgetItem *item = playLists->item(playLists->currentRow());
+
+    //return if item empty
+    if(item->text() == "")
+        return;
+
+    //for 'all' playlist
+    if(item->text() == "all")
     {
-        QListWidgetItem *item = playLists->item(playLists->currentRow());
+        emit playlistmanager->CallOutRemoveAllTracksFromPlayListByName(item->text());
+        emit this->CallOutPassNamesOfSongsToMusicList(playlistmanager->GetSongsFromCurrentPlayList(item->text()));
+        //remove from buffer 'allSongs'
+        emit playlistmanager->CallOutClearAllSongs();
 
-        //return if item empty
-        if(item->text() == "")
-            return;
+        return;
+    }
 
-        //for 'all' playlist
-        if(item->text() == "all")
-        {
-            emit playlistmanager->CallOutRemoveAllTracksFromPlayListByName(item->text());
-            emit this->CallOutPassNamesOfSongsToMusicList(playlistmanager->GetSongsFromCurrentPlayList(item->text()));
-            //remove from buffer 'allSongs'
-            emit playlistmanager->CallOutClearAllSongs();
-
-            return;
-        }
-
-        //for other playlist
-        if(item->text() == playlistmanager->GetCurrentPlayListName())
-        {
-            playermanager->stop();
-            emit playlistmanager->CallOutRemoveAllTracksFromCurrentPlayList();
-            emit this->CallOutPassNamesOfSongsToMusicList(playlistmanager->GetSongsFromCurrentPlayList(item->text()));
-            //remove from buffer 'allSongs'
-            emit playlistmanager->CallOutClearAllSongs();
-        }
-        else
-        {
-            emit playlistmanager->CallOutRemoveAllTracksFromPlayListByName(item->text());
-            emit this->CallOutPassNamesOfSongsToMusicList(playlistmanager->GetSongsFromCurrentPlayList(item->text()));
-            //remove from buffer 'allSongs'
-            emit playlistmanager->CallOutClearAllSongs();
-        }
+    //for other playlist
+    if(item->text() == playlistmanager->GetCurrentPlayListName())
+    {
+        playermanager->stop();
+        emit playlistmanager->CallOutRemoveAllTracksFromCurrentPlayList();
+        emit this->CallOutPassNamesOfSongsToMusicList(playlistmanager->GetSongsFromCurrentPlayList(item->text()));
+        //remove from buffer 'allSongs'
+        emit playlistmanager->CallOutClearAllSongs();
+    }
+    else
+    {
+        emit playlistmanager->CallOutRemoveAllTracksFromPlayListByName(item->text());
+        emit this->CallOutPassNamesOfSongsToMusicList(playlistmanager->GetSongsFromCurrentPlayList(item->text()));
+        //remove from buffer 'allSongs'
+        emit playlistmanager->CallOutClearAllSongs();
     }
 
     return;
@@ -632,49 +629,43 @@ void Ocean::EraseAllItemsFromMusicList()
 void Ocean::EraseItemFromMusicList()
 {
     // If multiple selection is on, we need to erase all selected items
-    for (unsigned short int iter = 0; iter < musicList->selectedItems().size(); ++iter)
+    // Get curent item on selected row
+    QListWidgetItem *item = musicList->item(musicList->currentRow());
+
+    //return if item empty
+    if(item->text() == "")
+        return;
+
+    QListWidgetItem *playlistIter = playLists->item(playLists->currentRow());
+
+    //for 'all' playlist
+    if(item->text() == "all")
     {
-        // Get curent item on selected row
-        QListWidgetItem *item = musicList->item(musicList->currentRow());
+        //remove from other playlist
+        emit playlistmanager->CallOutRemoveTrackFromPlayListByIndex(musicList->currentRow(), playlistIter->text());
+        emit this->CallOutPassNamesOfSongsToMusicList(playlistmanager->GetSongsFromCurrentPlayList(playlistIter->text()));
+        //remove from buffer 'allSongs'
+        emit playlistmanager->CallOutClearOneSong(musicList->currentRow());
 
-        //return if item empty
-        if(item->text() == "")
-            return;
+        return;
+    }
 
-        for(unsigned short int iterPlayList = 0; iterPlayList < playLists->selectedItems().size(); ++iterPlayList)
-        {
-            QListWidgetItem *playlistIter = playLists->item(playLists->currentRow());
-
-            //for 'all' playlist
-            if(item->text() == "all")
-            {
-                //remove from other playlist
-                emit playlistmanager->CallOutRemoveTrackFromPlayListByIndex(musicList->currentRow(), playlistIter->text());
-                emit this->CallOutPassNamesOfSongsToMusicList(playlistmanager->GetSongsFromCurrentPlayList(playlistIter->text()));
-                //remove from buffer 'allSongs'
-                emit playlistmanager->CallOutClearOneSong(musicList->currentRow());
-
-                return;
-            }
-
-            //for other playlist
-            if(playlistIter->text() == playlistmanager->GetCurrentPlayListName())
-            {
-                //remove from current playlist
-                emit playlistmanager->CallOutRemoveTrackFromCurrentPlayListByIndex(musicList->currentRow());
-                emit this->CallOutPassNamesOfSongsToMusicList(playlistmanager->GetSongsFromCurrentPlayList(playlistmanager->GetCurrentPlayListName()));
-                //remove from buffer 'allSongs'
-                emit playlistmanager->CallOutClearOneSong(musicList->currentRow());
-            }
-            else
-            {
-                //remove from other playlist
-                emit playlistmanager->CallOutRemoveTrackFromPlayListByIndex(musicList->currentRow(), playlistIter->text());
-                emit this->CallOutPassNamesOfSongsToMusicList(playlistmanager->GetSongsFromCurrentPlayList(playlistIter->text()));
-                //remove from buffer 'allSongs'
-                emit playlistmanager->CallOutClearOneSong(musicList->currentRow());
-            }
-        }
+    //for other playlist
+    if(playlistIter->text() == playlistmanager->GetCurrentPlayListName())
+    {
+        //remove from current playlist
+        emit playlistmanager->CallOutRemoveTrackFromCurrentPlayListByIndex(musicList->currentRow());
+        emit this->CallOutPassNamesOfSongsToMusicList(playlistmanager->GetSongsFromCurrentPlayList(playlistmanager->GetCurrentPlayListName()));
+        //remove from buffer 'allSongs'
+        emit playlistmanager->CallOutClearOneSong(musicList->currentRow());
+    }
+    else
+    {
+        //remove from other playlist
+        emit playlistmanager->CallOutRemoveTrackFromPlayListByIndex(musicList->currentRow(), playlistIter->text());
+        emit this->CallOutPassNamesOfSongsToMusicList(playlistmanager->GetSongsFromCurrentPlayList(playlistIter->text()));
+        //remove from buffer 'allSongs'
+        emit playlistmanager->CallOutClearOneSong(musicList->currentRow());
     }
 
     return;
@@ -690,20 +681,8 @@ void Ocean::AddSongIntoPlayListByIndex()
     return;
 }
 
-/*
-    BUG HERE
-    If to rename track without selecting track
-    programm will be renaming 0 (ZERO) element
-
-    Need to make if() case to check current element
-    (check mod of widget)
-    Example code here
-*/
 void Ocean::RenameTrack()
 {
-    //if(musicList->currentRow() == 0)
-        //return;
-
     getStringFromUserToRenameTrack->show();
     this->setDisabled(true);
 
@@ -712,8 +691,6 @@ void Ocean::RenameTrack()
 
 void Ocean::RenameTrackByNewName()
 {
-    for(unsigned short int iter = 0; iter < playLists->selectedItems().size(); ++iter)
-    {
         QListWidgetItem *playlist = playLists->item(playLists->currentRow());
 
         emit playlistmanager->CallOutRenameTrackByIndex(musicList->currentRow(),
@@ -724,7 +701,6 @@ void Ocean::RenameTrackByNewName()
         emit getStringFromUserToRenameTrack->BreakeWidget();
         //rename inside UI
         this->GetNamesOfSongsToMusicList(playlist);
-    }
 
     return;
 }
@@ -744,21 +720,16 @@ void Ocean::ParseMusicList(const QString &name)
         return;
 
     //selected item of music list
-    for (unsigned short int iter = 0; iter < musicList->selectedItems().size(); ++iter)
-    {
-        QListWidgetItem *trackCurrent = musicList->item(musicList->currentRow());
+    QListWidgetItem *trackCurrent = musicList->item(musicList->currentRow());
 
-        //current item of playlist
-        for (unsigned short int iter = 0; iter < playLists->selectedItems().size(); ++iter)
-        {
-            QListWidgetItem *playlistCurrent = playLists->item(playLists->currentRow());
+    //current item of playlist
+    QListWidgetItem *playlistCurrent = playLists->item(playLists->currentRow());
 
-            emit playlistmanager->CallOutAddSongIntoPlayList(trackCurrent->text(), //name of song
-                                                                    name, //selected playlist
-                                                                    playlistCurrent->text(), //current playlist
-                                                                    musicList->currentRow()); //index of song
-        }
-    }
+    emit playlistmanager->CallOutAddSongIntoPlayList(trackCurrent->text(), //name of song
+                                                     name, //selected playlist
+                                                     playlistCurrent->text(), //current playlist
+                                                     musicList->currentRow()); //index of song
+
 
     return;
 }
@@ -770,20 +741,17 @@ void Ocean::ParseMusicList(const QString &name)
 */
 void Ocean::MoveTrack(QListWidgetItem *item)
 {
-    for (unsigned short int iter = 0; iter < playLists->selectedItems().size(); ++iter)
-    {
-        QListWidgetItem *playlist = playLists->item(playLists->currentRow());
+    QListWidgetItem *playlist = playLists->item(playLists->currentRow());
 
-        if(playlist->text() == "all")
-            return;
+    if(playlist->text() == "all")
+        return;
 
-        if(playlist->text() == playlistmanager->GetCurrentPlayListName())
-            emit playlistmanager->CallOutMoveSongInsideCurrentPlayList(pressedItem, item->listWidget()->row(item));
-        else
-            emit playlistmanager->CallOutMoveSongInsidePlayListByName(pressedItem, item->listWidget()->row(item), playlist->text());
+    if(playlist->text() == playlistmanager->GetCurrentPlayListName())
+        emit playlistmanager->CallOutMoveSongInsideCurrentPlayList(pressedItem, item->listWidget()->row(item));
+    else
+        emit playlistmanager->CallOutMoveSongInsidePlayListByName(pressedItem, item->listWidget()->row(item), playlist->text());
 
-        qDebug() << "previous: " << pressedItem << "new index: " << item->listWidget()->row(item) << playlist->text();
-    }
+    qDebug() << "previous: " << pressedItem << "new index: " << item->listWidget()->row(item) << playlist->text();
 
     //remove previous index
     item = musicList->takeItem(pressedItem);
@@ -844,25 +812,22 @@ void Ocean::ShowContextMenuOfPlayList(const QPoint &point)
 
 void Ocean::EraseItemFromPlayList()
 {
-    for (unsigned short int iter = 0; iter < playLists->selectedItems().size(); ++iter)
+    QListWidgetItem *item = playLists->item(playLists->currentRow());
+
+    if(item->text() == "all")
+        return;
+
+    if(item->text() == playlistmanager->GetCurrentPlayListName())
     {
-        QListWidgetItem *item = playLists->item(playLists->currentRow());
-
-        if(item->text() == "all")
-            return;
-
-        if(item->text() == playlistmanager->GetCurrentPlayListName())
-        {
-            //clear current playlist
-            musicList->clear();
-            playlistmanager->GetCurrentPlayList()->clear();
-            playermanager->stop();
-        }
-
-        playlistmanager->CallOutRemovePlayListByName(item->text());
-
-        delete item;
+        //clear current playlist
+        musicList->clear();
+        playlistmanager->GetCurrentPlayList()->clear();
+        playermanager->stop();
     }
+
+    playlistmanager->CallOutRemovePlayListByName(item->text());
+
+    delete item;
 
     return;
 }
@@ -877,19 +842,11 @@ void Ocean::CreatePlaylist()
 
 void Ocean::RenamePlaylist()
 {
-    /*
-        Call widget in this method
-        and waiting for user input
-    */
+    // Get curent item on selected row
+    QListWidgetItem *item = playLists->item(playLists->currentRow());
 
-    for(unsigned short int iter = 0; iter < playLists->selectedItems().size(); ++iter)
-    {
-        // Get curent item on selected row
-        QListWidgetItem *item = playLists->item(playLists->currentRow());
-
-        if((item->text() == "") || (item->text() == "all"))
-            return;
-    }
+    if((item->text() == "") || (item->text() == "all"))
+        return;
 
     //show widget
     getStringFromUserToRenamePlaylist->show();
@@ -905,55 +862,52 @@ void Ocean::Rename()
         after user input in this method
     */
 
-    for(unsigned short int iter = 0; iter < playLists->selectedItems().size(); ++iter)
+    // Get curent item on selected row
+    QListWidgetItem *item = playLists->item(playLists->currentRow());
+
+    if((item->text() == "") || (item->text() == "all"))
+        return;
+    else
     {
-        // Get curent item on selected row
-        QListWidgetItem *item = playLists->item(playLists->currentRow());
+        //save index
+        int index = playlistmanager->GetCurrentIndex();
 
-        if((item->text() == "") || (item->text() == "all"))
-            return;
-        else
-        {
-            //save index
-            int index = playlistmanager->GetCurrentIndex();
+        if(item->text() == playlistmanager->GetCurrentPlayListName())
+        {   //For current playlist
+            //rename file
+            emit playlistmanager->CallOutRenameSelectedPlayList(getStringFromUserToRenamePlaylist->GetNameOfNewPlayList(), item->text());
+            //rename inside UI
+            item->setText(getStringFromUserToRenamePlaylist->GetNameOfNewPlayList());
+            //close widget
+            emit getStringFromUserToRenamePlaylist->BreakeWidget();
 
-            if(item->text() == playlistmanager->GetCurrentPlayListName())
-            {   //For current playlist
-                //rename file
-                emit playlistmanager->CallOutRenameSelectedPlayList(getStringFromUserToRenamePlaylist->GetNameOfNewPlayList(), item->text());
-                //rename inside UI
-                item->setText(getStringFromUserToRenamePlaylist->GetNameOfNewPlayList());
-                //close widget
-                emit getStringFromUserToRenamePlaylist->BreakeWidget();
+            //set name of playlist
+            emit playlistmanager->CallOutSetCurrentPlayListName(item->text());
+            //clear current playlist
+            playlistmanager->GetCurrentPlayList()->clear();
 
-                //set name of playlist
-                emit playlistmanager->CallOutSetCurrentPlayListName(item->text());
-                //clear current playlist
-                playlistmanager->GetCurrentPlayList()->clear();
-
-                //load
-                if(playlistmanager->LoadPlayList(playlistmanager->GetCurrentPlayListName()))
-                {
-                    //load playlist
-                    playermanager->setPlaylist(playlistmanager->GetCurrentPlayList());
-                    //play playlist
-                    playermanager->play();
-                    //set current position
-                    playermanager->SetPositionOfTrack(playermanager->GetPositionOfTrack());
-
-                    //set track by index and play it
-                    playlistmanager->SetTrackByIndex(index);
-                }
-            }
-            else //For other playlist
+            //load
+            if(playlistmanager->LoadPlayList(playlistmanager->GetCurrentPlayListName()))
             {
-                //rename file
-                emit playlistmanager->CallOutRenameSelectedPlayList(getStringFromUserToRenamePlaylist->GetNameOfNewPlayList(), item->text());
-                //rename inside UI
-                item->setText(getStringFromUserToRenamePlaylist->GetNameOfNewPlayList());
-                //close widget
-                emit getStringFromUserToRenamePlaylist->BreakeWidget();
+                //load playlist
+                playermanager->setPlaylist(playlistmanager->GetCurrentPlayList());
+                //play playlist
+                playermanager->play();
+                //set current position
+                playermanager->SetPositionOfTrack(playermanager->GetPositionOfTrack());
+
+                //set track by index and play it
+                playlistmanager->SetTrackByIndex(index);
             }
+        }
+        else //For other playlist
+        {
+            //rename file
+            emit playlistmanager->CallOutRenameSelectedPlayList(getStringFromUserToRenamePlaylist->GetNameOfNewPlayList(), item->text());
+            //rename inside UI
+            item->setText(getStringFromUserToRenamePlaylist->GetNameOfNewPlayList());
+            //close widget
+            emit getStringFromUserToRenamePlaylist->BreakeWidget();
         }
     }
 
@@ -962,13 +916,10 @@ void Ocean::Rename()
 
 void Ocean::ExportTrackOfPlayList()
 {
-    for (unsigned short int iter = 0; iter < playLists->selectedItems().size(); ++iter)
-    {
-        QListWidgetItem *item = playLists->item(playLists->currentRow());
+    QListWidgetItem *item = playLists->item(playLists->currentRow());
 
-        //export files from playlist via ImportManager
-        importManager->CallOutToExportTracksOfPlayList(item->text());
-    }
+    //export files from playlist via ImportManager
+    importManager->CallOutToExportTracksOfPlayList(item->text());
 
     return;
 }
@@ -1004,31 +955,28 @@ void Ocean::SetPlayList(QListWidgetItem *item)
 
 void Ocean::SetPlayListByTrack(QListWidgetItem *item)
 {
-    for(unsigned short int iterPlayList = 0; iterPlayList < playLists->selectedItems().size(); ++iterPlayList)
+    //playlist
+    QListWidgetItem *iter = playLists->item(playLists->currentRow());
+
+    //set name of playlist
+    emit playlistmanager->CallOutSetCurrentPlayListName(iter->text());
+
+    //clear current playlist
+    playlistmanager->GetCurrentPlayList()->clear();
+
+    //load
+    if(playlistmanager->LoadPlayList(playlistmanager->GetCurrentPlayListName()))
     {
-        //playlist
-        QListWidgetItem *iter = playLists->item(playLists->currentRow());
+        playermanager->setPlaylist(playlistmanager->GetCurrentPlayList());
+        playermanager->play();
 
-        //set name of playlist
-        emit playlistmanager->CallOutSetCurrentPlayListName(iter->text());
-
-        //clear current playlist
-        playlistmanager->GetCurrentPlayList()->clear();
-
-        //load
-        if(playlistmanager->LoadPlayList(playlistmanager->GetCurrentPlayListName()))
-        {
-            playermanager->setPlaylist(playlistmanager->GetCurrentPlayList());
-            playermanager->play();
-
-            //set track by index and play it
-            const int index = item->listWidget()->row(item);
-            playlistmanager->SetTrackByIndex(index);
-        }
-
-        //show songs in music list
-        emit this->CallOutPassNamesOfSongsToMusicList(playlistmanager->GetSongsFromCurrentPlayList(iter->text()));
+        //set track by index and play it
+        const int index = item->listWidget()->row(item);
+        playlistmanager->SetTrackByIndex(index);
     }
+
+    //show songs in music list
+    emit this->CallOutPassNamesOfSongsToMusicList(playlistmanager->GetSongsFromCurrentPlayList(iter->text()));
 
     return;
 }
