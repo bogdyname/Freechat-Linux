@@ -35,6 +35,12 @@ Client::~Client()
     qDebug() << "Destructor from client.cpp";
 }
 
+void Client::ReadyRead()
+{
+
+    return;
+}
+
 void Client::Connected()
 {
     //Need to send size of data to check free space for it on server PC
