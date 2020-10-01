@@ -31,15 +31,6 @@ void CustomListWidget::dragEnterEvent(QDragEnterEvent *event)
     return;
 }
 
-void CustomListWidget::dragLeaveEvent(QDragLeaveEvent *event)
-{
-    /*
-        Need to create model Drag and Drop to add tracks into some playlist
-        (just drop items from music into some item in playlist)
-    */
-    event->accept();
-}
-
 void CustomListWidget::dragMoveEvent(QDragMoveEvent *event)
 {
     event->accept();
