@@ -45,9 +45,7 @@ void Client::Connected()
 {
     //Need to send size of data to check free space for it on server PC
 
-    #ifndef Q_DEBUG
     qDebug() << "Connected.";
-    #endif
 
     return;
 }
@@ -59,9 +57,9 @@ void Client::Error(QAbstractSocket::SocketError err)
 
     //Find error
     error = "Error: " + (err == QAbstractSocket::HostNotFoundError ?
-                                    "The host was not found.\n" : err == QAbstractSocket::RemoteHostClosedError ?
-                                    "The remote host is closed.\n" : err == QAbstractSocket::ConnectionRefusedError ?
-                                    "The connection was refused.\n" : QString(socket->errorString() + "\n"));
+                             "The host was not found.\n" : err == QAbstractSocket::RemoteHostClosedError ?
+                             "The remote host is closed.\n" : err == QAbstractSocket::ConnectionRefusedError ?
+                             "The connection was refused.\n" : QString(socket->errorString() + "\n"));
 
     //Trigger error signal
     emit this->CallOutSendError(error);
@@ -75,9 +73,9 @@ void Client::SendData(QFile &file)
     QByteArray dataBlock = 0; //Full buffer
     //Setting up stream
     QDataStream sendStream(&dataBlock, QIODevice::WriteOnly);
-    sendStream.QDataStream::setVersion(QDataStream::Qt_5_9);
+    sendStream.setVersion(QDataStream::Qt_5_9);
 
-    if(socket->state() != QAbstractSocket::ConnectedState || file.open(ReadOnly))
+    if((socket->state() != QAbstractSocket::ConnectedState) || (file.open(ReadOnly)))
     {
         //Write name of file
         sendStream << (quint64)0 << file.fileName();

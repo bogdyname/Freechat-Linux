@@ -80,7 +80,6 @@ Ocean::Ocean(QWidget *parent)
     //UpSide
     //Player
     ui->playSlider->addWidget(nameOfTrack);
-    nameOfTrack->setObjectName("nameOfTrack");
     ui->playSlider->addWidget(sliderOfTrack);
     ui->playSlider->setAlignment(nameOfTrack, AlignJustify);
 
@@ -134,6 +133,7 @@ Ocean::Ocean(QWidget *parent)
 
     //name of track
     nameOfTrack->setFixedHeight(35);
+    nameOfTrack->setObjectName("nameOfTrack");
 
     //Error message box
     errorMessageBox->setWindowTitle("Error");
@@ -161,9 +161,8 @@ Ocean::Ocean(QWidget *parent)
     for(QString &iter : buffer)
         iter = playlistmanager->ParseStringToRemoveFormatAndCurrentPath(iter);
 
+    //Load playlists
     playLists->addItems(buffer);
-    qDebug() << "Load playlists" << this->GetNamesOfPlaylistsFromBinDir();
-
     /*--------------------------------------------------TOOLS--------------------------------------------------*/
 
 
@@ -237,7 +236,7 @@ Ocean::Ocean(QWidget *parent)
     ----------------------Tools-----------------------
 
     --------------------Shortcut----------------------
-    11)
+    11)Shortcuts fpr work with tracks, player and window of app
         11.1) Trigger delete track Ctrl + D
         11.2) Trigger rename track Ctrl + R
 
