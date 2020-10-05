@@ -20,9 +20,6 @@ signals:
 
 private slots:
     void SendData(QFile &file);
-
-    //handlers
-private slots:
     void ReadyRead();
     void Connected();
     void Error(QAbstractSocket::SocketError);
