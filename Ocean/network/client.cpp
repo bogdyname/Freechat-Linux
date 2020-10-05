@@ -88,7 +88,7 @@ void Client::SendData(QFile &file)
         //Set stream on NIL position
         sendStream.device()->seek(0);
         //Write block of qint64
-        sendStream << (quint64 )(dataBlock.size() - sizeof(932838457459459));
+        sendStream << (quint64)(dataBlock.size() - sizeof(932838457459459));
 
         //Check recieved and replied sizes
         qint64 sendData = 0;

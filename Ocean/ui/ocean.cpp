@@ -158,6 +158,7 @@ Ocean::Ocean(QWidget *parent)
     //Load playlists
     QStringList buffer = this->GetNamesOfPlaylistsFromBinDir();
 
+    //Parsing names of playlists to show inside UI without format of files
     for(QString &iter : buffer)
         iter = playlistmanager->ParseStringToRemoveFormatAndCurrentPath(iter);
 
@@ -236,7 +237,7 @@ Ocean::Ocean(QWidget *parent)
     ----------------------Tools-----------------------
 
     --------------------Shortcut----------------------
-    11)Shortcuts fpr work with tracks, player and window of app
+    11)Shortcuts for work with tracks, player and window of app
         11.1) Trigger delete track Ctrl + D
         11.2) Trigger rename track Ctrl + R
 
@@ -310,13 +311,14 @@ Ocean::Ocean(QWidget *parent)
     connect(timerForCheckDefaultPlayList, &QTimer::timeout, this, &Ocean::WriteDefaultPlayList);
 
     //Shortcuts-----------------------------------------
+    //Keys for work with tracks
     connect(ctrlD, &QShortcut::activated, this, &Ocean::EraseItemFromMusicList);
     connect(ctrlR, &QShortcut::activated, this, &Ocean::RenameTrack);
-
+    //Keys for work with player
     connect(A, &QShortcut::activated, playlistmanager, &Playlist::SetPreviousTrack);
     connect(S, &QShortcut::activated, playermanager, &Player::SetPausePlayTrack);
     connect(D, &QShortcut::activated, playlistmanager, &Playlist::SetNextTrack);
-
+    //Keys for work with app fo window
     connect(shiftF, &QShortcut::activated, this, &Ocean::FullViaShiftF);
     connect(shiftQ, &QShortcut::activated, this, &Ocean::QuitViaShiftQ);
     connect(shiftH, &QShortcut::activated, this, &Ocean::HideViaShiftH);
@@ -383,6 +385,7 @@ void Ocean::resizeEvent(QResizeEvent *event)
 /*--------------------------------------------------------------------------------------------------------------------------------------------------*/
 void Ocean::Hidder()
 {
+    //Hide elements of UI
     spacer->changeSize(0, 0);
     playLists->hide();
     musicList->hide();
@@ -393,6 +396,7 @@ void Ocean::Hidder()
 
 void Ocean::Shower()
 {
+    //Show elements of UI
     spacer->changeSize(100, 250);
     playLists->show();
     musicList->show();
@@ -403,8 +407,10 @@ void Ocean::Shower()
 
 void Ocean::GetNamesOfSongsToMusicList(QListWidgetItem *item)
 {
+    //Clear list in UI
     musicList->clear();
 
+    //Past new music list into UI
     emit this->CallOutPassNamesOfSongsToMusicList(playlistmanager->GetSongsFromCurrentPlayList(item->text()));
 
     return;
@@ -414,9 +420,11 @@ void Ocean::PassNamesOfSongsToMusicList(const QStringList &songs)
 {
     QStringList buffer = songs;
 
+    //Parsing to remove format
     for(QString &iter : buffer)
         iter = playlistmanager->ParseStringToRemoveFormatAndCurrentPath(iter);
 
+    //Pass new tracks into music list UI
     musicList->clear();
     musicList->addItems(buffer);
 
@@ -586,8 +594,10 @@ void Ocean::ShowContextMenuOfMusicList(const QPoint &point)
 
 void Ocean::EraseAllItemsFromMusicList()
 {
+    //Clear music list inside UI
     musicList->clear();
 
+    //Get current item of playlist
     QListWidgetItem *item = playLists->item(playLists->currentRow());
 
     //return if item empty
@@ -597,7 +607,9 @@ void Ocean::EraseAllItemsFromMusicList()
     //for 'all' playlist
     if(item->text() == "all")
     {
+        //Delete tracks from MAIN playlist
         emit playlistmanager->CallOutRemoveAllTracksFromPlayListByName(item->text());
+        //Past new music list into UI
         emit this->CallOutPassNamesOfSongsToMusicList(playlistmanager->GetSongsFromCurrentPlayList(item->text()));
         //remove from buffer 'allSongs'
         emit playlistmanager->CallOutClearAllSongs();
@@ -608,15 +620,20 @@ void Ocean::EraseAllItemsFromMusicList()
     //for other playlist
     if(item->text() == playlistmanager->GetCurrentPlayListName())
     {
+        //Stop player if it's current playlist
         playermanager->stop();
+        //And after that delete all tracks from current playlist
         emit playlistmanager->CallOutRemoveAllTracksFromCurrentPlayList();
+        //Past new music list into UI
         emit this->CallOutPassNamesOfSongsToMusicList(playlistmanager->GetSongsFromCurrentPlayList(item->text()));
         //remove from buffer 'allSongs'
         emit playlistmanager->CallOutClearAllSongs();
     }
     else
     {
+        //Delete tracks from other (not current) playlist
         emit playlistmanager->CallOutRemoveAllTracksFromPlayListByName(item->text());
+        //Past new music list into UI
         emit this->CallOutPassNamesOfSongsToMusicList(playlistmanager->GetSongsFromCurrentPlayList(item->text()));
         //remove from buffer 'allSongs'
         emit playlistmanager->CallOutClearAllSongs();
@@ -635,6 +652,7 @@ void Ocean::EraseItemFromMusicList()
     if(item->text() == "")
         return;
 
+    //Get name of current playlist
     QListWidgetItem *playlistIter = playLists->item(playLists->currentRow());
 
     //for 'all' playlist
@@ -642,6 +660,7 @@ void Ocean::EraseItemFromMusicList()
     {
         //remove from other playlist
         emit playlistmanager->CallOutRemoveTrackFromPlayListByIndex(musicList->currentRow(), playlistIter->text());
+        //Past new music list into UI
         emit this->CallOutPassNamesOfSongsToMusicList(playlistmanager->GetSongsFromCurrentPlayList(playlistIter->text()));
         //remove from buffer 'allSongs'
         emit playlistmanager->CallOutClearOneSong(musicList->currentRow());
@@ -654,6 +673,7 @@ void Ocean::EraseItemFromMusicList()
     {
         //remove from current playlist
         emit playlistmanager->CallOutRemoveTrackFromCurrentPlayListByIndex(musicList->currentRow());
+        //Past new music list into UI
         emit this->CallOutPassNamesOfSongsToMusicList(playlistmanager->GetSongsFromCurrentPlayList(playlistmanager->GetCurrentPlayListName()));
         //remove from buffer 'allSongs'
         emit playlistmanager->CallOutClearOneSong(musicList->currentRow());
@@ -662,6 +682,7 @@ void Ocean::EraseItemFromMusicList()
     {
         //remove from other playlist
         emit playlistmanager->CallOutRemoveTrackFromPlayListByIndex(musicList->currentRow(), playlistIter->text());
+        //Past new music list into UI
         emit this->CallOutPassNamesOfSongsToMusicList(playlistmanager->GetSongsFromCurrentPlayList(playlistIter->text()));
         //remove from buffer 'allSongs'
         emit playlistmanager->CallOutClearOneSong(musicList->currentRow());
@@ -690,16 +711,18 @@ void Ocean::RenameTrack()
 
 void Ocean::RenameTrackByNewName()
 {
-        QListWidgetItem *playlist = playLists->item(playLists->currentRow());
+    //Get name of current playlist (selected playlist inside UI)
+    QListWidgetItem *playlist = playLists->item(playLists->currentRow());
 
-        emit playlistmanager->CallOutRenameTrackByIndex(musicList->currentRow(),
-                                                        playlist->text(),
-                                                        getStringFromUserToRenameTrack->GetNameOfNewPlayList());
+    //Rename track
+    emit playlistmanager->CallOutRenameTrackByIndex(musicList->currentRow(),//Current index of track
+                                                    playlist->text(),//Pass name of playlist
+                                                    getStringFromUserToRenameTrack->GetNameOfNewPlayList());//New name for track
 
-        //close widget
-        emit getStringFromUserToRenameTrack->BreakeWidget();
-        //rename inside UI
-        this->GetNamesOfSongsToMusicList(playlist);
+    //close editor (to rename track) widget
+    emit getStringFromUserToRenameTrack->BreakeWidget();
+    //rename inside UI
+    this->GetNamesOfSongsToMusicList(playlist);
 
     return;
 }
@@ -724,11 +747,11 @@ void Ocean::ParseMusicList(const QString &name)
     //current item of playlist
     QListWidgetItem *playlistCurrent = playLists->item(playLists->currentRow());
 
+    //Add track into playlist
     emit playlistmanager->CallOutAddSongIntoPlayList(trackCurrent->text(), //name of song
                                                      name, //selected playlist
                                                      playlistCurrent->text(), //current playlist
                                                      musicList->currentRow()); //index of song
-
 
     return;
 }
@@ -811,11 +834,14 @@ void Ocean::ShowContextMenuOfPlayList(const QPoint &point)
 
 void Ocean::EraseItemFromPlayList()
 {
+    //Get current name of playlist
     QListWidgetItem *item = playLists->item(playLists->currentRow());
 
+    //Can't delete MAIN playlist
     if(item->text() == "all")
         return;
 
+    //If it's current playlist (clear and stop it)
     if(item->text() == playlistmanager->GetCurrentPlayListName())
     {
         //clear current playlist
@@ -824,8 +850,10 @@ void Ocean::EraseItemFromPlayList()
         playermanager->stop();
     }
 
+    //Delete playlist from App
     playlistmanager->CallOutRemovePlayListByName(item->text());
 
+    //Delete this playlist from UI
     delete item;
 
     return;
