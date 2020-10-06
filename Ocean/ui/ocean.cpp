@@ -943,6 +943,7 @@ void Ocean::Rename()
 
 void Ocean::ExportTrackOfPlayList()
 {
+    //Get current playlist name
     QListWidgetItem *item = playLists->item(playLists->currentRow());
 
     //export files from playlist via ImportManager
@@ -970,6 +971,7 @@ void Ocean::SetPlayList(QListWidgetItem *item)
     //load
     if(playlistmanager->LoadPlayList(playlistmanager->GetCurrentPlayListName()))
     {
+        //Set playlist and play it
         playermanager->setPlaylist(playlistmanager->GetCurrentPlayList());
         playermanager->play();
     }
@@ -991,9 +993,10 @@ void Ocean::SetPlayListByTrack(QListWidgetItem *item)
     //clear current playlist
     playlistmanager->GetCurrentPlayList()->clear();
 
-    //load
+    //load playlist
     if(playlistmanager->LoadPlayList(playlistmanager->GetCurrentPlayListName()))
     {
+        //Set playlist and play it
         playermanager->setPlaylist(playlistmanager->GetCurrentPlayList());
         playermanager->play();
 
@@ -1010,12 +1013,14 @@ void Ocean::SetPlayListByTrack(QListWidgetItem *item)
 
 void Ocean::SetCurrentPlayList()
 {
+    //Check current playlist with name of MAIN playlist
     if(playlistmanager->GetCurrentPlayListName() == "all")
     {
+        //Save current index of track
         const unsigned short int index = playlistmanager->GetCurrentPlayList()->currentIndex();
         QString nameOfSongBuffer = "";
 
-        //save current track by name
+        //save current track name
         for(unsigned short int iter = 0; iter < musicList->count(); ++iter)
             if(iter == index)
                 nameOfSongBuffer = musicList->item(index)->text();
@@ -1023,7 +1028,7 @@ void Ocean::SetCurrentPlayList()
         //clear current playlist
         playlistmanager->GetCurrentPlayList()->clear();
 
-        //load
+        //load playlist
         if(playlistmanager->LoadPlayList(playlistmanager->GetCurrentPlayListName()))
         {
             //set playlist
@@ -1130,7 +1135,9 @@ void Ocean::ClosegetStringWithSelectedPlaylistViaCancel()
 /*--------------------------------------------------------------------------------------------------------------------------------------------------*/
 void Ocean::ClosegetAddedTracksFromWidgetViaCancel()
 {
+    //Enable main window
     this->setEnabled(true);
+    //Hide own widget for add tracks into new playlist
     getAddedTracksFromWidget->hide();
 
     return;
@@ -1138,16 +1145,20 @@ void Ocean::ClosegetAddedTracksFromWidgetViaCancel()
 
 void Ocean::PassAddedTracksIntoBuffer(const QStringList &list)
 {
+    //Save added track from UI to add into playlist file
     bufferOfAddedTracks.clear();
     bufferOfAddedTracks += list;
 
-    playLists->addItem(getStringFromUserToCreateNewPlaylist->GetNameOfNewPlayList()); //add new playlist
+    //Add new playlist
+    playLists->addItem(getStringFromUserToCreateNewPlaylist->GetNameOfNewPlayList());
 
-    //create new playlist
-    emit playlistmanager->CallOutCreateNewPlayList(getStringFromUserToCreateNewPlaylist->GetNameOfNewPlayList(),
-                                                   playlistmanager->ParseToGetFullPathOfTracks(bufferOfAddedTracks));
+    //Create new playlist
+    emit playlistmanager->CallOutCreateNewPlayList(getStringFromUserToCreateNewPlaylist->GetNameOfNewPlayList(),//Name of new playlist
+                                                   playlistmanager->ParseToGetFullPathOfTracks(bufferOfAddedTracks));//Added tracks for new playlist
 
+    //Enable main window
     this->setEnabled(true);
+    //Hide own widget for add tracks into new playlist
     getAddedTracksFromWidget->hide();
 
     return;
@@ -1217,13 +1228,19 @@ QStringList Ocean::GetNamesOfPlaylistsFromBinDir()
 
 void Ocean::CallWidgetAfterCreatePlaylistSlot()
 {
+    //Get all track from App
     QStringList buffer = playlistmanager->GetAllTracks();
 
+    //Remove format from names of tracks
     for(QString &iter : buffer)
         iter = playlistmanager->ParseStringToRemoveFormatAndCurrentPath(iter);
 
+    //Pass all tracks from main window into widget
     getAddedTracksFromWidget->GetAllSongsfFromMainWindow(buffer);
+
+    //Disable main window
     this->setDisabled(true);
+    //Show own widget for add tracks into new playlist
     getAddedTracksFromWidget->show();
 
     return;
@@ -1231,9 +1248,10 @@ void Ocean::CallWidgetAfterCreatePlaylistSlot()
 
 void Ocean::WriteDefaultPlayList()
 {
+    //Check first elemet there is playlists to find MAIN playlist
     if(playLists->item(0)->text() == "all")
         return;
-    else
+    else//Write into UI MAIN playlist
         playLists->addItem("all");
 
     return;
@@ -1251,15 +1269,17 @@ void Ocean::WriteDefaultPlayList()
 
 QStringList Ocean::GetAllItemsFromList()
 {
-    QStringList list;
+    //List with names of playlist
+    QStringList buffer;
 
+    //Get all names of playlist from UI
     for(unsigned short int iter = 0; iter < playLists->count(); ++iter)
     {
         QListWidgetItem* item = playLists->item(iter);
-        list.push_back(item->text());
+        buffer.push_back(item->text());
     }
 
-    return  list;
+    return  buffer;
 }
 
 /*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
