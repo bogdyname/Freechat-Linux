@@ -388,6 +388,7 @@ void Playlist::ClearOneSong(const int &index)
 /*--------------------------------------------------------------------------------------------------------------------------------------------------*/
 void Playlist::SetModOfPlayback()
 {
+    //Current state of playback
     counterOfPlayback == 2 ? counterOfPlayback = -1 : ++counterOfPlayback ;
 
     switch(counterOfPlayback)
@@ -461,11 +462,15 @@ void Playlist::CheckDefaultPlayList()
 
         QMediaPlaylist *buffer = new QMediaPlaylist();
 
+        //add song into playlist
         for(const QString &iter : allSongs)
-            buffer->addMedia(QMediaContent(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/music/" + iter)));//add song into playlist
+            buffer->addMedia(QMediaContent(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/music/" + iter)));
 
-        if(buffer->save(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/all.m3u8"), "m3u8"))
-            delete buffer;
+        //Save main playlist
+        buffer->save(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/all.m3u8"), "m3u8");
+
+        //Clear memory
+        delete buffer;
     }
     else
     {
@@ -476,14 +481,19 @@ void Playlist::CheckDefaultPlayList()
 
         QMediaPlaylist *buffer = new QMediaPlaylist();
 
+        //Clear current file to add new files
         buffer->load(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/all.m3u8"), "m3u8");
         buffer->clear();
 
+        //add song into playlist
         for(const QString &iter : allSongs)
-            buffer->addMedia(QMediaContent(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/music/" + iter)));//add song into playlist
+            buffer->addMedia(QMediaContent(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/music/" + iter)));
 
-        if(buffer->save(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/all.m3u8"), "m3u8"))
-            delete buffer;
+        //Save main playlist
+        buffer->save(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/all.m3u8"), "m3u8");
+
+        //Clear memory
+        delete buffer;
     }
 
     return;
@@ -535,11 +545,13 @@ QStringList Playlist::GetSongsFromCurrentPlayList(const QString &nameOfPlayList)
     if(file.exists())
     {
         if(!file.open(QFile::ReadOnly))
+            //Return empty list of songs
             return songs;
         else
         {
             QTextStream stream(&file);
 
+            //Write paths of files (paths of songs) into list buffer line by line from file
             while(!stream.atEnd())
                 songs.push_back(stream.readLine());
 
@@ -547,8 +559,10 @@ QStringList Playlist::GetSongsFromCurrentPlayList(const QString &nameOfPlayList)
         }
     }
     else
+        //If playlist file not exists return empty list of songs
         return songs;
 
+    //return list with songs
     return songs;
 }
 
@@ -585,9 +599,11 @@ bool Playlist::CreatePlayList(const QString &name, const QStringList &list)
 
     QMediaPlaylist *bufferPlaylist = new QMediaPlaylist();
 
+    //add song into playlist
     for(const QString &iter : list)
-        bufferPlaylist->addMedia(QMediaContent(QUrl::fromLocalFile(iter)));//add song into playlist
+        bufferPlaylist->addMedia(QMediaContent(QUrl::fromLocalFile(iter)));
 
+    //Save created playlist
     if(bufferPlaylist->save(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/" + name + ".m3u8"), "m3u8"))
     {
         delete bufferPlaylist;
@@ -648,6 +664,7 @@ bool Playlist::SavePlaylist(const QString &name, const QStringList &newListOfSon
     cd->setCurrent(QCoreApplication::applicationDirPath());
     currentPlaylist->clear();
 
+    //add song into playlist
     for(const QString &iter : newListOfSongs)
         currentPlaylist->addMedia(QMediaContent(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/music/" + iter)));
 
@@ -666,6 +683,7 @@ bool Playlist::SavePlaylist(const QString &name, const QStringList &newListOfSon
 
     QMediaPlaylist *bufferPlaylist = new QMediaPlaylist();
 
+    //add song into playlist
     for(const QString &iter : newListOfSongs)
         bufferPlaylist->addMedia(QMediaContent(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/music/" + iter)));
 
@@ -784,7 +802,9 @@ bool Playlist::AddSongsIntoPlayListByName(const QStringList &songs, const QStrin
     if((songs.isEmpty()) && (nameOfPlayList == ""))
         return false;
 
-    cd->setCurrent(QCoreApplication::applicationDirPath()); // set default path
+    //set default path
+    cd->setCurrent(QCoreApplication::applicationDirPath());
+
     QMediaPlaylist *bufferPlaylist = new QMediaPlaylist();
     bufferPlaylist->load(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/" + nameOfPlayList + ".m3u8"), "m3u8"); // load playlist
 
@@ -1033,7 +1053,7 @@ bool Playlist::RenameTrack(const int &index, const QString &playlist, const QStr
 
     if(fileOfCurrentPlaylist->open(QIODevice::ReadWrite))
     {
-        // read specific line by index
+        //read specific line by index
         for(int iterOfFile = 0; iterOfFile <= index; ++iterOfFile)
             bufferOfName = streamOfCurrentPlaylist.readLine(0);
 
@@ -1059,6 +1079,7 @@ bool Playlist::RenameTrack(const int &index, const QString &playlist, const QStr
         //file with current name
         fileOfTrack->setFileName(QCoreApplication::applicationDirPath() + "/music/" + bufferOfName);
 
+        //Create new name of track
         newNameOfTrack = QCoreApplication::applicationDirPath() + "/music/" + newName + ParseStringToGetFormat(bufferOfName);
 
         //rename file
@@ -1110,10 +1131,13 @@ bool Playlist::RenameTrack(const int &index, const QString &playlist, const QStr
             //reset stream to start read from beginning
             stream.seek(0);
 
+            //Parsing file to add into buffer all songs except old name
             while(!stream.atEnd())
             {
+                //Read line
                 line = stream.readLine(0).trimmed();
 
+                //CMP current line and old name
                 if(!(line == pathBuffer))
                     streamData.push_back(line + "\n");
             }
@@ -1175,9 +1199,11 @@ QStringList Playlist::ParseToGetFullPathOfTracks(const QStringList &list)
 
     QStringList bufferlist = {}; //july.mp3 //july
 
+    //Parsing all files from app
     for(const QString &iterForAllSongs : allSongs)
     {
-        QString::const_iterator iter = iterForAllSongs.end() - 5; //start after dot
+        //start after dot
+        QString::const_iterator iter = iterForAllSongs.end() - 5;
         QString buffer = "";
 
         for(; iter != iterForAllSongs.begin() - 1; --iter)
@@ -1190,6 +1216,7 @@ QStringList Playlist::ParseToGetFullPathOfTracks(const QStringList &list)
         }
         //now buffer = 'july'
 
+        //Add track without full path and format into buffer
         for(const QString &iterForList : list)
             if(iterForList == buffer)
                 bufferlist.push_back(QCoreApplication::applicationDirPath() + "/music/" + iterForAllSongs);
@@ -1200,18 +1227,24 @@ QStringList Playlist::ParseToGetFullPathOfTracks(const QStringList &list)
 
 QString Playlist::ParseStringToRemoveFormatAndCurrentPath(const QString &string)
 {
+    //Remove last char UNICODE
     QString::const_iterator iter = string.end() - 1;
     QString buffer = "";
 
+    //Check last char again
     if(*iter == "8")
         iter = string.end() - 6;
     else
         iter = string.end() - 5;
 
+    //Parsing string while not char '/' or '\'
     for(; iter != string.begin() - 1; --iter)
+            //unix like      //windows
         if(*iter == "/" || *iter == "\\")
+            //Stop  parsing
             break;
         else
+            //Push char into buffer
             buffer.push_front(*iter);
 
     return buffer;
@@ -1242,6 +1275,7 @@ QString Playlist::ParserToGetFormatOfSong(const QString &nameOfPlayList, const i
 
 QString Playlist::ParseStringToGetFormat(const QString &string)
 {
+    //Remove last char UNICODE
     QString::const_iterator iter = string.end() - 1;
     QString buffer = "";
 
