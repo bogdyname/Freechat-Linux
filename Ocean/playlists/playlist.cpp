@@ -1073,7 +1073,7 @@ bool Playlist::RenameTrack(const int &index, const QString &playlist, const QStr
         else
             OS = true;// Set Unix OS (macOS/Linux)
 
-        //rename track
+        //get only name with format from full path
         bufferOfName = ParseToGetCurrentName(bufferOfName);
 
         //file with current name
@@ -1088,9 +1088,9 @@ bool Playlist::RenameTrack(const int &index, const QString &playlist, const QStr
 
         //check Windows paths to add it to current OS
         QString::const_iterator iterOfPath = newNameOfTrack.begin() + 1;
-        if(*iterOfPath == ":")
+        if(*iterOfPath == ":")//Windows
             newNameOfTrack.push_front("file:///");
-        else
+        else//UNIX (macOS/Linux)
             newNameOfTrack.push_front("file://");
 
         delete fileOfTrack;
@@ -1255,6 +1255,7 @@ QString Playlist::ParserToGetFormatOfSong(const QString &nameOfPlayList, const i
     if(nameOfPlayList == "")
         return "";
 
+    //load file
     QFile buffer(QCoreApplication::applicationDirPath() + "/bin/" + nameOfPlayList + ".m3u8");
     QString format = "";
 
@@ -1279,17 +1280,22 @@ QString Playlist::ParseStringToGetFormat(const QString &string)
     QString::const_iterator iter = string.end() - 1;
     QString buffer = "";
 
+    //Parsing string to get last 3 chars (format)
     for(; iter != string.begin(); --iter)
     {
+        //Check if current index is dot
         if(*iter == ".")
         {
+            //Push dot after get all chars of format
             buffer.push_front(".");
+            //and return format with dot like '.wav'
             return buffer;
         }
-        else
+        else//Save one char from format of file
             buffer.push_front(*iter);
     }
 
+    //Save return
     return buffer;
 }
 
@@ -1299,15 +1305,17 @@ QString Playlist::ParseToGetCurrentName(const QString &fullPath)
     QString bufferOfFullPath = fullPath;
     QString::iterator iterator = bufferOfFullPath.end();
 
+    //Check UNICODE char int the end
     if(*iterator == NULL)
         iterator = bufferOfFullPath.end() - 1;
 
+    //Parsing string (full path) to get only name of track with format
     for(; iterator != bufferOfFullPath.begin(); --iterator)
     {
             //unix like         //windows
         if((*iterator == "/") || (*iterator == "\\"))
             return nameWithFormat;
-        else
+        else//Save char of only name
             nameWithFormat.push_front(*iterator);
     }
 
