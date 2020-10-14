@@ -36,36 +36,6 @@ void Button::SetIconForSwitch(QString item)
 
 void Button::buttonPressed()
 {
-    /*QIcon *icon = new QIcon("://images/" + this->objectName() + "_pressed.png");
-    this->setIcon(*icon);
-
-    delete icon;
-    return;*/
-
-   /* QIcon *icon;
-
-    switch(*this->switchCounter)
-    {
-        //Play current track
-        case 0:
-        {
-            icon = new QIcon("://images/" + *this->switchIcon + "_pressed.png");
-            this->setIcon(*icon);
-        }
-        break;
-
-        //Pause current track
-        case 1:
-        {
-            icon = new QIcon("://images/" + this->objectName() + "_pressed.png");
-            this->setIcon(*icon);
-        }
-        break;
-    }
-
-    delete icon;
-    return;*/
-
     QIcon *icon;
     static int counter = 1;
 
