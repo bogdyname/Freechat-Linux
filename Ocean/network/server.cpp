@@ -67,7 +67,7 @@ void Server::Receiver()
             receiveStream >> nextBlockSize;
         }
 
-        if(socket->QAbstractSocket::bytesAvailable() < nextBlockSize)
+        if(socket->bytesAvailable() < nextBlockSize)
             break;
 
         receiveStream >> buffer;

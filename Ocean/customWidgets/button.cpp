@@ -73,7 +73,7 @@ void Button::buttonReleased()
     return;
 }
 
-void Button::changeIcon(int &counter)
+void Button::changeIcon(const int &counter)
 {
     QIcon *icon;
 

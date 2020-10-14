@@ -26,7 +26,7 @@ Player::Player(QObject *parent)
         exit(1);
     }
 
-    //setting up variables
+    //setting up variable to switch status of track (play or pause)
     counterOfPausePlay = 0;
 
     player->setNotifyInterval(500);
@@ -34,59 +34,12 @@ Player::Player(QObject *parent)
     //player data
     connect(this, &QMediaPlayer::positionChanged, this, &Player::ChangedPosition);
 
-    //catch error
-    connect(this, static_cast<void(QMediaPlayer::*)(QMediaPlayer::Error )>(&QMediaPlayer::error), this, &Player::MediaError);
-    //signals of error
-    connect(this, &Player::CallOutNoError, this, &Player::NoError);
-    connect(this, &Player::CallOutResourceError, this, &Player::ResourceError);
-    connect(this, &Player::CallOutFormatError, this, &Player::FormatError);
-    connect(this, &Player::CallOutNetworkError, this, &Player::NetworkError);
-    connect(this, &Player::CallOutAccessDeniedError, this, &Player::AccessDeniedError);
-    connect(this, &Player::CallOutServiceMissingError, this, &Player::ServiceMissingError);
-
     return;
 }
 
 Player::~Player()
 {
     qDebug() << "Destructor from Player.cpp";
-}
-
-//Private slots
-void Player::NoError(QMediaPlayer::Error errorStatus)
-{
-
-    return;
-}
-
-void Player::ResourceError(QMediaPlayer::Error errorStatus)
-{
-
-    return;
-}
-
-void Player::FormatError(QMediaPlayer::Error errorStatus)
-{
-
-    return;
-}
-
-void Player::NetworkError(QMediaPlayer::Error errorStatus)
-{
-
-    return;
-}
-
-void Player::AccessDeniedError(QMediaPlayer::Error errorStatus)
-{
-
-    return;
-}
-
-void Player::ServiceMissingError(QMediaPlayer::Error errorStatus)
-{
-
-    return;
 }
 
 //Public slots
@@ -139,23 +92,6 @@ void Player::CallSetVolume(const int &volume)
 void Player::ChangedPosition(qint64 position)
 {
     currentPosition = position;
-
-    return;
-}
-
-void Player::MediaError(QMediaPlayer::Error error)
-{
-    //error catch
-    switch(error)
-    {
-        case QMediaPlayer::NoError: emit this->CallOutNoError(error); break;
-        case QMediaPlayer::ResourceError: emit this->CallOutResourceError(error); break;
-        case QMediaPlayer::FormatError: emit this->CallOutFormatError(error); break;
-        case QMediaPlayer::NetworkError: emit this->CallOutNetworkError(error); break;
-        case QMediaPlayer::AccessDeniedError: emit this->CallOutAccessDeniedError(error); break;
-        case QMediaPlayer::ServiceMissingError: emit this->CallOutServiceMissingError(error); break;
-        default: break;
-    }
 
     return;
 }
