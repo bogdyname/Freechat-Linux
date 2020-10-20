@@ -19,6 +19,7 @@ class Button : public QPushButton
 
 private:
     QString *switchIcon;
+    QIcon *icon;
 
 public:
     Button(QWidget *parent = nullptr, QString objName = " ");
