@@ -10,7 +10,7 @@ Button::Button(QWidget *parent, QString objName)
     :  QPushButton(parent)
 {
     this->setObjectName(objName);
-    QIcon *icon = new QIcon("://images/" + this->objectName() + ".png");
+    icon = new QIcon("://images/" + this->objectName() + ".png");
     this->setIcon(*icon);
 
     Button::switchIcon = nullptr;
@@ -18,13 +18,13 @@ Button::Button(QWidget *parent, QString objName)
     connect(this, &QAbstractButton::pressed, this, &Button::buttonPressed);
     connect(this, &QAbstractButton::released, this, &Button::buttonReleased);
 
-    delete icon;
     return;
 }
 
 Button::~Button()
 {
     delete switchIcon;
+    delete icon;
 
     return;
 }
@@ -36,77 +36,22 @@ void Button::SetIconForSwitch(QString item)
 
 void Button::buttonPressed()
 {
-    /*QIcon *icon = new QIcon("://images/" + this->objectName() + "_pressed.png");
+    icon = new QIcon("://images/" + this->objectName() + "_pressed.png");
     this->setIcon(*icon);
 
-    delete icon;
-    return;*/
-
-   /* QIcon *icon;
-
-    switch(*this->switchCounter)
-    {
-        //Play current track
-        case 0:
-        {
-            icon = new QIcon("://images/" + *this->switchIcon + "_pressed.png");
-            this->setIcon(*icon);
-        }
-        break;
-
-        //Pause current track
-        case 1:
-        {
-            icon = new QIcon("://images/" + this->objectName() + "_pressed.png");
-            this->setIcon(*icon);
-        }
-        break;
-    }
-
-    delete icon;
-    return;*/
-
-    QIcon *icon;
-    static int counter = 1;
-
-    counter == 1 ? --counter : ++counter ;
-
-    switch(counter)
-    {
-        //Play current track
-        case 0:
-        {
-            icon = new QIcon("://images/" + this->objectName() + "_pressed.png");
-            this->setIcon(*icon);
-        }
-        break;
-
-        //Pause current track
-        case 1:
-        {
-            icon = new QIcon("://images/" + *this->switchIcon + "_pressed.png");
-            this->setIcon(*icon);
-        }
-        break;
-    }
-
-    delete icon;
     return;
 }
 
 void Button::buttonReleased()
 {
-    QIcon *icon = new QIcon("://images/" + this->objectName() + ".png");
+    icon = new QIcon("://images/" + this->objectName() + ".png");
     this->setIcon(*icon);
 
-    delete icon;
     return;
 }
 
 void Button::changeIcon(const int &counter)
 {
-    QIcon *icon;
-
     switch(counter)
     {
         //Play current track
@@ -126,6 +71,5 @@ void Button::changeIcon(const int &counter)
         break;
     }
 
-    delete icon;
     return;
 }
