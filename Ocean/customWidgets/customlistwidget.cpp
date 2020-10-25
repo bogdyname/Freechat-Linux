@@ -31,12 +31,6 @@ void CustomListWidget::dragEnterEvent(QDragEnterEvent *event)
     return;
 }
 
-void CustomListWidget::dragLeaveEvent(QDragLeaveEvent *event)
-{
-    //TTS
-    event->accept();
-}
-
 void CustomListWidget::dragMoveEvent(QDragMoveEvent *event)
 {
     event->accept();

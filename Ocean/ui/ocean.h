@@ -13,11 +13,10 @@
 #include <QLabel>
 #include <QPixmap>
 #include <QWidget>
-#include <QSlider>
 #include <QShortcut>
 #include <QLineEdit>
-#include <QComboBox>
 #include <QMimeData>
+#include <QMessageBox>
 #include <QListWidget>
 #include <QPushButton>
 #include <QMainWindow>
@@ -39,6 +38,8 @@
 
 //custom widgets
 #include "customWidgets/customlistwidget.h"
+#include "customWidgets/slider.h"
+#include "customWidgets/button.h"
 
 //managers
 #include "imports/importmanager.h"
@@ -107,6 +108,7 @@ private slots:
     void PassNamesOfSongsToMusicList(const QStringList &songs);
     void AddFilesAfterDropEvent(const QStringList &files);
     void SetNameOfCurrentTrackFromPlaylist(const QString &name);
+    void ErrorsByPlaylist(const int &error);
     /*-------------------------------------Slots for MainWindow----------------------------------*/
 
     /*-------------------------------------------Shortcut----------------------------------------*/
@@ -317,13 +319,13 @@ private:
 private:
     //UI--------------------------------------------------------------
     //track status (maybe bit rank)
-    QSlider *sliderOfTrack = nullptr;
+    Slider *sliderOfTrack = nullptr;
     QLabel *nameOfTrack = nullptr;
 
     //right side (working with app)
     QSpacerItem *spacer = nullptr;
     QPixmap *ownImage = nullptr;
-    QSlider *sliderOfVolume = nullptr;
+    Slider *sliderOfVolume = nullptr;
     QLabel *imageOfPlayList = nullptr;
 
     //lists of playlists and musiclists
@@ -334,11 +336,26 @@ private:
     int pressedItem = -1;
 
     //player
-    QPushButton *pausePlayTrack = nullptr;
-    QPushButton *stopTrack = nullptr;
-    QPushButton *nextTrack = nullptr;
-    QPushButton *previousTrack = nullptr;
-    QPushButton *playbackMode = nullptr;
+    Button *pausePlayTrack = nullptr;
+    Button *stopTrack = nullptr;
+    Button *nextTrack = nullptr;
+    Button *previousTrack = nullptr;
+    Button *playbackMode = nullptr;
+
+    //Error message box
+    QMessageBox *errorMessageBox = nullptr;
+
+    //Errors messages
+    const QStringList errorsByPlayList =
+    {
+        "Can't save playlist",         //0
+        "Can't rename playlist",       //1
+        "Can't create playlist",       //2
+        "Can't delete playlist",       //3
+        "Can't rename track",          //4
+        "Can't delete track",          //5
+        "Can't add song into playlist" //6
+    };
     //UI--------------------------------------------------------------
 
     //TOOLS-----------------------------------------------------------

@@ -12,7 +12,9 @@ CONFIG += c++17
 DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
+    customWidgets/button.cpp \
     customWidgets/customlistwidget.cpp \
+    customWidgets/slider.cpp \
     imports/importmanager.cpp \
     main.cpp \
     network/client.cpp \
@@ -27,7 +29,9 @@ SOURCES += \
     ui/selectplaylist.cpp
 
 HEADERS += \
+    customWidgets/button.h \
     customWidgets/customlistwidget.h \
+    customWidgets/slider.h \
     imports/importmanager.h \
     network/client.h \
     network/networkmanager.h \

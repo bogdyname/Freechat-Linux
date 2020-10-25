@@ -22,17 +22,13 @@ ImportManager::ImportManager(QObject *parent)
     }
     catch(std::bad_alloc &exp)
     {
-        #ifndef Q_DEBUG
         qCritical() << "Exception caught: " << exp.std::bad_alloc::what();
-        #endif
-        abort();
+        exit(1);
     }
     catch(...)
     {
-        #ifndef Q_DEBUG
         qCritical() << "Some exception caught";
-        #endif
-        abort();
+        exit(1);
     }
 
     //Singals with orivate Slots
@@ -112,8 +108,6 @@ void ImportManager::SaveFileViaDragAndDrop(const QStringList &paths)
 /*--------------------------------------------------------------------------------------------------------------------------------------------------*/
 /*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||SLOTS PUBLIC|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
 /*--------------------------------------------------------------------------------------------------------------------------------------------------*/
-
-
 
 /*--------------------------------------------------------------------------------------------------------------------------------------------------*/
 /*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||SLOTS PRIVATE||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
@@ -226,20 +220,9 @@ void ImportManager::SaveFilesIntoMusicFolderAndDeleteIt(const QStringList &paths
             CheckDir();
             mp3File->copy(iter, cd->currentPath() + "/music/" + nameOfSong);
             mp3File->remove();
-
-            #ifndef Q_DEBUG
-            qDebug() << "File has been removed: " + iter;
-            qDebug() << "Added new file: " + nameOfSong;
-            #endif
         }
         else
-        {
-            #ifndef Q_DEBUG
-            qCritical() << "Error open or read file!";
-            #endif
-
             return;
-        }
 
         mp3File->close();
     }
@@ -259,19 +242,9 @@ void ImportManager::SaveFilesIntoMusicFolderOnlyCopy(const QStringList &paths)
 
             CheckDir();
             mp3File->copy(iter, cd->currentPath() + "/music/" + nameOfSong);
-
-            #ifndef Q_DEBUG
-            qDebug() << "Added new file: " << cd->currentPath() + "/music/" + nameOfSong;
-            #endif
         }
         else
-        {
-            #ifndef Q_DEBUG
-            qCritical() << "Error open or read file!";
-            #endif
-
             return;
-        }
 
         mp3File->close();
     }
@@ -304,19 +277,9 @@ void ImportManager::SaveFilesIntoMusicFolderOnlyCopyAfterDrop(const QStringList 
 
             //just added tracks to pass it into playlist
             justAddedSongs.push_back(cd->currentPath() + "/music/" + nameOfSong);
-
-            #ifndef Q_DEBUG
-            qDebug() << "Added new file: " + cd->currentPath() + "/music/" + nameOfSong;
-            #endif
         }
         else
-        {
-            #ifndef Q_DEBUG
-            qCritical() << "Error open or read file!";
-            #endif
-
             return;
-        }
 
         mp3File->close();
     }
@@ -333,20 +296,10 @@ bool ImportManager::CheckDir()
     {
         cd->mkdir("music");
 
-        #ifndef Q_DEBUG
-        qDebug() << "Folder 'music' created";
-        #endif
-
         return false;
     }
     else
-    {
-        #ifndef Q_DEBUG
-        qCritical() << "Folder 'music' already exists!";
-        #endif
-
         return true;
-    }
 }
 
 QString ImportManager::GetNameOfSongFromCurrentPath(const QString nameOfSong)

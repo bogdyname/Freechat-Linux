@@ -24,12 +24,23 @@
 class Playlist : public QMediaPlaylist
 {
     Q_OBJECT
-    Q_CLASSINFO("Version", "1.0")
+    Q_CLASSINFO("Version", "0.8")
 
     /*
      * Format of playlists = .m3u8
      * Dir 'bin' for saving and loading playlists
     */
+
+    enum Errors
+    {
+        ErrorSavePlaylist   = 0,
+        ErrorRenamePlaylist = 1,
+        ErrorCreatePlaylist = 2,
+        ErrorDeletePlaylist = 3,
+        ErrorRenameTrack    = 4,
+        ErrorDeleteTrack    = 5,
+        ErrorAddTrack       = 6
+    };
 
 public:
     Playlist(QObject *parent = nullptr);
@@ -103,6 +114,8 @@ signals:
     void CallOutClearAllSongs();
     /*---------------------------------------Clear one song---------------------------------*/
     void CallOutClearOneSong(const int &index);
+    /*---------------------------------------Error Message----------------------------------*/
+    void CallOutErrorMessage(const int &error);
     /*-------------------------------------------------------SIGNALS-------------------------------------------------------*/
 
 
@@ -232,13 +245,18 @@ public:
         11) add songs into playlist by name via drag and drop
         12) add songs into current playlist via drag and drop
         --remove
-        13/14) remove track by index
-        15/16) remove track by index and name
+        13) remove track by index
+        14) remove track by index from app
+        15) remove track by index and name
+        16) remove all tracks from playlist
+        17) remove all tracks from app
+        18) remove all track from playlist by name
         --move
-        17) move track inside playlist by index
-        18) move track inside playlist by index and name
+        19) move track inside playlist by index
+        20) move track inside playlist by index and name
         --rename track
         19) rename track by indexex
+        21) rename track by indexex
     */
 private:
     bool CreatePlayList(const QString &name, const QStringList &list); //--------------------------------------------------------------------------------------------1) (DONE)
@@ -254,12 +272,14 @@ private:
     bool AddSongsIntoPlayListByName(const QStringList &songs, const QString &nameOfPlayList);//---------------------------------------------------------------------11) (DONE)
     bool AddSongsIntoCurrentPlayList(const QStringList &songs);//---------------------------------------------------------------------------------------------------12) (DONE)
     bool RemoveTrackByIndex(const int &index); //-------------------------------------------------------------------------------------------------------------------13) (DONE)
-    bool RemoveTrackByIndex(const int &index, const QString &name); //----------------------------------------------------------------------------------------------14) (DONE)
-    bool RemoveAllTracks(); //--------------------------------------------------------------------------------------------------------------------------------------15) (DONE)
-    bool RemoveAllTracks(const QString &name); //-------------------------------------------------------------------------------------------------------------------16) (DONE)
-    bool MoveSongInsidePlaylistByIndex(const int &currentIndex, const int &newIndex); //----------------------------------------------------------------------------17)
-    bool MoveSongInsidePlaylistByIndex(const int &currentIndex, const int &newIndex, const QString &name); //-------------------------------------------------------18)
-    bool RenameTrack(const int &index, const QString &playlist, const QString &newName); //-------------------------------------------------------------------------19)
+    bool RemoveTrackByIndexFromApp(const int &index); //------------------------------------------------------------------------------------------------------------14) (DONE)
+    bool RemoveTrackByIndex(const int &index, const QString &name); //----------------------------------------------------------------------------------------------15) (DONE)
+    bool RemoveAllTracks(); //--------------------------------------------------------------------------------------------------------------------------------------16) (DONE)
+    bool RemoveAllTracksFromApp(); //-------------------------------------------------------------------------------------------------------------------------------17) (DONE)
+    bool RemoveAllTracks(const QString &name); //-------------------------------------------------------------------------------------------------------------------18) (DONE)
+    bool MoveSongInsidePlaylistByIndex(const int &currentIndex, const int &newIndex); //----------------------------------------------------------------------------19)
+    bool MoveSongInsidePlaylistByIndex(const int &currentIndex, const int &newIndex, const QString &name); //-------------------------------------------------------20)
+    bool RenameTrack(const int &index, const QString &playlist, const QString &newName); //-------------------------------------------------------------------------21) (DONE)
     /*----------------------------------------Methods to call it in Private SLOTS----------------------------------------*/
 
     /*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
@@ -303,6 +323,7 @@ public: //using inside Ocean.cpp
     /*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
 
 private:
+    int counterOfPlayback;
     QDir *cd = nullptr; //------------------------------------- works with dir and paths of system
     QStringList allSongs; //----------------------------------- list with paths of all songs
     QString currentPlaylistName; //---------------------------- name of playlist

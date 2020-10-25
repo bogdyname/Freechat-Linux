@@ -18,18 +18,21 @@ Player::Player(QObject *parent)
     catch(std::bad_alloc &exp)
     {
         qCritical() << "Exception caught: " << exp.std::bad_alloc::what();
-        abort();
+        exit(1);
     }
     catch(...)
     {
         qCritical() << "Some exception caught";
-        abort();
+        exit(1);
     }
+
+    //setting up variable to switch status of track (play or pause)
+    counterOfPausePlay = 0;
 
     player->setNotifyInterval(500);
 
+    //player data
     connect(this, &QMediaPlayer::positionChanged, this, &Player::ChangedPosition);
-    connect(this, static_cast<void(QMediaPlayer::*)(QMediaPlayer::Error )>(&QMediaPlayer::error), this, &Player::MediaError);
 
     return;
 }
@@ -42,18 +45,15 @@ Player::~Player()
 //Public slots
 void Player::SetPausePlayTrack()
 {
-    static int counter = 0;
+    counterOfPausePlay == 1 ? --counterOfPausePlay : ++counterOfPausePlay ;
 
-    counter == 1 ? --counter : ++counter ;
-
-    switch(counter)
+    switch(counterOfPausePlay)
     {
         //Play current track
         case 0:
         {
             this->play();
             emit this->CallOutSetImagePuasePlayTrack(0);
-            qDebug() << 0 ;
         }
         break;
 
@@ -62,7 +62,6 @@ void Player::SetPausePlayTrack()
         {
             this->pause();
             emit this->CallOutSetImagePuasePlayTrack(1);
-            qDebug() << 1 ;
         }
         break;
     }
@@ -93,20 +92,6 @@ void Player::CallSetVolume(const int &volume)
 void Player::ChangedPosition(qint64 position)
 {
     currentPosition = position;
-
-    return;
-}
-
-void Player::MediaError(QMediaPlayer::Error)
-{
-    //check it out
-
-    emit this->CallOutNoError();
-    emit this->CallOutResourceError();
-    emit this->CallOutFormatError();
-    emit this->CallOutNetworkError();
-    emit this->CallOutAccessDeniedError();
-    emit this->CallOutServiceMissingError();
 
     return;
 }
