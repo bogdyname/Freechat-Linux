@@ -49,7 +49,9 @@ Server::~Server()
 
 void Server::Receiver()
 {
+    //part of packet
     nextBlockSize = 0;
+    //full file (only one)
     QByteArray buffer = 0;
     socket = (QTcpSocket*)sender();
 
@@ -57,21 +59,28 @@ void Server::Receiver()
     QDataStream receiveStream(socket);
     receiveStream.setVersion(QDataStream::Qt_5_13);
 
+    //Reads until the entire file is received
     forever
     {
+        //Check
         if(nextBlockSize == 0)
         {
+            //Received data is empty
             if(socket->bytesAvailable() < sizeof(932838457459459))
                 break;
 
+            //Write data from socket into block for check
             receiveStream >> nextBlockSize;
         }
 
+        //Received data is empty
         if(socket->bytesAvailable() < nextBlockSize)
             break;
 
+        //Write data from socket into buffer
         receiveStream >> buffer;
 
+        //Clear current block
         nextBlockSize = 0;
     }
 
