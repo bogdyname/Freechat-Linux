@@ -987,26 +987,33 @@ void Ocean::SetPlayListByTrack(QListWidgetItem *item)
     //playlist
     QListWidgetItem *iter = playLists->item(playLists->currentRow());
 
-    //set name of playlist
-    emit playlistmanager->CallOutSetCurrentPlayListName(iter->text());
-
-    //clear current playlist
-    playlistmanager->GetCurrentPlayList()->clear();
-
-    //load playlist
-    if(playlistmanager->LoadPlayList(playlistmanager->GetCurrentPlayListName()))
+    if(playlistmanager->GetCurrentPlayListName() != iter->text())
     {
-        //Set playlist and play it
-        playermanager->setPlaylist(playlistmanager->GetCurrentPlayList());
-        playermanager->play();
+        //set name of playlist
+        emit playlistmanager->CallOutSetCurrentPlayListName(iter->text());
 
-        //set track by index and play it
-        const int index = item->listWidget()->row(item);
-        playlistmanager->SetTrackByIndex(index);
+        //clear current playlist
+        playlistmanager->GetCurrentPlayList()->clear();
+
+        //load playlist
+        if(playlistmanager->LoadPlayList(playlistmanager->GetCurrentPlayListName()))
+        {
+            //Set playlist and play it
+            playermanager->setPlaylist(playlistmanager->GetCurrentPlayList());
+            playermanager->play();
+
+            //set track by index and play it
+            playlistmanager->SetTrackByIndex(item->listWidget()->row(item));
+        }
+
+        //show songs in music list
+        emit this->CallOutPassNamesOfSongsToMusicList(playlistmanager->GetSongsFromCurrentPlayList(iter->text()));
     }
-
-    //show songs in music list
-    emit this->CallOutPassNamesOfSongsToMusicList(playlistmanager->GetSongsFromCurrentPlayList(iter->text()));
+    else
+    {
+        //Play selected track in current playlist
+        playlistmanager->SetTrackByIndex(item->listWidget()->row(item));
+    }
 
     return;
 }
