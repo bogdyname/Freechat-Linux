@@ -17,11 +17,6 @@ Playlist::Playlist(QObject *parent)
         cd = new QDir();
         currentPlaylist = new QMediaPlaylist(this);
     }
-    catch(std::bad_alloc &exp)
-    {
-        qCritical() << "Exception caught: " << exp.std::bad_alloc::what();
-        exit(1);
-    }
     catch(...)
     {
         qCritical() << "Some exception caught";
