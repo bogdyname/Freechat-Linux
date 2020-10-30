@@ -20,11 +20,6 @@ ImportManager::ImportManager(QObject *parent)
         mp3File = new QFile(this);
         importerWindow = new QFileDialog();
     }
-    catch(std::bad_alloc &exp)
-    {
-        qCritical() << "Exception caught: " << exp.std::bad_alloc::what();
-        exit(1);
-    }
     catch(...)
     {
         qCritical() << "Some exception caught";
@@ -42,10 +37,7 @@ ImportManager::ImportManager(QObject *parent)
     cd->setCurrent(QCoreApplication::applicationDirPath());
 
     //Check folder of music
-    if(cd->mkdir("music"))
-        qDebug() << "Folder 'music' created";
-    else
-        qDebug() << "Folder 'music' already exists!";
+    cd->mkdir("music");
 
     return;
 }
@@ -68,13 +60,16 @@ ImportManager::~ImportManager()
 /*--------------------------------------------------------------------------------------------------------------------------------------------------*/
 void ImportManager::CallFileDialogWithDel()
 {
+    //list with paths of files (get via QFileDialog)
     const QStringList pathOfFiles = importerWindow->getOpenFileNames(0, "Import Music", "", "*.mp3 *.wav *.m4a");
 
+    //close method if list is empty
     if(pathOfFiles.isEmpty())
         return;
-    else
+    else//save files inside app and delete from getted path
         SaveFilesIntoMusicFolderAndDeleteIt(pathOfFiles);
 
+    //call methods to check playlist 'all' (reboot playlist)
     emit this->CallOutToCheckSongsInsideDefaultPlayList();
 
     return;
@@ -82,13 +77,16 @@ void ImportManager::CallFileDialogWithDel()
 
 void ImportManager::CallFileDialogOnlyCopy()
 {
+    //list with paths of files (get via QFileDialog)
     const QStringList pathOfFiles = importerWindow->getOpenFileNames(0, "Import Music", "", "*.mp3 *.wav *.m4a");
 
+    //close method if list is empty
     if(pathOfFiles.isEmpty())
         return;
-    else
+    else//copy files into app
         SaveFilesIntoMusicFolderOnlyCopy(pathOfFiles);
 
+    //call methods to check playlist 'all' (reboot playlist)
     emit this->CallOutToCheckSongsInsideDefaultPlayList();
 
     return;
@@ -96,11 +94,13 @@ void ImportManager::CallFileDialogOnlyCopy()
 
 void ImportManager::SaveFileViaDragAndDrop(const QStringList &paths)
 {
+    //close method if list is empty
     if(paths.isEmpty())
         return;
-    else
+    else//copy files into app
         SaveFilesIntoMusicFolderOnlyCopyAfterDrop(paths);
 
+    //call methods to check playlist 'all' (reboot playlist)
     emit this->CallOutToCheckSongsInsideDefaultPlayList();
 
     return;
@@ -123,6 +123,7 @@ void ImportManager::ExportTracksOfPlayList(const QString &playlist)
     //set path to export files
     cd->setCurrent(pathToExport);
     cd->mkdir("export music");
+    //path (with dir) to copy files from app
     const QString pathOfExportDir = pathToExport + "/export music/";
 
     //parse file
@@ -137,7 +138,8 @@ void ImportManager::ExportTracksOfPlayList(const QString &playlist)
         // read specific line by index
         while(!stream.atEnd())
         {
-            pathOfTrack = stream.readLine().trimmed(); //read line with path of track
+            //read line with path of track
+            pathOfTrack = stream.readLine().trimmed();
 
             //added path into buffer to copy it via QFile::copy()
             QString buffer = pathOfTrack;
@@ -154,9 +156,11 @@ void ImportManager::ExportTracksOfPlayList(const QString &playlist)
 
             //remove first 8 elements 'file:///'
             ParseStringToRemoveFirstChars(pathOfTrack);
+            //parsing all path to get only names of files
             nameOfSong = GetNameOfSongFromCurrentPath(buffer);
 
-            bufferOfPath->copy(buffer, pathOfExportDir + nameOfSong); //copy into export dir
+            //copy into export dir
+            bufferOfPath->copy(buffer, pathOfExportDir + nameOfSong);
         }
 
         delete buffer;
@@ -182,10 +186,13 @@ void ImportManager::ExportTracksOfPlayList(const QString &playlist)
 /*--------------------------------------------------------------------------------------------------------------------------------------------------*/
 const QStringList ImportManager::GetJustAddedSongs()
 {
+    //list for path - just added files via Drag and Drop
     QStringList buffer = {};
 
+    //parsing to remove last char 'UNICODE'
     foreach(const QString &iter, justAddedSongs)
     {
+        //copy current file path
         QString songBuffer = iter;
 
         //remove unicode char
@@ -209,23 +216,37 @@ const QStringList ImportManager::GetJustAddedSongs()
 //Methods for save files
 void ImportManager::SaveFilesIntoMusicFolderAndDeleteIt(const QStringList &paths)
 {
+    //parsing list with paths
     for(const QString &iter : paths)
     {
+        //pointer on current file
         mp3File->setFileName(iter);
 
         if(mp3File->open(QFile::ReadOnly))
         {
+            //get name from full path
             const QString nameOfSong = GetNameOfSongFromCurrentPath(iter);
 
+            //check dir of app
             CheckDir();
+            //add files into app
             mp3File->copy(iter, cd->currentPath() + "/music/" + nameOfSong);
+            //delete file from full path
             mp3File->remove();
         }
         else
+        {
+            //clear last point
+            mp3File = nullptr;
+
             return;
+        }
 
         mp3File->close();
     }
+
+    //clear last point
+    mp3File = nullptr;
 
     return;
 }

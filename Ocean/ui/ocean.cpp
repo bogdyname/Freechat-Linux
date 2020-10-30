@@ -62,13 +62,6 @@ Ocean::Ocean(QWidget *parent)
         importManager = new ImportManager(this);
         playlistmanager = new Playlist(this);
         playermanager = new Player(this);
-        //system
-        sysmanager = new System();
-    }
-    catch(std::bad_alloc &exp)
-    {
-        qCritical() << "Exception caught: " << exp.std::bad_alloc::what();
-        exit(1);
     }
     catch(...)
     {
@@ -116,10 +109,7 @@ Ocean::Ocean(QWidget *parent)
     //buttons
     pausePlayTrack->SetIconForSwitch("play");
     //Default image of playlists
-    if(ownImage->load("://images/vampire_playlist.jpg", "jpg", AutoColor))
-        qDebug() << "true";
-    else
-        qDebug() << "false";
+    ownImage->load("://images/vampire_playlist.jpg", "jpg", AutoColor);
 
     const QPixmap *imageTTS = ownImage;
 
@@ -331,26 +321,17 @@ Ocean::~Ocean()
     qDebug() << "Destructor from Ocean.cpp";
 
     //Tools
-    sysmanager->Free(cd);
+    sysmanager.Free(cd);
     //widgets
-    sysmanager->Free(getAddedTracksFromWidget);
-    sysmanager->Free(getStringFromUserToCreateNewPlaylist);
-    sysmanager->Free(getStringWithSelectedPlaylist);
-    sysmanager->Free(getStringFromUserToRenamePlaylist);
-    sysmanager->Free(getStringFromUserToRenameTrack);
+    sysmanager.Free(getAddedTracksFromWidget);
+    sysmanager.Free(getStringFromUserToCreateNewPlaylist);
+    sysmanager.Free(getStringWithSelectedPlaylist);
+    sysmanager.Free(getStringFromUserToRenamePlaylist);
+    sysmanager.Free(getStringFromUserToRenameTrack);
     //UI
-    sysmanager->Free(ownImage);
-    sysmanager->Free(spacer);
-    sysmanager->Free(ui);
-
-    //system
-    delete sysmanager;
-    sysmanager = nullptr;
-
-    qDebug() << "SYSTEM INFO";
-
-    if(!sysmanager)
-        qDebug() << "sysmanager empty!";
+    sysmanager.Free(ownImage);
+    sysmanager.Free(spacer);
+    sysmanager.Free(ui);
 }
 
 
@@ -450,13 +431,18 @@ void Ocean::AddFilesAfterDropEvent(const QStringList &files)
         //get format
         for(; iter != string.begin(); --iter)
         {
+            //check current char
             if(*iter == ".")
             {
+                //write into buffer '.' and close cycle (parsed format)
                 buffer.push_front(".");
                 break;
             }
             else
+            {
+                //write current char into buffer (and go no parsing)
                 buffer.push_front(*iter);
+            }
         }
 
         //check format of file
@@ -757,10 +743,6 @@ void Ocean::ParseMusicList(const QString &name)
 }
 
 //BUG ON ALL OS
-/*
-    NEED TO TEST IT!!!!!!!!
-    item->listWidget()->row(item)
-*/
 void Ocean::MoveTrack(QListWidgetItem *item)
 {
     QListWidgetItem *playlist = playLists->item(playLists->currentRow());

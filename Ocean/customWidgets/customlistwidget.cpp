@@ -25,6 +25,7 @@ CustomListWidget::CustomListWidget(QWidget *parent)
 
 void CustomListWidget::dragEnterEvent(QDragEnterEvent *event)
 {
+    //
     if(event->mimeData()->hasFormat("text/uri-list"))
         event->acceptProposedAction();
 
@@ -33,6 +34,7 @@ void CustomListWidget::dragEnterEvent(QDragEnterEvent *event)
 
 void CustomListWidget::dragMoveEvent(QDragMoveEvent *event)
 {
+    //can accept drop items
     event->accept();
 
     return;
@@ -40,12 +42,16 @@ void CustomListWidget::dragMoveEvent(QDragMoveEvent *event)
 
 void CustomListWidget::dropEvent(QDropEvent* event)
 {
+    //list for path of files
     QList<QUrl> urlList = event->mimeData()->urls();
+    //list only for audio files
     QStringList buffer = {};
 
+    //parsing all paths of files to get only audio files
     foreach(QUrl url, urlList)
         buffer.push_back(url.toString());
 
+    //pass paths of audio files into import manager
     emit this->CallOutItemsDroped(buffer);
 
     return;

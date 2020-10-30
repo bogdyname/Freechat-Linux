@@ -20,11 +20,6 @@ SelectPlaylist::SelectPlaylist(QWidget *parent)
         cancel = new QPushButton("cancel", this);
         playlists = new QListWidget(this);
     }
-    catch(std::bad_alloc &exp)
-    {
-        qCritical() << "Exception caught: " << exp.std::bad_alloc::what();
-        exit(1);
-    }
     catch(...)
     {
         qCritical() << "Some exception caught";
