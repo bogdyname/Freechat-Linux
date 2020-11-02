@@ -22,11 +22,6 @@ AddMusicWidget::AddMusicWidget(QWidget *parent)
         okay = new QPushButton("okay", this);
         cancel = new QPushButton("cancel", this);
     }
-    catch(std::bad_alloc &exp)
-    {
-        qCritical() << "Exception caught: " << exp.std::bad_alloc::what();
-        exit(1);
-    }
     catch(...)
     {
         qCritical() << "Some exception caught";
