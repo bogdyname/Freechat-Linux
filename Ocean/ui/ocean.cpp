@@ -50,6 +50,9 @@ Ocean::Ocean(QWidget *parent)
         shiftF = new QShortcut(this);
         shiftQ = new QShortcut(this);
         shiftH = new QShortcut(this);
+        //Shortcuts for move track up or down inside playlist
+        moveTrackUp = new QShortcut(this);
+        moveTrackDown = new QShortcut(this);
 
         //Object of own classes
         //widgets
@@ -162,13 +165,16 @@ Ocean::Ocean(QWidget *parent)
     ctrlD->setKey(CTRL + Key_D);
     ctrlR->setKey(CTRL + Key_R);
     //Shortcuts for playlists
-    A->setKey(Key_A);
-    S->setKey(Key_S);
-    D->setKey(Key_D);
+    A->setKey(Key_Left);
+    S->setKey(Key_Space);
+    D->setKey(Key_Right);
     //Shortcuts for window of app
     shiftF->setKey(SHIFT + Key_F);
     shiftQ->setKey(SHIFT + Key_Q);
     shiftH->setKey(SHIFT + Key_H);
+    //Shortcuts for move track up or down inside playlist
+    moveTrackUp->setKey(CTRL + Key_Up);
+    moveTrackDown->setKey(CTRL + Key_Down);
     /*-------------------------------------------------Shortcut------------------------------------------------*/
 
     /*
@@ -259,8 +265,6 @@ Ocean::Ocean(QWidget *parent)
     connect(previousTrack, &QPushButton::clicked, playlistmanager, &Playlist::SetPreviousTrack);
     connect(playbackMode, &QPushButton::clicked, playlistmanager, &Playlist::SetModOfPlayback);
     connect(musicList, &QListWidget::itemDoubleClicked, this, &Ocean::SetPlayListByTrack);
-    connect(musicList, &QListWidget::itemPressed, this, &Ocean::SetPreviousIndexOfItem);
-    connect(musicList, &QListWidget::itemChanged, this, &Ocean::MoveTrack);
     connect(playlistmanager, &Playlist::CallOutSetNameOfCurrentTrack, this, &Ocean::SetNameOfCurrentTrackFromPlaylist);
 
     //UI-----------------------------------------------
@@ -312,6 +316,9 @@ Ocean::Ocean(QWidget *parent)
     connect(shiftF, &QShortcut::activated, this, &Ocean::FullViaShiftF);
     connect(shiftQ, &QShortcut::activated, this, &Ocean::QuitViaShiftQ);
     connect(shiftH, &QShortcut::activated, this, &Ocean::HideViaShiftH);
+    //Shortcuts for move track up or down inside playlist
+    connect(moveTrackUp, &QShortcut::activated, this, &Ocean::MoveTrackUp);
+    connect(moveTrackDown, &QShortcut::activated, this, &Ocean::MoveTrackUp);
 
     return;
 }
@@ -742,51 +749,39 @@ void Ocean::ParseMusicList(const QString &name)
     return;
 }
 
-//BUG ON ALL OS
-void Ocean::MoveTrack(QListWidgetItem *item)
+void Ocean::MoveTrackUp()
 {
+    //Looking for current playlist
     QListWidgetItem *playlist = playLists->item(playLists->currentRow());
 
-    if(playlist->text() == "all")
+    //End if cureent playlist is MAIN or is empty
+    if(playlist->text() == "all" || playlist->text() == "")
         return;
 
+    //Looking for current track
+    QListWidgetItem *currentTrack = musicList->item(musicList->currentRow());
+    int currentIndex = musicList->row(currentTrack);
+
+    //Check if current track is not exist or is first track (zero in array)
+    if(currentIndex <= 0)
+        return;
+
+    //Create previuse position
+    QListWidgetItem *previuseTrack = musicList->item(musicList->row(currentTrack) - 1);
+    int previuseIndex = musicList->row(previuseTrack);
+
+    //Mover item
+    QListWidgetItem *temp = musicList->takeItem(previuseIndex);
+    musicList->insertItem(previuseIndex, currentTrack);
+    musicList->insertItem(currentIndex, temp);
+
+    //Move track inside playlist file
     if(playlist->text() == playlistmanager->GetCurrentPlayListName())
-        emit playlistmanager->CallOutMoveSongInsideCurrentPlayList(pressedItem, item->listWidget()->row(item));
+        //Move inside current playlist
+        emit playlistmanager->CallOutMoveSongInsideCurrentPlayList(currentIndex, previuseIndex);
     else
-        emit playlistmanager->CallOutMoveSongInsidePlayListByName(pressedItem, item->listWidget()->row(item), playlist->text());
-
-    qDebug() << "previous: " << pressedItem << "new index: " << item->listWidget()->row(item) << playlist->text();
-
-    //remove previous index
-    item = musicList->takeItem(pressedItem);
-    delete item;
-
-    return;
-}
-
-void Ocean::SetPreviousIndexOfItem(QListWidgetItem *item)
-{
-    //current indexes
-   for(int iter = 0; iter < musicList->count(); ++iter)
-   {
-       QListWidgetItem *track = musicList->item(iter);
-       currentIndexesOfTracks.push_back(track->text());
-   }
-
-   for(int iter = 0; iter < musicList->count(); ++iter)
-    qDebug() << "Indexes: " << currentIndexesOfTracks.at(iter);
-
-    pressedItem = item->listWidget()->row(item);
-
-    musicList->update();
-
-    return;
-}
-
-void Ocean::UpdateCurrentIndexes()
-{
-   for(int iter = 0; iter < musicList->count(); ++iter)
-     qDebug() << "Indexes: " << currentIndexesOfTracks.at(iter);
+        //Move inside other playlist
+        emit playlistmanager->CallOutMoveSongInsidePlayListByName(currentIndex, previuseIndex, playlist->text());
 
     return;
 }

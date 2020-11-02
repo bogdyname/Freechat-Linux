@@ -171,9 +171,7 @@ private slots:
     void ClosegetStringFromUserToRenameTrackViaCancel();
     //move track
     void ParseMusicList(const QString &name);
-    void MoveTrack(QListWidgetItem *item);
-    void SetPreviousIndexOfItem(QListWidgetItem *item);
-    void UpdateCurrentIndexes();
+    void MoveTrackUp();
     // Context Menu of Music list ------------------------------------------------- 1
 
     //||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
@@ -331,9 +329,6 @@ private:
     //lists of playlists and musiclists
     CustomListWidget *playLists = nullptr;
     CustomListWidget *musicList = nullptr;
-    QList<QString> currentIndexesOfTracks = {};
-    QList<QString> previousIndexesOfTracks = {};
-    int pressedItem = -1;
 
     //player
     Button *pausePlayTrack = nullptr;
@@ -381,6 +376,10 @@ private:
         1) Full Window Shift + F
         2) Quit Window Shift + Q
         3) Hide Window Shift + H
+
+      * Shortcuts for move track up or down inside playlist
+        1) Move track up
+        2) Move track down
     */
 
     QShortcut *ctrlD = nullptr;
@@ -393,6 +392,9 @@ private:
     QShortcut *shiftF = nullptr;
     QShortcut *shiftQ = nullptr;
     QShortcut *shiftH = nullptr;
+
+    QShortcut *moveTrackUp = nullptr;
+    QShortcut *moveTrackDown = nullptr;
     //Shortcuts-------------------------------------------------------
 
 
