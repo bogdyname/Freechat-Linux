@@ -43,9 +43,9 @@ Ocean::Ocean(QWidget *parent)
         ctrlD = new QShortcut(this);
         ctrlR = new QShortcut(this);
         //Shortcuts for playlists
-        A = new QShortcut(this);
-        S = new QShortcut(this);
-        D = new QShortcut(this);
+        previuseSong = new QShortcut(this);
+        pauseSong = new QShortcut(this);
+        nextTrack = new QShortcut(this);
         //Shortcuts for window of app
         shiftF = new QShortcut(this);
         shiftQ = new QShortcut(this);
@@ -165,9 +165,9 @@ Ocean::Ocean(QWidget *parent)
     ctrlD->setKey(CTRL + Key_D);
     ctrlR->setKey(CTRL + Key_R);
     //Shortcuts for playlists
-    A->setKey(Key_Left);
-    S->setKey(Key_Space);
-    D->setKey(Key_Right);
+    previuseSong->setKey(Key_Left);
+    pauseSong->setKey(Key_Space);
+    nextSong->setKey(Key_Right);
     //Shortcuts for window of app
     shiftF->setKey(SHIFT + Key_F);
     shiftQ->setKey(SHIFT + Key_Q);
@@ -309,16 +309,16 @@ Ocean::Ocean(QWidget *parent)
     connect(ctrlD, &QShortcut::activated, this, &Ocean::EraseItemFromMusicList);
     connect(ctrlR, &QShortcut::activated, this, &Ocean::RenameTrack);
     //Keys for work with player
-    connect(A, &QShortcut::activated, playlistmanager, &Playlist::SetPreviousTrack);
-    connect(S, &QShortcut::activated, playermanager, &Player::SetPausePlayTrack);
-    connect(D, &QShortcut::activated, playlistmanager, &Playlist::SetNextTrack);
+    connect(previuseSong, &QShortcut::activated, playlistmanager, &Playlist::SetPreviousTrack);
+    connect(pauseSong, &QShortcut::activated, playermanager, &Player::SetPausePlayTrack);
+    connect(nextTrack, &QShortcut::activated, playlistmanager, &Playlist::SetNextTrack);
     //Keys for work with app fo window
     connect(shiftF, &QShortcut::activated, this, &Ocean::FullViaShiftF);
     connect(shiftQ, &QShortcut::activated, this, &Ocean::QuitViaShiftQ);
     connect(shiftH, &QShortcut::activated, this, &Ocean::HideViaShiftH);
     //Shortcuts for move track up or down inside playlist
     connect(moveTrackUp, &QShortcut::activated, this, &Ocean::MoveTrackUp);
-    connect(moveTrackDown, &QShortcut::activated, this, &Ocean::MoveTrackUp);
+    connect(moveTrackDown, &QShortcut::activated, this, &Ocean::MoveTrackDown);
 
     return;
 }
@@ -782,6 +782,43 @@ void Ocean::MoveTrackUp()
     else
         //Move inside other playlist
         emit playlistmanager->CallOutMoveSongInsidePlayListByName(currentIndex, previuseIndex, playlist->text());
+
+    return;
+}
+
+void Ocean::MoveTrackDown()
+{
+    //Looking for current playlist
+    QListWidgetItem *playlist = playLists->item(playLists->currentRow());
+
+    //End if cureent playlist is MAIN or is empty
+    if(playlist->text() == "all" || playlist->text() == "")
+        return;
+
+    //Looking for current track
+    QListWidgetItem *currentTrack = musicList->item(musicList->currentRow());
+    int currentIndex = musicList->row(currentTrack);
+
+    //Check if current track is not exist or is last track (end of array)
+    if(currentIndex == (musicList->count() - 1))
+        return;
+
+    //Create previuse position
+    QListWidgetItem *nextTrack = musicList->item(musicList->row(currentTrack) + 1);
+    int nextIndex = musicList->row(nextTrack);
+
+    //Mover item
+    QListWidgetItem *temp = musicList->takeItem(nextIndex);
+    musicList->insertItem(nextIndex, currentTrack);
+    musicList->insertItem(currentIndex, temp);
+
+    //Move track inside playlist file
+    if(playlist->text() == playlistmanager->GetCurrentPlayListName())
+        //Move inside current playlist
+        emit playlistmanager->CallOutMoveSongInsideCurrentPlayList(currentIndex, nextIndex);
+    else
+        //Move inside other playlist
+        emit playlistmanager->CallOutMoveSongInsidePlayListByName(currentIndex, nextIndex, playlist->text());
 
     return;
 }

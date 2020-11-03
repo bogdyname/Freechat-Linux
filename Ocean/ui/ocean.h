@@ -170,8 +170,10 @@ private slots:
     void RenameTrackByNewName();
     void ClosegetStringFromUserToRenameTrackViaCancel();
     //move track
-    void ParseMusicList(const QString &name);
     void MoveTrackUp();
+    void MoveTrackDown();
+    //parsing
+    void ParseMusicList(const QString &name);
     // Context Menu of Music list ------------------------------------------------- 1
 
     //||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
@@ -368,9 +370,9 @@ private:
         2) rename track Ctrl + R
 
      * Shortcuts for playlists
-        1) previuse track A
-        2) play or pause S
-        3) next track D
+        1) previuse track ->
+        2) play or pause SPACE
+        3) next track <-
 
       * Shortcuts for window of app
         1) Full Window Shift + F
@@ -385,9 +387,9 @@ private:
     QShortcut *ctrlD = nullptr;
     QShortcut *ctrlR = nullptr;
 
-    QShortcut *A = nullptr;
-    QShortcut *S = nullptr;
-    QShortcut *D = nullptr;
+    QShortcut *previuseSong = nullptr;
+    QShortcut *pauseSong = nullptr;
+    QShortcut *nextSong = nullptr;
 
     QShortcut *shiftF = nullptr;
     QShortcut *shiftQ = nullptr;
