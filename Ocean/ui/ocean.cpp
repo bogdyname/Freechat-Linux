@@ -756,6 +756,42 @@ void Ocean::ParseMusicList(const QString &name)
 
 void Ocean::MoveTrackUp()
 {
+    /*
+	//Save current index of track
+        const unsigned short int index = playlistmanager->GetCurrentPlayList()->currentIndex();
+        QString nameOfSongBuffer = "";
+
+        //save current track name
+        for(unsigned short int iter = 0; iter < musicList->count(); ++iter)
+            if(iter == index)
+                nameOfSongBuffer = musicList->item(index)->text();
+
+	    //set playlist
+            playermanager->setPlaylist(playlistmanager->GetCurrentPlayList());
+
+            //show songs in music list
+            emit this->CallOutPassNamesOfSongsToMusicList(playlistmanager->GetSongsFromCurrentPlayList("all"));
+
+            //index for set last track by index
+            unsigned short int newIndex = 0;
+
+            //find current track
+            for(unsigned short int iter = 0; iter < musicList->count(); ++iter)
+            {
+                QString bufferOfTrackName = musicList->item(iter)->text();
+
+                if(nameOfSongBuffer == bufferOfTrackName)
+                    newIndex = iter;
+            }
+
+            //set current track
+            playlistmanager->GetCurrentPlayList()->setCurrentIndex(newIndex);
+            //play this track
+            playermanager->play();
+            //set current position
+            playermanager->SetPositionOfTrack(playermanager->GetPositionOfTrack());
+    */
+
     //Looking for current playlist
     QListWidgetItem *playlist = playLists->item(playLists->currentRow());
 
@@ -805,6 +841,43 @@ void Ocean::MoveTrackUp()
 
 void Ocean::MoveTrackDown()
 {
+    /*
+	//Save current index of track
+        const unsigned short int index = playlistmanager->GetCurrentPlayList()->currentIndex();
+        QString nameOfSongBuffer = "";
+
+        //save current track name
+        for(unsigned short int iter = 0; iter < musicList->count(); ++iter)
+            if(iter == index)
+                nameOfSongBuffer = musicList->item(index)->text();
+
+	    //set playlist
+            playermanager->setPlaylist(playlistmanager->GetCurrentPlayList());
+
+            //show songs in music list
+            emit this->CallOutPassNamesOfSongsToMusicList(playlistmanager->GetSongsFromCurrentPlayList("all"));
+
+            //index for set last track by index
+            unsigned short int newIndex = 0;
+
+            //find current track
+            for(unsigned short int iter = 0; iter < musicList->count(); ++iter)
+            {
+                QString bufferOfTrackName = musicList->item(iter)->text();
+
+                if(nameOfSongBuffer == bufferOfTrackName)
+                    newIndex = iter;
+            }
+
+            //set current track
+            playlistmanager->GetCurrentPlayList()->setCurrentIndex(newIndex);
+            //play this track
+            playermanager->play();
+            //set current position
+            playermanager->SetPositionOfTrack(playermanager->GetPositionOfTrack());
+    */
+
+
     //Move track--------------------------------------------------------------
     //Looking for current playlist
     QListWidgetItem *playlist = playLists->item(playLists->currentRow());
