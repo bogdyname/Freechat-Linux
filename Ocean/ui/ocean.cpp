@@ -45,7 +45,7 @@ Ocean::Ocean(QWidget *parent)
         //Shortcuts for playlists
         previuseSong = new QShortcut(this);
         pauseSong = new QShortcut(this);
-        nextTrack = new QShortcut(this);
+        nextSong = new QShortcut(this);
         //Shortcuts for window of app
         shiftF = new QShortcut(this);
         shiftQ = new QShortcut(this);
@@ -244,6 +244,9 @@ Ocean::Ocean(QWidget *parent)
         11.6) Trigger Full Window Shift + F
         11.7) Trigger Quit Window Shift + Q
         11.8) Trigger Hide Window Shift + H
+
+        11.9) Trigger move track up CTRL + KEY UP
+        11.10) Trigger move track down CTRL + KEY DOWN
     --------------------Shortcut----------------------
     */
 
@@ -311,7 +314,7 @@ Ocean::Ocean(QWidget *parent)
     //Keys for work with player
     connect(previuseSong, &QShortcut::activated, playlistmanager, &Playlist::SetPreviousTrack);
     connect(pauseSong, &QShortcut::activated, playermanager, &Player::SetPausePlayTrack);
-    connect(nextTrack, &QShortcut::activated, playlistmanager, &Playlist::SetNextTrack);
+    connect(nextSong, &QShortcut::activated, playlistmanager, &Playlist::SetNextTrack);
     //Keys for work with app fo window
     connect(shiftF, &QShortcut::activated, this, &Ocean::FullViaShiftF);
     connect(shiftQ, &QShortcut::activated, this, &Ocean::QuitViaShiftQ);
@@ -319,6 +322,8 @@ Ocean::Ocean(QWidget *parent)
     //Shortcuts for move track up or down inside playlist
     connect(moveTrackUp, &QShortcut::activated, this, &Ocean::MoveTrackUp);
     connect(moveTrackDown, &QShortcut::activated, this, &Ocean::MoveTrackDown);
+    connect(moveTrackUp, &QShortcut::activated, this, &Ocean::SetCurrentPlayList);
+    connect(moveTrackDown, &QShortcut::activated, this, &Ocean::SetCurrentPlayList);
 
     return;
 }
@@ -755,7 +760,7 @@ void Ocean::MoveTrackUp()
     QListWidgetItem *playlist = playLists->item(playLists->currentRow());
 
     //End if cureent playlist is MAIN or is empty
-    if(playlist->text() == "all" || playlist->text() == "")
+    if(playlist->text() == "all")
         return;
 
     //Looking for current track
@@ -777,8 +782,20 @@ void Ocean::MoveTrackUp()
 
     //Move track inside playlist file
     if(playlist->text() == playlistmanager->GetCurrentPlayListName())
+    {
         //Move inside current playlist
         emit playlistmanager->CallOutMoveSongInsideCurrentPlayList(currentIndex, previuseIndex);
+
+
+        //Find current track------------------------------------------------------
+        //set current track
+        playlistmanager->GetCurrentPlayList()->setCurrentIndex(previuseIndex);
+        //play this track
+        playermanager->play();
+        //set current position
+        playermanager->SetPositionOfTrack(playermanager->GetPositionOfTrack());
+        //Find current track------------------------------------------------------
+    }
     else
         //Move inside other playlist
         emit playlistmanager->CallOutMoveSongInsidePlayListByName(currentIndex, previuseIndex, playlist->text());
@@ -788,11 +805,12 @@ void Ocean::MoveTrackUp()
 
 void Ocean::MoveTrackDown()
 {
+    //Move track--------------------------------------------------------------
     //Looking for current playlist
     QListWidgetItem *playlist = playLists->item(playLists->currentRow());
 
     //End if cureent playlist is MAIN or is empty
-    if(playlist->text() == "all" || playlist->text() == "")
+    if(playlist->text() == "all")
         return;
 
     //Looking for current track
@@ -814,11 +832,23 @@ void Ocean::MoveTrackDown()
 
     //Move track inside playlist file
     if(playlist->text() == playlistmanager->GetCurrentPlayListName())
+    {
         //Move inside current playlist
         emit playlistmanager->CallOutMoveSongInsideCurrentPlayList(currentIndex, nextIndex);
+
+        //Find current track------------------------------------------------------
+        //set current track
+        playlistmanager->GetCurrentPlayList()->setCurrentIndex(nextIndex);
+        //play this track
+        playermanager->play();
+        //set current position
+        playermanager->SetPositionOfTrack(playermanager->GetPositionOfTrack());
+        //Find current track------------------------------------------------------
+    }
     else
         //Move inside other playlist
         emit playlistmanager->CallOutMoveSongInsidePlayListByName(currentIndex, nextIndex, playlist->text());
+    //Move track--------------------------------------------------------------
 
     return;
 }
