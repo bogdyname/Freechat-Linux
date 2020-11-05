@@ -322,8 +322,6 @@ Ocean::Ocean(QWidget *parent)
     //Shortcuts for move track up or down inside playlist
     connect(moveTrackUp, &QShortcut::activated, this, &Ocean::MoveTrackUp);
     connect(moveTrackDown, &QShortcut::activated, this, &Ocean::MoveTrackDown);
-    connect(moveTrackUp, &QShortcut::activated, this, &Ocean::SetCurrentPlayList);
-    connect(moveTrackDown, &QShortcut::activated, this, &Ocean::SetCurrentPlayList);
 
     return;
 }
@@ -756,52 +754,30 @@ void Ocean::ParseMusicList(const QString &name)
 
 void Ocean::MoveTrackUp()
 {
-    /*
-	//Save current index of track
-        const unsigned short int index = playlistmanager->GetCurrentPlayList()->currentIndex();
-        QString nameOfSongBuffer = "";
-
-        //save current track name
-        for(unsigned short int iter = 0; iter < musicList->count(); ++iter)
-            if(iter == index)
-                nameOfSongBuffer = musicList->item(index)->text();
-
-	    //set playlist
-            playermanager->setPlaylist(playlistmanager->GetCurrentPlayList());
-
-            //show songs in music list
-            emit this->CallOutPassNamesOfSongsToMusicList(playlistmanager->GetSongsFromCurrentPlayList("all"));
-
-            //index for set last track by index
-            unsigned short int newIndex = 0;
-
-            //find current track
-            for(unsigned short int iter = 0; iter < musicList->count(); ++iter)
-            {
-                QString bufferOfTrackName = musicList->item(iter)->text();
-
-                if(nameOfSongBuffer == bufferOfTrackName)
-                    newIndex = iter;
-            }
-
-            //set current track
-            playlistmanager->GetCurrentPlayList()->setCurrentIndex(newIndex);
-            //play this track
-            playermanager->play();
-            //set current position
-            playermanager->SetPositionOfTrack(playermanager->GetPositionOfTrack());
-    */
-
     //Looking for current playlist
     QListWidgetItem *playlist = playLists->item(playLists->currentRow());
 
     //End if cureent playlist is MAIN or is empty
+    if(playlist == nullptr)
+        return;
+
     if(playlist->text() == "all")
         return;
 
     //Looking for current track
     QListWidgetItem *currentTrack = musicList->item(musicList->currentRow());
+
+    if(currentTrack == nullptr)
+        return;
+
     int currentIndex = musicList->row(currentTrack);
+
+    //Check if shortcuts call with empty field
+    if(currentTrack->text() == "")
+        return;
+
+    //save name of track on current index
+    QString nameOfSongBuffer = currentTrack->text();
 
     //Check if current track is not exist or is first track (zero in array)
     if(currentIndex <= 0)
@@ -819,18 +795,33 @@ void Ocean::MoveTrackUp()
     //Move track inside playlist file
     if(playlist->text() == playlistmanager->GetCurrentPlayListName())
     {
-        //Move inside current playlist
-        emit playlistmanager->CallOutMoveSongInsideCurrentPlayList(currentIndex, previuseIndex);
+        //save current position of track
+        qint64 position = playermanager->GetPositionOfTrack();
 
+        if(previuseIndex == playlistmanager->GetCurrentIndex())
+        {
+            //Move inside current playlist
+            emit playlistmanager->CallOutMoveSongInsideCurrentPlayList(currentIndex, previuseIndex);
 
-        //Find current track------------------------------------------------------
-        //set current track
-        playlistmanager->GetCurrentPlayList()->setCurrentIndex(previuseIndex);
-        //play this track
-        playermanager->play();
-        //set current position
-        playermanager->SetPositionOfTrack(playermanager->GetPositionOfTrack());
-        //Find current track------------------------------------------------------
+            //play this track
+            playermanager->play();
+            //set current position
+            playermanager->SetPositionOfTrack(position);
+            //set track by index and play it
+            playlistmanager->SetTrackByIndex(currentIndex);
+        }
+        else
+        {
+            //Move inside current playlist
+            emit playlistmanager->CallOutMoveSongInsideCurrentPlayList(currentIndex, previuseIndex);
+
+            //play this track
+            playermanager->play();
+            //set current position
+            playermanager->SetPositionOfTrack(position);
+            //set track by index and play it
+            playlistmanager->SetTrackByIndex(currentIndex);
+        }
     }
     else
         //Move inside other playlist
@@ -841,54 +832,27 @@ void Ocean::MoveTrackUp()
 
 void Ocean::MoveTrackDown()
 {
-    /*
-	//Save current index of track
-        const unsigned short int index = playlistmanager->GetCurrentPlayList()->currentIndex();
-        QString nameOfSongBuffer = "";
-
-        //save current track name
-        for(unsigned short int iter = 0; iter < musicList->count(); ++iter)
-            if(iter == index)
-                nameOfSongBuffer = musicList->item(index)->text();
-
-	    //set playlist
-            playermanager->setPlaylist(playlistmanager->GetCurrentPlayList());
-
-            //show songs in music list
-            emit this->CallOutPassNamesOfSongsToMusicList(playlistmanager->GetSongsFromCurrentPlayList("all"));
-
-            //index for set last track by index
-            unsigned short int newIndex = 0;
-
-            //find current track
-            for(unsigned short int iter = 0; iter < musicList->count(); ++iter)
-            {
-                QString bufferOfTrackName = musicList->item(iter)->text();
-
-                if(nameOfSongBuffer == bufferOfTrackName)
-                    newIndex = iter;
-            }
-
-            //set current track
-            playlistmanager->GetCurrentPlayList()->setCurrentIndex(newIndex);
-            //play this track
-            playermanager->play();
-            //set current position
-            playermanager->SetPositionOfTrack(playermanager->GetPositionOfTrack());
-    */
-
-
-    //Move track--------------------------------------------------------------
     //Looking for current playlist
     QListWidgetItem *playlist = playLists->item(playLists->currentRow());
 
     //End if cureent playlist is MAIN or is empty
+    if(playlist == nullptr)
+        return;
+
     if(playlist->text() == "all")
         return;
 
     //Looking for current track
     QListWidgetItem *currentTrack = musicList->item(musicList->currentRow());
+
+    if(currentTrack == nullptr)
+        return;
+
     int currentIndex = musicList->row(currentTrack);
+
+    //Check if shortcuts call with empty field
+    if(currentTrack->text() == "")
+        return;
 
     //Check if current track is not exist or is last track (end of array)
     if(currentIndex == (musicList->count() - 1))
@@ -906,22 +870,37 @@ void Ocean::MoveTrackDown()
     //Move track inside playlist file
     if(playlist->text() == playlistmanager->GetCurrentPlayListName())
     {
-        //Move inside current playlist
-        emit playlistmanager->CallOutMoveSongInsideCurrentPlayList(currentIndex, nextIndex);
+        //save current position of track
+        qint64 position = playermanager->GetPositionOfTrack();
 
-        //Find current track------------------------------------------------------
-        //set current track
-        playlistmanager->GetCurrentPlayList()->setCurrentIndex(nextIndex);
-        //play this track
-        playermanager->play();
-        //set current position
-        playermanager->SetPositionOfTrack(playermanager->GetPositionOfTrack());
-        //Find current track------------------------------------------------------
+        if(nextIndex == playlistmanager->GetCurrentIndex())
+        {
+            //Move inside current playlist
+            emit playlistmanager->CallOutMoveSongInsideCurrentPlayList(currentIndex, nextIndex);
+
+            //play this track
+            playermanager->play();
+            //set current position
+            playermanager->SetPositionOfTrack(position);
+            //set track by index and play it
+            playlistmanager->SetTrackByIndex(currentIndex);
+        }
+        else
+        {
+            //Move inside current playlist
+            emit playlistmanager->CallOutMoveSongInsideCurrentPlayList(currentIndex, nextIndex);
+
+            //play this track
+            playermanager->play();
+            //set current position
+            playermanager->SetPositionOfTrack(position);
+            //set track by index and play it
+            playlistmanager->SetTrackByIndex(currentIndex);
+        }
     }
     else
         //Move inside other playlist
         emit playlistmanager->CallOutMoveSongInsidePlayListByName(currentIndex, nextIndex, playlist->text());
-    //Move track--------------------------------------------------------------
 
     return;
 }
@@ -1403,7 +1382,18 @@ QStringList Ocean::GetAllItemsFromList()
         buffer.push_back(item->text());
     }
 
-    return  buffer;
+    return buffer;
+}
+
+QString Ocean::GetCurrentNameOfTrack()
+{
+    //Get current pointer of track
+    QListWidgetItem *currentTrack = musicList->item(playlistmanager->GetCurrentIndex());
+
+    if(currentTrack != nullptr)
+        return currentTrack->text();
+
+    return "";
 }
 
 /*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
