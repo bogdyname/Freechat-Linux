@@ -352,7 +352,8 @@ private:
         "Can't delete playlist",       //3
         "Can't rename track",          //4
         "Can't delete track",          //5
-        "Can't add song into playlist" //6
+        "Can't add song into playlist",//6
+        "Can't move song"              //7
     };
     //UI--------------------------------------------------------------
 

@@ -516,6 +516,7 @@ void Ocean::ErrorsByPlaylist(const int &error)
         case 4: errorMessageBox->setText(errorsByPlayList.at(error)); break;
         case 5: errorMessageBox->setText(errorsByPlayList.at(error)); break;
         case 6: errorMessageBox->setText(errorsByPlayList.at(error)); break;
+        case 7: errorMessageBox->setText(errorsByPlayList.at(error)); break;
         default: errorMessageBox->setText("Unknown error."); break;
     }
 
@@ -795,33 +796,12 @@ void Ocean::MoveTrackUp()
     //Move track inside playlist file
     if(playlist->text() == playlistmanager->GetCurrentPlayListName())
     {
-        //save current position of track
-        qint64 position = playermanager->GetPositionOfTrack();
+        //Move inside current playlist
+        emit playlistmanager->CallOutMoveSongInsideCurrentPlayList(currentIndex, previuseIndex);
 
-        if(previuseIndex == playlistmanager->GetCurrentIndex())
-        {
-            //Move inside current playlist
-            emit playlistmanager->CallOutMoveSongInsideCurrentPlayList(currentIndex, previuseIndex);
-
-            //play this track
-            playermanager->play();
-            //set current position
-            playermanager->SetPositionOfTrack(position);
-            //set track by index and play it
-            playlistmanager->SetTrackByIndex(currentIndex);
-        }
-        else
-        {
-            //Move inside current playlist
-            emit playlistmanager->CallOutMoveSongInsideCurrentPlayList(currentIndex, previuseIndex);
-
-            //play this track
-            playermanager->play();
-            //set current position
-            playermanager->SetPositionOfTrack(position);
-            //set track by index and play it
-            playlistmanager->SetTrackByIndex(currentIndex);
-        }
+        //Stop play current playlist
+        playermanager->stop();
+        nameOfTrack->clear();
     }
     else
         //Move inside other playlist
@@ -831,7 +811,7 @@ void Ocean::MoveTrackUp()
 }
 
 void Ocean::MoveTrackDown()
-{
+{   
     //Looking for current playlist
     QListWidgetItem *playlist = playLists->item(playLists->currentRow());
 
@@ -870,33 +850,12 @@ void Ocean::MoveTrackDown()
     //Move track inside playlist file
     if(playlist->text() == playlistmanager->GetCurrentPlayListName())
     {
-        //save current position of track
-        qint64 position = playermanager->GetPositionOfTrack();
+        //Move inside current playlist
+        emit playlistmanager->CallOutMoveSongInsideCurrentPlayList(currentIndex, nextIndex);
 
-        if(nextIndex == playlistmanager->GetCurrentIndex())
-        {
-            //Move inside current playlist
-            emit playlistmanager->CallOutMoveSongInsideCurrentPlayList(currentIndex, nextIndex);
-
-            //play this track
-            playermanager->play();
-            //set current position
-            playermanager->SetPositionOfTrack(position);
-            //set track by index and play it
-            playlistmanager->SetTrackByIndex(currentIndex);
-        }
-        else
-        {
-            //Move inside current playlist
-            emit playlistmanager->CallOutMoveSongInsideCurrentPlayList(currentIndex, nextIndex);
-
-            //play this track
-            playermanager->play();
-            //set current position
-            playermanager->SetPositionOfTrack(position);
-            //set track by index and play it
-            playlistmanager->SetTrackByIndex(currentIndex);
-        }
+        //Stop play current playlist
+        playermanager->stop();
+        nameOfTrack->clear();
     }
     else
         //Move inside other playlist
