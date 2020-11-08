@@ -24,7 +24,7 @@
 class Playlist : public QMediaPlaylist
 {
     Q_OBJECT
-    Q_CLASSINFO("Version", "0.8")
+    Q_CLASSINFO("Version", "1.0")
 
     /*
      * Format of playlists = .m3u8
@@ -39,7 +39,8 @@ class Playlist : public QMediaPlaylist
         ErrorDeletePlaylist = 3,
         ErrorRenameTrack    = 4,
         ErrorDeleteTrack    = 5,
-        ErrorAddTrack       = 6
+        ErrorAddTrack       = 6,
+        ErrorMoveTrack      = 7
     };
 
 public:
@@ -277,8 +278,8 @@ private:
     bool RemoveAllTracks(); //--------------------------------------------------------------------------------------------------------------------------------------16) (DONE)
     bool RemoveAllTracksFromApp(); //-------------------------------------------------------------------------------------------------------------------------------17) (DONE)
     bool RemoveAllTracks(const QString &name); //-------------------------------------------------------------------------------------------------------------------18) (DONE)
-    bool MoveSongInsidePlaylistByIndex(const int &currentIndex, const int &newIndex); //----------------------------------------------------------------------------19)
-    bool MoveSongInsidePlaylistByIndex(const int &currentIndex, const int &newIndex, const QString &name); //-------------------------------------------------------20)
+    bool MoveSongInsidePlaylistByIndex(const int &currentIndex, const int &newIndex); //----------------------------------------------------------------------------19) (DONE)
+    bool MoveSongInsidePlaylistByIndex(const int &currentIndex, const int &newIndex, const QString &name); //-------------------------------------------------------20) (DONE)
     bool RenameTrack(const int &index, const QString &playlist, const QString &newName); //-------------------------------------------------------------------------21) (DONE)
     /*----------------------------------------Methods to call it in Private SLOTS----------------------------------------*/
 

@@ -308,10 +308,8 @@ void Playlist::AddSongsIntoCurrentPlaylistViaDragAndDrop(const QStringList &song
 /*---------------------------------------MOVE METHODS---------------------------------------*/
 void Playlist::MoveSongInsideCurrentPlayList(const int &currentIndex, const int &newIndex)
 {
-    if(MoveSongInsidePlaylistByIndex(currentIndex, newIndex))
-        qDebug() << "track is moved into " << newIndex << "from " << currentIndex;
-    else
-        qCritical() << "error: can't move track into new index";
+    if(!MoveSongInsidePlaylistByIndex(currentIndex, newIndex))
+        emit this->CallOutErrorMessage(ErrorMoveTrack);
 
     return;
 }
@@ -321,10 +319,8 @@ void Playlist::MoveSongInsidePlayListByName(const int &currentIndex, const int &
     if(name == "")
         return;
 
-    if(MoveSongInsidePlaylistByIndex(currentIndex, newIndex, name))
-        qDebug() << "track is moved into " << newIndex << "from " << currentIndex;
-    else
-        qCritical() << "error: can't move track into new index";
+    if(!MoveSongInsidePlaylistByIndex(currentIndex, newIndex, name))
+        emit this->CallOutErrorMessage(ErrorMoveTrack);
 
     return;
 }
