@@ -29,7 +29,6 @@ public:
 
 private slots:
     void Receiver();
-    void Sender();
 
 private:
     qint64 nextBlockSize;

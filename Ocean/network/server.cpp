@@ -85,24 +85,3 @@ void Server::Receiver()
 
     return;
 }
-
-void Server::Sender()
-{
-    const QString messageDone = "received";
-    QByteArray block;
-    QDataStream sendStream(&block, QIODevice::ReadWrite);
-    sendStream.setVersion(QDataStream::Qt_5_13);
-
-    //write data into stream
-    sendStream << qint64(0) << messageDone;
-
-    //set sream in beginning
-    sendStream.device()->seek(0);
-    sendStream << (qint64)(block.size() - sizeof(932838457459459));
-
-    //write data into socket and after that send it
-    socket->write(block);
-    socket->flush();
-
-    return;
-}

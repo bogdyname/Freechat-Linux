@@ -13,7 +13,6 @@ Client::Client(QTcpSocket *parent)
     }
 
     connect(this, &QAbstractSocket::connected, this, &Client::Connected);
-    connect(this, &QAbstractSocket::readyRead, this, &Client::ReadyRead);
     connect(this, &QAbstractSocket::errorOccurred, this, &Client::Error);
 
     //Settin up variables
@@ -25,12 +24,6 @@ Client::Client(QTcpSocket *parent)
 Client::~Client()
 {
     qDebug() << "Destructor from client.cpp";
-}
-
-void Client::ReadyRead()
-{
-
-    return;
 }
 
 void Client::Connected()
