@@ -9,6 +9,7 @@
 constexpr System::System()
 {
 
+    return;
 }
 
 template <typename Type>

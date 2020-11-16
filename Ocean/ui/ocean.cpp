@@ -428,6 +428,7 @@ void Ocean::AddFilesAfterDropEvent(const QStringList &files)
     QString mp3 = ".mp3";
     QString wav = ".wav";
     QString mp4 = ".mp4";
+    QString flac = ".flac";
     QStringList filesBuffer = {}; //only music files
     QStringList pathsOfFiles = {}; //finish list with paths of songs
 
@@ -456,7 +457,7 @@ void Ocean::AddFilesAfterDropEvent(const QStringList &files)
         }
 
         //check format of file
-        if((buffer == mp3) || (buffer == wav) || (buffer == mp4))
+        if((buffer == mp3) || (buffer == wav) || (buffer == mp4) || (buffer == flac))
             filesBuffer.push_front(string);
     }
 
@@ -799,8 +800,11 @@ void Ocean::MoveTrackUp()
         //Move inside current playlist
         emit playlistmanager->CallOutMoveSongInsideCurrentPlayList(currentIndex, previuseIndex);
 
+        //BUG HERE
+        //PLAYING SECOND TRACK IN PLAYLIST AFTER MOVE
         //Stop play current playlist
         playermanager->stop();
+        playlistmanager->setCurrentIndex(0);
         nameOfTrack->clear();
     }
     else
@@ -853,8 +857,11 @@ void Ocean::MoveTrackDown()
         //Move inside current playlist
         emit playlistmanager->CallOutMoveSongInsideCurrentPlayList(currentIndex, nextIndex);
 
+        //BUG HERE
+        //PLAYING SECOND TRACK IN PLAYLIST AFTER MOVE
         //Stop play current playlist
         playermanager->stop();
+        playlistmanager->setCurrentIndex(0);
         nameOfTrack->clear();
     }
     else

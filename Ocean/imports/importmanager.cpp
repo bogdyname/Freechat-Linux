@@ -61,7 +61,7 @@ ImportManager::~ImportManager()
 void ImportManager::CallFileDialogWithDel()
 {
     //list with paths of files (get via QFileDialog)
-    const QStringList pathOfFiles = importerWindow->getOpenFileNames(0, "Import Music", "", "*.mp3 *.wav *.m4a");
+    const QStringList pathOfFiles = importerWindow->getOpenFileNames(0, "Import Music", "", "*.mp3 *.wav *.m4a *.flac");
 
     //close method if list is empty
     if(pathOfFiles.isEmpty())
@@ -78,7 +78,7 @@ void ImportManager::CallFileDialogWithDel()
 void ImportManager::CallFileDialogOnlyCopy()
 {
     //list with paths of files (get via QFileDialog)
-    const QStringList pathOfFiles = importerWindow->getOpenFileNames(0, "Import Music", "", "*.mp3 *.wav *.m4a");
+    const QStringList pathOfFiles = importerWindow->getOpenFileNames(0, "Import Music", "", "*.mp3 *.wav *.m4a *.flac");
 
     //close method if list is empty
     if(pathOfFiles.isEmpty())
