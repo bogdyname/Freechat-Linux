@@ -800,11 +800,9 @@ void Ocean::MoveTrackUp()
         //Move inside current playlist
         emit playlistmanager->CallOutMoveSongInsideCurrentPlayList(currentIndex, previuseIndex);
 
-        //BUG HERE
-        //PLAYING SECOND TRACK IN PLAYLIST AFTER MOVE
         //Stop play current playlist
         playermanager->stop();
-        playlistmanager->setCurrentIndex(0);
+        playlistmanager->GetCurrentPlayList()->setCurrentIndex(0);
         nameOfTrack->clear();
     }
     else
@@ -857,11 +855,9 @@ void Ocean::MoveTrackDown()
         //Move inside current playlist
         emit playlistmanager->CallOutMoveSongInsideCurrentPlayList(currentIndex, nextIndex);
 
-        //BUG HERE
-        //PLAYING SECOND TRACK IN PLAYLIST AFTER MOVE
         //Stop play current playlist
-        playermanager->stop();
-        playlistmanager->setCurrentIndex(0);
+        playermanager->pause();
+        playlistmanager->GetCurrentPlayList()->setCurrentIndex(0);
         nameOfTrack->clear();
     }
     else
