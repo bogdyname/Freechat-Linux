@@ -25,17 +25,8 @@ CustomListWidget::CustomListWidget(QWidget *parent)
 
 void CustomListWidget::dragEnterEvent(QDragEnterEvent *event)
 {
-    //
     if(event->mimeData()->hasFormat("text/uri-list"))
         event->acceptProposedAction();
-
-    return;
-}
-
-void CustomListWidget::dragMoveEvent(QDragMoveEvent *event)
-{
-    //can accept drop items
-    event->accept();
 
     return;
 }

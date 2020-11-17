@@ -449,7 +449,7 @@ void Playlist::CheckDefaultPlayList()
         //Create playlist with all songs
         //For get all songs into 'allSongs' variable
         cd->setCurrent(QCoreApplication::applicationDirPath() + "/music/");
-        allSongs = cd->entryList(QStringList() << "*.mp3" << "*.MP3" << "*.wav" << "*.WAV", QDir::Files);
+        allSongs = cd->entryList(QStringList() << "*.mp3" << "*.MP3" << "*.wav" << "*.WAV" << "*.flac" << "*.FLAC", QDir::Files);
 
         QMediaPlaylist *buffer = new QMediaPlaylist();
 
@@ -468,7 +468,7 @@ void Playlist::CheckDefaultPlayList()
         //Reboot songs inside playlist with all songs
         //For get all songs into 'allSongs' variable
         cd->setCurrent(QCoreApplication::applicationDirPath() + "/music/");
-        allSongs = cd->entryList(QStringList() << "*.mp3" << "*.MP3" << "*.wav" << "*.WAV" << "*.m4a" << "*.M4A", QDir::Files);
+        allSongs = cd->entryList(QStringList() << "*.mp3" << "*.MP3" << "*.wav" << "*.WAV" << "*.m4a" << "*.M4A" << "*.flac" << "*.FLAC", QDir::Files);
 
         QMediaPlaylist *buffer = new QMediaPlaylist();
 
@@ -1185,7 +1185,7 @@ QString Playlist::ParserToGetNameOfSongByIndex(const int &index)
 QStringList Playlist::ParseToGetFullPathOfTracks(const QStringList &list)
 {
     cd->setCurrent(QCoreApplication::applicationDirPath() + "/music/");
-    QStringList allSongs = cd->entryList(QStringList() << "*.mp3" << "*.MP3" << "*.wav" << "*.WAV" << "*.m4a" << "*.M4A", QDir::Files);
+    QStringList allSongs = cd->entryList(QStringList() << "*.mp3" << "*.MP3" << "*.wav" << "*.WAV" << "*.m4a" << "*.M4A" << "*.flac" << "*.FLAC", QDir::Files);
     cd->setCurrent(QCoreApplication::applicationDirPath());
 
     QStringList bufferlist = {}; //july.mp3 //july
