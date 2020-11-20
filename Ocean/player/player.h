@@ -30,13 +30,11 @@ public slots:
     void CallSetPlayList(QMediaPlaylist *playlist);
     void CallSetVolume(const int &volume);
 
+public:
+    qint64 GetCurrentPosition();
+
 private slots:
     void ChangedPosition(qint64 position);
-
-public:
-    const QMediaPlayer* GetPlayer();
-    qint64 GetPositionOfTrack();
-    void SetPositionOfTrack(const qint64 position);
 
 private:
     bool SetPlayList(QMediaPlaylist *playlist);
@@ -44,7 +42,6 @@ private:
 
 private:
     int counterOfPausePlay;
-    QMediaPlayer *player = nullptr;
     qint64 currentPosition;
 };
 

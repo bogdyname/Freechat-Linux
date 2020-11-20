@@ -15,7 +15,6 @@ Playlist::Playlist(QObject *parent)
     try
     {
         cd = new QDir();
-        currentPlaylist = new QMediaPlaylist(this);
     }
     catch(...)
     {
@@ -40,7 +39,7 @@ Playlist::Playlist(QObject *parent)
 
     //Setting up of media playlist object
     //default playback mode
-    currentPlaylist->setPlaybackMode(QMediaPlaylist::Sequential);
+    this->setPlaybackMode(QMediaPlaylist::Sequential);
 
     /*---------------------------------signals with slots---------------------------------*/
     /*
@@ -95,7 +94,7 @@ Playlist::Playlist(QObject *parent)
     connect(this, &Playlist::CallOutMoveSongInsideCurrentPlayList, this, &Playlist::MoveSongInsideCurrentPlayList);
     connect(this, &Playlist::CallOutMoveSongInsidePlayListByName, this, &Playlist::MoveSongInsidePlayListByName);
     //Set name of current track
-    connect(currentPlaylist, &QMediaPlaylist::currentIndexChanged, this, &Playlist::SetNameOfCurrentTrack);
+    connect(this, &QMediaPlaylist::currentIndexChanged, this, &Playlist::SetNameOfCurrentTrack);
     //Rename track
     connect(this, &Playlist::CallOutRenameTrackByIndex, this, &Playlist::RenameTrackByIndex);
     //Clear all songs
@@ -122,12 +121,12 @@ Playlist::~Playlist()
 /*--------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 /*---------------------------------------SAVE METHODS---------------------------------------*/
-void Playlist::SaveCurrentPlayList(const QString &name, const QStringList &newListOfSongs, QMediaPlaylist *currentPlaylist)
+void Playlist::SaveCurrentPlayList(const QString &name, const QStringList &newListOfSongs)
 {
     if(name == "" && newListOfSongs.isEmpty())
         return;
 
-    if(!this->SavePlaylist(name, newListOfSongs, currentPlaylist))
+    if(!this->SaveCurrentPlaylist(name, newListOfSongs))
         emit this->CallOutErrorMessage(ErrorSavePlaylist);
 
     return;
@@ -158,12 +157,12 @@ void Playlist::SaveNewPlayList(const QString &name)
 
 
 /*--------------------------------------RENAME METHODS--------------------------------------*/
-void Playlist::RenameCurrentPlayList(const QString &newName, QMediaPlaylist *currentPlaylist)
+void Playlist::RenameCurrentPlayList(const QString &newName)
 {
     if(newName == "")
         return;
 
-    if(!this->RenamePlayList(newName, currentPlaylist))
+    if(!this->RenamePlayList(newName))
         emit this->CallOutErrorMessage(ErrorRenamePlaylist);
 
     return;
@@ -387,7 +386,7 @@ void Playlist::SetModOfPlayback()
         //Loop all tracks
         case 0:
         {
-            currentPlaylist->setPlaybackMode(QMediaPlaylist::Loop);
+            this->setPlaybackMode(QMediaPlaylist::Loop);
             emit this->CallOutSetImageOfCurrentPlaybackMode(0);
         }
         break;
@@ -395,7 +394,7 @@ void Playlist::SetModOfPlayback()
         //Current track in loop
         case 1:
         {
-            currentPlaylist->setPlaybackMode(QMediaPlaylist::CurrentItemInLoop);
+            this->setPlaybackMode(QMediaPlaylist::CurrentItemInLoop);
             emit this->CallOutSetImageOfCurrentPlaybackMode(1);
         }
         break;
@@ -403,7 +402,7 @@ void Playlist::SetModOfPlayback()
         //Random tracks
         case 2:
         {
-            currentPlaylist->setPlaybackMode(QMediaPlaylist::Random);
+            this->setPlaybackMode(QMediaPlaylist::Random);
             emit this->CallOutSetImageOfCurrentPlaybackMode(2);
         }
         break;
@@ -411,32 +410,11 @@ void Playlist::SetModOfPlayback()
         //Default sequential player (one by one)
         default:
         {
-            currentPlaylist->setPlaybackMode(QMediaPlaylist::Sequential);
+            this->setPlaybackMode(QMediaPlaylist::Sequential);
             emit this->CallOutSetImageOfCurrentPlaybackMode(-1);
         }
         break;
     }
-
-    return;
-}
-
-void Playlist::SetNextTrack()
-{
-    currentPlaylist->next();
-
-    return;
-}
-
-void Playlist::SetPreviousTrack()
-{
-    currentPlaylist->previous();
-
-    return;
-}
-
-void Playlist::SetTrackByIndex(const int &indexOfTrack)
-{
-    currentPlaylist->setCurrentIndex(indexOfTrack);
 
     return;
 }
@@ -502,19 +480,14 @@ const QString Playlist::GetCurrentPlayListName()
     return currentPlaylistName;
 }
 
-QMediaPlaylist* Playlist::GetCurrentPlayList()
-{
-    return currentPlaylist;
-}
-
 int Playlist::GetCurrentIndex()
 {
-    return currentPlaylist->currentIndex();
+    return this->currentIndex();
 }
 
 bool Playlist::LoadPlayList(const QString &name)
 {
-    if(LookingForPlayList(name, currentPlaylist))
+    if(LookingForPlayList(name))
         return true;
     else
         return false;
@@ -628,17 +601,17 @@ bool Playlist::RemovePlayList(const QString &name)
 
 
 /*----------------------------------------LOAD METHODS---------------------------------------*/
-bool Playlist::LookingForPlayList(const QString &name, QMediaPlaylist *medialist)
+bool Playlist::LookingForPlayList(const QString &name)
 {
     if(name == "")
         return false;
 
     CheckSettingsDir();
 
-    medialist->load(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/" + name + ".m3u8"), "m3u8");
-    medialist->setCurrentIndex(0);
+    this->load(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/" + name + ".m3u8"), "m3u8");
+    this->setCurrentIndex(0);
 
-    if(!medialist->isEmpty())
+    if(!this->isEmpty())
         return true;
     else
         return false;
@@ -647,19 +620,19 @@ bool Playlist::LookingForPlayList(const QString &name, QMediaPlaylist *medialist
 
 
 /*---------------------------------------SAVE METHODS---------------------------------------*/
-bool Playlist::SavePlaylist(const QString &name, const QStringList &newListOfSongs, QMediaPlaylist *currentPlaylist)
+bool Playlist::SaveCurrentPlaylist(const QString &name, const QStringList &newListOfSongs)
 {
     if(name == "" && newListOfSongs.isEmpty())
         return false;
 
     cd->setCurrent(QCoreApplication::applicationDirPath());
-    currentPlaylist->clear();
+    this->clear();
 
     //add song into playlist
     for(const QString &iter : newListOfSongs)
-        currentPlaylist->addMedia(QMediaContent(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/music/" + iter)));
+        this->addMedia(QMediaContent(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/music/" + iter)));
 
-    if(currentPlaylist->save(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/" + name + ".m3u8"), "m3u8"))
+    if(this->save(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/" + name + ".m3u8"), "m3u8"))
         return true;
     else
         return false;
@@ -712,14 +685,14 @@ bool Playlist::SavePlaylist(const QString &name)
 
 
 /*--------------------------------------RENAME METHODS--------------------------------------*/
-bool Playlist::RenamePlayList(const QString &newName, QMediaPlaylist *currentPlaylist)
+bool Playlist::RenamePlayList(const QString &newName)
 {
     if(newName == "")
         return false;
 
     cd->setCurrent(QCoreApplication::applicationDirPath());
 
-    if(currentPlaylist->save(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/" + newName + ".m3u8"), "m3u8"))
+    if(this->save(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/" + newName + ".m3u8"), "m3u8"))
         return true;
     else
         return false;
@@ -824,9 +797,9 @@ bool Playlist::AddSongsIntoCurrentPlayList(const QStringList &songs)
 
     //add songs into current playlist
     foreach(const QString &iter, songs)
-        currentPlaylist->addMedia(QMediaContent(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/music/" + iter)));
+        this->addMedia(QMediaContent(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/music/" + iter)));
 
-    if(currentPlaylist->save(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/" + currentPlaylistName + ".m3u8"), "m3u8"))
+    if(this->save(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/" + currentPlaylistName + ".m3u8"), "m3u8"))
         return true;
     else
         return false;
@@ -855,9 +828,9 @@ bool Playlist::RemoveTrackByIndex(const int &index)
         return false;
     }
 
-    if(currentPlaylist->removeMedia(index))
+    if(this->removeMedia(index))
     {
-        if(currentPlaylist->save(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/" + currentPlaylistName + ".m3u8"), "m3u8"))
+        if(this->save(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/" + currentPlaylistName + ".m3u8"), "m3u8"))
             return true;
         else
             return false;
@@ -941,9 +914,9 @@ bool Playlist::RemoveTrackByIndex(const int &index, const QString &name)
 
 bool Playlist::RemoveAllTracks()
 {
-    if(currentPlaylist->clear())
+    if(this->clear())
     {
-        if(currentPlaylist->save(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/" + currentPlaylistName + ".m3u8"), "m3u8"))
+        if(this->save(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/" + currentPlaylistName + ".m3u8"), "m3u8"))
             return true;
         else
             return false;
@@ -999,9 +972,9 @@ bool Playlist::RemoveAllTracks(const QString &name)
 /*---------------------------------------MOVE METHODS---------------------------------------*/
 bool Playlist::MoveSongInsidePlaylistByIndex(const int &currentIndex, const int &newIndex)
 {
-    currentPlaylist->moveMedia(currentIndex, newIndex);
+    this->moveMedia(currentIndex, newIndex);
 
-    if(currentPlaylist->save(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/" + currentPlaylistName + ".m3u8"), "m3u8"))
+    if(this->save(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/bin/" + currentPlaylistName + ".m3u8"), "m3u8"))
         return true;
     else
         return false;

@@ -11,19 +11,10 @@
 Player::Player(QObject *parent)
     : QMediaPlayer(parent)
 {
-    try
-    {
-        player = new QMediaPlayer(this);
-    }
-    catch(...)
-    {
-        exit(1);
-    }
-
     //setting up variable to switch status of track (play or pause)
     counterOfPausePlay = 0;
 
-    player->setNotifyInterval(500);
+    this->setNotifyInterval(500);
 
     //player data
     connect(this, &QMediaPlayer::positionChanged, this, &Player::ChangedPosition);
@@ -83,27 +74,14 @@ void Player::CallSetVolume(const int &volume)
     return;
 }
 
+qint64 Player::GetCurrentPosition()
+{
+    return this->currentPosition;
+}
+
 void Player::ChangedPosition(qint64 position)
 {
     currentPosition = position;
-
-    return;
-}
-
-//Methods
-const QMediaPlayer* Player::GetPlayer()
-{
-    return player;
-}
-
-qint64 Player::GetPositionOfTrack()
-{
-    return currentPosition;
-}
-
-void Player::SetPositionOfTrack(const qint64 position)
-{
-    player->setPosition(position);
 
     return;
 }
@@ -112,7 +90,7 @@ bool Player::SetPlayList(QMediaPlaylist *playlist)
 {
     if(!playlist->isEmpty())
     {
-        player->setPlaylist(playlist);
+        this->setPlaylist(playlist);
         return true;
     }
     else
@@ -123,7 +101,7 @@ bool Player::SetVolume(const int &volume)
 {
     if(volume > 0)
     {
-        player->setVolume(volume);
+        this->setVolume(volume);
         return true;
     }
     else
