@@ -264,8 +264,8 @@ Ocean::Ocean(QWidget *parent)
     connect(sliderOfTrack, &QSlider::valueChanged, playermanager,&QMediaPlayer::setPosition);
 
     //Playlist manager
-    connect(nextTrack, &QPushButton::clicked, playlistmanager, &Playlist::SetNextTrack);
-    connect(previousTrack, &QPushButton::clicked, playlistmanager, &Playlist::SetPreviousTrack);
+    connect(nextTrack, &QPushButton::clicked, playlistmanager, &Playlist::next);
+    connect(previousTrack, &QPushButton::clicked, playlistmanager, &Playlist::previous);
     connect(playbackMode, &QPushButton::clicked, playlistmanager, &Playlist::SetModOfPlayback);
     connect(musicList, &QListWidget::itemDoubleClicked, this, &Ocean::SetPlayListByTrack);
     connect(playlistmanager, &Playlist::CallOutSetNameOfCurrentTrack, this, &Ocean::SetNameOfCurrentTrackFromPlaylist);
@@ -312,9 +312,9 @@ Ocean::Ocean(QWidget *parent)
     connect(ctrlD, &QShortcut::activated, this, &Ocean::EraseItemFromMusicList);
     connect(ctrlR, &QShortcut::activated, this, &Ocean::RenameTrack);
     //Keys for work with player
-    connect(previuseSong, &QShortcut::activated, playlistmanager, &Playlist::SetPreviousTrack);
+    connect(previuseSong, &QShortcut::activated, playlistmanager, &Playlist::previous);
     connect(pauseSong, &QShortcut::activated, playermanager, &Player::SetPausePlayTrack);
-    connect(nextSong, &QShortcut::activated, playlistmanager, &Playlist::SetNextTrack);
+    connect(nextSong, &QShortcut::activated, playlistmanager, &Playlist::next);
     //Keys for work with app fo window
     connect(shiftF, &QShortcut::activated, this, &Ocean::FullViaShiftF);
     connect(shiftQ, &QShortcut::activated, this, &Ocean::QuitViaShiftQ);
@@ -802,7 +802,7 @@ void Ocean::MoveTrackUp()
 
         //Stop play current playlist
         playermanager->stop();
-        playlistmanager->GetCurrentPlayList()->setCurrentIndex(0);
+        playlistmanager->setCurrentIndex(0);
         nameOfTrack->clear();
     }
     else
@@ -857,7 +857,7 @@ void Ocean::MoveTrackDown()
 
         //Stop play current playlist
         playermanager->pause();
-        playlistmanager->GetCurrentPlayList()->setCurrentIndex(0);
+        playlistmanager->setCurrentIndex(0);
         nameOfTrack->clear();
     }
     else
@@ -904,7 +904,7 @@ void Ocean::EraseItemFromPlayList()
     {
         //clear current playlist
         musicList->clear();
-        playlistmanager->GetCurrentPlayList()->clear();
+        playlistmanager->clear();
         playermanager->stop();
     }
 
@@ -955,7 +955,7 @@ void Ocean::Rename()
     else
     {
         //save index
-        int index = playlistmanager->GetCurrentIndex();
+        int index = playlistmanager->currentIndex();
 
         if(item->text() == playlistmanager->GetCurrentPlayListName())
         {   //For current playlist
@@ -969,20 +969,20 @@ void Ocean::Rename()
             //set name of playlist
             emit playlistmanager->CallOutSetCurrentPlayListName(item->text());
             //clear current playlist
-            playlistmanager->GetCurrentPlayList()->clear();
+            playlistmanager->clear();
 
             //load
             if(playlistmanager->LoadPlayList(playlistmanager->GetCurrentPlayListName()))
             {
                 //load playlist
-                playermanager->setPlaylist(playlistmanager->GetCurrentPlayList());
+                playermanager->setPlaylist(playlistmanager);
                 //play playlist
                 playermanager->play();
                 //set current position
-                playermanager->SetPositionOfTrack(playermanager->GetPositionOfTrack());
+                playermanager->setPosition(playermanager->GetCurrentPosition());
 
                 //set track by index and play it
-                playlistmanager->SetTrackByIndex(index);
+                playlistmanager->setCurrentIndex(index);
             }
         }
         else //For other playlist
@@ -1024,13 +1024,13 @@ void Ocean::SetPlayList(QListWidgetItem *item)
     emit playlistmanager->CallOutSetCurrentPlayListName(item->text());
 
     //clear current playlist
-    playlistmanager->GetCurrentPlayList()->clear();
+    playlistmanager->clear();
 
     //load
     if(playlistmanager->LoadPlayList(playlistmanager->GetCurrentPlayListName()))
     {
         //Set playlist and play it
-        playermanager->setPlaylist(playlistmanager->GetCurrentPlayList());
+        playermanager->setPlaylist(playlistmanager);
         playermanager->play();
     }
 
@@ -1051,17 +1051,17 @@ void Ocean::SetPlayListByTrack(QListWidgetItem *item)
         emit playlistmanager->CallOutSetCurrentPlayListName(iter->text());
 
         //clear current playlist
-        playlistmanager->GetCurrentPlayList()->clear();
+        playlistmanager->clear();
 
         //load playlist
         if(playlistmanager->LoadPlayList(playlistmanager->GetCurrentPlayListName()))
         {
             //Set playlist and play it
-            playermanager->setPlaylist(playlistmanager->GetCurrentPlayList());
+            playermanager->setPlaylist(playlistmanager);
             playermanager->play();
 
             //set track by index and play it
-            playlistmanager->SetTrackByIndex(item->listWidget()->row(item));
+            playlistmanager->setCurrentIndex(item->listWidget()->row(item));
         }
 
         //show songs in music list
@@ -1070,7 +1070,7 @@ void Ocean::SetPlayListByTrack(QListWidgetItem *item)
     else
     {
         //Play selected track in current playlist
-        playlistmanager->SetTrackByIndex(item->listWidget()->row(item));
+        playlistmanager->setCurrentIndex(item->listWidget()->row(item));
     }
 
     return;
@@ -1082,7 +1082,7 @@ void Ocean::SetCurrentPlayList()
     if(playlistmanager->GetCurrentPlayListName() == "all")
     {
         //Save current index of track
-        const unsigned short int index = playlistmanager->GetCurrentPlayList()->currentIndex();
+        const unsigned short int index = playlistmanager->currentIndex();
         QString nameOfSongBuffer = "";
 
         //save current track name
@@ -1091,13 +1091,13 @@ void Ocean::SetCurrentPlayList()
                 nameOfSongBuffer = musicList->item(index)->text();
 
         //clear current playlist
-        playlistmanager->GetCurrentPlayList()->clear();
+        playlistmanager->clear();
 
         //load playlist
         if(playlistmanager->LoadPlayList(playlistmanager->GetCurrentPlayListName()))
         {
             //set playlist
-            playermanager->setPlaylist(playlistmanager->GetCurrentPlayList());
+            playermanager->setPlaylist(playlistmanager);
 
             //show songs in music list
             emit this->CallOutPassNamesOfSongsToMusicList(playlistmanager->GetSongsFromCurrentPlayList("all"));
@@ -1115,11 +1115,11 @@ void Ocean::SetCurrentPlayList()
             }
 
             //set current track
-            playlistmanager->GetCurrentPlayList()->setCurrentIndex(newIndex);
+            playlistmanager->setCurrentIndex(newIndex);
             //play this track
             playermanager->play();
             //set current position
-            playermanager->SetPositionOfTrack(playermanager->GetPositionOfTrack());
+            playermanager->setPosition(playermanager->GetCurrentPosition());
         }
     }
 
@@ -1350,7 +1350,7 @@ QStringList Ocean::GetAllItemsFromList()
 QString Ocean::GetCurrentNameOfTrack()
 {
     //Get current pointer of track
-    QListWidgetItem *currentTrack = musicList->item(playlistmanager->GetCurrentIndex());
+    QListWidgetItem *currentTrack = musicList->item(playlistmanager->currentIndex());
 
     if(currentTrack != nullptr)
         return currentTrack->text();
