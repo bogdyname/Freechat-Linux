@@ -37,10 +37,6 @@ private slots:
     void ChangedPosition(qint64 position);
 
 private:
-    bool SetPlayList(QMediaPlaylist *playlist);
-    bool SetVolume(const int &volume);
-
-private:
     int counterOfPausePlay;
     qint64 currentPosition;
 };
