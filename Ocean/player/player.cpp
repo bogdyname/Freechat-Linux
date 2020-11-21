@@ -27,7 +27,6 @@ Player::~Player()
     qDebug() << "Destructor from Player.cpp";
 }
 
-//Public slots
 void Player::SetPausePlayTrack()
 {
     counterOfPausePlay == 1 ? --counterOfPausePlay : ++counterOfPausePlay ;
@@ -56,22 +55,18 @@ void Player::SetPausePlayTrack()
 
 void Player::CallSetPlayList(QMediaPlaylist *playlist)
 {
-    if(SetPlayList(playlist))
-        qDebug() << "set playlist";
+    if(!playlist->isEmpty())
+        this->setPlaylist(playlist);
     else
-        qDebug() << "error: set playlist";
-
-    return;
+        return;
 }
 
 void Player::CallSetVolume(const int &volume)
 {
-    if(SetVolume(volume))
-        qDebug() << "set volume" << volume;
+    if(volume > 0)
+        this->setVolume(volume);
     else
-        qDebug() << "error: set volume";
-
-    return;
+        return;
 }
 
 qint64 Player::GetCurrentPosition()
@@ -84,26 +79,4 @@ void Player::ChangedPosition(qint64 position)
     currentPosition = position;
 
     return;
-}
-
-bool Player::SetPlayList(QMediaPlaylist *playlist)
-{
-    if(!playlist->isEmpty())
-    {
-        this->setPlaylist(playlist);
-        return true;
-    }
-    else
-        return false;
-}
-
-bool Player::SetVolume(const int &volume)
-{
-    if(volume > 0)
-    {
-        this->setVolume(volume);
-        return true;
-    }
-    else
-        return false;
 }
