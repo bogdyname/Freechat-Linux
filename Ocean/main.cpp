@@ -9,7 +9,6 @@
 #include <QFile>
 
 //own classes
-#include "network/networkmanager.h"
 #include "ui/ocean.h"
 
 //check alloc memory in system
