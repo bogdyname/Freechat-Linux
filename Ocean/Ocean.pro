@@ -17,9 +17,6 @@ SOURCES += \
     customWidgets/slider.cpp \
     imports/importmanager.cpp \
     main.cpp \
-    network/client.cpp \
-    network/networkmanager.cpp \
-    network/server.cpp \
     player/player.cpp \
     playlists/playlist.cpp \
     sysmanager/system.cpp \
@@ -33,9 +30,6 @@ HEADERS += \
     customWidgets/customlistwidget.h \
     customWidgets/slider.h \
     imports/importmanager.h \
-    network/client.h \
-    network/networkmanager.h \
-    network/server.h \
     player/player.h \
     playlists/playlist.h \
     sysmanager/system.h \

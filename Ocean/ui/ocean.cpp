@@ -36,7 +36,6 @@ Ocean::Ocean(QWidget *parent)
 
         //Tools for widgets
         timerForCheckWidgets = new QTimer(this);
-        timerForCheckDefaultPlayList = new QTimer(this);
         cd = new QDir();
 
         //Shortcuts for tracks
@@ -141,12 +140,11 @@ Ocean::Ocean(QWidget *parent)
 
     /*--------------------------------------------------TOOLS--------------------------------------------------*/
     //Timer for check widget of create playlist
-    timerForCheckWidgets->setInterval(500);
+    timerForCheckWidgets->setInterval(1000);
     timerForCheckWidgets->start();
 
-    //Timer for check default playlist
-    timerForCheckDefaultPlayList->setInterval(500);
-    timerForCheckDefaultPlayList->start();
+    //Load default playlist
+    playlistmanager->CheckDefaultPlayList();
 
     //Load playlists
     QStringList buffer = this->GetNamesOfPlaylistsFromBinDir();
@@ -304,8 +302,6 @@ Ocean::Ocean(QWidget *parent)
     connect(timerForCheckWidgets, &QTimer::timeout, this, &Ocean::IfgetStringWithSelectedPlaylistClosed);
     connect(timerForCheckWidgets, &QTimer::timeout, this, &Ocean::IfgetAddedTracksFromWidgetClosed);
     connect(timerForCheckWidgets, &QTimer::timeout, this, &Ocean::IfgetStringFromUserToRenameClosed);
-    //Timer for check default playlist (inside Ocean::playLists zero iter "all")
-    connect(timerForCheckDefaultPlayList, &QTimer::timeout, this, &Ocean::WriteDefaultPlayList);
 
     //Shortcuts-----------------------------------------
     //Keys for work with tracks
@@ -1310,18 +1306,6 @@ void Ocean::CallWidgetAfterCreatePlaylistSlot()
 
     return;
 }
-
-void Ocean::WriteDefaultPlayList()
-{
-    //Check first elemet there is playlists to find MAIN playlist
-    if(playLists->item(0)->text() == "all")
-        return;
-    else//Write into UI MAIN playlist
-        playLists->addItem("all");
-
-    return;
-}
-
 /*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
 /*||||||||||||||||||||||||||||||||||||||||||||||||||||||Tools||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
 /*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
