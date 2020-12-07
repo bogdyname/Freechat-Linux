@@ -18,7 +18,6 @@ Playlist::Playlist(QObject *parent)
     }
     catch(...)
     {
-        qCritical() << "Some exception caught";
         exit(1);
     }
 
@@ -32,10 +31,7 @@ Playlist::Playlist(QObject *parent)
     cd->setCurrent(QCoreApplication::applicationDirPath());
 
     //Check folder of settings/playlist
-    if(cd->mkdir("bin"))
-        qDebug() << "Folder 'bin' created";
-    else
-        qDebug() << "Folder 'bin' already exists!";
+    CheckSettingsDir();
 
     //Setting up of media playlist object
     //default playback mode
@@ -108,8 +104,6 @@ Playlist::Playlist(QObject *parent)
 Playlist::~Playlist()
 {
     delete cd;
-
-    qDebug() << "Destructor from Playlist.cpp";
 }
 /*--------------------------------------------------------------------------------------------------------------------------------------------------*/
 /*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||MAIN|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
@@ -725,7 +719,7 @@ bool Playlist::RenamePlayList(const QString &newName, const QString &currentName
 /*----------------------------------------SETTINGS METHODS------------------------------------*/
 bool Playlist::CheckSettingsDir()
 {
-    if(QDir("bin").QDir::exists() == false)
+    if(QDir("bin").exists() == false)
     {
         cd->mkdir("bin");
         return false;

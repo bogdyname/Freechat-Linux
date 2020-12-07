@@ -5,13 +5,6 @@
 */
 
 #include "system.h"
-
-constexpr System::System()
-{
-
-    return;
-}
-
 template <typename Type>
 void System::Free(Type &object)
 {

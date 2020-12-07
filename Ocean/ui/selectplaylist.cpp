@@ -22,7 +22,6 @@ SelectPlaylist::SelectPlaylist(QWidget *parent)
     }
     catch(...)
     {
-        qCritical() << "Some exception caught";
         exit(1);
     }
 
@@ -40,8 +39,6 @@ SelectPlaylist::SelectPlaylist(QWidget *parent)
 SelectPlaylist::~SelectPlaylist()
 {
     delete ui;
-
-    qDebug() << "Destructor from SelectPlaylist.cpp";
 }
 
 void SelectPlaylist::PassAllPlaylistsIntoWidget(const QStringList &list)

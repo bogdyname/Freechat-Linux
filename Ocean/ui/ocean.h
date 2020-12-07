@@ -372,6 +372,7 @@ private:
         1) previuse track ->
         2) play or pause SPACE
         3) next track <-
+        4) delete playlist
 
       * Shortcuts for window of app
         1) Full Window Shift + F
@@ -383,19 +384,22 @@ private:
         2) Move track down
     */
 
-    QShortcut *ctrlD = nullptr;
-    QShortcut *ctrlR = nullptr;
+    QShortcut *deleteTrack = nullptr;
+    QShortcut *renameTrack = nullptr;
 
     QShortcut *previuseSong = nullptr;
     QShortcut *pauseSong = nullptr;
     QShortcut *nextSong = nullptr;
+    QShortcut *deletePlaylist = nullptr;
 
-    QShortcut *shiftF = nullptr;
-    QShortcut *shiftQ = nullptr;
-    QShortcut *shiftH = nullptr;
+    QShortcut *fullWindow = nullptr;
+    QShortcut *quitWindow = nullptr;
+    QShortcut *hideWindow = nullptr;
 
     QShortcut *moveTrackUp = nullptr;
     QShortcut *moveTrackDown = nullptr;
+
+
     //Shortcuts-------------------------------------------------------
 
 
