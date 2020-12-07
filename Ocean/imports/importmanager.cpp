@@ -22,7 +22,6 @@ ImportManager::ImportManager(QObject *parent)
     }
     catch(...)
     {
-        qCritical() << "Some exception caught";
         exit(1);
     }
 
@@ -37,7 +36,7 @@ ImportManager::ImportManager(QObject *parent)
     cd->setCurrent(QCoreApplication::applicationDirPath());
 
     //Check folder of music
-    cd->mkdir("music");
+    CheckMusicDir();
 
     return;
 }
@@ -46,8 +45,6 @@ ImportManager::~ImportManager()
 {
     delete cd;
     delete importerWindow;
-
-    qDebug() << "Destructor from ImportManager.cpp";
 }
 /*--------------------------------------------------------------------------------------------------------------------------------------------------*/
 /*|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||MAIN|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
@@ -228,7 +225,7 @@ void ImportManager::SaveFilesIntoMusicFolderAndDeleteIt(const QStringList &paths
             const QString nameOfSong = GetNameOfSongFromCurrentPath(iter);
 
             //check dir of app
-            CheckDir();
+            CheckMusicDir();
             //add files into app
             mp3File->copy(iter, cd->currentPath() + "/music/" + nameOfSong);
             //delete file from full path
@@ -261,7 +258,7 @@ void ImportManager::SaveFilesIntoMusicFolderOnlyCopy(const QStringList &paths)
         {
             const QString nameOfSong(GetNameOfSongFromCurrentPath(iter));
 
-            CheckDir();
+            CheckMusicDir();
             mp3File->copy(iter, cd->currentPath() + "/music/" + nameOfSong);
         }
         else
@@ -293,7 +290,7 @@ void ImportManager::SaveFilesIntoMusicFolderOnlyCopyAfterDrop(const QStringList 
         {
             const QString nameOfSong(GetNameOfSongFromCurrentPath(iter));
 
-            CheckDir();
+            CheckMusicDir();
             mp3File->copy(cd->currentPath() + "/music/" + nameOfSong);
 
             //just added tracks to pass it into playlist
@@ -308,12 +305,12 @@ void ImportManager::SaveFilesIntoMusicFolderOnlyCopyAfterDrop(const QStringList 
     return;
 }
 
-bool ImportManager::CheckDir()
+bool ImportManager::CheckMusicDir()
 {
     //current path of app
     cd->setCurrent(QCoreApplication::applicationDirPath());
 
-    if(QDir("music").QDir::exists() == false)
+    if(QDir("music").exists() == false)
     {
         cd->mkdir("music");
 

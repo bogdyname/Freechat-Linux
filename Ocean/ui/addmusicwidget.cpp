@@ -24,7 +24,6 @@ AddMusicWidget::AddMusicWidget(QWidget *parent)
     }
     catch(...)
     {
-        qCritical() << "Some exception caught";
         exit(1);
     }
 
@@ -48,8 +47,6 @@ AddMusicWidget::AddMusicWidget(QWidget *parent)
 AddMusicWidget::~AddMusicWidget()
 {
     delete ui;
-
-    qDebug() << "Destructor from AddMusicWidget.cpp";
 }
 
 void AddMusicWidget::DoubleClickedAllSongsList(QListWidgetItem *item)

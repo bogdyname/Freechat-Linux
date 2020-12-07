@@ -57,7 +57,7 @@ private:
     void SaveFilesIntoMusicFolderOnlyCopyAfterDrop(const QStringList &paths);
 
     //check or create 'music' dir
-    bool CheckDir();
+    bool CheckMusicDir();
 
     //parser to remove current path
     QString GetNameOfSongFromCurrentPath(const QString nameOfSong);

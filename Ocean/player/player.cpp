@@ -24,7 +24,7 @@ Player::Player(QObject *parent)
 
 Player::~Player()
 {
-    qDebug() << "Destructor from Player.cpp";
+
 }
 
 void Player::SetPausePlayTrack()

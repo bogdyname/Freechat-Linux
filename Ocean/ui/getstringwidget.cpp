@@ -22,7 +22,6 @@ GetStringWidget::GetStringWidget(QWidget *parent)
     }
     catch(...)
     {
-        qCritical() << "Some exception caught";
         exit(1);
     }
 
@@ -45,8 +44,6 @@ GetStringWidget::GetStringWidget(QWidget *parent)
 GetStringWidget::~GetStringWidget()
 {
     delete ui;
-
-    qDebug() << "Destructor from GetStringWidget.cpp";
 }
 
 QString GetStringWidget::GetNameOfNewPlayList()

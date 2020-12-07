@@ -12,21 +12,11 @@
 class System
 {
 public:
-    constexpr System();
-
-/*------------------------------------ACTION WITH AN OBJECT--------------------------------------*/
-public:
     template <typename Type>
     static void Free(Type &object);
-/*------------------------------------ACTION WITH AN OBJECT--------------------------------------*/
 
-
-
-/*----------------------------------------INFO OF OBJECT----------------------------------------*/
-public:
     template <typename Type>
     static bool PointerIsEmpty(const Type &object);
-/*----------------------------------------INFO OF OBJECT----------------------------------------*/
 };
 
 #endif

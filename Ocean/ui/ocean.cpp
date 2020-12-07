@@ -39,16 +39,17 @@ Ocean::Ocean(QWidget *parent)
         cd = new QDir();
 
         //Shortcuts for tracks
-        ctrlD = new QShortcut(this);
-        ctrlR = new QShortcut(this);
+        deleteTrack = new QShortcut(this);
+        renameTrack = new QShortcut(this);
         //Shortcuts for playlists
         previuseSong = new QShortcut(this);
         pauseSong = new QShortcut(this);
         nextSong = new QShortcut(this);
+        deletePlaylist = new QShortcut(this);
         //Shortcuts for window of app
-        shiftF = new QShortcut(this);
-        shiftQ = new QShortcut(this);
-        shiftH = new QShortcut(this);
+        fullWindow = new QShortcut(this);
+        quitWindow = new QShortcut(this);
+        hideWindow = new QShortcut(this);
         //Shortcuts for move track up or down inside playlist
         moveTrackUp = new QShortcut(this);
         moveTrackDown = new QShortcut(this);
@@ -67,7 +68,6 @@ Ocean::Ocean(QWidget *parent)
     }
     catch(...)
     {
-        qCritical() << "Some exception caught";
         exit(1);
     }
 
@@ -160,16 +160,17 @@ Ocean::Ocean(QWidget *parent)
 
     /*-------------------------------------------------Shortcut------------------------------------------------*/
     //Shortcuts for tracks
-    ctrlD->setKey(CTRL + Key_D);
-    ctrlR->setKey(CTRL + Key_R);
+    deleteTrack->setKey(CTRL + Key_D);
+    renameTrack->setKey(CTRL + Key_R);
     //Shortcuts for playlists
     previuseSong->setKey(Key_Left);
     pauseSong->setKey(Key_Space);
     nextSong->setKey(Key_Right);
+    deletePlaylist->setKey(Key_Delete);
     //Shortcuts for window of app
-    shiftF->setKey(SHIFT + Key_F);
-    shiftQ->setKey(SHIFT + Key_Q);
-    shiftH->setKey(SHIFT + Key_H);
+    fullWindow->setKey(SHIFT + Key_F);
+    quitWindow->setKey(SHIFT + Key_Q);
+    hideWindow->setKey(SHIFT + Key_H);
     //Shortcuts for move track up or down inside playlist
     moveTrackUp->setKey(CTRL + Key_Up);
     moveTrackDown->setKey(CTRL + Key_Down);
@@ -235,16 +236,17 @@ Ocean::Ocean(QWidget *parent)
         11.1) Trigger delete track Ctrl + D
         11.2) Trigger rename track Ctrl + R
 
-        11.3) Trigger previuse track A
-        11.4) Trigger play or pause S
-        11.5) Trigger next track D
+        11.3) Trigger previuse track ->
+        11.4) Trigger play or pause SPACE
+        11.5) Trigger next track <-
+        11.6) Trigger delete playlist Del
 
-        11.6) Trigger Full Window Shift + F
-        11.7) Trigger Quit Window Shift + Q
-        11.8) Trigger Hide Window Shift + H
+        11.7) Trigger Full Window Shift + F
+        11.8) Trigger Quit Window Shift + Q
+        11.9) Trigger Hide Window Shift + H
 
-        11.9) Trigger move track up CTRL + KEY UP
-        11.10) Trigger move track down CTRL + KEY DOWN
+        11.10) Trigger move track up CTRL + KEY UP
+        11.11) Trigger move track down CTRL + KEY DOWN
     --------------------Shortcut----------------------
     */
 
@@ -305,16 +307,17 @@ Ocean::Ocean(QWidget *parent)
 
     //Shortcuts-----------------------------------------
     //Keys for work with tracks
-    connect(ctrlD, &QShortcut::activated, this, &Ocean::EraseItemFromMusicList);
-    connect(ctrlR, &QShortcut::activated, this, &Ocean::RenameTrack);
+    connect(deleteTrack, &QShortcut::activated, this, &Ocean::EraseItemFromMusicList);
+    connect(renameTrack, &QShortcut::activated, this, &Ocean::RenameTrack);
     //Keys for work with player
     connect(previuseSong, &QShortcut::activated, playlistmanager, &Playlist::previous);
     connect(pauseSong, &QShortcut::activated, playermanager, &Player::SetPausePlayTrack);
     connect(nextSong, &QShortcut::activated, playlistmanager, &Playlist::next);
+    connect(deletePlaylist, &QShortcut::activated, this, &Ocean::EraseItemFromPlayList);
     //Keys for work with app fo window
-    connect(shiftF, &QShortcut::activated, this, &Ocean::FullViaShiftF);
-    connect(shiftQ, &QShortcut::activated, this, &Ocean::QuitViaShiftQ);
-    connect(shiftH, &QShortcut::activated, this, &Ocean::HideViaShiftH);
+    connect(fullWindow, &QShortcut::activated, this, &Ocean::FullViaShiftF);
+    connect(quitWindow, &QShortcut::activated, this, &Ocean::QuitViaShiftQ);
+    connect(hideWindow, &QShortcut::activated, this, &Ocean::HideViaShiftH);
     //Shortcuts for move track up or down inside playlist
     connect(moveTrackUp, &QShortcut::activated, this, &Ocean::MoveTrackUp);
     connect(moveTrackDown, &QShortcut::activated, this, &Ocean::MoveTrackDown);
@@ -324,8 +327,6 @@ Ocean::Ocean(QWidget *parent)
 
 Ocean::~Ocean()
 {
-    qDebug() << "Destructor from Ocean.cpp";
-
     //Tools
     sysmanager.Free(cd);
     //widgets

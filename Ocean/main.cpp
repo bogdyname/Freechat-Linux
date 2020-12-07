@@ -27,5 +27,5 @@ int main(int argc, char *argv[])
     Ocean window;
     window.show();
 
-    return app.QApplication::exec();
+    return app.exec();
 }
