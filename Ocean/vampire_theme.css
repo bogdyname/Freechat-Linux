@@ -3,8 +3,8 @@ QWidget
 {
     background-color: #170004;
     color: #690419;
-    margin-right: 10px;
     margin-left: 10px;
+    margin-right: 10px;
 }
 
 QListWidget
@@ -24,13 +24,6 @@ QLineEdit
     border-color: #F4003D;
     border-style: solid;
     border-radius: 1px;
-    height: 30%;
-}
-
-QPushButton
-{
-    color: #F4003D;
-    border: 0px;
     height: 30%;
 }
 

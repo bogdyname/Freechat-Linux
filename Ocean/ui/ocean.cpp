@@ -19,7 +19,6 @@ Ocean::Ocean(QWidget *parent)
     try
     {
         //Objects of UI
-        spacer = new QSpacerItem(200, 0);
         ownImage = new QPixmap();
         imageOfPlayList = new QLabel(this);
         nameOfTrack = new QLabel(this);
@@ -85,14 +84,15 @@ Ocean::Ocean(QWidget *parent)
 
     //Right side
     //Image of play list
+    ui->tool->setAlignment(AlignTop);
     ui->image->addWidget(imageOfPlayList);
     ui->volumeSlider->addWidget(sliderOfVolume);
+    ui->buttonsOfTracks->setSpacing(0);     //put buttons closer
     ui->buttonsOfTracks->addWidget(previousTrack);
     ui->buttonsOfTracks->addWidget(stopTrack);
     ui->buttonsOfTracks->addWidget(pausePlayTrack);
     ui->buttonsOfTracks->addWidget(playbackMode);
     ui->buttonsOfTracks->addWidget(nextTrack);
-    ui->tool->setAlignment(AlignTop);
     //slider for volume
 
     //Main window  
@@ -374,7 +374,6 @@ void Ocean::resizeEvent(QResizeEvent *event)
 void Ocean::Hidder()
 {
     //Hide elements of UI
-    spacer->changeSize(0, 0);
     playLists->hide();
     musicList->hide();
     nameOfTrack->hide();
@@ -385,7 +384,6 @@ void Ocean::Hidder()
 void Ocean::Shower()
 {
     //Show elements of UI
-    spacer->changeSize(100, 250);
     playLists->show();
     musicList->show();
     nameOfTrack->show();
