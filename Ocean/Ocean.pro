@@ -19,7 +19,6 @@ SOURCES += \
     main.cpp \
     player/player.cpp \
     playlists/playlist.cpp \
-    sysmanager/system.cpp \
     ui/addmusicwidget.cpp \
     ui/getstringwidget.cpp \
     ui/ocean.cpp \
@@ -32,7 +31,6 @@ HEADERS += \
     imports/importmanager.h \
     player/player.h \
     playlists/playlist.h \
-    sysmanager/system.h \
     ui/addmusicwidget.h \
     ui/getstringwidget.h \
     ui/ocean.h \

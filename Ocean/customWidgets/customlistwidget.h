@@ -18,6 +18,7 @@
 class CustomListWidget : public QListWidget
 {
     Q_OBJECT
+    Q_CLASSINFO("Version", "1.0")
 
 public:
     CustomListWidget(QWidget *parent = nullptr);

@@ -328,17 +328,17 @@ Ocean::Ocean(QWidget *parent)
 Ocean::~Ocean()
 {
     //Tools
-    sysmanager.Free(cd);
+    delete cd;
     //widgets
-    sysmanager.Free(getAddedTracksFromWidget);
-    sysmanager.Free(getStringFromUserToCreateNewPlaylist);
-    sysmanager.Free(getStringWithSelectedPlaylist);
-    sysmanager.Free(getStringFromUserToRenamePlaylist);
-    sysmanager.Free(getStringFromUserToRenameTrack);
+    delete getAddedTracksFromWidget;
+    delete getStringFromUserToCreateNewPlaylist;
+    delete getStringWithSelectedPlaylist;
+    delete getStringFromUserToRenamePlaylist;
+    delete getStringFromUserToRenameTrack;
     //UI
-    sysmanager.Free(ownImage);
-    sysmanager.Free(spacer);
-    sysmanager.Free(ui);
+    delete ownImage;
+    delete spacer;
+    delete ui;
 }
 
 

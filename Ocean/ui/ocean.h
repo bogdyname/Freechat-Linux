@@ -46,13 +46,10 @@
 #include "playlists/playlist.h"
 #include "player/player.h"
 
-//system
-#include "sysmanager/system.h"
-#include "sysmanager/system.cpp"
-
 class Ocean : public QMainWindow, private Ui::Ocean
 {
     Q_OBJECT
+    Q_CLASSINFO("Version", "1.0")
 
 public:
     Ocean(QWidget *parent = nullptr);
@@ -408,7 +405,6 @@ private:
     /*
         1) UI own widgets
         2) Managers
-        3) System
     */
 private:
     // UI own widgets ----------------------------------------------- 1
@@ -425,10 +421,6 @@ private:
     Playlist *playlistmanager = nullptr;
     Player *playermanager = nullptr;
     // Managers ----------------------------------------------------- 2
-
-    // System ------------------------------------------------------- 3
-    System sysmanager;
-    // System ------------------------------------------------------- 3
     //Own Objects-----------------------------------------------------
 
 

@@ -17,6 +17,7 @@
 class GetStringWidget : public QWidget, private Ui::GetString
 {
     Q_OBJECT
+    Q_CLASSINFO("Version", "1.0")
 
 public:
     GetStringWidget(QWidget *parent = nullptr);
