@@ -17,6 +17,7 @@
 class Player : public QMediaPlayer
 {
     Q_OBJECT
+    Q_CLASSINFO("Version", "1.0")
 
 public:
     Player(QObject *parent = nullptr);

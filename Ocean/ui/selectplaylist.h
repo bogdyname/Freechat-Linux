@@ -17,6 +17,7 @@
 class SelectPlaylist : public QWidget, private Ui::SelectedPlaylist
 {
     Q_OBJECT
+    Q_CLASSINFO("Version", "1.0")
 
 public:
     SelectPlaylist(QWidget *parent = nullptr);

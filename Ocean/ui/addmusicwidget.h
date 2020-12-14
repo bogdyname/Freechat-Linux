@@ -17,6 +17,7 @@
 class AddMusicWidget : public QWidget, private Ui::AddMusicWidget
 {
     Q_OBJECT
+    Q_CLASSINFO("Version", "1.0")
 
 public:
     explicit AddMusicWidget(QWidget *parent = nullptr);
