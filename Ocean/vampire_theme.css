@@ -45,6 +45,10 @@ QLabel#nameOfTrack:hover
     color: #F4003D;
 }
 
+Button
+{
+    border: 0px;
+}
 /*SLIDER -----------------------------------------------------------------*/
 QSlider::groove:horizontal
 {
@@ -77,8 +81,8 @@ QSlider::handle:horizontal
     border: 2px solid #F4003D;
     border-radius: 4px;
     width: 4px;
-    margin-top: -5px;
-    margin-bottom: -5px;
+    margin-top: -3.5px;
+    margin-bottom: -3.5px;
 }
 
 QSlider::handle:horizontal:pressed
@@ -87,8 +91,8 @@ QSlider::handle:horizontal:pressed
     border: 2px solid #F4003D;
     border-radius: 4px;
     width: 4px;
-    margin-top: -5px;
-    margin-bottom: -5px;
+    margin-top: -3.5px;
+    margin-bottom: -3.5px;
 }
 
 /*COMBO BOX -----------------------------------------------------------------*/

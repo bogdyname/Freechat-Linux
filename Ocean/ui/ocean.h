@@ -22,7 +22,6 @@
 #include <QMainWindow>
 #include <QStringList>
 #include <QMessageBox>
-#include <QSpacerItem>
 #include <QTextBrowser>
 #include <QMediaPlayer>
 #include <QResizeEvent>
@@ -322,7 +321,6 @@ private:
     QLabel *nameOfTrack = nullptr;
 
     //right side (working with app)
-    QSpacerItem *spacer = nullptr;
     QPixmap *ownImage = nullptr;
     Slider *sliderOfVolume = nullptr;
     QLabel *imageOfPlayList = nullptr;

@@ -12,6 +12,7 @@ Button::Button(QWidget *parent, QString objName)
     this->setObjectName(objName);
     icon = new QIcon("://images/" + this->objectName() + ".png");
     this->setIcon(*icon);
+    this->setFlat(true);
 
     Button::switchIcon = nullptr;
 

@@ -93,7 +93,6 @@ Ocean::Ocean(QWidget *parent)
     ui->buttonsOfTracks->addWidget(pausePlayTrack);
     ui->buttonsOfTracks->addWidget(playbackMode);
     ui->buttonsOfTracks->addWidget(nextTrack);
-    //slider for volume
 
     //Main window  
     this->setMinimumSize(270, 420);
@@ -105,6 +104,7 @@ Ocean::Ocean(QWidget *parent)
 
     //Slider of volume
     sliderOfVolume->setFixedSize(250, 17);
+    sliderOfVolume->setObjectName("sliderOfVolume");
     //Slider of track
     sliderOfTrack->setMinimumWidth(250);
 
@@ -337,7 +337,6 @@ Ocean::~Ocean()
     sysmanager.Free(getStringFromUserToRenameTrack);
     //UI
     sysmanager.Free(ownImage);
-    sysmanager.Free(spacer);
     sysmanager.Free(ui);
 }
 
